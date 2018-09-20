@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
 import app from "./base";
+import AddRecipe from "./AddRecipe"
 
 
 class RecipeListTable extends Component {
@@ -27,8 +28,10 @@ class RecipeListTable extends Component {
 
 	render() {
 		return (
-		
-			<h1>List Recipes</h1>
+			<div>
+				<h1>List Recipes</h1>
+				<AddRecipe />
+			</div>
 		
 		);
 	};

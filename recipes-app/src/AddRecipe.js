@@ -4,10 +4,31 @@ import app from "./base";
 
 
 class AddRecipe extends Component {
+	constructor(props){
+		super(props);
+		
+		this.state = {
+			value: '',
+			user: null
+		};
 
-	state = {
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
 
-		user:null
+
+
+	handleChange(event) {
+		this.setState({value: event.target.value});
+	}
+
+	handleSubmit(event){
+		//alert('A name was submitted: ' + this.state.value);
+		event.preventDefault();
+		
+		addNewRecipe(1, this.state.value);
+
+
 	}
 
 	componentDidMount() {
@@ -16,6 +37,8 @@ class AddRecipe extends Component {
 			if (user)
 			{
 				console.log(user);
+				this.setState({user: user});
+
 
 			}
 		});
@@ -27,11 +50,34 @@ class AddRecipe extends Component {
 
 	render() {
 		return (
-		
-			<h1>Add Recipe</h1>
-		
+			<div>
+				<h2>Add Recipe</h2>
+				<form onSubmit={this.handleSubmit}>
+					<label>
+						Name:
+					<input type="text" value={this.state.value} onChange={this.handleChange} />
+					</label>
+						<input type="submit" value="submit" />
+				</form>
+			</div>
 		);
-	};
+	}
 }
 
+function addNewRecipe(uid, name)
+{
+	var newRecipe = {
+		uid: uid,
+		name: name
+	}
+
+	var newDishKey = app.database().ref().child('dishes').push().key;
+
+	var updates = {};
+	updates['/dish/' + newDishKey] = newRecipe;
+
+	return app.database().ref().update(updates);
+
+}
+		
 export default AddRecipe;
