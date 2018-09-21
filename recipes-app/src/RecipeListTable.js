@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
 import app from "./base";
-import AddRecipe from "./AddRecipe"
+import AddDish from "./AddDish"
 
 
 class RecipeListTable extends Component {
@@ -30,7 +30,7 @@ class RecipeListTable extends Component {
 		return (
 			<div>
 				<h1>List Recipes</h1>
-				<AddRecipe />
+				<AddDish />
 			</div>
 		
 		);

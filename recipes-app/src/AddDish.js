@@ -3,13 +3,13 @@ import { Route, Redirect } from "react-router-dom";
 import app from "./base";
 
 
-class AddRecipe extends Component {
+class AddDish extends Component {
 	constructor(props){
 		super(props);
 		
 		this.state = {
 			value: '',
-			user: null
+			user: app.auth().currentUser
 		};
 
 		this.handleChange = this.handleChange.bind(this);
@@ -25,33 +25,21 @@ class AddRecipe extends Component {
 	handleSubmit(event){
 		//alert('A name was submitted: ' + this.state.value);
 		event.preventDefault();
-		
-		addNewRecipe(1, this.state.value);
+
+		const category = 1;
+
+		// Get the category of the dish from the query in the url
+
+		addNewDish(this.state.user.uid, this.state.value, category);
 
 
 	}
-
-	componentDidMount() {
-
-		app.auth().onAuthStateChanged(function(user) {
-			if (user)
-			{
-				console.log(user);
-				this.setState({user: user});
-
-
-			}
-		});
-
-	};
-
-
 
 
 	render() {
 		return (
 			<div>
-				<h2>Add Recipe</h2>
+				<h2>Add Dish</h2>
 				<form onSubmit={this.handleSubmit}>
 					<label>
 						Name:
@@ -64,20 +52,21 @@ class AddRecipe extends Component {
 	}
 }
 
-function addNewRecipe(uid, name)
+function addNewDish(uid, name, category)
 {
-	var newRecipe = {
+	var newDish = {
 		uid: uid,
-		name: name
+		name: name,
+		category: category
 	}
 
 	var newDishKey = app.database().ref().child('dishes').push().key;
 
 	var updates = {};
-	updates['/dish/' + newDishKey] = newRecipe;
+	updates['/dish/' + newDishKey] = newDish;
 
 	return app.database().ref().update(updates);
 
 }
 		
-export default AddRecipe;
+export default AddDish;
