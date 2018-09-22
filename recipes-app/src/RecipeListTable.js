@@ -1,26 +1,22 @@
 import React, { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
 import app from "./base";
-import AddDish from "./AddDish"
+import AddDishForm from "./AddDishForm"
 
 
 class RecipeListTable extends Component {
 
 	state = {
 
-		user:null
+		user: app.auth().currentUser,
+		dishes: []
+
 	}
 
 	componentDidMount() {
-
-		app.auth().onAuthStateChanged(function(user) {
-			if (user)
-			{
-				console.log(user);
-
-			}
-		});
-
+		
+		//return app.database.ref('/dish/' + )
+		
 	};
 
 
@@ -30,7 +26,7 @@ class RecipeListTable extends Component {
 		return (
 			<div>
 				<h1>List Recipes</h1>
-				<AddDish />
+				<AddDishForm />
 			</div>
 		
 		);

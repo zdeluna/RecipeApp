@@ -11,8 +11,22 @@ class SignUpContainer extends Component {
 		try {
 			const user = await app
 				.auth()
-				.createUserWithEmailAndPassword(email.value, password.value)
-			this.props.history.push("/");
+				.createUserWithEmailAndPassword(email.value, password.value).then(function(user)
+					{
+						console.log(user);
+						var userId = user.user.uid;
+						var userData = {
+							username: email.value
+						};
+						console.log("set data");
+
+						
+						//root.child("Users").child(user.uid).set(userData);
+						app.database().ref('users/' + userId).set({
+							username: email.value
+						});
+					});
+				this.props.history.push("/");
 		}
 
 		catch (error){

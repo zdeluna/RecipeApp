@@ -3,7 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import app from "./base";
 
 
-class AddDish extends Component {
+class AddDishForm extends Component {
 	constructor(props){
 		super(props);
 		
@@ -69,4 +69,4 @@ function addNewDish(uid, name, category)
 
 }
 		
-export default AddDish;
+export default AddDishForm;
