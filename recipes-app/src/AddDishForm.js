@@ -63,7 +63,7 @@ function addNewDish(uid, name, category)
 	var newDishKey = app.database().ref().child('dishes').push().key;
 
 	var updates = {};
-	updates['/dish/' + newDishKey] = newDish;
+	updates['/dishes/' + uid + '/' + newDishKey] = newDish;
 
 	return app.database().ref().update(updates);
 

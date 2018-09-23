@@ -21,7 +21,6 @@ class SignUpContainer extends Component {
 						console.log("set data");
 
 						
-						//root.child("Users").child(user.uid).set(userData);
 						app.database().ref('users/' + userId).set({
 							username: email.value
 						});
