@@ -4,12 +4,13 @@ import app from "./base";
 import AddDishForm from "./AddDishForm"
 
 
-class RecipeListTable extends Component {
+class DishListTable extends Component {
 
 	state = {
 
 		user: app.auth().currentUser,
 		dishes: [],
+		category: this.props.match.params.category
 	
 	};
 
@@ -21,20 +22,24 @@ class RecipeListTable extends Component {
 			let dishArray = [];
 
 			for (let dish in dishes){
-				dishArray.push({
-					id: dish,
-					name: dishes[dish].name				
-				});
+
+				// If the dish category parameter matches the url query then add it to the array
+				if (dishes[dish].category == this.state.category)
+				{
+					dishArray.push({
+						id: dish,
+						name: dishes[dish].name				
+					});
+				}
 			}
+		
 			console.log(dishArray);
 			this.setState({
 				dishes: dishArray
 			});
-
 		});
-	}
-	
-
+	};
+		
 	render() {
 		return (
 			<div>
@@ -57,4 +62,4 @@ class RecipeListTable extends Component {
 	};
 }
 
-export default RecipeListTable;
+export default DishListTable;

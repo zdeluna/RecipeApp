@@ -7,7 +7,7 @@ import app from "./base";
 import Home from "./Home";
 import LogIn from "./LogIn";
 import SignUp from "./SignUp";
-import RecipeListTable from "./RecipeListTable";
+import DishListTable from "./DishListTable";
 
 class App extends Component {
 	state = { loading: true, authenticated: false, user: null };
@@ -51,7 +51,7 @@ class App extends Component {
 					/>
 					<Route exact path="/login" component={LogIn} />
 					<Route exact path="/signup" component={SignUp} />
-					<Route path="/users/recipes/:id" component={RecipeListTable} />
+					<Route path="/users/dishes/:category" component={DishListTable} />
 				</div>
 			</Router>
 		);
