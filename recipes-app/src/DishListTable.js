@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, BrowserRouter, Link } from "react-router-dom";
 import app from "./base";
-import AddDishForm from "./AddDishForm"
+import AddDishForm from "./AddDishForm";
+import ViewDishButton from "./ViewDishButton";
 
 
 class DishListTable extends Component {
@@ -10,7 +11,8 @@ class DishListTable extends Component {
 
 		user: app.auth().currentUser,
 		dishes: [],
-		category: this.props.match.params.category
+		category: this.props.match.params.category,
+		redirect: false
 	
 	};
 
@@ -39,6 +41,13 @@ class DishListTable extends Component {
 			});
 		});
 	};
+
+	handleClick = (e, id) => {
+		console.log("Go to dish");
+		
+		
+
+	};
 		
 	render() {
 		return (
@@ -47,10 +56,12 @@ class DishListTable extends Component {
 
 				<ul>
 					{this.state.dishes.map(dish => 
-					<li key={dish.id}>
-						{dish.name}</li>
+					<div>
+						<li key={dish.id}>
+							<Link key={dish.id} to={`/users/category/${this.state.category}/dish/${dish.id}`}>{dish.name}</Link>
+						</li>
+					</div>
 					)}
-					
 				
 				</ul>
 

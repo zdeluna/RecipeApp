@@ -51,7 +51,7 @@ class App extends Component {
 					/>
 					<Route exact path="/login" component={LogIn} />
 					<Route exact path="/signup" component={SignUp} />
-					<Route path="/users/dishes/:category" component={DishListTable} />
+					<Route exact path="/users/category/:category" component={DishListTable} />
 				</div>
 			</Router>
 		);

@@ -28,7 +28,22 @@ class Home extends Component {
 		if (this.state.redirect){
 			if (this.state.category === 1)
 			{
-				return <Redirect push to="users/dishes/1" />;
+				return <Redirect push to="users/category/1" />;
+			}
+
+			else if (this.state.category === 2)
+			{
+				return <Redirect push to="users/category/2" />;
+			}
+
+			else if (this.state.category === 3)
+			{
+				return <Redirect push to="users/category/2" />;
+			}
+
+			else if (this.state.category === 4)
+			{
+				return <Redirect push to="users/category/2" />;
 			}
 		}
 
