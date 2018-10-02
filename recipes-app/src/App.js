@@ -8,6 +8,7 @@ import Home from "./Home";
 import LogIn from "./LogIn";
 import SignUp from "./SignUp";
 import DishListTable from "./DishListTable";
+import DishEntry from "./DishEntry";
 
 class App extends Component {
 	state = { loading: true, authenticated: false, user: null };
@@ -52,6 +53,7 @@ class App extends Component {
 					<Route exact path="/login" component={LogIn} />
 					<Route exact path="/signup" component={SignUp} />
 					<Route exact path="/users/category/:category" component={DishListTable} />
+					<Route exact path="/users/category/:category/dish/:dishId" component={DishEntry} />
 				</div>
 			</Router>
 		);
