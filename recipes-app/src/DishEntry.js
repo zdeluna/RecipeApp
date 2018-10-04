@@ -3,7 +3,7 @@ import CategoryButton from "./CategoryButton";
 import { Route, Redirect } from "react-router-dom";
 import app from "./base";
 import AddUrlForm from "./AddUrlForm";
-
+import RecipeStepsForm from "./RecipeStepsForm";
 
 
 class DishEntry extends Component {
@@ -31,6 +31,7 @@ class DishEntry extends Component {
 			<div>
 				<h1>{this.state.name}</h1>
 				<AddUrlForm dishId={this.state.dishId}/>
+				<RecipeStepsForm />
 			</div>
 		);
 	};
