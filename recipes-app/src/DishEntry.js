@@ -31,7 +31,7 @@ class DishEntry extends Component {
 			<div>
 				<h1>{this.state.name}</h1>
 				<AddUrlForm dishId={this.state.dishId}/>
-				<RecipeStepsForm />
+				<RecipeStepsForm dishId={this.state.dishId}/>
 			</div>
 		);
 	};

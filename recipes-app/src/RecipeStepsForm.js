@@ -19,25 +19,21 @@ class RecipeStepsForm extends Component {
 			]
 		};
 
-		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleChange = (id, description) => {
+
+		this.state.stepForms[id-1].value = description;
+		this.forceUpdate();
+		
 	}
 
 
-
-	handleChange(event) {
-		this.setState({value: event.target.value});
-	}
-e
-	handleSubmit(event){
+	handleSubmit = (event) => {
 		//alert('A name was submitted: ' + this.state.value);
 		event.preventDefault();
 
-		const category = 1;
-
-		// Get the category of the dish from the query in the url
-
-		//addRecipeUrl(this.state.user.uid, this.props.dishId, this.state.value);
+		updateDatabase(this.state.stepForms, this.state.user.uid, this.props.dishId);
 	}
 
 
@@ -47,7 +43,7 @@ e
 				<h2>Add Recipe Steps Manually</h2>
 				<form onSubmit={this.handleSubmit}>
 					{this.state.stepForms.map(stepForm => 
-						<Step key={stepForm.id} id={stepForm.id} />)}
+						<Step key={stepForm.id} value={stepForm.value} id={stepForm.id} onChange={this.handleChange} onBlue={this.handleChange} />)}
 					<input type="submit" value="submit" />
 				</form>
 			</div>
@@ -55,11 +51,14 @@ e
 	}
 }
 
-function addRecipeUrl(uid, dishId, url)
-{
 
+function updateDatabase(steps, uid, dishId)
+{
+	console.log("update database" + steps);
 	app.database().ref().child('/dishes/' + uid + '/' + dishId)
-		.update({ url: url });
+		.update({steps: steps});
+
+
 
 }
 		

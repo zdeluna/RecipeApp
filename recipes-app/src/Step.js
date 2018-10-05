@@ -22,7 +22,13 @@ class Step extends Component {
 
 
 	handleChange = (event) => {
-		this.setState({value: event.target.value});
+		this.setState({value: event.target.value}, () => {
+
+			// Update the array contained in the steps form component
+			this.props.onChange(this.state.id, this.state.value);
+
+		});
+
 	}
 
 
