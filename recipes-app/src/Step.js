@@ -25,6 +25,9 @@ class Step extends Component {
 		this.setState({value: event.target.value}, () => {
 
 			// Update the array contained in the steps form component
+			// https://stackoverflow.com/questions/33088482/onchange-in-react-doesnt-capture-the-last-character-of-text
+
+			// Use a asynchronous callback
 			this.props.onChange(this.state.id, this.state.value);
 
 		});
