@@ -10,7 +10,8 @@ class Step extends Component {
 		this.state = {
 			description: props.description, 
 			user: app.auth().currentUser,
-			id: props.id
+			id: props.id,
+			deleteButtonVisible: false
 		};
 
 	}
@@ -30,7 +31,15 @@ class Step extends Component {
 			// Use a asynchronous callback
 			this.props.onChange(this.state.id, this.state.value);
 
+			
+
 		});
+
+	}
+
+	handleDeleteStep = (event) => {
+		this.props.onClick(this.state.id);
+
 
 	}
 
@@ -43,6 +52,7 @@ class Step extends Component {
 					<input type="text" value={this.state.description} 
 						onChange={this.handleChange} onBlur={() => this.updateInput(this.state.value)} />
 				</label>
+				{ this.props.deleteButton ? <button type="button" onClick={this.handleDeleteStep}>Delete</button> : null }
 			</div>
 		);
 	}
