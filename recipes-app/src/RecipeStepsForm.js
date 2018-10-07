@@ -57,14 +57,20 @@ class RecipeStepsForm extends Component {
     };
 
     handleDeleteStep = id => {
-        console.log('Delete step' + id);
         this.removeStep(id - 1);
         this.state.numberOfSteps--;
+
+        // Set the visible property of the new last step's delete button as true
+        if (this.state.numberOfSteps > 1)
+            this.state.stepForms[this.state.numberOfSteps - 1][
+                'visible'
+            ] = true;
     };
 
     // https://stackoverflow.com/questions/29527385/removing-element-from-array-in-component-state
 
     removeStep(id) {
+        // Remove the last step object from the stepForms array
         this.setState({
             stepForms: this.state.stepForms.filter((_, i) => i !== id),
         });
