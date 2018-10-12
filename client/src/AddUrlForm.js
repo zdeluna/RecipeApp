@@ -30,9 +30,8 @@ class AddUrlForm extends Component {
 
     // Make a call to the api to handle parsing the recipe from the url
     addRecipeLink = async () => {
-        //const response = await fetch('/api/recipe');
         // prettier-ignore
-        fetch('/api/recipe', {
+        fetch(`/api/dish/${this.props.dishId}/recipe`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -40,7 +39,6 @@ class AddUrlForm extends Component {
             },
             body: JSON.stringify({
                 userID: this.state.user.uid,
-                dishID: this.props.dishId,
                 url: this.state.value,
             })
         })
@@ -64,13 +62,6 @@ class AddUrlForm extends Component {
             </div>
         );
     }
-}
-
-function addRecipeUrl(uid, dishId, url) {
-    app.database()
-        .ref()
-        .child('/dishes/' + uid + '/' + dishId)
-        .update({url: url});
 }
 
 export default AddUrlForm;
