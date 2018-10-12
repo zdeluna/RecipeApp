@@ -22,6 +22,28 @@ class RecipeStepsForm extends Component {
         };
     }
 
+    addStepsToDatabase = async () => {
+        // Only send id and value fields from the stepForms array.
+        // Create a new array "stepsData" to have the filtered properties
+        // Source: https://stackoverflow.com/questions/40329742/removing-object-properties-with-lodash
+        var model = {id: null, value: null};
+
+        var stepsData = _.pick(this.state.stepForms, _.keys(model));
+
+        //prettier-ignore
+        fetch(`/api/dish/${this.props.dishId}/recipe/steps`, {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				steps: this.state.stepsData,
+				userID: this.state.user.uid
+			})
+		})
+    };
+
     addStep = event => {
         // Set the last object of step forms to have a visible property of false
         this.state.stepForms[this.state.numberOfSteps - 1]['visible'] = false;
@@ -48,12 +70,7 @@ class RecipeStepsForm extends Component {
     handleSubmit = event => {
         //alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
-
-        updateDatabase(
-            this.state.stepForms,
-            this.state.user.uid,
-            this.props.dishId,
-        );
+        this.addStepsToDatabase();
     };
 
     handleDeleteStep = id => {
@@ -100,14 +117,6 @@ class RecipeStepsForm extends Component {
             </div>
         );
     }
-}
-
-function updateDatabase(steps, uid, dishId) {
-    console.log('update database' + steps);
-    app.database()
-        .ref()
-        .child('/dishes/' + uid + '/' + dishId)
-        .update({steps: steps});
 }
 
 export default RecipeStepsForm;

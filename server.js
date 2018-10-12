@@ -17,6 +17,12 @@ admin.initializeApp({
 
 var database = admin.database().ref('/');
 
+app.post('/api/dish/:id/recipe/steps', (req, res) => {
+    database
+        .child('/dishes/' + req.body.userID + '/' + req.params.id)
+        .update({steps: req.body.steps});
+});
+
 app.post('/api/dish/:id/recipe', (req, res) => {
     database
         .child('/dishes/' + req.body.userID + '/' + req.params.id)
