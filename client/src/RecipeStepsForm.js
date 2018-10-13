@@ -25,10 +25,13 @@ class RecipeStepsForm extends Component {
     addStepsToDatabase = async () => {
         // Only send id and value fields from the stepForms array.
         // Create a new array "stepsData" to have the filtered properties
-        // Source: https://stackoverflow.com/questions/40329742/removing-object-properties-with-lodash
-        var model = {id: null, value: null};
 
-        var stepsData = _.pick(this.state.stepForms, _.keys(model));
+        var stepsData = this.state.stepForms.map(function(step) {
+            return {
+                id: step.id,
+                value: step.value,
+            };
+        });
 
         //prettier-ignore
         fetch(`/api/dish/${this.props.dishId}/recipe/steps`, {
@@ -38,7 +41,7 @@ class RecipeStepsForm extends Component {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				steps: this.state.stepsData,
+				steps: stepsData,
 				userID: this.state.user.uid
 			})
 		})
