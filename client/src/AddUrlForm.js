@@ -31,7 +31,7 @@ class AddUrlForm extends Component {
     // Make a call to the api to handle parsing the recipe from the url
     addRecipeLink = async () => {
         // prettier-ignore
-        fetch(`/api/dish/${this.props.dishId}/recipe`, {
+        fetch(`/api/dish/${this.props.dishId}/recipe/url`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
