@@ -20,22 +20,27 @@ admin.initializeApp({
 var database = admin.database().ref('/');
 
 app.post('/api/dish/:id/recipe/steps', (req, res) => {
-    database
-        .child('/dishes/' + req.body.userID + '/' + req.params.id)
-        .update({steps: req.body.steps});
+    saveSteps(req.body.userID, req.params.id, req.body.steps);
 });
 
+/* This route stores a url in the database and generates the steps from the url then saves again to the database*/
 app.post('/api/dish/:id/recipe/url', (req, res) => {
-    const url = req.body.url;
-    database
-        .child('/dishes/' + req.body.userID + '/' + req.params.id)
-        .update({url: url});
-
     // Parse the steps from the url
-    getRecipeStepsFromWebPage(url, function(err, stepsArray) {
+    const url = req.body.url;
+    getRecipeStepsAndIngredientsFromWebPage(url, function(err, stepsArray) {
         if (!err) {
+            saveSteps(req.body.userID, req.params.id, stepsArray).then(() => {
+                saveUrl(req.body.userID, req.params.id, req.body.url).then(() =>
+                    res.status(200).send('OK'),
+                );
+            });
         }
     });
+});
+
+/* This route gets */
+app.get('/api/dish/:id/recipe', (req, res) => {
+    console.log('in get route');
 });
 
 app.listen(port, () => {
@@ -43,9 +48,19 @@ app.listen(port, () => {
     //var stepsArray = [];
 });
 
-function getRecipeStepsFromWebPage(url, complete) {
-    console.log('in function');
+function saveSteps(userId, dishId, steps) {
+    return database
+        .child('/dishes/' + userId + '/' + dishId)
+        .update({steps: steps});
+}
 
+function saveUrl(userId, dishId, url) {
+    return database
+        .child('/dishes/' + userId + '/' + dishId)
+        .update({url: url});
+}
+
+function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
     var json = [];
     var stepsArray = [];
 
