@@ -3,17 +3,17 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
-import Step from './Step';
+import Ingredient from './Ingredient';
 
-class RecipeStepsForm extends Component {
+class IngredientsForm extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             value: '',
             user: app.auth().currentUser,
-            numberOfSteps: 4,
-            stepForms: [
+            numberOfIngredients: 4,
+            ingredientsArray: [
                 {id: 1, value: '', visible: false},
                 {id: 2, value: '', visible: false},
                 {id: 3, value: '', visible: false},
@@ -22,42 +22,46 @@ class RecipeStepsForm extends Component {
         };
     }
 
-    addStepsToDatabase = async () => {
+    addIngredientsToDatabase = async () => {
         // Only send id and value fields from the stepForms array.
         // Create a new array "stepsData" to have the filtered properties
 
-        var stepsData = this.state.stepForms.map(function(step) {
+        var ingredientsData = this.state.ingredientsArray.map(function(
+            ingredient,
+        ) {
             return {
-                id: step.id,
-                value: step.value,
+                id: ingredient.id,
+                value: ingredient.value,
             };
         });
 
         //prettier-ignore
-        fetch(`/api/users/${this.state.user.uid}/dish/${this.props.dishId}/recipe/steps`, {
+        fetch(`/api/users/${this.state.user.uid}/dish/${this.props.dishId}/recipe/ingredients`, {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				steps: stepsData,
+				ingredients: ingredientsData,
 			})
 		});
     };
 
-    addStep = event => {
+    addIngredient = event => {
         // Set the last object of step forms to have a visible property of false
-        this.state.stepForms[this.state.numberOfSteps - 1]['visible'] = false;
+        this.state.ingredientsArray[this.state.numberOfIngredients - 1][
+            'visible'
+        ] = false;
 
         // Increase the number of steps listed in the state property
-        this.state.numberOfSteps++;
+        this.state.numberOfIngredients++;
 
         // https://stackoverflow.com/questions/23966438/what-is-the-preferred-way-to-mutate-a-react-state
         // Concatenate an array with stepForms that includes the new step
         this.setState(state => ({
-            stepForms: state.stepForms.concat({
-                id: this.state.numberOfSteps,
+            ingredientsArray: state.ingredientsArray.concat({
+                id: this.state.numberOfIngredients,
                 value: '',
                 visible: true,
             }),
@@ -65,55 +69,57 @@ class RecipeStepsForm extends Component {
     };
 
     handleChange = (id, description) => {
-        this.state.stepForms[id - 1].value = description;
+        this.state.ingredientsArray[id - 1].value = description;
         this.forceUpdate();
     };
 
     handleSubmit = event => {
         //alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
-        this.addStepsToDatabase();
+        this.addIngredientsToDatabase();
     };
 
-    handleDeleteStep = id => {
-        this.removeStep(id - 1);
-        this.state.numberOfSteps--;
+    handleDeleteIngredient = id => {
+        this.removeIngredient(id - 1);
+        this.state.numberOfIngredients--;
 
         // Set the visible property of the new last step's delete button as true
-        if (this.state.numberOfSteps > 1)
-            this.state.stepForms[this.state.numberOfSteps - 1][
+        if (this.state.numberOfIngredients > 1)
+            this.state.ingredientsArray[this.state.numberOfIngredients - 1][
                 'visible'
             ] = true;
     };
 
     // https://stackoverflow.com/questions/29527385/removing-element-from-array-in-component-state
 
-    removeStep(id) {
+    removeIngredient(id) {
         // Remove the last step object from the stepForms array
         this.setState({
-            stepForms: this.state.stepForms.filter((_, i) => i !== id),
+            ingredientsArray: this.state.ingredientsArray.filter(
+                (_, i) => i !== id,
+            ),
         });
     }
 
     render() {
         return (
             <div>
-                <h2>Add Recipe Steps Manually</h2>
+                <h2>Add Ingredients Manually</h2>
                 <form onSubmit={this.handleSubmit}>
-                    {this.state.stepForms.map(stepForm => (
-                        <Step
-                            key={stepForm.id}
-                            value={stepForm.value}
-                            id={stepForm.id}
+                    {this.state.ingredientsArray.map(ingredient => (
+                        <Ingredient
+                            key={ingredient.id}
+                            value={ingredient.value}
+                            id={ingredient.id}
                             onChange={this.handleChange}
                             onClick={this.handleDeleteStep}
-                            onBlue={this.handleChange}
-                            deleteButton={stepForm.visible}
+                            onBlur={this.handleChange}
+                            deleteButton={ingredient.visible}
                         />
                     ))}
                     <input type="submit" value="submit" />
-                    <button type="button" onClick={this.addStep}>
-                        Add Step
+                    <button type="button" onClick={this.addIngredient}>
+                        Add Ingredient
                     </button>
                 </form>
             </div>
@@ -121,4 +127,4 @@ class RecipeStepsForm extends Component {
     }
 }
 
-export default RecipeStepsForm;
+export default IngredientsForm;

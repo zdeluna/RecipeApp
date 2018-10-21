@@ -19,18 +19,35 @@ admin.initializeApp({
 
 var database = admin.database().ref('/');
 
-app.post('/api/dish/:id/recipe/steps', (req, res) => {
-    saveSteps(req.body.userID, req.params.id, req.body.steps);
+app.post('/api/users/:userId/dish/:dishId/recipe/steps', (req, res) => {
+    const steps = req.body.steps;
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+
+    saveSteps(userId, dishId, steps).then(res.status(200).send('OK'));
+});
+
+app.post('/api/users/:userId/dish/:dishId/recipe/ingredients', (req, res) => {
+    const ingredients = req.body.ingredients;
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+
+    saveIngredients(userId, dishId, ingredients).then(
+        res.status(200).send('OK'),
+    );
 });
 
 /* This route stores a url in the database and generates the steps from the url then saves again to the database*/
-app.post('/api/dish/:id/recipe/url', (req, res) => {
+app.post('/api/users/:userId/dish/:dishId/recipe/url', (req, res) => {
     // Parse the steps from the url
     const url = req.body.url;
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+
     getRecipeStepsAndIngredientsFromWebPage(url, function(err, stepsArray) {
         if (!err) {
-            saveSteps(req.body.userID, req.params.id, stepsArray).then(() => {
-                saveUrl(req.body.userID, req.params.id, req.body.url).then(() =>
+            saveSteps(userId, dishId, stepsArray).then(() => {
+                saveUrl(userId, dishId, url).then(() =>
                     res.status(200).send('OK'),
                 );
             });
@@ -39,8 +56,13 @@ app.post('/api/dish/:id/recipe/url', (req, res) => {
 });
 
 /* This route gets */
-app.get('/api/dish/:id/recipe', (req, res) => {
-    console.log('in get route');
+app.get('/api/users/:userId/dish/:dishId', (req, res) => {
+    var userId = req.params.userId;
+    var dishId = req.params.dishId;
+
+    getDishFromDatabase(userId, dishId, data => {
+        console.log('got info from db' + data);
+    });
 });
 
 app.listen(port, () => {
@@ -54,10 +76,25 @@ function saveSteps(userId, dishId, steps) {
         .update({steps: steps});
 }
 
+function saveIngredients(userId, dishId, ingredients) {
+    return database
+        .child('/dishes/' + userId + '/' + dishId)
+        .update({ingredients: ingredients});
+}
+
 function saveUrl(userId, dishId, url) {
     return database
         .child('/dishes/' + userId + '/' + dishId)
         .update({url: url});
+}
+
+function getDishFromDatabase(userId, dishId, complete) {
+    return database
+        .child('/dishes/' + userId + '/' + dishId)
+        .on('value', function(snapshot) {
+            console.log(snapshot.val());
+            complete(snapshot.val());
+        });
 }
 
 function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
