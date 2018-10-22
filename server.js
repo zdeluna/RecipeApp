@@ -44,12 +44,20 @@ app.post('/api/users/:userId/dish/:dishId/recipe/url', (req, res) => {
     const userId = req.params.userId;
     const dishId = req.params.dishId;
 
-    getRecipeStepsAndIngredientsFromWebPage(url, function(err, stepsArray) {
+    getRecipeStepsAndIngredientsFromWebPage(url, function(
+        err,
+        stepsArray,
+        ingredientsArray,
+    ) {
         if (!err) {
             saveSteps(userId, dishId, stepsArray).then(() => {
-                saveUrl(userId, dishId, url).then(() =>
-                    res.status(200).send('OK'),
-                );
+                saveUrl(userId, dishId, url).then(() => {
+                    saveIngredients(userId, dishId, ingredientsArray).then(
+                        () => {
+                            res.status(200).send('OK');
+                        },
+                    );
+                });
             });
         }
     });
@@ -100,14 +108,14 @@ function getDishFromDatabase(userId, dishId, complete) {
 function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
     var json = [];
     var stepsArray = [];
+    var ingredientsArray = [];
 
     request(url, function(error, response, html) {
         if (error) return complete(error, err);
         var $ = cheerio.load(html);
 
+        /* Get the recipes steps */
         $('.recipe-procedure-text').filter(function() {
-            var stepNumber = 1;
-
             var data = $(this);
             var stepDescription = data.children().text();
 
@@ -116,6 +124,19 @@ function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
             stepsArray.push(step);
         });
 
-        complete(false, stepsArray);
+        /* Get the ingredients */
+        $('.recipe-ingredients > ul').filter(function() {
+            var data = $(this);
+            var ingredientDescription = data.children().text();
+
+            var ingredient = {
+                id: ingredientsArray.length,
+                value: ingredientDescription,
+            };
+
+            ingredientsArray.push(ingredient);
+        });
+
+        complete(false, stepsArray, ingredientsArray);
     });
 }
