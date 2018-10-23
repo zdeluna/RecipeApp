@@ -125,9 +125,9 @@ function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
         });
 
         /* Get the ingredients */
-        $('.recipe-ingredients > ul').filter(function() {
+        $('.ingredient').filter(function() {
             var data = $(this);
-            var ingredientDescription = data.children().text();
+            var ingredientDescription = data.text();
 
             var ingredient = {
                 id: ingredientsArray.length,

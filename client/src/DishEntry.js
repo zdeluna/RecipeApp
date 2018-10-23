@@ -2,15 +2,14 @@ import React, {Component} from 'react';
 import CategoryButton from './CategoryButton';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
-import AddUrlForm from './AddUrlForm';
-import RecipeStepsForm from './RecipeStepsForm';
-import IngredientsForm from './IngredientsForm';
+import NewDishForm from './NewDishForm';
 
 class DishEntry extends Component {
     state = {
         user: app.auth().currentUser,
         dishId: this.props.match.params.dishId,
         name: '',
+        created: false,
     };
 
     componentDidMount() {
@@ -23,6 +22,8 @@ class DishEntry extends Component {
         dishesRef.on('value', snapshot => {
             let dish = snapshot.val();
             this.setState({name: dish['name']});
+            // If steps and ingredients have already been saved, then set this.state.created to true
+            if (dish['steps'].length > 0) this.setState({created: true});
         });
     }
 
@@ -30,9 +31,7 @@ class DishEntry extends Component {
         return (
             <div>
                 <h1>{this.state.name}</h1>
-                <AddUrlForm dishId={this.state.dishId} />
-                <RecipeStepsForm dishId={this.state.dishId} />
-                <IngredientsForm dishId={this.state.dishId} />
+                <NewDishForm dishId={this.state.dishId} />
             </div>
         );
     }
