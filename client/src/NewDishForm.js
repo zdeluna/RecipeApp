@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import CategoryButton from './CategoryButton';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
 import AddUrlForm from './AddUrlForm';
@@ -7,10 +6,14 @@ import RecipeStepsForm from './RecipeStepsForm';
 import IngredientsForm from './IngredientsForm';
 
 class NewDishForm extends Component {
-    state = {
-        user: app.auth().currentUser,
-        dishId: this.props.match.params.dishId,
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            user: app.auth().currentUser,
+            dishId: this.props.dishId,
+        };
+    }
 
     componentDidMount() {}
 
