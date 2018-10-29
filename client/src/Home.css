@@ -1,0 +1,14 @@
+.col-centered {
+    float: none;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.button-centered {
+    float: none;
+    margin: 0 auto;
+}
+
+.row {
+    padding: 10px;
+}
