@@ -1,7 +1,16 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
-import {Form, Button, FormGroup, Label, Input, FormText} from 'reactstrap';
+import {
+    Form,
+    Button,
+    FormGroup,
+    Label,
+    Input,
+    FormText,
+    Container,
+} from 'reactstrap';
+import './AddDishForm.css';
 
 class AddDishForm extends Component {
     constructor(props) {
@@ -34,20 +43,21 @@ class AddDishForm extends Component {
     render() {
         return (
             <div>
-                <h2>Add Dish</h2>
-                <Form onSubmit={this.handleSubmit}>
-                    <FormGroup>
-                        <Label>
-                            Name:
-                            <input
+                <Container>
+                    <Form inline onSubmit={this.handleSubmit}>
+                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <Label for="newDishInput">New Dish Name</Label>
+                            <Input
                                 type="text"
                                 value={this.state.value}
                                 onChange={this.handleChange}
+                                id="newDishInput"
                             />
-                        </Label>
-                    </FormGroup>
-                    <input type="submit" value="submit" />
-                </Form>
+
+                            <Button color="primary">Submit</Button>
+                        </FormGroup>
+                    </Form>
+                </Container>
             </div>
         );
     }

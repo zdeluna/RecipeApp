@@ -1,76 +1,84 @@
-import React, { Component } from "react";
-import { Route, Redirect, BrowserRouter, Link } from "react-router-dom";
-import app from "./base";
-import AddDishForm from "./AddDishForm";
-import ViewDishButton from "./ViewDishButton";
-
+import React, {Component} from 'react';
+import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
+import app from './base';
+import AddDishForm from './AddDishForm';
+import ViewDishButton from './ViewDishButton';
+import {Table, Container} from 'reactstrap';
+import './DishListTable.css';
 
 class DishListTable extends Component {
+    state = {
+        user: app.auth().currentUser,
+        dishes: [],
+        category: this.props.match.params.category,
+        redirect: false,
+    };
 
-	state = {
+    componentDidMount() {
+        const dishesRef = app
+            .database()
+            .ref()
+            .child('dishes')
+            .child(this.state.user.uid);
+        dishesRef.on('value', snapshot => {
+            let dishes = snapshot.val();
+            let dishArray = [];
 
-		user: app.auth().currentUser,
-		dishes: [],
-		category: this.props.match.params.category,
-		redirect: false
-	
-	};
+            for (let dish in dishes) {
+                // If the dish category parameter matches the url query then add it to the array
+                if (dishes[dish].category == this.state.category) {
+                    dishArray.push({
+                        id: dish,
+                        name: dishes[dish].name,
+                    });
+                }
+            }
 
-	componentDidMount() {
-		
-		const dishesRef = app.database().ref().child('dishes').child(this.state.user.uid)
-		dishesRef.on('value', (snapshot) => {
-			let dishes = snapshot.val();
-			let dishArray = [];
+            console.log(dishArray);
+            this.setState({
+                dishes: dishArray,
+            });
+        });
+    }
 
-			for (let dish in dishes){
+    handleClick = (e, id) => {
+        console.log('Go to dish');
+    };
 
-				// If the dish category parameter matches the url query then add it to the array
-				if (dishes[dish].category == this.state.category)
-				{
-					dishArray.push({
-						id: dish,
-						name: dishes[dish].name				
-					});
-				}
-			}
-		
-			console.log(dishArray);
-			this.setState({
-				dishes: dishArray
-			});
-		});
-	};
+    render() {
+        return (
+            <Container>
+                <AddDishForm />
 
-	handleClick = (e, id) => {
-		console.log("Go to dish");
-		
-		
-
-	};
-		
-	render() {
-		return (
-			<div>
-				<h1>List Recipes</h1>
-
-				<ul>
-					{this.state.dishes.map(dish => 
-					<div>
-						<li key={dish.id}>
-							<Link key={dish.id} to={`/users/category/${this.state.category}/dish/${dish.id}`}>{dish.name}</Link>
-						</li>
-					</div>
-					)}
-				
-				</ul>
-
-
-				<AddDishForm />
-			</div>
-		
-		);
-	};
+                <Table className="dishTable">
+                    <thead>
+                        <tr>
+                            <th>Dish</th>
+                            <th>Time to Make</th>
+                            <th>Last made</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.dishes.map(dish => (
+                            <tr>
+                                <td key={dish.id}>
+                                    <Link
+                                        key={dish.id}
+                                        to={`/users/category/${
+                                            this.state.category
+                                        }/dish/${dish.id}`}>
+                                        {dish.name}
+                                    </Link>
+                                </td>
+                                <td key={dish.id}>40 minutes</td>
+                                <td key={dish.id}>1/1/2018</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            </Container>
+        );
+    }
 }
 
 export default DishListTable;
