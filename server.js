@@ -1,11 +1,14 @@
 const express = require('express');
 var request = require('request');
+var cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 5000;
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
+
+app.use(cors());
 
 var admin = require('firebase-admin');
 
@@ -19,6 +22,36 @@ admin.initializeApp({
 
 var database = admin.database().ref('/');
 
+app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
+    //var stepsArray = [];
+});
+
+app.options('/*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header(
+        'Access-Control-Allow-Methods',
+        'GET, PUT, POST, DELETE, OPTIONS',
+    );
+    res.header(
+        'Acess-Control-Allow-Headers',
+        'Content-Type, Authorization, Content-Length, X-Requested-With',
+    );
+    res.send(200);
+});
+
+/* Route to create a new dish */
+app.post('/api/users/:userId/dish/', (req, res) => {
+    const userId = req.params.userId;
+    const dishName = req.body.dishName;
+    const category = req.body.category;
+
+    createNewDish(userId, dishName, category).then(data => {
+        console.log(data);
+    });
+});
+
+/* Route to add new steps to a dish*/
 app.post('/api/users/:userId/dish/:dishId/recipe/steps', (req, res) => {
     const steps = req.body.steps;
     const userId = req.params.userId;
@@ -27,6 +60,7 @@ app.post('/api/users/:userId/dish/:dishId/recipe/steps', (req, res) => {
     saveSteps(userId, dishId, steps).then(res.status(200).send('OK'));
 });
 
+/* Route to add ingredients to a dish*/
 app.post('/api/users/:userId/dish/:dishId/recipe/ingredients', (req, res) => {
     const ingredients = req.body.ingredients;
     const userId = req.params.userId;
@@ -71,11 +105,6 @@ app.get('/api/users/:userId/dish/:dishId', (req, res) => {
     getDishFromDatabase(userId, dishId, data => {
         console.log('got info from db' + data);
     });
-});
-
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
-    //var stepsArray = [];
 });
 
 function saveSteps(userId, dishId, steps) {
@@ -139,4 +168,20 @@ function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
 
         complete(false, stepsArray, ingredientsArray);
     });
+}
+
+/* This function will create a new dish and return an id of the dish entry in the database */
+function createNewDish(userId, dishName, category) {
+    var newDish = {
+        uid: userId,
+        name: dishName,
+        category: category,
+    };
+
+    var newDishKey = database.child('dishes').push().key;
+
+    var updates = {};
+    updates['/dishes/' + userId + '/' + newDishKey] = newDish;
+
+    return database.update(updates);
 }

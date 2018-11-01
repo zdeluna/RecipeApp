@@ -3,7 +3,7 @@ import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
 import app from './base';
 import AddDishForm from './AddDishForm';
 import ViewDishButton from './ViewDishButton';
-import {Table, Container} from 'reactstrap';
+import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
 
 class DishListTable extends Component {
@@ -33,7 +33,7 @@ class DishListTable extends Component {
                     });
                 }
             }
-
+            console.log('print dish array');
             console.log(dishArray);
             this.setState({
                 dishes: dishArray,
@@ -48,8 +48,9 @@ class DishListTable extends Component {
     render() {
         return (
             <Container>
-                <AddDishForm />
-
+                <Row>
+                    <AddDishForm />
+                </Row>
                 <Table className="dishTable">
                     <thead>
                         <tr>

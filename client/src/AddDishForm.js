@@ -37,8 +37,24 @@ class AddDishForm extends Component {
 
         // Get the category of the dish from the query in the url
 
-        addNewDish(this.state.user.uid, this.state.value, category);
+        this.addNewDish(this.state.user.uid, this.state.value, category);
     }
+
+    // Make a call to the api to handle parsing the recipe from the url
+    addNewDish = async (userId, dishName, category) => {
+        // prettier-ignore
+        fetch(`/api/users/${this.state.user.uid}/dish/`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+				dishName: dishName,
+				category: category
+            })
+        })
+    };
 
     render() {
         return (
@@ -46,43 +62,20 @@ class AddDishForm extends Component {
                 <Container>
                     <Form inline onSubmit={this.handleSubmit}>
                         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                            <Label for="newDishInput">New Dish Name</Label>
+                            <Label for="newDishInput">New Dish Name: </Label>
                             <Input
                                 type="text"
                                 value={this.state.value}
                                 onChange={this.handleChange}
                                 id="newDishInput"
                             />
-
-                            <Button color="primary">Submit</Button>
                         </FormGroup>
+                        <Button color="primary">Submit</Button>
                     </Form>
                 </Container>
             </div>
         );
     }
-}
-
-function addNewDish(uid, name, category) {
-    var newDish = {
-        uid: uid,
-        name: name,
-        category: category,
-    };
-
-    var newDishKey = app
-        .database()
-        .ref()
-        .child('dishes')
-        .push().key;
-
-    var updates = {};
-    updates['/dishes/' + uid + '/' + newDishKey] = newDish;
-
-    return app
-        .database()
-        .ref()
-        .update(updates);
 }
 
 export default AddDishForm;
