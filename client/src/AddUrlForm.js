@@ -1,6 +1,15 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
+import {
+    Form,
+    Button,
+    FormGroup,
+    Label,
+    Input,
+    FormText,
+    Container,
+} from 'reactstrap';
 
 class AddUrlForm extends Component {
     constructor(props) {
@@ -46,18 +55,20 @@ class AddUrlForm extends Component {
     render() {
         return (
             <div>
-                <h2>Add Url</h2>
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Recipe Url:
-                        <input
-                            type="text"
-                            value={this.state.value}
-                            onChange={this.handleChange}
-                        />
-                    </label>
-                    <input type="submit" value="submit" />
-                </form>
+                <Container>
+                    <Form inline onSubmit={this.handleSubmit}>
+                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <Label for="newUrlInput">Recipe Url:</Label>
+                            <Input
+                                type="text"
+                                value={this.state.value}
+                                onChange={this.handleChange}
+                                id="newUrlInput"
+                            />
+                        </FormGroup>
+                        <Button color="primary">Submit</Button>
+                    </Form>
+                </Container>
             </div>
         );
     }

@@ -2,6 +2,15 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
+import {
+    Form,
+    Button,
+    FormGroup,
+    Label,
+    Input,
+    FormText,
+    Container,
+} from 'reactstrap';
 
 class Step extends Component {
     constructor(props) {
@@ -35,19 +44,20 @@ class Step extends Component {
     render() {
         return (
             <div>
-                <label>
+                <Label for="newStepInput">
                     Step #{this.state.id}
-                    <input
+                    <Input
                         type="text"
                         value={this.state.description}
                         onChange={this.handleChange}
                         onBlur={() => this.updateInput(this.state.value)}
+                        id="newStepInput"
                     />
-                </label>
+                </Label>
                 {this.props.deleteButton ? (
-                    <button type="button" onClick={this.handleDeleteStep}>
+                    <Button color="danger" onClick={this.handleDeleteStep}>
                         Delete
-                    </button>
+                    </Button>
                 ) : null}
             </div>
         );

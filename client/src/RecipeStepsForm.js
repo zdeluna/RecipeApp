@@ -4,6 +4,15 @@ import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
 import Step from './Step';
+import {
+    Form,
+    Button,
+    FormGroup,
+    Label,
+    Input,
+    FormText,
+    Container,
+} from 'reactstrap';
 
 class RecipeStepsForm extends Component {
     constructor(props) {
@@ -98,24 +107,29 @@ class RecipeStepsForm extends Component {
     render() {
         return (
             <div>
-                <h2>Add Recipe Steps Manually</h2>
-                <form onSubmit={this.handleSubmit}>
+                <Form onSubmit={this.handleSubmit}>
                     {this.state.stepForms.map(stepForm => (
-                        <Step
-                            key={stepForm.id}
-                            value={stepForm.value}
-                            id={stepForm.id}
-                            onChange={this.handleChange}
-                            onClick={this.handleDeleteStep}
-                            onBlue={this.handleChange}
-                            deleteButton={stepForm.visible}
-                        />
+                        <FormGroup>
+                            <Step
+                                key={stepForm.id}
+                                value={stepForm.value}
+                                id={stepForm.id}
+                                onChange={this.handleChange}
+                                onClick={this.handleDeleteStep}
+                                onBlue={this.handleChange}
+                                deleteButton={stepForm.visible}
+                            />
+                        </FormGroup>
                     ))}
-                    <input type="submit" value="submit" />
-                    <button type="button" onClick={this.addStep}>
-                        Add Step
-                    </button>
-                </form>
+                    <FormGroup>
+                        <Button color="primary" onClick={this.addStep}>
+                            Add Step
+                        </Button>
+                        <Button color="primary" onClick={this.handleSubmit}>
+                            Submit
+                        </Button>
+                    </FormGroup>
+                </Form>
             </div>
         );
     }
