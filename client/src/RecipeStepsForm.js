@@ -31,17 +31,7 @@ class RecipeStepsForm extends Component {
         };
     }
 
-    addStepsToDatabase = async () => {
-        // Only send id and value fields from the stepForms array.
-        // Create a new array "stepsData" to have the filtered properties
-
-        var stepsData = this.state.stepForms.map(function(step) {
-            return {
-                id: step.id,
-                value: step.value,
-            };
-        });
-
+    addStepsToDatabase = async stepsData => {
         //prettier-ignore
         fetch(`/api/users/${this.state.user.uid}/dish/${this.props.dishId}/recipe/steps`, {
 			method: 'POST',
@@ -52,7 +42,11 @@ class RecipeStepsForm extends Component {
 			body: JSON.stringify({
 				steps: stepsData,
 			})
-		});
+		}).then(response => {
+			if (response.status == 200)
+				console.log(response);
+				this.props.onClick();
+		})
     };
 
     addStep = event => {
@@ -79,9 +73,26 @@ class RecipeStepsForm extends Component {
     };
 
     handleSubmit = event => {
-        //alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
-        this.addStepsToDatabase();
+
+        //alert('A name was submitted: ' + this.state.value);
+        console.log('call add to database function');
+
+        // Only send id and value fields from the stepForms array.
+        // Create a new array "stepsData" to have the filtered properties
+        /*
+        var stepsData = this.state.stepForms.map(function(step) {
+            return {
+                id: step.id,
+                value: step.value,
+            };
+		});
+
+*/
+        var stepsData = [{id: 1, value: 'step 1'}];
+
+        this.addStepsToDatabase(stepsData);
+        //this.props.onClick();
     };
 
     handleDeleteStep = id => {
@@ -107,7 +118,7 @@ class RecipeStepsForm extends Component {
     render() {
         return (
             <div>
-                <Form onSubmit={this.handleSubmit}>
+                <Form>
                     {this.state.stepForms.map(stepForm => (
                         <FormGroup>
                             <Step
@@ -125,7 +136,9 @@ class RecipeStepsForm extends Component {
                         <Button color="primary" onClick={this.addStep}>
                             Add Step
                         </Button>
-                        <Button color="primary" onClick={this.handleSubmit}>
+                        <Button
+                            color="primary"
+                            onClick={event => this.handleSubmit(event)}>
                             Submit
                         </Button>
                     </FormGroup>

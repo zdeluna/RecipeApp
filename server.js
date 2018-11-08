@@ -57,6 +57,7 @@ app.post('/api/users/:userId/dish/:dishId/recipe/steps', (req, res) => {
     const userId = req.params.userId;
     const dishId = req.params.dishId;
 
+    console.log('SERVER: save steps');
     saveSteps(userId, dishId, steps).then(res.status(200).send('OK'));
 });
 

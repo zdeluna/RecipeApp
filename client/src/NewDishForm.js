@@ -18,20 +18,26 @@ class NewDishForm extends Component {
         };
     }
 
-    componentDidMount() {}
-
     handleClick = (e, stepNumber) => {
+        console.log('update step');
+        console.log(stepNumber);
         this.setState({step: stepNumber});
     };
 
-    renderForm = () => {
-        if (this.state.step == 0) return null;
-        else if (this.state.step == 1) {
+    renderForm = props => {
+        const step = props.step;
+        if (step == 0) return null;
+        else if (step == 1) {
             return <AddUrlForm dishId={this.state.dishId} />;
-        } else if (this.state.step == 2) {
-            return <RecipeStepsForm dishId={this.state.dishId} />;
-        } else if (this.state.step == 3) {
-            <IngredientsForm dishId={this.state.dishId} />;
+        } else if (step == 2) {
+            return (
+                <RecipeStepsForm
+                    dishId={this.state.dishId}
+                    onClick={e => this.handleClick(e, 3)}
+                />
+            );
+        } else if (step == 3) {
+            return <IngredientsForm dishId={this.state.dishId} />;
         }
     };
 
@@ -66,7 +72,7 @@ class NewDishForm extends Component {
                     </Row>
                     <Row>
                         <Col sm="12" md={{size: 6, offset: 3}}>
-                            <this.renderForm />
+                            <this.renderForm step={this.state.step} />
                         </Col>
                     </Row>
                 </Container>

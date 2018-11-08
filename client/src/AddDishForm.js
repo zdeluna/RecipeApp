@@ -32,7 +32,7 @@ class AddDishForm extends Component {
     handleSubmit(event) {
         //alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
-
+        console.log('Add new dish');
         const category = 1;
 
         // Get the category of the dish from the query in the url

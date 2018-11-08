@@ -7,20 +7,24 @@ import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
 
 class DishListTable extends Component {
-    state = {
-        user: app.auth().currentUser,
-        dishes: [],
-        category: this.props.match.params.category,
-        redirect: false,
-    };
-
+    constructor() {
+        super();
+        this.state = {
+            user: app.auth().currentUser,
+            dishes: [],
+            category: 1, //this.props.match.params.category,
+            redirect: false,
+            loaded: false,
+        };
+    }
     componentDidMount() {
-        const dishesRef = app
+        this.dishesRef = app
             .database()
             .ref()
             .child('dishes')
             .child(this.state.user.uid);
-        dishesRef.on('value', snapshot => {
+
+        this.dishesRef.on('value', snapshot => {
             let dishes = snapshot.val();
             let dishArray = [];
 
@@ -37,8 +41,13 @@ class DishListTable extends Component {
             console.log(dishArray);
             this.setState({
                 dishes: dishArray,
+                loaded: true,
             });
         });
+    }
+
+    componentWillUnmount() {
+        this.dishesRef.off();
     }
 
     handleClick = (e, id) => {

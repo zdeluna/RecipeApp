@@ -33,7 +33,6 @@ class AddUrlForm extends Component {
 
         // Get the category of the dish from the query in the url
 
-        //addRecipeUrl(this.state.user.uid, this.props.dishId, this.state.value);
         this.addRecipeLink();
     };
 
