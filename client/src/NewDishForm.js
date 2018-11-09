@@ -25,6 +25,7 @@ class NewDishForm extends Component {
     };
 
     renderForm = props => {
+        console.log('render Form: ' + props.step);
         const step = props.step;
         if (step == 0) return null;
         else if (step == 1) {

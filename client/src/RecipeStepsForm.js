@@ -92,7 +92,6 @@ class RecipeStepsForm extends Component {
         var stepsData = [{id: 1, value: 'step 1'}];
 
         this.addStepsToDatabase(stepsData);
-        //this.props.onClick();
     };
 
     handleDeleteStep = id => {

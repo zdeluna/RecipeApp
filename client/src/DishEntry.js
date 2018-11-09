@@ -26,7 +26,12 @@ class DishEntry extends Component {
             let dish = snapshot.val();
             this.setState({name: dish['name']});
             // If steps and ingredients have already been saved, then set this.state.created to true
-            if (dish['steps'] && dish['steps'].length > 0)
+            if (
+                dish['steps'] &&
+                dish['steps'].length > 0 &&
+                dish['ingredients'] &&
+                dish['ingredients'].length
+            )
                 this.setState({created: true});
         });
     }
