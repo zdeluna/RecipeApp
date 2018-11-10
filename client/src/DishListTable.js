@@ -37,8 +37,6 @@ class DishListTable extends Component {
                     });
                 }
             }
-            console.log('print dish array');
-            console.log(dishArray);
             this.setState({
                 dishes: dishArray,
                 loaded: true,
@@ -51,7 +49,7 @@ class DishListTable extends Component {
     }
 
     handleClick = (e, id) => {
-        console.log('Go to dish');
+        console.log(e, id);
     };
 
     render() {
@@ -70,18 +68,18 @@ class DishListTable extends Component {
                     </thead>
                     <tbody>
                         {this.state.dishes.map(dish => (
-                            <tr>
-                                <td key={dish.id}>
+                            <tr key={dish.id + 'r'}>
+                                <td key={dish.id + 'c'}>
                                     <Link
-                                        key={dish.id}
+                                        key={dish.id + 'link'}
                                         to={`/users/category/${
                                             this.state.category
                                         }/dish/${dish.id}`}>
                                         {dish.name}
                                     </Link>
                                 </td>
-                                <td key={dish.id}>40 minutes</td>
-                                <td key={dish.id}>1/1/2018</td>
+                                <td key={dish.id + 'time'}>40 minutes</td>
+                                <td key={dish.id + 'date'}>1/1/2018</td>
                             </tr>
                         ))}
                     </tbody>

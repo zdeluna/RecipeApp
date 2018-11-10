@@ -19,15 +19,12 @@ class NewDishForm extends Component {
     }
 
     handleClick = (e, stepNumber) => {
-        console.log('update step');
-        console.log(stepNumber);
         this.setState({step: stepNumber});
     };
 
     renderForm = props => {
-        console.log('render Form: ' + props.step);
         const step = props.step;
-        if (step == 0) return null;
+        if (step == 0 || step == 4) return null;
         else if (step == 1) {
             return <AddUrlForm dishId={this.state.dishId} />;
         } else if (step == 2) {
@@ -38,7 +35,12 @@ class NewDishForm extends Component {
                 />
             );
         } else if (step == 3) {
-            return <IngredientsForm dishId={this.state.dishId} />;
+            return (
+                <IngredientsForm
+                    dishId={this.state.dishId}
+                    onClick={e => this.handleClick(e, 4)}
+                />
+            );
         }
     };
 

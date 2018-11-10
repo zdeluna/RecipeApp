@@ -53,7 +53,9 @@ class AddDishForm extends Component {
 				dishName: dishName,
 				category: category
             })
-        })
+        }).then(response => {
+			if (response.status == 201) console.log(response.headers.get('Location'));//this.props.onClick();
+        });
     };
 
     render() {

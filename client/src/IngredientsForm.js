@@ -4,6 +4,15 @@ import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
 import Ingredient from './Ingredient';
+import {
+    Form,
+    Button,
+    FormGroup,
+    Label,
+    Input,
+    FormText,
+    Container,
+} from 'reactstrap';
 
 class IngredientsForm extends Component {
     constructor(props) {
@@ -45,7 +54,9 @@ class IngredientsForm extends Component {
 			body: JSON.stringify({
 				ingredients: ingredientsData,
 			})
-		});
+		}).then(response => {
+            if (response.status == 200) this.props.onClick();
+        });
     };
 
     addIngredient = event => {
@@ -104,24 +115,31 @@ class IngredientsForm extends Component {
     render() {
         return (
             <div>
-                <h2>Add Ingredients Manually</h2>
-                <form onSubmit={this.handleSubmit}>
+                <Form>
                     {this.state.ingredientsArray.map(ingredient => (
-                        <Ingredient
-                            key={ingredient.id}
-                            value={ingredient.value}
-                            id={ingredient.id}
-                            onChange={this.handleChange}
-                            onClick={this.handleDeleteStep}
-                            onBlur={this.handleChange}
-                            deleteButton={ingredient.visible}
-                        />
+                        <FormGroup>
+                            <Ingredient
+                                key={ingredient.id}
+                                value={ingredient.value}
+                                id={ingredient.id}
+                                onChange={this.handleChange}
+                                onClick={this.handleDeleteStep}
+                                onBlur={this.handleChange}
+                                deleteButton={ingredient.visible}
+                            />
+                        </FormGroup>
                     ))}
-                    <input type="submit" value="submit" />
-                    <button type="button" onClick={this.addIngredient}>
-                        Add Ingredient
-                    </button>
-                </form>
+                    <FormGroup>
+                        <Button color="primary" onClick={this.addIngredient}>
+                            Add Ingredient
+                        </Button>
+                        <Button
+                            color="primary"
+                            onClick={event => this.handleSubmit(event)}>
+                            Submit
+                        </Button>
+                    </FormGroup>
+                </Form>
             </div>
         );
     }

@@ -2,6 +2,15 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
+import {
+    Form,
+    Button,
+    FormGroup,
+    Label,
+    Input,
+    FormText,
+    Container,
+} from 'reactstrap';
 
 class Ingredient extends Component {
     constructor(props) {
@@ -35,19 +44,20 @@ class Ingredient extends Component {
     render() {
         return (
             <div>
-                <label>
-                    Step #{this.state.id}
-                    <input
+                <Label>
+                    Ingredient #{this.state.id}
+                    <Input
                         type="text"
                         value={this.state.description}
                         onChange={this.handleChange}
                         onBlur={() => this.updateInput(this.state.value)}
+                        id="newIngredient"
                     />
-                </label>
+                </Label>
                 {this.props.deleteButton ? (
-                    <button type="button" onClick={this.handleDeleteStep}>
+                    <Button color="danger" onClick={this.handleDeleteStep}>
                         Delete
-                    </button>
+                    </Button>
                 ) : null}
             </div>
         );

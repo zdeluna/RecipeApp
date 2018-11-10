@@ -46,8 +46,14 @@ app.post('/api/users/:userId/dish/', (req, res) => {
     const dishName = req.body.dishName;
     const category = req.body.category;
 
-    createNewDish(userId, dishName, category).then(data => {
-        console.log(data);
+    const key = getNewDishKey();
+
+    createNewDish(userId, dishName, category, key).then(data => {
+        console.log('data: ' + data);
+        res.location(
+            'http://localhost:5000/api/users/' + userId + '/dish/' + key,
+        );
+        res.status(201).send('OK');
     });
 });
 
@@ -172,7 +178,7 @@ function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
 }
 
 /* This function will create a new dish and return an id of the dish entry in the database */
-function createNewDish(userId, dishName, category) {
+function createNewDish(userId, dishName, category, dishKey) {
     var newDish = {
         uid: userId,
         name: dishName,
@@ -182,7 +188,12 @@ function createNewDish(userId, dishName, category) {
     var newDishKey = database.child('dishes').push().key;
 
     var updates = {};
-    updates['/dishes/' + userId + '/' + newDishKey] = newDish;
+    updates['/dishes/' + userId + '/' + dishKey] = newDish;
 
     return database.update(updates);
+}
+
+/* This function returns a new key that can be used to create a new dish */
+function getNewDishKey() {
+    return database.child('dishes').push().key;
 }

@@ -33,20 +33,33 @@ class RecipeStepsForm extends Component {
 
     addStepsToDatabase = async stepsData => {
         //prettier-ignore
-        fetch(`/api/users/${this.state.user.uid}/dish/${this.props.dishId}/recipe/steps`, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				steps: stepsData,
-			})
-		}).then(response => {
-			if (response.status == 200)
-				console.log(response);
-				this.props.onClick();
-		})
+        // Only send id and value fields from the stepForms array.
+        // Create a new array "stepsData" to have the filtered properties
+
+        var stepsData = this.state.stepForms.map(function(step) {
+            return {
+                id: step.id,
+                value: step.value,
+            };
+        });
+
+        fetch(
+            `/api/users/${this.state.user.uid}/dish/${
+                this.props.dishId
+            }/recipe/steps`,
+            {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    steps: stepsData,
+                }),
+            },
+        ).then(response => {
+            if (response.status == 200) this.props.onClick();
+        });
     };
 
     addStep = event => {
@@ -78,20 +91,7 @@ class RecipeStepsForm extends Component {
         //alert('A name was submitted: ' + this.state.value);
         console.log('call add to database function');
 
-        // Only send id and value fields from the stepForms array.
-        // Create a new array "stepsData" to have the filtered properties
-        /*
-        var stepsData = this.state.stepForms.map(function(step) {
-            return {
-                id: step.id,
-                value: step.value,
-            };
-		});
-
-*/
-        var stepsData = [{id: 1, value: 'step 1'}];
-
-        this.addStepsToDatabase(stepsData);
+        this.addStepsToDatabase();
     };
 
     handleDeleteStep = id => {
