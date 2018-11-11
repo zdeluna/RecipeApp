@@ -48,15 +48,15 @@ class DishListTable extends Component {
         this.dishesRef.off();
     }
 
-    handleClick = (e, id) => {
-        console.log(e, id);
+    handleClick = id => {
+        console.log('In dish: ' + id);
     };
 
     render() {
         return (
             <Container>
                 <Row>
-                    <AddDishForm />
+                    <AddDishForm onClick={id => this.handleClick(id)} />
                 </Row>
                 <Table className="dishTable">
                     <thead>

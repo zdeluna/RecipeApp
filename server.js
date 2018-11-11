@@ -43,17 +43,19 @@ app.options('/*', function(req, res, next) {
 /* Route to create a new dish */
 app.post('/api/users/:userId/dish/', (req, res) => {
     const userId = req.params.userId;
-    const dishName = req.body.dishName;
+    const name = req.body.name;
     const category = req.body.category;
 
     const key = getNewDishKey();
 
-    createNewDish(userId, dishName, category, key).then(data => {
+    var responseObject = {id: key};
+
+    createNewDish(userId, name, category, key).then(data => {
         console.log('data: ' + data);
         res.location(
             'http://localhost:5000/api/users/' + userId + '/dish/' + key,
         );
-        res.status(201).send('OK');
+        res.status(201).send(JSON.stringify(responseObject));
     });
 });
 

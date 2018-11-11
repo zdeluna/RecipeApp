@@ -50,12 +50,16 @@ class AddDishForm extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-				dishName: dishName,
+				name: dishName,
 				category: category
             })
-        }).then(response => {
-			if (response.status == 201) console.log(response.headers.get('Location'));//this.props.onClick();
-        });
+		})
+		.then(response => response.json())
+		.then(data=> {
+					// Send the id of the dish to the dishListTable component
+				this.props.onClick(data.id);
+			
+		});
     };
 
     render() {
