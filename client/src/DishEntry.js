@@ -12,6 +12,8 @@ class DishEntry extends Component {
             dishId: this.props.match.params.dishId,
             name: '',
             created: false,
+            stepsArray: [],
+            ingredientsArray: [],
         };
     }
 
@@ -33,7 +35,12 @@ class DishEntry extends Component {
                 dish['ingredients'].length
             )
                 this.setState({created: true});
+            this;
         });
+    }
+
+    componentWillUnmount() {
+        this.dishesRef.off();
     }
 
     renderNewDishForm = props => {

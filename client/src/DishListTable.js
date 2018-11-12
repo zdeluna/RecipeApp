@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
 import app from './base';
 import AddDishForm from './AddDishForm';
-import ViewDishButton from './ViewDishButton';
 import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
 
@@ -49,7 +48,15 @@ class DishListTable extends Component {
     }
 
     handleClick = id => {
-        console.log('In dish: ' + id);
+        // Redirect to the dish entry page using the id that was recently created
+        this.setState({dishId: id});
+        var redirect_location =
+            '/users/category/' +
+            this.state.category +
+            '/dish/' +
+            this.state.dishId;
+
+        this.props.history.push(redirect_location);
     };
 
     render() {
