@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
+import DishEntryTable from './DishEntryTable';
 import NewDishForm from './NewDishForm';
 
 class DishEntry extends Component {
@@ -33,9 +34,14 @@ class DishEntry extends Component {
                 dish['steps'].length > 0 &&
                 dish['ingredients'] &&
                 dish['ingredients'].length
-            )
-                this.setState({created: true});
-            this;
+            ) {
+                this.setState({
+                    created: true,
+                    stepsArray: dish.steps,
+                    ingredientsArray: dish.ingredients,
+                });
+                console.log(this.state.stepsArray, this.state.ingredientsArray);
+            }
         });
     }
 
@@ -58,6 +64,7 @@ class DishEntry extends Component {
                 <this.renderNewDishForm
                     entryContainsSteps={this.state.created}
                 />
+                <DishEntryTable type="Steps" entries={this.state.steps} />
             </div>
         );
     }
