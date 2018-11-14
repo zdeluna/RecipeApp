@@ -9,9 +9,16 @@ class DishEntryTable extends Component {
         super();
         this.state = {
             user: app.auth().currentUser,
+            entries: [],
+            type: '',
+        };
+    }
+
+    componentDidMount() {
+        this.setState({
             entries: this.props.entries,
             type: this.props.type,
-        };
+        });
     }
 
     render() {
@@ -26,7 +33,7 @@ class DishEntryTable extends Component {
                     <tbody>
                         {this.state.entries.map(entry => (
                             <tr key={entry.id + 'r'}>
-                                <td key={entry.id + 'c'} />
+                                <td key={entry.id + 'c'}>{entry.value}</td>
                             </tr>
                         ))}
                     </tbody>

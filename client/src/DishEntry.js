@@ -53,7 +53,15 @@ class DishEntry extends Component {
         const entryContainsSteps = props.entryContainsSteps;
         if (entryContainsSteps != true) {
             return <NewDishForm dishId={this.state.dishId} />;
+        } else {
+            return (
+                <DishEntryTable
+                    type="Directions"
+                    entries={this.state.stepsArray}
+                />
+            );
         }
+
         return null;
     };
 
@@ -64,7 +72,6 @@ class DishEntry extends Component {
                 <this.renderNewDishForm
                     entryContainsSteps={this.state.created}
                 />
-                <DishEntryTable type="Steps" entries={this.state.steps} />
             </div>
         );
     }
