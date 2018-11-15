@@ -19,26 +19,25 @@ class AddDishForm extends Component {
         this.state = {
             value: '',
             user: app.auth().currentUser,
+            category: this.props.category,
         };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
+    handleChange = event => {
         this.setState({value: event.target.value});
-    }
+    };
 
-    handleSubmit(event) {
-        //alert('A name was submitted: ' + this.state.value);
+    handleSubmit = event => {
         event.preventDefault();
-        console.log('Add new dish');
-        const category = 1;
 
         // Get the category of the dish from the query in the url
 
-        this.addNewDish(this.state.user.uid, this.state.value, category);
-    }
+        this.addNewDish(
+            this.state.user.uid,
+            this.state.value,
+            this.state.category,
+        );
+    };
 
     // Make a call to the api to handle parsing the recipe from the url
     addNewDish = async (userId, dishName, category) => {

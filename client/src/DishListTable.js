@@ -6,12 +6,12 @@ import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
 
 class DishListTable extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             user: app.auth().currentUser,
             dishes: [],
-            category: 1, //this.props.match.params.category,
+            category: this.props.match.params.category,
             redirect: false,
             loaded: false,
         };
@@ -63,7 +63,10 @@ class DishListTable extends Component {
         return (
             <Container>
                 <Row>
-                    <AddDishForm onClick={id => this.handleClick(id)} />
+                    <AddDishForm
+                        category={this.state.category}
+                        onClick={id => this.handleClick(id)}
+                    />
                 </Row>
                 <Table striped className="dishTable">
                     <thead>

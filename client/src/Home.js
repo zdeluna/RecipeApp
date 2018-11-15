@@ -38,9 +38,9 @@ class Home extends Component {
             } else if (this.state.category === 2) {
                 return <Redirect push to="users/category/2" />;
             } else if (this.state.category === 3) {
-                return <Redirect push to="users/category/2" />;
+                return <Redirect push to="users/category/3" />;
             } else if (this.state.category === 4) {
-                return <Redirect push to="users/category/2" />;
+                return <Redirect push to="users/category/4" />;
             }
         }
 
