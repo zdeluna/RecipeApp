@@ -65,7 +65,7 @@ class DishListTable extends Component {
                 <Row>
                     <AddDishForm onClick={id => this.handleClick(id)} />
                 </Row>
-                <Table className="dishTable">
+                <Table striped className="dishTable">
                     <thead>
                         <tr>
                             <th>Dish</th>

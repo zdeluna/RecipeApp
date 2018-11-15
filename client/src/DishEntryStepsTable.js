@@ -4,7 +4,7 @@ import app from './base';
 import {Table, Container, Row} from 'reactstrap';
 import './DishEntry.css';
 
-class DishEntryTable extends Component {
+class DishEntryStepsTable extends Component {
     constructor() {
         super();
         this.state = {
@@ -20,18 +20,12 @@ class DishEntryTable extends Component {
             entries: this.props.entries,
             type: this.props.type,
         });
-
-        if (this.state.type == 'Steps') {
-            this.setState({
-                striped: false,
-            });
-        }
     }
 
     render() {
         return (
             <Container>
-                <Table size="sm" id={'entryTable' + this.state.type}>
+                <Table striped size="sm" id="dishEntryStepsTable">
                     <thead>
                         <tr>
                             <th>{this.props.type}</th>
@@ -40,7 +34,9 @@ class DishEntryTable extends Component {
                     <tbody>
                         {this.state.entries.map(entry => (
                             <tr key={entry.id + 'r'}>
-                                <td key={entry.id + 'c'}>{entry.value}</td>
+                                <td key={entry.id + 'c'}>
+                                    {entry.id + 1}) {entry.value}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -50,4 +46,4 @@ class DishEntryTable extends Component {
     }
 }
 
-export default DishEntryTable;
+export default DishEntryStepsTable;

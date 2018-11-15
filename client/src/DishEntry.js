@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
-import DishEntryTable from './DishEntryTable';
+import DishEntryStepsTable from './DishEntryStepsTable';
+import DishEntryIngredientsTable from './DishEntryIngredientsTable';
+
 import NewDishForm from './NewDishForm';
 
 class DishEntry extends Component {
@@ -55,10 +57,17 @@ class DishEntry extends Component {
             return <NewDishForm dishId={this.state.dishId} />;
         } else {
             return (
-                <DishEntryTable
-                    type="Directions"
-                    entries={this.state.stepsArray}
-                />
+                <div>
+                    <DishEntryIngredientsTable
+                        type="Ingredients"
+                        entries={this.state.ingredientsArray}
+                    />
+
+                    <DishEntryStepsTable
+                        type="Directions"
+                        entries={this.state.stepsArray}
+                    />
+                </div>
             );
         }
 

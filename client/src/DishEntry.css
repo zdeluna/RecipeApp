@@ -1,0 +1,13 @@
+#dishEntryIngredientsTable {
+    font-size: 14px;
+    width: 50%;
+}
+
+#dishEntryStepsTable {
+    font-size: 16px;
+}
+
+.StepsIngredientsContainer {
+    float: left;
+    font-size: 20px;
+}
