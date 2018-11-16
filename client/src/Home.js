@@ -27,7 +27,6 @@ class Home extends Component {
     };
 
     handleClick = (e, id) => {
-        console.log('Event Handler Called', id);
         this.setState({redirect: true, category: id});
     };
 

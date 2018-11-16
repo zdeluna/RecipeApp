@@ -13,6 +13,7 @@ class DishEntry extends Component {
         this.state = {
             user: app.auth().currentUser,
             dishId: this.props.match.params.dishId,
+            category: this.props.match.params.category,
             name: '',
             created: false,
             stepsArray: [],
@@ -21,13 +22,13 @@ class DishEntry extends Component {
     }
 
     componentDidMount() {
-        const dishesRef = app
+        this.dishesRef = app
             .database()
             .ref()
             .child('dishes')
             .child(this.state.user.uid)
             .child(this.state.dishId);
-        dishesRef.on('value', snapshot => {
+        this.dishesRef.on('value', snapshot => {
             let dish = snapshot.val();
             this.setState({name: dish['name']});
             // If steps and ingredients have already been saved, then set this.state.created to true
@@ -42,7 +43,6 @@ class DishEntry extends Component {
                     stepsArray: dish.steps,
                     ingredientsArray: dish.ingredients,
                 });
-                console.log(this.state.stepsArray, this.state.ingredientsArray);
             }
         });
     }
@@ -61,6 +61,8 @@ class DishEntry extends Component {
                     <DishEntryIngredientsTable
                         type="Ingredients"
                         entries={this.state.ingredientsArray}
+                        dishId={this.state.dishId}
+                        category={this.state.category}
                     />
 
                     <DishEntryStepsTable

@@ -106,13 +106,14 @@ app.post('/api/users/:userId/dish/:dishId/recipe/url', (req, res) => {
     });
 });
 
-/* This route gets */
+/* This route gets dish information using the dish id */
 app.get('/api/users/:userId/dish/:dishId', (req, res) => {
     var userId = req.params.userId;
     var dishId = req.params.dishId;
 
-    getDishFromDatabase(userId, dishId, data => {
+    getDishFromDatabase(userId, dishId, dish => {
         console.log('got info from db' + data);
+        res.status(200).json(dish);
     });
 });
 

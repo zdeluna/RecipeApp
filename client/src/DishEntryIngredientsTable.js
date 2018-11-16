@@ -28,7 +28,15 @@ class DishEntryIngredientsTable extends Component {
                 <Table borderless size="sm" id="dishEntryIngredientsTable">
                     <thead>
                         <tr>
-                            <th>{this.props.type}</th>
+                            <th>
+                                {this.props.type}{' '}
+                                <Link
+                                    to={`/users/category/${
+                                        this.props.category
+                                    }/dish/${this.props.dishId}/ingredients`}>
+                                    Edit
+                                </Link>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

@@ -31,6 +31,10 @@ class RecipeStepsForm extends Component {
         };
     }
 
+    componentDidMount() {
+        // Get the ingredients from the server
+    }
+
     addStepsToDatabase = async stepsData => {
         //prettier-ignore
         // Only send id and value fields from the stepForms array.
