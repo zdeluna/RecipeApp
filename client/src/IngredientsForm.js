@@ -18,6 +18,13 @@ class IngredientsForm extends Component {
     constructor(props) {
         super(props);
         console.log(this.props.match.params.dishId);
+
+        this.dishId = 0;
+
+        if (this.props.match.params.dishId) {
+            this.dishId = this.props.match.params.dishId;
+        } else this.dishId = this.props.dishId;
+
         this.state = {
             value: '',
             user: app.auth().currentUser,
@@ -29,11 +36,8 @@ class IngredientsForm extends Component {
                 {id: 4, value: '', visible: true},
             ],
             update: false,
-            dishId: '',
+            dishId: this.dishId,
         };
-        if (this.props.match.params.dishId) {
-            this.setState({dishId: this.props.match.params.dishId});
-        } else this.setState({dishId: this.props.dishId});
     }
 
     // Check to see if the ingredients have already been stored in the database
@@ -78,6 +82,7 @@ class IngredientsForm extends Component {
             };
         });
 
+        console.log('dish id: ' + this.state.dishId);
         //prettier-ignore
         fetch(`/api/users/${this.state.user.uid}/dish/${this.state.dishId}/ingredients`, {
 			method: method,
@@ -115,7 +120,7 @@ class IngredientsForm extends Component {
     };
 
     handleChange = (id, value) => {
-        this.state.ingredientsArray[id - 1].value = value;
+        this.state.ingredientsArray[id].value = value;
         this.forceUpdate();
     };
 

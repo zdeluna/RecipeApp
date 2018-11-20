@@ -111,8 +111,9 @@ app.put('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
     const ingredients = req.body.ingredients;
     const userId = req.params.userId;
     const dishId = req.params.dishId;
-    console.log(userId);
-    console.log(dishId);
+    console.log('in put: User id: ' + userId);
+    console.log('in put: Dish id: ' + dishId);
+    console.log('in put: Ingredients: ' + ingredients);
     saveIngredients(userId, dishId, ingredients).then(response => {
         console.log(response);
         res.status(303).send('OK');
@@ -161,8 +162,7 @@ function saveUrl(userId, dishId, url) {
 function getDishFromDatabase(userId, dishId, complete) {
     return database
         .child('/dishes/' + userId + '/' + dishId)
-        .on('value', function(snapshot) {
-            console.log(snapshot.val());
+        .once('value', function(snapshot) {
             complete(snapshot.val());
         });
 }
