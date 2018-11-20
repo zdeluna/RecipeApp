@@ -17,7 +17,7 @@ import {
 class IngredientsForm extends Component {
     constructor(props) {
         super(props);
-
+        console.log(this.props.match.params.dishId);
         this.state = {
             value: '',
             user: app.auth().currentUser,
@@ -28,13 +28,47 @@ class IngredientsForm extends Component {
                 {id: 3, value: '', visible: false},
                 {id: 4, value: '', visible: true},
             ],
+            update: false,
+            dishId: '',
         };
+        if (this.props.match.params.dishId) {
+            this.setState({dishId: this.props.match.params.dishId});
+        } else this.setState({dishId: this.props.dishId});
+    }
+
+    // Check to see if the ingredients have already been stored in the database
+    // by making a get request to the api then update the ingredients array in state
+    componentDidMount() {
+        fetch(
+            `/api/users/${this.state.user.uid}/dish/${
+                this.state.dishId
+            }/ingredients`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            },
+        ).then(response => {
+            if (response.status == 200) {
+                response.json().then(ingredients => {
+                    this.setState({
+                        update: true,
+                        ingredientsArray: ingredients,
+                    });
+                });
+            }
+        });
     }
 
     addIngredientsToDatabase = async () => {
+        // If the state update field is true, then we need to make a put request instead of a post request
+        var method = 'POST';
+        if (this.state.update) method = 'PUT';
+
         // Only send id and value fields from the stepForms array.
         // Create a new array "stepsData" to have the filtered properties
-
         var ingredientsData = this.state.ingredientsArray.map(function(
             ingredient,
         ) {
@@ -45,8 +79,8 @@ class IngredientsForm extends Component {
         });
 
         //prettier-ignore
-        fetch(`/api/users/${this.state.user.uid}/dish/${this.props.dishId}/recipe/ingredients`, {
-			method: 'POST',
+        fetch(`/api/users/${this.state.user.uid}/dish/${this.state.dishId}/ingredients`, {
+			method: method,
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
@@ -55,6 +89,7 @@ class IngredientsForm extends Component {
 				ingredients: ingredientsData,
 			})
 		}).then(response => {
+			// If the response status is 200, then we have created ingredients for the dish the first time, and need to let the parent component, NewDishForm, steps has been added by calling the onClick event.
             if (response.status == 200) this.props.onClick();
         });
     };
@@ -79,13 +114,12 @@ class IngredientsForm extends Component {
         }));
     };
 
-    handleChange = (id, description) => {
-        this.state.ingredientsArray[id - 1].value = description;
+    handleChange = (id, value) => {
+        this.state.ingredientsArray[id - 1].value = value;
         this.forceUpdate();
     };
 
     handleSubmit = event => {
-        //alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
         this.addIngredientsToDatabase();
     };
@@ -136,7 +170,7 @@ class IngredientsForm extends Component {
                         <Button
                             color="primary"
                             onClick={event => this.handleSubmit(event)}>
-                            Submit
+                            Save
                         </Button>
                     </FormGroup>
                 </Form>

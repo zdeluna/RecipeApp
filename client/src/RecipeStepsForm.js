@@ -48,9 +48,7 @@ class RecipeStepsForm extends Component {
         });
 
         fetch(
-            `/api/users/${this.state.user.uid}/dish/${
-                this.props.dishId
-            }/recipe/steps`,
+            `/api/users/${this.state.user.uid}/dish/${this.props.dishId}/steps`,
             {
                 method: 'POST',
                 headers: {
@@ -142,7 +140,7 @@ class RecipeStepsForm extends Component {
                         <Button
                             color="primary"
                             onClick={event => this.handleSubmit(event)}>
-                            Submit
+                            Save
                         </Button>
                     </FormGroup>
                 </Form>

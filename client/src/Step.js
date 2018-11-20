@@ -17,7 +17,7 @@ class Step extends Component {
         super(props);
 
         this.state = {
-            description: props.description,
+            value: props.value,
             user: app.auth().currentUser,
             id: props.id,
         };
@@ -45,7 +45,7 @@ class Step extends Component {
         return (
             <div>
                 <Label for="newStepInput">
-                    Step #{this.state.id}
+                    Step #{this.state.id + 1}
                     <Input
                         type="text"
                         value={this.state.description}

@@ -10,6 +10,7 @@ import SignUp from './SignUp';
 import DishListTable from './DishListTable';
 import DishEntry from './DishEntry';
 import RecipeStepsForm from './RecipeStepsForm';
+import IngredientsForm from './IngredientsForm';
 
 class App extends Component {
     state = {loading: true, authenticated: false, user: null};
@@ -54,7 +55,7 @@ class App extends Component {
                         <Route
                             exact
                             path="/users/category/:category/dish/:dishId/ingredients"
-                            component={RecipeStepsForm}
+                            component={IngredientsForm}
                         />
                         <Route
                             exact

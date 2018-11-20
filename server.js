@@ -60,7 +60,7 @@ app.post('/api/users/:userId/dish/', (req, res) => {
 });
 
 /* Route to add new steps to a dish*/
-app.post('/api/users/:userId/dish/:dishId/recipe/steps', (req, res) => {
+app.post('/api/users/:userId/dish/:dishId/steps', (req, res) => {
     const steps = req.body.steps;
     const userId = req.params.userId;
     const dishId = req.params.dishId;
@@ -70,7 +70,7 @@ app.post('/api/users/:userId/dish/:dishId/recipe/steps', (req, res) => {
 });
 
 /* Route to add ingredients to a dish*/
-app.post('/api/users/:userId/dish/:dishId/recipe/ingredients', (req, res) => {
+app.post('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
     const ingredients = req.body.ingredients;
     const userId = req.params.userId;
     const dishId = req.params.dishId;
@@ -106,14 +106,36 @@ app.post('/api/users/:userId/dish/:dishId/recipe/url', (req, res) => {
     });
 });
 
+/* Route to update ingredients to a dish*/
+app.put('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
+    const ingredients = req.body.ingredients;
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+    console.log(userId);
+    console.log(dishId);
+    saveIngredients(userId, dishId, ingredients).then(response => {
+        console.log(response);
+        res.status(303).send('OK');
+    });
+});
+
 /* This route gets dish information using the dish id */
 app.get('/api/users/:userId/dish/:dishId', (req, res) => {
     var userId = req.params.userId;
     var dishId = req.params.dishId;
 
     getDishFromDatabase(userId, dishId, dish => {
-        console.log('got info from db' + data);
         res.status(200).json(dish);
+    });
+});
+
+/* This route gets dish information using the dish id */
+app.get('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
+    var userId = req.params.userId;
+    var dishId = req.params.dishId;
+
+    getDishFromDatabase(userId, dishId, dish => {
+        res.status(200).json(dish.ingredients);
     });
 });
 
@@ -124,6 +146,7 @@ function saveSteps(userId, dishId, steps) {
 }
 
 function saveIngredients(userId, dishId, ingredients) {
+    console.log(ingredients);
     return database
         .child('/dishes/' + userId + '/' + dishId)
         .update({ingredients: ingredients});

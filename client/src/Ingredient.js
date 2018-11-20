@@ -17,7 +17,7 @@ class Ingredient extends Component {
         super(props);
 
         this.state = {
-            description: props.description,
+            value: props.value,
             user: app.auth().currentUser,
             id: props.id,
         };
@@ -45,10 +45,10 @@ class Ingredient extends Component {
         return (
             <div>
                 <Label>
-                    Ingredient #{this.state.id}
+                    Ingredient #{this.state.id + 1}
                     <Input
                         type="text"
-                        value={this.state.description}
+                        value={this.state.value}
                         onChange={this.handleChange}
                         onBlur={() => this.updateInput(this.state.value)}
                         id="newIngredient"
