@@ -18,6 +18,12 @@ class RecipeStepsForm extends Component {
     constructor(props) {
         super(props);
 
+        this.dishId = 0;
+
+        if (this.props.match.params.dishId) {
+            this.dishId = this.props.match.params.dishId;
+        } else this.dishId = this.props.dishId;
+
         this.state = {
             value: '',
             user: app.auth().currentUser,
@@ -28,14 +34,42 @@ class RecipeStepsForm extends Component {
                 {id: 3, value: '', visible: false},
                 {id: 4, value: '', visible: true},
             ],
+            update: false,
+            dishId: this.dishId,
+            redirect: false,
         };
     }
 
+    // Check to see if the steps have already been stored in the database
+    // by making a get request to the api then update the steps array in state
+
     componentDidMount() {
-        // Get the ingredients from the server
+        fetch(
+            `/api/users/${this.state.user.uid}/dish/${this.state.dishId}/steps`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            },
+        ).then(response => {
+            if (response.status == 200) {
+                response.json().then(steps => {
+                    this.setState({
+                        update: true,
+                        stepForms: steps,
+                    });
+                });
+            }
+        });
     }
 
     addStepsToDatabase = async stepsData => {
+        // If the state update field is true, then we need to make a put request instead of a post request
+        var method = 'POST';
+        if (this.state.update) method = 'PUT';
+
         //prettier-ignore
         // Only send id and value fields from the stepForms array.
         // Create a new array "stepsData" to have the filtered properties
@@ -61,6 +95,10 @@ class RecipeStepsForm extends Component {
             },
         ).then(response => {
             if (response.status == 200) this.props.onClick();
+            else {
+                console.log('redirect');
+                this.setState({redirect: true});
+            }
         });
     };
 
@@ -82,8 +120,8 @@ class RecipeStepsForm extends Component {
         }));
     };
 
-    handleChange = (id, description) => {
-        this.state.stepForms[id - 1].value = description;
+    handleChange = (id, value) => {
+        this.state.stepForms[id - 1].value = value;
         this.forceUpdate();
     };
 
@@ -117,6 +155,17 @@ class RecipeStepsForm extends Component {
     }
 
     render() {
+        if (this.state.redirect) {
+            return (
+                <Redirect
+                    push
+                    to={`/users/category/${
+                        this.props.match.params.category
+                    }/dish/${this.state.dishId}`}
+                />
+            );
+        }
+
         return (
             <div>
                 <Form>

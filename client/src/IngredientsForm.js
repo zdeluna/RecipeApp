@@ -17,7 +17,6 @@ import {
 class IngredientsForm extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props.match.params.dishId);
 
         this.dishId = 0;
 
@@ -37,6 +36,7 @@ class IngredientsForm extends Component {
             ],
             update: false,
             dishId: this.dishId,
+            redirect: false,
         };
     }
 
@@ -82,7 +82,6 @@ class IngredientsForm extends Component {
             };
         });
 
-        console.log('dish id: ' + this.state.dishId);
         //prettier-ignore
         fetch(`/api/users/${this.state.user.uid}/dish/${this.state.dishId}/ingredients`, {
 			method: method,
@@ -95,7 +94,12 @@ class IngredientsForm extends Component {
 			})
 		}).then(response => {
 			// If the response status is 200, then we have created ingredients for the dish the first time, and need to let the parent component, NewDishForm, steps has been added by calling the onClick event.
-            if (response.status == 200) this.props.onClick();
+			if (response.status == 200) this.props.onClick();
+			else {
+			console.log("redirect");
+				this.setState({redirect: true});
+		
+			}
         });
     };
 
@@ -152,6 +156,17 @@ class IngredientsForm extends Component {
     }
 
     render() {
+        if (this.state.redirect) {
+            return (
+                <Redirect
+                    push
+                    to={`/users/category/${
+                        this.props.match.params.category
+                    }/dish/${this.state.dishId}`}
+                />
+            );
+        }
+
         return (
             <div>
                 <Form>
