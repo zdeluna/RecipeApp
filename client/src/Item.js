@@ -41,6 +41,50 @@ class Item extends Component {
     handleDeleteStep = event => {
         this.props.onClick(this.state.id);
     };
+
+    render() {
+        if (this.state.type == 'steps') {
+            return (
+                <div>
+                    <Label for="newStepInput">
+                        Step #{this.state.id + 1}
+                        <Input
+                            type="text"
+                            value={this.state.value}
+                            onChange={this.handleChange}
+                            onBlur={() => this.updateInput(this.state.value)}
+                            id="newStep"
+                        />
+                    </Label>
+                    {this.props.deleteButton ? (
+                        <Button color="danger" onClick={this.handleDeleteStep}>
+                            Delete
+                        </Button>
+                    ) : null}
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    <Label>
+                        Ingredient #{this.state.id + 1}
+                        <Input
+                            type="text"
+                            value={this.state.value}
+                            onChange={this.handleChange}
+                            onBlur={() => this.updateInput(this.state.value)}
+                            id="newIngredient"
+                        />
+                    </Label>
+                    {this.props.deleteButton ? (
+                        <Button color="danger" onClick={this.handleDeleteStep}>
+                            Delete
+                        </Button>
+                    ) : null}
+                </div>
+            );
+        }
+    }
 }
 
 export default Item;

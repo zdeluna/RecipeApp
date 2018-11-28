@@ -61,7 +61,7 @@ app.post('/api/users/:userId/dish/', (req, res) => {
 
 /* Route to add new steps to a dish*/
 app.post('/api/users/:userId/dish/:dishId/steps', (req, res) => {
-    const steps = req.body.steps;
+    const steps = req.body.items;
     const userId = req.params.userId;
     const dishId = req.params.dishId;
 
@@ -71,7 +71,7 @@ app.post('/api/users/:userId/dish/:dishId/steps', (req, res) => {
 
 /* Route to add ingredients to a dish*/
 app.post('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
-    const ingredients = req.body.ingredients;
+    const ingredients = req.body.items;
     const userId = req.params.userId;
     const dishId = req.params.dishId;
 

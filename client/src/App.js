@@ -11,6 +11,7 @@ import DishListTable from './DishListTable';
 import DishEntry from './DishEntry';
 import RecipeStepsForm from './RecipeStepsForm';
 import IngredientsForm from './IngredientsForm';
+import ItemForm from './ItemForm';
 
 class App extends Component {
     state = {loading: true, authenticated: false, user: null};
@@ -55,7 +56,9 @@ class App extends Component {
                         <Route
                             exact
                             path="/users/category/:category/dish/:dishId/ingredients"
-                            component={IngredientsForm}
+                            render={props => (
+                                <ItemForm {...props} type={'ingredients'} />
+                            )}
                         />
                         <Route
                             exact

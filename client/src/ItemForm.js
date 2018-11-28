@@ -3,6 +3,7 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
+import Item from './Item';
 import {
     Form,
     Button,
@@ -27,7 +28,7 @@ class ItemForm extends Component {
             value: '',
             user: app.auth().currentUser,
             type: props.type,
-            numberOfIngredients: 4,
+            numberOfItems: 4,
             itemsArray: [
                 {id: 1, value: '', visible: false},
                 {id: 2, value: '', visible: false},
@@ -38,13 +39,24 @@ class ItemForm extends Component {
             dishId: this.dishId,
             redirect: false,
         };
+
+        this.saveButtonText;
+        if (this.state.type == 'ingredients') {
+            this.saveButtonText = 'Save Ingredients';
+        } else {
+            this.saveButtonText = 'Save Steps';
+        }
     }
 
     // Check to see if the ingredients have already been stored in the database
     // by making a get request to the api then update the ingredients array in state
     componentDidMount() {
         var get_url =
-            '/api/users/${this.state.user.uid}/dish/${this.state.dishId}/' +
+            '/api/users/' +
+            this.state.user.uid +
+            '/dish/' +
+            this.state.dishId +
+            '/' +
             this.state.type;
 
         fetch(get_url, {
@@ -80,7 +92,11 @@ class ItemForm extends Component {
         });
 
         var update_url =
-            '/api/users/${this.state.user.uid}/dish/${this.state.dishId}/' +
+            '/api/users/' +
+            this.state.user.uid +
+            '/dish/' +
+            this.state.dishId +
+            '/' +
             this.state.type;
 
         //prettier-ignore
@@ -91,7 +107,7 @@ class ItemForm extends Component {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				ingredients: ingredientsData,
+				items: this.state.itemsArray,
 			})
 		}).then(response => {
 			// If the response status is 200, then we have created ingredients for the dish the first time, and need to let the parent component, NewDishForm, steps has been added by calling the onClick event.
@@ -102,21 +118,18 @@ class ItemForm extends Component {
 			}
         });
     };
-    //"LEFT OFF HERE **********************************************");
     addItem = event => {
         // Set the last object of step forms to have a visible property of false
-        this.state.itemsArray[this.state.numberOfIngredients - 1][
-            'visible'
-        ] = false;
+        this.state.itemsArray[this.state.numberOfItems - 1]['visible'] = false;
 
         // Increase the number of steps listed in the state property
-        this.state.numberOfIngredients++;
+        this.state.numberOfItems++;
 
         // https://stackoverflow.com/questions/23966438/what-is-the-preferred-way-to-mutate-a-react-state
         // Concatenate an array with stepForms that includes the new step
         this.setState(state => ({
             itemsArray: state.itemsArray.concat({
-                id: this.state.numberOfIngredients,
+                id: this.state.numberOfItems,
                 value: '',
                 visible: true,
             }),
@@ -130,23 +143,23 @@ class ItemForm extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        this.addIngredientsToDatabase();
+        this.addItemsToDatabase();
     };
 
-    handleDeleteIngredient = id => {
-        this.removeIngredient(id - 1);
-        this.state.numberOfIngredients--;
+    handleDeleteItem = id => {
+        this.removeItem(id - 1);
+        this.state.numberOfItems--;
 
         // Set the visible property of the new last step's delete button as true
-        if (this.state.numberOfIngredients > 1)
-            this.state.itemsArray[this.state.numberOfIngredients - 1][
+        if (this.state.numberOfItems > 1)
+            this.state.itemsArray[this.state.numberOfItems - 1][
                 'visible'
             ] = true;
     };
 
     // https://stackoverflow.com/questions/29527385/removing-element-from-array-in-component-state
 
-    removeIngredient(id) {
+    removeItem(id) {
         // Remove the last step object from the stepForms array
         this.setState({
             itemsArray: this.state.itemsArray.filter((_, i) => i !== id),
@@ -168,22 +181,23 @@ class ItemForm extends Component {
         return (
             <div>
                 <Form>
-                    {this.state.itemsArray.map(ingredient => (
+                    {this.state.itemsArray.map(item => (
                         <FormGroup>
-                            <Ingredient
-                                key={ingredient.id}
-                                value={ingredient.value}
-                                id={ingredient.id}
+                            <Item
+                                key={item.id}
+                                value={item.value}
+                                id={item.id}
                                 onChange={this.handleChange}
-                                onClick={this.handleDeleteStep}
+                                onClick={this.handleDeleteItem}
                                 onBlur={this.handleChange}
-                                deleteButton={ingredient.visible}
+                                deleteButton={item.visible}
+                                type={this.state.type}
                             />
                         </FormGroup>
                     ))}
                     <FormGroup>
-                        <Button color="primary" onClick={this.addIngredient}>
-                            Add Ingredient
+                        <Button color="primary" onClick={this.addItem}>
+                            {this.saveButtonText}
                         </Button>
                         <Button
                             color="primary"
@@ -197,4 +211,4 @@ class ItemForm extends Component {
     }
 }
 
-export default IngredientsForm;
+export default ItemForm;
