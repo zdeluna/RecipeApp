@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
+import Item from './Item';
 import {
     Form,
     Button,
@@ -12,34 +13,10 @@ import {
     Container,
 } from 'reactstrap';
 
-class Ingredient extends Component {
+class Ingredient extends Item {
     constructor(props) {
         super(props);
-
-        this.state = {
-            value: props.value,
-            user: app.auth().currentUser,
-            id: props.id,
-        };
     }
-
-    updateInput = newValue => {
-        this.setState({value: newValue});
-    };
-
-    handleChange = event => {
-        this.setState({value: event.target.value}, () => {
-            // Update the array contained in the steps form component
-            // https://stackoverflow.com/questions/33088482/onchange-in-react-doesnt-capture-the-last-character-of-text
-
-            // Use a asynchronous callback
-            this.props.onChange(this.state.id, this.state.value);
-        });
-    };
-
-    handleDeleteStep = event => {
-        this.props.onClick(this.state.id);
-    };
 
     render() {
         return (

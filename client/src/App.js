@@ -59,6 +59,11 @@ class App extends Component {
                         />
                         <Route
                             exact
+                            path="/users/category/:category/dish/:dishId/steps"
+                            component={RecipeStepsForm}
+                        />
+                        <Route
+                            exact
                             path="/users/category/:category/dish/:dishId"
                             component={DishEntry}
                         />

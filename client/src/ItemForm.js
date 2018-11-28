@@ -3,7 +3,6 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
-import Step from './Step';
 import {
     Form,
     Button,
@@ -14,7 +13,7 @@ import {
     Container,
 } from 'reactstrap';
 
-class RecipeStepsForm extends Component {
+class ItemForm extends Component {
     constructor(props) {
         super(props);
 
@@ -27,8 +26,9 @@ class RecipeStepsForm extends Component {
         this.state = {
             value: '',
             user: app.auth().currentUser,
-            numberOfSteps: 4,
-            stepsArray: [
+            type: props.type,
+            numberOfIngredients: 4,
+            itemsArray: [
                 {id: 1, value: '', visible: false},
                 {id: 2, value: '', visible: false},
                 {id: 3, value: '', visible: false},
@@ -40,81 +40,83 @@ class RecipeStepsForm extends Component {
         };
     }
 
-    // Check to see if the steps have already been stored in the database
-    // by making a get request to the api then update the steps array in state
-
+    // Check to see if the ingredients have already been stored in the database
+    // by making a get request to the api then update the ingredients array in state
     componentDidMount() {
-        fetch(
-            `/api/users/${this.state.user.uid}/dish/${this.state.dishId}/steps`,
-            {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
+        var get_url =
+            '/api/users/${this.state.user.uid}/dish/${this.state.dishId}/' +
+            this.state.type;
+
+        fetch(get_url, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
             },
-        ).then(response => {
+        }).then(response => {
             if (response.status == 200) {
-                response.json().then(steps => {
-                    console.log('response: ' + steps);
+                response.json().then(items => {
                     this.setState({
                         update: true,
-                        stepsArray: steps,
+                        itemsArray: items,
                     });
                 });
             }
         });
     }
 
-    addStepsToDatabase = async () => {
+    addItemsToDatabase = async () => {
         // If the state update field is true, then we need to make a put request instead of a post request
         var method = 'POST';
         if (this.state.update) method = 'PUT';
 
-        //prettier-ignore
-        // Only send id and value fields from the stepsArray array.
+        // Only send id and value fields from the stepForms array.
         // Create a new array "stepsData" to have the filtered properties
-
-        var stepsData = this.state.stepsArray.map(function(step) {
+        var itemsData = this.state.itemsArray.map(function(item) {
             return {
-                id: step.id,
-                value: step.value,
+                id: item.id,
+                value: item.value,
             };
         });
 
-        fetch(
-            `/api/users/${this.state.user.uid}/dish/${this.props.dishId}/steps`,
-            {
-                method: method,
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    steps: stepsData,
-                }),
-            },
-        ).then(response => {
-            if (response.status == 200) this.props.onClick();
-            else {
-                console.log('redirect');
-                this.setState({redirect: true});
-            }
+        var update_url =
+            '/api/users/${this.state.user.uid}/dish/${this.state.dishId}/' +
+            this.state.type;
+
+        //prettier-ignore
+        fetch(update_url, {
+			method: method,
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				ingredients: ingredientsData,
+			})
+		}).then(response => {
+			// If the response status is 200, then we have created ingredients for the dish the first time, and need to let the parent component, NewDishForm, steps has been added by calling the onClick event.
+			if (response.status == 200) this.props.onClick();
+			else {
+				this.setState({redirect: true});
+		
+			}
         });
     };
-
-    addStep = event => {
+    //"LEFT OFF HERE **********************************************");
+    addItem = event => {
         // Set the last object of step forms to have a visible property of false
-        this.state.stepsArray[this.state.numberOfSteps - 1]['visible'] = false;
+        this.state.itemsArray[this.state.numberOfIngredients - 1][
+            'visible'
+        ] = false;
 
         // Increase the number of steps listed in the state property
-        this.state.numberOfSteps++;
+        this.state.numberOfIngredients++;
 
         // https://stackoverflow.com/questions/23966438/what-is-the-preferred-way-to-mutate-a-react-state
-        // Concatenate an array with stepsArray that includes the new step
+        // Concatenate an array with stepForms that includes the new step
         this.setState(state => ({
-            stepsArray: state.stepsArray.concat({
-                id: this.state.numberOfSteps,
+            itemsArray: state.itemsArray.concat({
+                id: this.state.numberOfIngredients,
                 value: '',
                 visible: true,
             }),
@@ -122,36 +124,32 @@ class RecipeStepsForm extends Component {
     };
 
     handleChange = (id, value) => {
-        this.state.stepsArray[id].value = value;
+        this.state.itemsArray[id].value = value;
         this.forceUpdate();
     };
 
     handleSubmit = event => {
         event.preventDefault();
-
-        //alert('A name was submitted: ' + this.state.value);
-        console.log('call add to database function');
-
-        this.addStepsToDatabase();
+        this.addIngredientsToDatabase();
     };
 
-    handleDeleteStep = id => {
-        this.removeStep(id - 1);
-        this.state.numberOfSteps--;
+    handleDeleteIngredient = id => {
+        this.removeIngredient(id - 1);
+        this.state.numberOfIngredients--;
 
         // Set the visible property of the new last step's delete button as true
-        if (this.state.numberOfSteps > 1)
-            this.state.stepsArray[this.state.numberOfSteps - 1][
+        if (this.state.numberOfIngredients > 1)
+            this.state.itemsArray[this.state.numberOfIngredients - 1][
                 'visible'
             ] = true;
     };
 
     // https://stackoverflow.com/questions/29527385/removing-element-from-array-in-component-state
 
-    removeStep(id) {
-        // Remove the last step object from the stepsArray array
+    removeIngredient(id) {
+        // Remove the last step object from the stepForms array
         this.setState({
-            stepsArray: this.state.stepsArray.filter((_, i) => i !== id),
+            itemsArray: this.state.itemsArray.filter((_, i) => i !== id),
         });
     }
 
@@ -170,22 +168,22 @@ class RecipeStepsForm extends Component {
         return (
             <div>
                 <Form>
-                    {this.state.stepsArray.map(step => (
+                    {this.state.itemsArray.map(ingredient => (
                         <FormGroup>
-                            <Step
-                                key={step.id}
-                                value={step.value}
-                                id={step.id}
+                            <Ingredient
+                                key={ingredient.id}
+                                value={ingredient.value}
+                                id={ingredient.id}
                                 onChange={this.handleChange}
                                 onClick={this.handleDeleteStep}
-                                onBlue={this.handleChange}
-                                deleteButton={step.visible}
+                                onBlur={this.handleChange}
+                                deleteButton={ingredient.visible}
                             />
                         </FormGroup>
                     ))}
                     <FormGroup>
-                        <Button color="primary" onClick={this.addStep}>
-                            Add Step
+                        <Button color="primary" onClick={this.addIngredient}>
+                            Add Ingredient
                         </Button>
                         <Button
                             color="primary"
@@ -199,4 +197,4 @@ class RecipeStepsForm extends Component {
     }
 }
 
-export default RecipeStepsForm;
+export default IngredientsForm;

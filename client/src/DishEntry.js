@@ -68,6 +68,8 @@ class DishEntry extends Component {
                     <DishEntryStepsTable
                         type="Directions"
                         entries={this.state.stepsArray}
+                        dishId={this.state.dishId}
+                        category={this.state.category}
                     />
                 </div>
             );

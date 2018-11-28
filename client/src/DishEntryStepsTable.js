@@ -28,7 +28,15 @@ class DishEntryStepsTable extends Component {
                 <Table striped size="sm" id="dishEntryStepsTable">
                     <thead>
                         <tr>
-                            <th>{this.props.type}</th>
+                            <th>
+                                {this.props.type}{' '}
+                                <Link
+                                    to={`/users/category/${
+                                        this.props.category
+                                    }/dish/${this.props.dishId}/steps`}>
+                                    Edit
+                                </Link>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

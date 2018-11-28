@@ -111,11 +111,17 @@ app.put('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
     const ingredients = req.body.ingredients;
     const userId = req.params.userId;
     const dishId = req.params.dishId;
-    console.log('in put: User id: ' + userId);
-    console.log('in put: Dish id: ' + dishId);
-    console.log('in put: Ingredients: ' + ingredients);
     saveIngredients(userId, dishId, ingredients).then(response => {
-        console.log(response);
+        res.status(303).send('OK');
+    });
+});
+
+/* Route to update steps to a dish*/
+app.put('/api/users/:userId/dish/:dishId/steps', (req, res) => {
+    const steps = req.body.steps;
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+    saveSteps(userId, dishId, steps).then(response => {
         res.status(303).send('OK');
     });
 });
@@ -130,13 +136,24 @@ app.get('/api/users/:userId/dish/:dishId', (req, res) => {
     });
 });
 
-/* This route gets dish information using the dish id */
+/* This route gets dish ingredients using the dish id */
 app.get('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
     var userId = req.params.userId;
     var dishId = req.params.dishId;
 
     getDishFromDatabase(userId, dishId, dish => {
         res.status(200).json(dish.ingredients);
+    });
+});
+
+/* This route gets dish steps using the dish id */
+app.get('/api/users/:userId/dish/:dishId/steps', (req, res) => {
+    var userId = req.params.userId;
+    var dishId = req.params.dishId;
+
+    getDishFromDatabase(userId, dishId, dish => {
+        console.log('***** ' + dish.steps);
+        res.status(200).json(dish.steps);
     });
 });
 
@@ -147,7 +164,6 @@ function saveSteps(userId, dishId, steps) {
 }
 
 function saveIngredients(userId, dishId, ingredients) {
-    console.log(ingredients);
     return database
         .child('/dishes/' + userId + '/' + dishId)
         .update({ingredients: ingredients});
