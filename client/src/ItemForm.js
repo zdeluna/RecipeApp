@@ -40,11 +40,11 @@ class ItemForm extends Component {
             redirect: false,
         };
 
-        this.saveButtonText;
+        this.addButtonText;
         if (this.state.type == 'ingredients') {
-            this.saveButtonText = 'Save Ingredients';
+            this.addButtonText = 'Add Ingredient';
         } else {
-            this.saveButtonText = 'Save Steps';
+            this.addButtonText = 'Add Step';
         }
     }
 
@@ -197,7 +197,7 @@ class ItemForm extends Component {
                     ))}
                     <FormGroup>
                         <Button color="primary" onClick={this.addItem}>
-                            {this.saveButtonText}
+                            {this.addButtonText}
                         </Button>
                         <Button
                             color="primary"

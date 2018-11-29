@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
 import AddUrlForm from './AddUrlForm';
-import RecipeStepsForm from './RecipeStepsForm';
-import IngredientsForm from './IngredientsForm';
+import ItemForm from './ItemForm';
 import {Button, Row, Col, Container} from 'reactstrap';
 import './Home.css';
 
@@ -29,16 +28,18 @@ class NewDishForm extends Component {
             return <AddUrlForm dishId={this.state.dishId} />;
         } else if (step == 2) {
             return (
-                <RecipeStepsForm
+                <ItemForm
                     dishId={this.state.dishId}
                     onClick={e => this.handleClick(e, 3)}
+                    type={'steps'}
                 />
             );
         } else if (step == 3) {
             return (
-                <IngredientsForm
+                <ItemForm
                     dishId={this.state.dishId}
                     onClick={e => this.handleClick(e, 4)}
+                    type={'ingredients'}
                 />
             );
         }

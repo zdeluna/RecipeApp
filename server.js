@@ -108,7 +108,7 @@ app.post('/api/users/:userId/dish/:dishId/recipe/url', (req, res) => {
 
 /* Route to update ingredients to a dish*/
 app.put('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
-    const ingredients = req.body.ingredients;
+    const ingredients = req.body.items;
     const userId = req.params.userId;
     const dishId = req.params.dishId;
     saveIngredients(userId, dishId, ingredients).then(response => {
@@ -118,7 +118,7 @@ app.put('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
 
 /* Route to update steps to a dish*/
 app.put('/api/users/:userId/dish/:dishId/steps', (req, res) => {
-    const steps = req.body.steps;
+    const steps = req.body.items;
     const userId = req.params.userId;
     const dishId = req.params.dishId;
     saveSteps(userId, dishId, steps).then(response => {
