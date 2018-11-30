@@ -15,7 +15,8 @@ class DishEntry extends Component {
             dishId: this.props.match.params.dishId,
             category: this.props.match.params.category,
             name: '',
-            created: false,
+            stepsCreated: false,
+            loaded: false,
             stepsArray: [],
             ingredientsArray: [],
         };
@@ -39,10 +40,13 @@ class DishEntry extends Component {
                 dish['ingredients'].length
             ) {
                 this.setState({
-                    created: true,
+                    stepsCreated: true,
+                    loaded: true,
                     stepsArray: dish.steps,
                     ingredientsArray: dish.ingredients,
                 });
+            } else {
+                this.setState({stepsCreated: false, loaded: true});
             }
         });
     }
@@ -53,9 +57,9 @@ class DishEntry extends Component {
 
     renderNewDishForm = props => {
         const entryContainsSteps = props.entryContainsSteps;
-        if (entryContainsSteps != true) {
+        if (!this.state.stepsCreated && this.state.loaded) {
             return <NewDishForm dishId={this.state.dishId} />;
-        } else {
+        } else if (this.state.stepsCreated && this.state.loaded) {
             return (
                 <div>
                     <DishEntryIngredientsTable
@@ -73,9 +77,7 @@ class DishEntry extends Component {
                     />
                 </div>
             );
-        }
-
-        return null;
+        } else return null;
     };
 
     render() {
@@ -83,7 +85,7 @@ class DishEntry extends Component {
             <div>
                 <h1>{this.state.name}</h1>
                 <this.renderNewDishForm
-                    entryContainsSteps={this.state.created}
+                    entryContainsSteps={this.state.stepsCreated}
                 />
             </div>
         );
