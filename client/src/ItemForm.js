@@ -12,6 +12,8 @@ import {
     Input,
     FormText,
     Container,
+    Col,
+    Row,
 } from 'reactstrap';
 
 class ItemForm extends Component {
@@ -179,34 +181,38 @@ class ItemForm extends Component {
         }
 
         return (
-            <div>
-                <Form>
-                    {this.state.itemsArray.map(item => (
-                        <FormGroup>
-                            <Item
-                                key={item.id}
-                                value={item.value}
-                                id={item.id}
-                                onChange={this.handleChange}
-                                onClick={this.handleDeleteItem}
-                                onBlur={this.handleChange}
-                                deleteButton={item.visible}
-                                type={this.state.type}
-                            />
-                        </FormGroup>
-                    ))}
-                    <FormGroup>
-                        <Button color="primary" onClick={this.addItem}>
-                            {this.addButtonText}
-                        </Button>
-                        <Button
-                            color="primary"
-                            onClick={event => this.handleSubmit(event)}>
-                            Save
-                        </Button>
-                    </FormGroup>
-                </Form>
-            </div>
+            <Container>
+                <Row>
+                    <Col sm="12" md={{size: 6, order: 1, offset: 4}}>
+                        <Form>
+                            {this.state.itemsArray.map(item => (
+                                <FormGroup>
+                                    <Item
+                                        key={item.id}
+                                        value={item.value}
+                                        id={item.id}
+                                        onChange={this.handleChange}
+                                        onClick={this.handleDeleteItem}
+                                        onBlur={this.handleChange}
+                                        deleteButton={item.visible}
+                                        type={this.state.type}
+                                    />
+                                </FormGroup>
+                            ))}
+                            <FormGroup>
+                                <Button color="primary" onClick={this.addItem}>
+                                    {this.addButtonText}
+                                </Button>
+                                <Button
+                                    color="primary"
+                                    onClick={event => this.handleSubmit(event)}>
+                                    Save
+                                </Button>
+                            </FormGroup>
+                        </Form>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
