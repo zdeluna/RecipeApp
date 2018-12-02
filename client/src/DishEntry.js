@@ -3,7 +3,7 @@ import {Route, Redirect} from 'react-router-dom';
 import app from './base';
 import DishEntryStepsTable from './DishEntryStepsTable';
 import DishEntryIngredientsTable from './DishEntryIngredientsTable';
-
+import Calendar from './Calendar';
 import NewDishForm from './NewDishForm';
 
 class DishEntry extends Component {
@@ -75,6 +75,13 @@ class DishEntry extends Component {
                         dishId={this.state.dishId}
                         category={this.state.category}
                     />
+
+                    <Calendar>
+                        dishId=
+                        {this.state.dishId}
+                        category=
+                        {this.state.category}
+                    </Calendar>
                 </div>
             );
         } else return null;
