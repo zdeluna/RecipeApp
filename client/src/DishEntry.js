@@ -76,12 +76,10 @@ class DishEntry extends Component {
                         category={this.state.category}
                     />
 
-                    <Calendar>
-                        dishId=
-                        {this.state.dishId}
-                        category=
-                        {this.state.category}
-                    </Calendar>
+                    <Calendar
+                        dishId={this.state.dishId}
+                        category={this.state.category}
+                    />
                 </div>
             );
         } else return null;

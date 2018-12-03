@@ -69,6 +69,15 @@ app.post('/api/users/:userId/dish/:dishId/steps', (req, res) => {
     saveSteps(userId, dishId, steps).then(res.status(200).send('OK'));
 });
 
+app.post('/api/users/:userId/dish/:dishId/history', (req, res) => {
+    const history = req.body.history;
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+
+    console.log('SERVER: ' + history + ' ' + userId + ' ' + dishId);
+    saveHistory(userId, dishId, history).then(res.status(200).send('OK'));
+});
+
 /* Route to add ingredients to a dish*/
 app.post('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
     const ingredients = req.body.items;
@@ -152,7 +161,6 @@ app.get('/api/users/:userId/dish/:dishId/steps', (req, res) => {
     var dishId = req.params.dishId;
 
     getDishFromDatabase(userId, dishId, dish => {
-        console.log('***** ' + dish.steps);
         res.status(200).json(dish.steps);
     });
 });
@@ -173,6 +181,12 @@ function saveUrl(userId, dishId, url) {
     return database
         .child('/dishes/' + userId + '/' + dishId)
         .update({url: url});
+}
+
+function saveHistory(userId, dishId, history) {
+    return database
+        .child('/dishes/' + userId + '/' + dishId)
+        .update({history: history});
 }
 
 function getDishFromDatabase(userId, dishId, complete) {
