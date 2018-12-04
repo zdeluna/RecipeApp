@@ -74,7 +74,7 @@ app.post('/api/users/:userId/dish/:dishId/history', (req, res) => {
     const userId = req.params.userId;
     const dishId = req.params.dishId;
 
-    console.log('SERVER: ' + history + ' ' + userId + ' ' + dishId);
+    console.log('SERVER:  ' + history + ' ' + userId + ' ' + dishId);
     saveHistory(userId, dishId, history).then(res.status(200).send('OK'));
 });
 
@@ -135,6 +135,16 @@ app.put('/api/users/:userId/dish/:dishId/steps', (req, res) => {
     });
 });
 
+/* Route to update steps to a dish*/
+app.put('/api/users/:userId/dish/:dishId/history', (req, res) => {
+    const history = req.body.history;
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+    saveHistory(userId, dishId, history).then(response => {
+        res.status(303).send('OK');
+    });
+});
+
 /* This route gets dish information using the dish id */
 app.get('/api/users/:userId/dish/:dishId', (req, res) => {
     var userId = req.params.userId;
@@ -165,6 +175,15 @@ app.get('/api/users/:userId/dish/:dishId/steps', (req, res) => {
     });
 });
 
+/* This route gets dish's history using the dish id */
+app.get('/api/users/:userId/dish/:dishId/history', (req, res) => {
+    var userId = req.params.userId;
+    var dishId = req.params.dishId;
+    getDishFromDatabase(userId, dishId, dish => {
+        res.status(200).json(dish.history);
+    });
+});
+
 function saveSteps(userId, dishId, steps) {
     return database
         .child('/dishes/' + userId + '/' + dishId)
@@ -184,6 +203,7 @@ function saveUrl(userId, dishId, url) {
 }
 
 function saveHistory(userId, dishId, history) {
+    console.log('SERVER: ' + userId + ' ' + dishId + ' ' + history);
     return database
         .child('/dishes/' + userId + '/' + dishId)
         .update({history: history});

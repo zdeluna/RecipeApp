@@ -17,16 +17,51 @@ class Calendar extends Component {
             user: app.auth().currentUser,
             dates: [],
             history: [],
+            dateIsScheduled: false,
+            updateDate: false,
         };
 
         Moment.locale('en');
         momentLocalizer();
     }
 
+    /* Store the value of the history from the database to the history in state */
+    componentDidMount() {
+        // First set the dishId and category will be used to create our url for the GET request
+        this.setState({
+            dishId: this.props.dishId,
+            category: this.props.category,
+        });
+
+        var get_url =
+            '/api/users/' +
+            this.state.user.uid +
+            '/dish/' +
+            this.props.dishId +
+            '/history';
+
+        fetch(get_url, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        }).then(response => {
+            if (response.status == 200) {
+                response.json().then(data => {
+                    this.setState({
+                        history: data,
+                    });
+                });
+            }
+        });
+    }
+
+    /* This function will handle adding the history state object to the database*/
     addDateToDatabase = async () => {
         // If the state update field is true, then we need to make a put request instead of a post request
         var method = 'POST';
-        if (this.state.update) method = 'PUT';
+        if (this.state.updateDate) method = 'PUT';
 
         var update_url =
             '/api/users/' +
@@ -47,45 +82,68 @@ class Calendar extends Component {
 			})
 		}).then(response => {
 			// If the response status is 200, then we have created ingredients for the dish the first time, and need to let the parent component, NewDishForm, steps has been added by calling the onClick event.
-			if (response.status == 200) {
-			console.log("success");
-			}
-			else {
-				this.setState({redirect: true});
-		
+			if (response.status == 200 || response.status == 303) {
+			this.setState({dateIsScheduled: true});
+
 			}
         });
     };
 
-    componentDidMount() {
-        this.setState({
-            dishId: this.props.dishId,
-            category: this.props.category,
-        });
-    }
-
+    /* Add the date to the history array in state */
     dateChanged = newDate => {
-        console.log(newDate);
-        this.setState({history: newDate});
+        // If the user has not entered scheduled the dish, then just add the date to the end of the array
+        var newHistory;
+
+        if (this.state.dateIsScheduled)
+            newHistory = this.state.history.concat(newDate);
+        // Otherwise, pop the last date off the array before adding the new date
+        else this.state.history.pop();
+        newHistory = this.state.history.concat(newDate);
+
+        this.setState({history: newHistory});
+    };
+
+    updateDate = () => {
+        this.setState({updateDate: true, dateIsScheduled: false});
+    };
+
+    /* Render the components based on if the user has already sheduled the dish today*/
+    renderComponents = props => {
+        const dateIsScheduled = props.dateIsScheduled;
+        if (!dateIsScheduled)
+            return (
+                <div>
+                    {' '}
+                    <Button
+                        color="primary"
+                        size="md"
+                        onClick={this.addDateToDatabase}>
+                        Schedule Dish
+                    </Button>
+                    <DateTimePicker
+                        format="MMM DD YYYY"
+                        time={false}
+                        defaultValue={new Date()}
+                        onChange={value => this.dateChanged(value)}
+                    />
+                </div>
+            );
+        else
+            return (
+                <div>
+                    <h3>Scheduled!</h3>
+                    <Button color="primary" size="md" onClick={this.updateDate}>
+                        Reschedule Dish
+                    </Button>
+                </div>
+            );
     };
 
     render() {
         return (
-            <div>
-                {' '}
-                <Button
-                    color="primary"
-                    size="md"
-                    onClick={this.addDateToDatabase}>
-                    Schedule Dish
-                </Button>
-                <DateTimePicker
-                    format="MMM DD YYYY"
-                    time={false}
-                    defaultValue={new Date()}
-                    onChange={value => this.dateChanged(value)}
-                />
-            </div>
+            <this.renderComponents
+                dateIsScheduled={this.state.dateIsScheduled}
+            />
         );
     }
 }
