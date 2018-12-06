@@ -11,11 +11,10 @@ import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 
 class Calendar extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             user: app.auth().currentUser,
-            dates: [],
             history: [],
             dateIsScheduled: false,
             updateDate: false,
@@ -49,6 +48,7 @@ class Calendar extends Component {
         }).then(response => {
             if (response.status == 200) {
                 response.json().then(data => {
+                    console.log(typeof data);
                     this.setState({
                         history: data,
                     });
@@ -91,14 +91,14 @@ class Calendar extends Component {
 
     /* Add the date to the history array in state */
     dateChanged = newDate => {
-        // If the user has not entered scheduled the dish, then just add the date to the end of the array
-        var newHistory;
+        // Remove the time
 
-        if (this.state.dateIsScheduled)
-            newHistory = this.state.history.concat(newDate);
-        // Otherwise, pop the last date off the array before adding the new date
-        else this.state.history.pop();
-        newHistory = this.state.history.concat(newDate);
+        // If the user has not entered scheduled the dish, then just add the date to the end of the array
+        var newHistory = this.state.history;
+
+        if (this.state.updateDate) this.removeDate(newHistory, 0);
+
+        newHistory.unshift(newDate);
 
         this.setState({history: newHistory});
     };
@@ -121,8 +121,8 @@ class Calendar extends Component {
                         Schedule Dish
                     </Button>
                     <DateTimePicker
-                        format="MMM DD YYYY"
                         time={false}
+                        format="MMM DD YYYY"
                         defaultValue={new Date()}
                         onChange={value => this.dateChanged(value)}
                     />
@@ -138,6 +138,13 @@ class Calendar extends Component {
                 </div>
             );
     };
+
+    removeDate(array, index) {
+        // Remove a date from the history array
+        this.setState({
+            history: array.filter((_, i) => i !== index),
+        });
+    }
 
     render() {
         return (

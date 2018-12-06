@@ -180,7 +180,8 @@ app.get('/api/users/:userId/dish/:dishId/history', (req, res) => {
     var userId = req.params.userId;
     var dishId = req.params.dishId;
     getDishFromDatabase(userId, dishId, dish => {
-        res.status(200).json(dish.history);
+        if (!dish.history) res.status(404);
+        else res.status(200).json(dish.history);
     });
 });
 
@@ -259,6 +260,7 @@ function createNewDish(userId, dishName, category, dishKey) {
         uid: userId,
         name: dishName,
         category: category,
+        history: [],
     };
 
     var newDishKey = database.child('dishes').push().key;

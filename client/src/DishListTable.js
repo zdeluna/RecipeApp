@@ -33,6 +33,7 @@ class DishListTable extends Component {
                     dishArray.push({
                         id: dish,
                         name: dishes[dish].name,
+                        history: dishes[dish].history,
                     });
                 }
             }
@@ -89,7 +90,7 @@ class DishListTable extends Component {
                                     </Link>
                                 </td>
                                 <td key={dish.id + 'time'}>40 minutes</td>
-                                <td key={dish.id + 'date'}>1/1/2018</td>
+                                <td key={dish.id + 'date'}>{dish.history}</td>
                             </tr>
                         ))}
                     </tbody>
