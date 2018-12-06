@@ -5,6 +5,7 @@ import DishEntryStepsTable from './DishEntryStepsTable';
 import DishEntryIngredientsTable from './DishEntryIngredientsTable';
 import Calendar from './Calendar';
 import NewDishForm from './NewDishForm';
+import {Container, Row, Col} from 'reactstrap';
 
 class DishEntry extends Component {
     constructor(props) {
@@ -16,37 +17,43 @@ class DishEntry extends Component {
             category: this.props.match.params.category,
             name: '',
             stepsCreated: false,
+            ingredientsCreated: false,
             loaded: false,
             stepsArray: [],
             ingredientsArray: [],
         };
     }
-
+    /* Make a GET request to the database to retrieve the dish information and store it in state */
     componentDidMount() {
-        this.dishesRef = app
-            .database()
-            .ref()
-            .child('dishes')
-            .child(this.state.user.uid)
-            .child(this.state.dishId);
-        this.dishesRef.on('value', snapshot => {
-            let dish = snapshot.val();
-            this.setState({name: dish['name']});
-            // If steps and ingredients have already been saved, then set this.state.created to true
-            if (
-                dish['steps'] &&
-                dish['steps'].length > 0 &&
-                dish['ingredients'] &&
-                dish['ingredients'].length
-            ) {
-                this.setState({
-                    stepsCreated: true,
-                    loaded: true,
-                    stepsArray: dish.steps,
-                    ingredientsArray: dish.ingredients,
+        var get_url =
+            '/api/users/' + this.state.user.uid + '/dish/' + this.state.dishId;
+
+        fetch(get_url, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        }).then(response => {
+            if (response.status == 200) {
+                response.json().then(dish => {
+                    this.setState({
+                        loaded: true,
+                        name: dish.name,
+                    });
+
+                    if (dish['ingredients'] && dish['ingredients'].length > 0)
+                        this.setState({
+                            ingredientsCreated: true,
+                            ingredientsArray: dish.ingredients,
+                        });
+
+                    if (dish['steps'] && dish['steps'].length > 0)
+                        this.setState({
+                            stepsCreated: true,
+                            stepsArray: dish.steps,
+                        });
                 });
-            } else {
-                this.setState({stepsCreated: false, loaded: true});
             }
         });
     }
@@ -61,26 +68,32 @@ class DishEntry extends Component {
             return <NewDishForm dishId={this.state.dishId} />;
         } else if (this.state.stepsCreated && this.state.loaded) {
             return (
-                <div>
-                    <DishEntryIngredientsTable
-                        type="Ingredients"
-                        entries={this.state.ingredientsArray}
-                        dishId={this.state.dishId}
-                        category={this.state.category}
-                    />
-
-                    <DishEntryStepsTable
-                        type="Directions"
-                        entries={this.state.stepsArray}
-                        dishId={this.state.dishId}
-                        category={this.state.category}
-                    />
-
-                    <Calendar
-                        dishId={this.state.dishId}
-                        category={this.state.category}
-                    />
-                </div>
+                <Container>
+                    <Row>
+                        <Col xs="9">
+                            <DishEntryIngredientsTable
+                                type="Ingredients"
+                                entries={this.state.ingredientsArray}
+                                dishId={this.state.dishId}
+                                category={this.state.category}
+                            />
+                        </Col>
+                        <Col xs="3">
+                            <Calendar
+                                dishId={this.state.dishId}
+                                category={this.state.category}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <DishEntryStepsTable
+                            type="Directions"
+                            entries={this.state.stepsArray}
+                            dishId={this.state.dishId}
+                            category={this.state.category}
+                        />
+                    </Row>
+                </Container>
             );
         } else return null;
     };
@@ -88,10 +101,18 @@ class DishEntry extends Component {
     render() {
         return (
             <div>
-                <h1>{this.state.name}</h1>
-                <this.renderNewDishForm
-                    entryContainsSteps={this.state.stepsCreated}
-                />
+                <Row>
+                    <Col sm="12" md={{size: 6, offset: 6}}>
+                        <h1>{this.state.name}</h1>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <this.renderNewDishForm
+                            entryContainsSteps={this.state.stepsCreated}
+                        />
+                    </Col>
+                </Row>
             </div>
         );
     }

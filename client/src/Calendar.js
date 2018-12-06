@@ -16,6 +16,7 @@ class Calendar extends Component {
         this.state = {
             user: app.auth().currentUser,
             history: [],
+            newScheduleDate: '',
             dateIsScheduled: false,
             updateDate: false,
         };
@@ -106,7 +107,7 @@ class Calendar extends Component {
 
         newHistory.unshift(newDate);
 
-        this.setState({history: newHistory});
+        this.setState({history: newHistory, newScheduleDate: newHistory[0]});
     };
 
     updateDate = () => {
@@ -137,7 +138,7 @@ class Calendar extends Component {
         else
             return (
                 <div>
-                    <h3>Scheduled!</h3>
+                    <h3>Scheduled for {this.state.newScheduleDate}</h3>
                     <Button color="primary" size="md" onClick={this.updateDate}>
                         Reschedule Dish
                     </Button>
