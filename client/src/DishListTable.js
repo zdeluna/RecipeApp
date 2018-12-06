@@ -26,15 +26,21 @@ class DishListTable extends Component {
         this.dishesRef.on('value', snapshot => {
             let dishes = snapshot.val();
             let dishArray = [];
-
+            let newDish;
             for (let dish in dishes) {
                 // If the dish category parameter matches the url query then add it to the array
                 if (dishes[dish].category == this.state.category) {
-                    dishArray.push({
+                    newDish = {
                         id: dish,
                         name: dishes[dish].name,
                         history: dishes[dish].history,
-                    });
+                    };
+
+                    if (dishes[dish].history) {
+                        newDish.lastMade = dishes[dish].history[0];
+                    }
+
+                    dishArray.push(newDish);
                 }
             }
             this.setState({
@@ -90,7 +96,7 @@ class DishListTable extends Component {
                                     </Link>
                                 </td>
                                 <td key={dish.id + 'time'}>40 minutes</td>
-                                <td key={dish.id + 'date'}>{dish.history}</td>
+                                <td key={dish.id + 'date'}>{dish.lastMade}</td>
                             </tr>
                         ))}
                     </tbody>

@@ -22,6 +22,13 @@ class Calendar extends Component {
 
         Moment.locale('en');
         momentLocalizer();
+
+        this.dateOptions = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        };
     }
 
     /* Store the value of the history from the database to the history in state */
@@ -91,12 +98,11 @@ class Calendar extends Component {
 
     /* Add the date to the history array in state */
     dateChanged = newDate => {
-        // Remove the time
-
+        var newDate = newDate.toLocaleDateString('en-US', this.dateOptions);
         // If the user has not entered scheduled the dish, then just add the date to the end of the array
         var newHistory = this.state.history;
 
-        if (this.state.updateDate) this.removeDate(newHistory, 0);
+        if (this.state.updateDate) newHistory = this.removeDate(newHistory, 0);
 
         newHistory.unshift(newDate);
 
@@ -141,9 +147,8 @@ class Calendar extends Component {
 
     removeDate(array, index) {
         // Remove a date from the history array
-        this.setState({
-            history: array.filter((_, i) => i !== index),
-        });
+
+        return array.filter((_, i) => i !== index);
     }
 
     render() {
