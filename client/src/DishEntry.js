@@ -4,6 +4,7 @@ import app from './base';
 import DishEntryStepsTable from './DishEntryStepsTable';
 import DishEntryIngredientsTable from './DishEntryIngredientsTable';
 import Calendar from './Calendar';
+import Notes from './Notes';
 import NewDishForm from './NewDishForm';
 import {Container, Row, Col} from 'reactstrap';
 
@@ -80,6 +81,10 @@ class DishEntry extends Component {
                         </Col>
                         <Col xs="3">
                             <Calendar
+                                dishId={this.state.dishId}
+                                category={this.state.category}
+                            />
+                            <Notes
                                 dishId={this.state.dishId}
                                 category={this.state.category}
                             />

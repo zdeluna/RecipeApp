@@ -89,6 +89,15 @@ app.post('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
     );
 });
 
+/* Route to add ingredients to a dish*/
+app.post('/api/users/:userId/dish/:dishId/notes', (req, res) => {
+    const notes = req.body.notes;
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+    console.log('Add notes');
+    saveNotes(userId, dishId, notes).then(res.status(200).send('OK'));
+});
+
 /* This route stores a url in the database and generates the steps from the url then saves again to the database*/
 app.post('/api/users/:userId/dish/:dishId/recipe/url', (req, res) => {
     // Parse the steps from the url
@@ -145,6 +154,16 @@ app.put('/api/users/:userId/dish/:dishId/history', (req, res) => {
     });
 });
 
+/* Route to update steps to a dish*/
+app.put('/api/users/:userId/dish/:dishId/notes', (req, res) => {
+    const notes = req.body.notes;
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+    saveNotes(userId, dishId, history).then(response => {
+        res.status(303).send('OK');
+    });
+});
+
 /* This route gets dish information using the dish id */
 app.get('/api/users/:userId/dish/:dishId', (req, res) => {
     var userId = req.params.userId;
@@ -185,6 +204,17 @@ app.get('/api/users/:userId/dish/:dishId/history', (req, res) => {
     });
 });
 
+/* This route gets dish's history using the dish id */
+app.get('/api/users/:userId/dish/:dishId/notes', (req, res) => {
+    var userId = req.params.userId;
+    var dishId = req.params.dishId;
+    console.log('get notes');
+    getDishFromDatabase(userId, dishId, dish => {
+        if (!dish.notes) res.status(404);
+        else res.status(200).json(dish.notes);
+    });
+});
+
 function saveSteps(userId, dishId, steps) {
     return database
         .child('/dishes/' + userId + '/' + dishId)
@@ -204,10 +234,16 @@ function saveUrl(userId, dishId, url) {
 }
 
 function saveHistory(userId, dishId, history) {
-    console.log('SERVER: ' + userId + ' ' + dishId + ' ' + history);
     return database
         .child('/dishes/' + userId + '/' + dishId)
         .update({history: history});
+}
+
+function saveNotes(userId, dishId, notes) {
+    console.log('SERVER: ' + dishId + ' ' + userId + ' ' + notes);
+    return database
+        .child('/dishes/' + userId + '/' + dishId)
+        .update({notes: notes});
 }
 
 function getDishFromDatabase(userId, dishId, complete) {

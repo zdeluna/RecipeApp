@@ -3,32 +3,15 @@ import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
 import app from './base';
 import {Table, Container, Row, Button} from 'reactstrap';
 import './DishEntry.css';
-import 'react-widgets/dist/css/react-widgets.css';
-//import {DateTimePicker} from 'react-widgets';
-import {ReactWidgets} from 'react-widgets';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
-import Moment from 'moment';
-import momentLocalizer from 'react-widgets-moment';
 
-class Calendar extends Component {
+class Notes extends Component {
     constructor(props) {
         super(props);
         this.state = {
             user: app.auth().currentUser,
-            history: [],
-            newScheduleDate: '',
-            dateIsScheduled: false,
-            updateDate: false,
-        };
-
-        Moment.locale('en');
-        momentLocalizer();
-
-        this.dateOptions = {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
+            notes: '',
+            editNotes: false,
+            updateNotes: false,
         };
     }
 
@@ -45,7 +28,7 @@ class Calendar extends Component {
             this.state.user.uid +
             '/dish/' +
             this.props.dishId +
-            '/history';
+            '/notes';
 
         fetch(get_url, {
             method: 'GET',
@@ -57,25 +40,30 @@ class Calendar extends Component {
             if (response.status == 200) {
                 response.json().then(data => {
                     this.setState({
-                        history: data,
+                        notes: data,
+                        updateNotes: true,
                     });
                 });
+            } else if (response.status == 404) {
+                this.setState({updateNotes: false});
             }
         });
     }
 
     /* This function will handle adding the history state object to the database*/
-    addDateToDatabase = async () => {
+    addNotesToDatabase = async event => {
+        console.log('CLIENT: add notes to database');
+        event.preventDefault();
         // If the state update field is true, then we need to make a put request instead of a post request
         var method = 'POST';
-        if (this.state.updateDate) method = 'PUT';
+        if (this.state.updateNotes) method = 'PUT';
 
         var update_url =
             '/api/users/' +
             this.state.user.uid +
             '/dish/' +
             this.state.dishId +
-            '/history';
+            '/notes';
 
         //prettier-ignore
         fetch(update_url, {
@@ -85,62 +73,54 @@ class Calendar extends Component {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				history: this.state.history,
+				notes: this.state.notes,
 			})
 		}).then(response => {
 			// If the response status is 200, then we have created ingredients for the dish the first time, and need to let the parent component, NewDishForm, steps has been added by calling the onClick event.
 			if (response.status == 200 || response.status == 303) {
-			this.setState({dateIsScheduled: true});
+			this.setState({editNotes: false});
 
 			}
         });
     };
 
     /* Add the date to the history array in state */
-    dateChanged = newDate => {
-        var newDate = newDate.toLocaleDateString('en-US', this.dateOptions);
-        // If the user has not entered scheduled the dish, then just add the date to the end of the array
-        var newHistory = this.state.history;
-
-        if (this.state.updateDate) newHistory = this.removeDate(newHistory, 0);
-
-        newHistory.unshift(newDate);
-
-        this.setState({history: newHistory, newScheduleDate: newHistory[0]});
+    notesChanged = newNotes => {
+        this.setState({notes: newNotes});
     };
 
-    updateDate = () => {
-        this.setState({updateDate: true, dateIsScheduled: false});
+    updateNotes = () => {
+        this.setState({editNotes: true});
     };
 
     /* Render the components based on if the user has already sheduled the dish today*/
     renderComponents = props => {
-        const dateIsScheduled = props.dateIsScheduled;
-        if (!dateIsScheduled)
+        const editNotes = props.editNotes;
+        if (editNotes)
             return (
                 <div>
-                    {' '}
+                    <textarea
+                        name="notesTextArea"
+                        onChange={this.notesChanged}
+                    />{' '}
                     <Button
                         color="primary"
                         size="md"
-                        onClick={this.addDateToDatabase}>
-                        Schedule Dish
+                        onClick={event => this.addNotesToDatabase(event)}>
+                        Save Notes
                     </Button>
-                    <DateTimePicker
-                        time={false}
-                        format="MMM DD YYYY"
-                        defaultValue={new Date()}
-                        onChange={value => this.dateChanged(value)}
-                    />
                 </div>
             );
         else
             return (
                 <div>
-                    <h3>Scheduled for {this.state.newScheduleDate}</h3>
-                    <Button color="primary" size="md" onClick={this.updateDate}>
-                        Reschedule Dish
+                    <Button
+                        color="primary"
+                        size="md"
+                        onClick={this.updateNotes}>
+                        Edit Notes
                     </Button>
+                    <h2>Notes</h2>
                 </div>
             );
     };
@@ -152,12 +132,8 @@ class Calendar extends Component {
     }
 
     render() {
-        return (
-            <this.renderComponents
-                dateIsScheduled={this.state.dateIsScheduled}
-            />
-        );
+        return <this.renderComponents editNotes={this.state.editNotes} />;
     }
 }
 
-export default Calendar;
+export default Notes;
