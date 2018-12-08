@@ -53,7 +53,7 @@ class Notes extends Component {
     /* This function will handle adding the history state object to the database*/
     addNotesToDatabase = async event => {
         console.log('CLIENT: add notes to database');
-        event.preventDefault();
+        event.persist();
         // If the state update field is true, then we need to make a put request instead of a post request
         var method = 'POST';
         if (this.state.updateNotes) method = 'PUT';
@@ -85,23 +85,44 @@ class Notes extends Component {
     };
 
     /* Add the date to the history array in state */
-    notesChanged = newNotes => {
-        this.setState({notes: newNotes});
+    notesChanged = event => {
+        this.setState({notes: event.target.value});
     };
 
     updateNotes = () => {
         this.setState({editNotes: true});
     };
 
+    deleteNotes = event => {
+        this.setState({notes: ''});
+        this.addNotesToDatabase(event);
+    };
+
     /* Render the components based on if the user has already sheduled the dish today*/
     renderComponents = props => {
         const editNotes = props.editNotes;
+        const updateNotes = props.updateNotes;
+
+        // User doesn't have any existing notes on the dish
+        if (!updateNotes)
+            return (
+                <div>
+                    <Button
+                        color="primary"
+                        size="md"
+                        onClick={this.updateNotes}>
+                        Create Notes
+                    </Button>
+                </div>
+            );
+
         if (editNotes)
             return (
                 <div>
                     <textarea
                         name="notesTextArea"
-                        onChange={this.notesChanged}
+                        onChange={event => this.notesChanged(event)}
+                        value={this.state.notes}
                     />{' '}
                     <Button
                         color="primary"
@@ -120,7 +141,13 @@ class Notes extends Component {
                         onClick={this.updateNotes}>
                         Edit Notes
                     </Button>
-                    <h2>Notes</h2>
+                    <Button
+                        color="danger"
+                        size="md"
+                        onClick={event => this.deleteNotes(event)}>
+                        Delete Notes
+                    </Button>
+                    <div id="notesTextArea">{this.state.notes}</div>
                 </div>
             );
     };
@@ -132,7 +159,12 @@ class Notes extends Component {
     }
 
     render() {
-        return <this.renderComponents editNotes={this.state.editNotes} />;
+        return (
+            <this.renderComponents
+                editNotes={this.state.editNotes}
+                updateNotes={this.state.updateNotes}
+            />
+        );
     }
 }
 

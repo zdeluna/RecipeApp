@@ -11,3 +11,11 @@
     float: left;
     font-size: 20px;
 }
+
+#notesTextArea {
+    background: #cccccc;
+    margin-top: 20px;
+    padding: 10px;
+    border-color: black;
+    border-style: solid;
+}
