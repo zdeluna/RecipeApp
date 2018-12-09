@@ -127,6 +127,7 @@ class Calendar extends Component {
                         Schedule Dish
                     </Button>
                     <DateTimePicker
+                        id="dateTimePicker"
                         time={false}
                         format="MMM DD YYYY"
                         defaultValue={new Date()}
@@ -153,9 +154,11 @@ class Calendar extends Component {
 
     render() {
         return (
-            <this.renderComponents
-                dateIsScheduled={this.state.dateIsScheduled}
-            />
+            <div id="calendarComponent">
+                <this.renderComponents
+                    dateIsScheduled={this.state.dateIsScheduled}
+                />
+            </div>
         );
     }
 }
