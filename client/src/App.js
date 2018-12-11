@@ -4,12 +4,12 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import app from './base';
 
-import Home from './Home';
-import LogIn from './LogIn';
-import SignUp from './SignUp';
-import DishListTable from './DishListTable';
-import DishEntry from './DishEntry';
-import ItemForm from './ItemForm';
+import Home from './containers/HomePage/Home';
+import LogIn from './containers/LogIn';
+import SignUp from './containers/SignUp';
+import DishListTable from 'components/DishListPage/DishListTable';
+import DishEntry from 'containers/DishEntry';
+import ItemForm from 'components/ItemForm';
 
 class App extends Component {
     state = {loading: true, authenticated: false, user: null};

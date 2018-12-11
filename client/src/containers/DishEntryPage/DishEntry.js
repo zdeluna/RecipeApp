@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import app from './base';
-import DishEntryStepsTable from './DishEntryStepsTable';
-import DishEntryIngredientsTable from './DishEntryIngredientsTable';
-import Calendar from './Calendar';
-import Notes from './Notes';
-import NewDishForm from './NewDishForm';
+import DishEntryStepsTable from 'components/DishEntryStepsTable';
+import DishEntryIngredientsTable from 'components/DishEntryIngredientsTable';
+import Calendar from 'components/Calendar';
+import Notes from 'components/Notes';
+import NewDishForm from 'components/NewDishForm';
 import {Container, Row, Col} from 'reactstrap';
 
 class DishEntry extends Component {

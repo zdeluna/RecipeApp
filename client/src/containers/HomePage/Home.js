@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import CategoryButton from './CategoryButton';
+import CategoryButton from 'components/CategoryButton';
 import {Route, Redirect} from 'react-router-dom';
 import {Row, Col, Container} from 'reactstrap';
 import './Home.css';
