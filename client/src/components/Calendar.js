@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
-import app from './base';
+import app from '../base';
 import {Table, Container, Row, Button} from 'reactstrap';
-import './DishEntry.css';
+import './Calendar.css';
 import 'react-widgets/dist/css/react-widgets.css';
 //import {DateTimePicker} from 'react-widgets';
 import {ReactWidgets} from 'react-widgets';

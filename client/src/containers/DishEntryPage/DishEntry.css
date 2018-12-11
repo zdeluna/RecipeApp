@@ -1,47 +1,4 @@
-#dishEntryIngredientsTable {
-    font-size: 14px;
-    width: 50%;
-}
-
-#dishEntryStepsTable {
-    font-size: 16px;
-}
-
 .StepsIngredientsContainer {
     float: left;
     font-size: 20px;
-}
-
-/* Notes Component */
-
-#notesText {
-    background: #cccccc;
-    margin-top: 20px;
-    padding: 10px;
-    border-color: black;
-    border-style: solid;
-    border-width: thin;
-}
-
-#notesTextArea {
-    background: #cccccc;
-    margin-top: 20px;
-    padding: 10px;
-    border-color: black;
-    border-style: solid;
-    border-width: thin;
-    width: 300px;
-}
-
-p {
-    white-space: pre-line;
-}
-
-/* Calendar Component */
-#calendarComponent {
-    margin-bottom: 50px;
-}
-
-#dateTimePicker {
-    margin-top: 20px;
 }

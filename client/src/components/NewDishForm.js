@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
-import app from './base';
-import AddUrlForm from 'components/AddUrlForm';
-import ItemForm from 'components/ItemForm';
+import app from '../base';
+import AddUrlForm from '../components/AddUrlForm';
+import ItemForm from '../components/ItemForm';
 import {Button, Row, Col, Container} from 'reactstrap';
-import './containers/Home/Home.css';
 
 class NewDishForm extends Component {
     constructor(props) {

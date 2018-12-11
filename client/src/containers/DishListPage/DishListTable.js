@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
-import app from './base';
-import AddDishForm from 'components/AddDishForm';
+import app from '../../base';
+import AddDishForm from '../../components/AddDishForm';
 import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
 

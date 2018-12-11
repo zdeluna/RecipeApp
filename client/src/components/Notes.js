@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
-import app from './base';
+import app from '../base';
 import {Table, Container, Row, Button} from 'reactstrap';
-import './DishEntry.css';
+import './Notes.css';
 import Textarea from 'react-textarea-autosize';
 
 class Notes extends Component {

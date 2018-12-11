@@ -1,7 +1,6 @@
 //@format
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
-import app from './base';
 import {
     Form,
     Button,
@@ -18,7 +17,6 @@ class Item extends Component {
 
         this.state = {
             value: props.value,
-            user: app.auth().currentUser,
             id: props.id,
             type: props.type,
         };

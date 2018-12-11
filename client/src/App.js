@@ -7,9 +7,9 @@ import app from './base';
 import Home from './containers/HomePage/Home';
 import LogIn from './containers/LogIn';
 import SignUp from './containers/SignUp';
-import DishListTable from 'components/DishListPage/DishListTable';
-import DishEntry from 'containers/DishEntry';
-import ItemForm from 'components/ItemForm';
+import DishListTable from './containers/DishListPage/DishListTable';
+import DishEntry from './containers/DishEntryPage/DishEntry';
+import ItemForm from './components/ItemForm';
 
 class App extends Component {
     state = {loading: true, authenticated: false, user: null};

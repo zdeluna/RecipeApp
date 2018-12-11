@@ -1,0 +1,22 @@
+#notesText {
+    background: #cccccc;
+    margin-top: 20px;
+    padding: 10px;
+    border-color: black;
+    border-style: solid;
+    border-width: thin;
+}
+
+#notesTextArea {
+    background: #cccccc;
+    margin-top: 20px;
+    padding: 10px;
+    border-color: black;
+    border-style: solid;
+    border-width: thin;
+    width: 300px;
+}
+
+p {
+    white-space: pre-line;
+}

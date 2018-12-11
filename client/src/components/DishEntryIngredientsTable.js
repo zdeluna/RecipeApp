@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
-import app from './base';
+import app from '../base';
 import {Table, Container, Row} from 'reactstrap';
-import './DishEntry.css';
+import './DishEntryIngredientsTable.css';
 
 class DishEntryIngredientsTable extends Component {
     constructor() {
