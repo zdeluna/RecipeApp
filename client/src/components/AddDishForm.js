@@ -11,6 +11,7 @@ import {
     Container,
 } from 'reactstrap';
 import './AddDishForm.css';
+import API from '../utils/Api';
 
 class AddDishForm extends Component {
     constructor(props) {
@@ -42,23 +43,15 @@ class AddDishForm extends Component {
     // Make a call to the api to handle parsing the recipe from the url
     addNewDish = async (userId, dishName, category) => {
         // prettier-ignore
-        fetch(`/api/users/${this.state.user.uid}/dish/`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-				name: dishName,
-				category: category
-            })
-		})
-		.then(response => response.json())
-		.then(data=> {
-					// Send the id of the dish to the dishListTable component
-				this.props.onClick(data.id);
-			
-		});
+
+        let newDish = {};
+        newDish.name = dishName;
+        newDish.category = category;
+
+        const api = new API();
+        api.createDish(this.state.user.uid, newDish).then(response => {
+            if (response.status == 201) this.props.onClick(response.data.id);
+        });
     };
 
     render() {

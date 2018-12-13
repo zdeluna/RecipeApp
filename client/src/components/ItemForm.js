@@ -54,7 +54,7 @@ class ItemForm extends Component {
     // Check to see if the ingredients have already been stored in the database
     // by making a get request to the api then update the ingredients array in state
     componentDidMount() {
-        var api = new API();
+        const api = new API();
         api.getDish(this.state.user.uid, this.props.match.params.dishId).then(
             response => {
                 if (response.status == 200) {

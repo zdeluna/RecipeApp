@@ -10,6 +10,10 @@ class API {
             '/api/' + 'users/' + userId + '/' + 'dish' + '/' + dishId,
         );
     }
+
+    createDish(userId, dish) {
+        return axios.post('/api/' + 'users/' + userId + '/' + 'dish', dish);
+    }
 }
 
 export default API;
