@@ -15,6 +15,7 @@ import {
     Col,
     Row,
 } from 'reactstrap';
+import API from '../utils/Api';
 
 class ItemForm extends Component {
     constructor(props) {
@@ -53,30 +54,24 @@ class ItemForm extends Component {
     // Check to see if the ingredients have already been stored in the database
     // by making a get request to the api then update the ingredients array in state
     componentDidMount() {
-        var get_url =
-            '/api/users/' +
-            this.state.user.uid +
-            '/dish/' +
-            this.state.dishId +
-            '/' +
-            this.state.type;
-
-        fetch(get_url, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
+        var api = new API();
+        api.getDish(this.state.user.uid, this.props.match.params.dishId).then(
+            response => {
+                if (response.status == 200) {
+                    if (this.props.type == 'ingredients') {
+                        this.setState({
+                            update: true,
+                            itemsArray: response.data.ingredients,
+                        });
+                    } else {
+                        this.setState({
+                            update: true,
+                            itemsArray: response.data.steps,
+                        });
+                    }
+                }
             },
-        }).then(response => {
-            if (response.status == 200) {
-                response.json().then(items => {
-                    this.setState({
-                        update: true,
-                        itemsArray: items,
-                    });
-                });
-            }
-        });
+        );
     }
 
     addItemsToDatabase = async () => {

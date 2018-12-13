@@ -9,6 +9,7 @@ import {ReactWidgets} from 'react-widgets';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
+import API from '../utils/Api';
 
 class Calendar extends Component {
     constructor(props) {
@@ -40,25 +41,11 @@ class Calendar extends Component {
             category: this.props.category,
         });
 
-        var get_url =
-            '/api/users/' +
-            this.state.user.uid +
-            '/dish/' +
-            this.props.dishId +
-            '/history';
-
-        fetch(get_url, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        }).then(response => {
+        var api = new API();
+        api.getDish(this.state.user.uid, this.props.dishId).then(response => {
             if (response.status == 200) {
-                response.json().then(data => {
-                    this.setState({
-                        history: data,
-                    });
+                this.setState({
+                    history: response.data.history,
                 });
             }
         });

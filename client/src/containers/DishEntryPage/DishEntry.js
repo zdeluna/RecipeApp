@@ -7,6 +7,7 @@ import Calendar from '../../components/Calendar';
 import Notes from '../../components/Notes';
 import NewDishForm from '../../components/NewDishForm';
 import {Container, Row, Col} from 'reactstrap';
+import API from '../../utils/Api';
 
 class DishEntry extends Component {
     constructor(props) {
@@ -26,41 +27,30 @@ class DishEntry extends Component {
     }
     /* Make a GET request to the database to retrieve the dish information and store it in state */
     componentDidMount() {
-        var get_url =
-            '/api/users/' + this.state.user.uid + '/dish/' + this.state.dishId;
-
-        fetch(get_url, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        }).then(response => {
-            if (response.status == 200) {
-                response.json().then(dish => {
+        var api = new API();
+        api.getDish(this.state.user.uid, this.props.match.params.dishId).then(
+            response => {
+                if (response.status == 200) {
+                    let dish = response.data;
                     this.setState({
                         loaded: true,
                         name: dish.name,
                     });
 
-                    if (dish['ingredients'] && dish['ingredients'].length > 0)
+                    if (dish.ingredients && dish.ingredients.length > 0)
                         this.setState({
                             ingredientsCreated: true,
                             ingredientsArray: dish.ingredients,
                         });
 
-                    if (dish['steps'] && dish['steps'].length > 0)
+                    if (dish.steps && dish.steps.length > 0)
                         this.setState({
                             stepsCreated: true,
                             stepsArray: dish.steps,
                         });
-                });
-            }
-        });
-    }
-
-    componentWillUnmount() {
-        this.dishesRef.off();
+                }
+            },
+        );
     }
 
     renderNewDishForm = props => {

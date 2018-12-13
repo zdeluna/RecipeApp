@@ -4,6 +4,7 @@ import app from '../base';
 import {Table, Container, Row, Button} from 'reactstrap';
 import './Notes.css';
 import Textarea from 'react-textarea-autosize';
+import API from '../utils/Api';
 
 class Notes extends Component {
     constructor(props) {
@@ -24,26 +25,12 @@ class Notes extends Component {
             category: this.props.category,
         });
 
-        var get_url =
-            '/api/users/' +
-            this.state.user.uid +
-            '/dish/' +
-            this.props.dishId +
-            '/notes';
-
-        fetch(get_url, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        }).then(response => {
+        var api = new API();
+        api.getDish(this.state.user.uid, this.props.dishId).then(response => {
             if (response.status == 200) {
-                response.json().then(data => {
-                    this.setState({
-                        notes: data,
-                        notesCreated: true,
-                    });
+                this.setState({
+                    notes: response.data.notes,
+                    notesCreated: true,
                 });
             } else if (response.status == 404) {
                 this.setState({updateNotes: false});
