@@ -55,14 +55,22 @@ class App extends Component {
                             exact
                             path="/users/category/:category/dish/:dishId/ingredients"
                             render={props => (
-                                <ItemForm {...props} type={'ingredients'} />
+                                <ItemForm
+                                    {...props}
+                                    update={true}
+                                    type={'ingredients'}
+                                />
                             )}
                         />
                         <Route
                             exact
                             path="/users/category/:category/dish/:dishId/steps"
                             render={props => (
-                                <ItemForm {...props} type={'steps'} />
+                                <ItemForm
+                                    {...props}
+                                    update={true}
+                                    type={'steps'}
+                                />
                             )}
                         />
                         <Route

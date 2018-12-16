@@ -59,6 +59,7 @@ class DishEntry extends Component {
     }
 
     handleUrlSubmitted = event => {
+        console.log('url submitted');
         this.setState({stepsCreated: true, ingredientsCreated: true});
         this.getDishIngredientsAndSteps();
     };

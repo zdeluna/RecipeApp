@@ -18,6 +18,10 @@ class NewDishForm extends Component {
 
     handleClick = (e, stepNumber) => {
         this.setState({step: stepNumber});
+        console.log('next step ' + stepNumber);
+
+        // If the user has entered the ingredients, then call the onClick event that will get passed to the dish entry component
+        if (stepNumber == 4) this.props.onClick;
     };
 
     renderForm = props => {
@@ -34,6 +38,7 @@ class NewDishForm extends Component {
         } else if (step == 2) {
             return (
                 <ItemForm
+                    key={this.state.dishId + 'stepsForm'}
                     dishId={this.state.dishId}
                     onClick={e => this.handleClick(e, 3)}
                     type={'steps'}
@@ -42,6 +47,7 @@ class NewDishForm extends Component {
         } else if (step == 3) {
             return (
                 <ItemForm
+                    key={this.state.dishId + 'ingredientsForm'}
                     dishId={this.state.dishId}
                     onClick={e => this.handleClick(e, 4)}
                     type={'ingredients'}

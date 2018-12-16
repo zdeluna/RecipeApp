@@ -23,26 +23,26 @@ class ItemForm extends Component {
 
         this.dishId = 0;
 
-        if (this.props.match.params.dishId) {
+        if (this.props.update == true) {
             this.dishId = this.props.match.params.dishId;
         } else this.dishId = this.props.dishId;
 
         this.state = {
             value: '',
             user: app.auth().currentUser,
-            type: props.type,
+            type: this.props.type,
             numberOfItems: 4,
             itemsArray: [
+                {id: 0, value: '', visible: false},
                 {id: 1, value: '', visible: false},
                 {id: 2, value: '', visible: false},
-                {id: 3, value: '', visible: false},
-                {id: 4, value: '', visible: true},
+                {id: 3, value: '', visible: true},
             ],
             update: false,
             dishId: this.dishId,
             redirect: false,
         };
-
+        console.log('Item form created: ' + this.state.type);
         this.addButtonText;
         if (this.state.type == 'ingredients') {
             this.addButtonText = 'Add Ingredient';
@@ -55,30 +55,27 @@ class ItemForm extends Component {
     // by making a get request to the api then update the ingredients array in state
     componentDidMount() {
         const api = new API();
-        api.getDish(this.state.user.uid, this.props.match.params.dishId).then(
-            response => {
-                if (response.status == 200) {
-                    if (this.props.type == 'ingredients') {
-                        this.setState({
-                            update: true,
-                            itemsArray: response.data.ingredients,
-                        });
-                    } else {
-                        this.setState({
-                            update: true,
-                            itemsArray: response.data.steps,
-                        });
-                    }
+        api.getDish(this.state.user.uid, this.state.dishId).then(response => {
+            if (response.status == 200) {
+                if (
+                    this.props.type == 'ingredients' &&
+                    response.data.ingredients
+                ) {
+                    this.setState({
+                        update: true,
+                        itemsArray: response.data.ingredients,
+                    });
+                } else if (this.props.type == 'steps' && response.data.steps) {
+                    this.setState({
+                        update: true,
+                        itemsArray: response.data.steps,
+                    });
                 }
-            },
-        );
+            }
+        });
     }
 
     addItemsToDatabase = async () => {
-        // If the state update field is true, then we need to make a put request instead of a post request
-        var method = 'POST';
-        if (this.state.update) method = 'PUT';
-
         // Only send id and value fields from the stepForms array.
         // Create a new array "stepsData" to have the filtered properties
         var itemsData = this.state.itemsArray.map(function(item) {
@@ -88,33 +85,19 @@ class ItemForm extends Component {
             };
         });
 
-        var update_url =
-            '/api/users/' +
-            this.state.user.uid +
-            '/dish/' +
-            this.state.dishId +
-            '/' +
-            this.state.type;
+        const api = new API();
 
-        //prettier-ignore
-        fetch(update_url, {
-			method: method,
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				items: this.state.itemsArray,
-			})
-		}).then(response => {
-			// If the response status is 200, then we have created ingredients for the dish the first time, and need to let the parent component, NewDishForm, steps has been added by calling the onClick event.
-			if (response.status == 200) this.props.onClick();
-			else {
-				this.setState({redirect: true});
-		
-			}
-        });
+        let itemsField = {[this.state.type]: this.state.itemsArray};
+        api.updateDish(this.state.user.uid, this.props.dishId, itemsField)
+            .then(response => {
+                this.props.onClick();
+                //this.state.update this.setState({redirect: true});
+            })
+            .catch(error => {
+                console.log(error.response);
+            });
     };
+
     addItem = event => {
         // Set the last object of step forms to have a visible property of false
         this.state.itemsArray[this.state.numberOfItems - 1]['visible'] = false;
