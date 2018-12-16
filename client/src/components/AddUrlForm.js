@@ -10,6 +10,7 @@ import {
     FormText,
     Container,
 } from 'reactstrap';
+import API from '../utils/Api';
 
 class AddUrlForm extends Component {
     constructor(props) {
@@ -18,6 +19,7 @@ class AddUrlForm extends Component {
         this.state = {
             value: '',
             user: app.auth().currentUser,
+            urlAdded: false,
         };
     }
 
@@ -26,29 +28,24 @@ class AddUrlForm extends Component {
     };
 
     handleSubmit = event => {
-        //alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
-
-        const category = 1;
-
-        // Get the category of the dish from the query in the url
-
         this.addRecipeLink();
     };
 
     // Make a call to the api to handle parsing the recipe from the url
     addRecipeLink = async () => {
         // prettier-ignore
-        fetch(`/api/users/${this.state.user.uid}/dish/${this.props.dishId}/recipe/url`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                url: this.state.value,
+        let urlField = {url: this.state.value};
+
+        const api = new API();
+        api.updateDish(this.state.user.uid, this.props.dishId, urlField)
+            .then(response => {
+                this.setState({urlAdded: true});
+                this.props.onClick();
             })
-        })
+            .catch(error => {
+                console.log(error.response);
+            });
     };
 
     render() {

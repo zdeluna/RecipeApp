@@ -44,9 +44,10 @@ class Calendar extends Component {
         var api = new API();
         api.getDish(this.state.user.uid, this.props.dishId).then(response => {
             if (response.status == 200) {
-                this.setState({
-                    history: response.data.history,
-                });
+                if (response.data.history)
+                    this.setState({
+                        history: response.data.history,
+                    });
             }
         });
     }
@@ -54,33 +55,16 @@ class Calendar extends Component {
     /* This function will handle adding the history state object to the database*/
     addDateToDatabase = async () => {
         // If the state update field is true, then we need to make a put request instead of a post request
-        var method = 'POST';
-        if (this.state.updateDate) method = 'PUT';
 
-        var update_url =
-            '/api/users/' +
-            this.state.user.uid +
-            '/dish/' +
-            this.state.dishId +
-            '/history';
-
-        //prettier-ignore
-        fetch(update_url, {
-			method: method,
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				history: this.state.history,
-			})
-		}).then(response => {
-			// If the response status is 200, then we have created ingredients for the dish the first time, and need to let the parent component, NewDishForm, steps has been added by calling the onClick event.
-			if (response.status == 200 || response.status == 303) {
-			this.setState({dateIsScheduled: true});
-
-			}
-        });
+        const api = new API();
+        let historyField = {history: this.state.history};
+        api.updateDish(this.state.user.uid, this.props.dishId, historyField)
+            .then(response => {
+                this.setState({dateIsScheduled: true});
+            })
+            .catch(error => {
+                console.log(error.response);
+            });
     };
 
     /* Add the date to the history array in state */

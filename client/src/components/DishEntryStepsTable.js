@@ -22,6 +22,13 @@ class DishEntryStepsTable extends Component {
         });
     }
 
+    // Consulted https://stackoverflow.com/questions/41582197/state-not-updating-when-receiving-new-props-reactjs
+    componentWillReceiveProps(newProps) {
+        if (this.props != newProps) {
+            this.setState({entries: this.props.entries});
+        }
+    }
+
     render() {
         return (
             <Container>

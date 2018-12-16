@@ -122,6 +122,36 @@ app.post('/api/users/:userId/dish/:dishId/recipe/url', (req, res) => {
     });
 });
 
+/* Route to update dish*/
+app.put('/api/users/:userId/dish/:dishId', (req, res) => {
+    const updatedDishFields = req.body;
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+    console.log('SERVER: ' + updatedDishFields + ' ' + userId + ' ' + dishId);
+
+    // If the user is updating the url, then the steps and ingredients will be changed
+    if (updatedDishFields.url) {
+        getRecipeStepsAndIngredientsFromWebPage(updatedDishFields.url, function(
+            err,
+            stepsArray,
+            ingredientsArray,
+        ) {
+            if (!err) {
+                updatedDishFields.steps = stepsArray;
+                updatedDishFields.ingredients = ingredientsArray;
+
+                saveDish(userId, dishId, updatedDishFields).then(response => {
+                    res.status(200).send('OK');
+                });
+            }
+        });
+    } else {
+        saveDish(userId, dishId, updatedDishFields).then(response => {
+            res.status(200).send('OK');
+        });
+    }
+});
+
 /* Route to update ingredients to a dish*/
 app.put('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
     const ingredients = req.body.items;
@@ -212,6 +242,12 @@ app.get('/api/users/:userId/dish/:dishId/notes', (req, res) => {
         else res.status(200).json(dish.notes);
     });
 });
+
+function saveDish(userId, dishId, updatedDishFields) {
+    return database
+        .child('/dishes/' + userId + '/' + dishId)
+        .update(updatedDishFields);
+}
 
 function saveSteps(userId, dishId, steps) {
     return database

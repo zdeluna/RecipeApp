@@ -24,7 +24,13 @@ class NewDishForm extends Component {
         const step = props.step;
         if (step == 0 || step == 4) return null;
         else if (step == 1) {
-            return <AddUrlForm dishId={this.state.dishId} />;
+            return (
+                <AddUrlForm
+                    dishId={this.state.dishId}
+                    category={this.props.category}
+                    onClick={this.props.onClick}
+                />
+            );
         } else if (step == 2) {
             return (
                 <ItemForm

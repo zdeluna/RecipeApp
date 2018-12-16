@@ -28,11 +28,12 @@ class Notes extends Component {
         var api = new API();
         api.getDish(this.state.user.uid, this.props.dishId).then(response => {
             if (response.status == 200) {
-                this.setState({
-                    notes: response.data.notes,
-                    notesCreated: true,
-                });
-            } else if (response.status == 404) {
+                if (response.data.notes)
+                    this.setState({
+                        notes: response.data.notes,
+                        notesCreated: true,
+                    });
+            } else {
                 this.setState({updateNotes: false});
             }
         });
@@ -40,66 +41,32 @@ class Notes extends Component {
 
     /* This function will handle adding the history state object to the database*/
     addNotesToDatabase = (event, notes) => {
-        console.log('CLIENT: add notes to database');
-        event.persist();
-        // If the state update field is true, then we need to make a put request instead of a post request
-        var method = 'POST';
-        if (this.state.updateNotes) method = 'PUT';
-
-        var update_url =
-            '/api/users/' +
-            this.state.user.uid +
-            '/dish/' +
-            this.state.dishId +
-            '/notes';
-
-        //prettier-ignore
-        fetch(update_url, {
-			method: method,
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				notes: notes,
-			})
-		}).then(response => {
-			// If the response status is 200, then we have created ingredients for the dish the first time, and need to let the parent component, NewDishForm, steps has been added by calling the onClick event.
-			if (response.status == 200 || response.status == 303) {
-			this.setState({editNotes: false, notesCreated: true});
-
-			}
-        });
+        const api = new API();
+        let notesField = {notes: this.state.notes};
+        api.updateDish(this.state.user.uid, this.props.dishId, notesField)
+            .then(response => {
+                this.setState({editNotes: false, notesCreated: true});
+            })
+            .catch(error => {
+                console.log(error.response);
+            });
     };
 
     /* This function will remove the notes from the database */
     deleteNotesFromDatabase = event => {
-        var method = 'PUT';
-
-        var update_url =
-            '/api/users/' +
-            this.state.user.uid +
-            '/dish/' +
-            this.state.dishId +
-            '/notes';
-
-        //prettier-ignore
-        fetch(update_url, {
-			method: method,
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				notes: '',
-			})
-		}).then(response => {
-			// If the response status is 200, then we have created ingredients for the dish the first time, and need to let the parent component, NewDishForm, steps has been added by calling the onClick event.
-			if (response.status == 200 || response.status == 303) {
-			this.setState({notes: null, editNotes: false, notesCreated: false});
-
-			}
-        });
+        const api = new API();
+        let notesField = {notes: ''};
+        api.updateDish(this.state.user.uid, this.props.dishId, notesField)
+            .then(response => {
+                this.setState({
+                    notes: null,
+                    editNotes: false,
+                    notesCreated: false,
+                });
+            })
+            .catch(error => {
+                console.log(error.response);
+            });
     };
 
     /* Add the date to the history array in state */

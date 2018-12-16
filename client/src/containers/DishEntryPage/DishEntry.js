@@ -27,6 +27,10 @@ class DishEntry extends Component {
     }
     /* Make a GET request to the database to retrieve the dish information and store it in state */
     componentDidMount() {
+        this.getDishIngredientsAndSteps();
+    }
+
+    getDishIngredientsAndSteps() {
         var api = new API();
         api.getDish(this.state.user.uid, this.props.match.params.dishId).then(
             response => {
@@ -37,26 +41,37 @@ class DishEntry extends Component {
                         name: dish.name,
                     });
 
-                    if (dish.ingredients && dish.ingredients.length > 0)
+                    if (dish.ingredients && dish.ingredients.length > 0) {
                         this.setState({
                             ingredientsCreated: true,
                             ingredientsArray: dish.ingredients,
                         });
-
-                    if (dish.steps && dish.steps.length > 0)
+                    }
+                    if (dish.steps && dish.steps.length > 0) {
                         this.setState({
                             stepsCreated: true,
                             stepsArray: dish.steps,
                         });
+                    }
                 }
             },
         );
     }
 
+    handleUrlSubmitted = event => {
+        this.setState({stepsCreated: true, ingredientsCreated: true});
+        this.getDishIngredientsAndSteps();
+    };
+
     renderNewDishForm = props => {
-        const entryContainsSteps = props.entryContainsSteps;
         if (!this.state.stepsCreated && this.state.loaded) {
-            return <NewDishForm dishId={this.state.dishId} />;
+            return (
+                <NewDishForm
+                    dishId={this.state.dishId}
+                    category={this.state.category}
+                    onClick={this.handleUrlSubmitted}
+                />
+            );
         } else if (this.state.stepsCreated && this.state.loaded) {
             return (
                 <Container>
@@ -103,9 +118,7 @@ class DishEntry extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        <this.renderNewDishForm
-                            entryContainsSteps={this.state.stepsCreated}
-                        />
+                        <this.renderNewDishForm />
                     </Col>
                 </Row>
             </div>
