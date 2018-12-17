@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000;
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
-
+app.enable('trust proxy');
 app.use(cors());
 
 var admin = require('firebase-admin');
@@ -192,6 +192,14 @@ app.put('/api/users/:userId/dish/:dishId/notes', (req, res) => {
     });
 });
 
+/* This route will get all the dishes of a user */
+app.get('/api/users/:userId', (req, res) => {
+    const userId = req.params.userId;
+    getAllDishesOfUser(userId).then(dishes => {
+        res.status(200).json(dishes);
+    });
+});
+
 /* This route gets dish information using the dish id */
 app.get('/api/users/:userId/dish/:dishId', (req, res) => {
     var userId = req.params.userId;
@@ -285,6 +293,14 @@ function getDishFromDatabase(userId, dishId, complete) {
         .child('/dishes/' + userId + '/' + dishId)
         .once('value', function(snapshot) {
             complete(snapshot.val());
+        });
+}
+
+function getAllDishesOfUser(userId) {
+    return database
+        .child('/dishes/' + userId)
+        .once('value', function(snapshot) {
+            return snapshot.val();
         });
 }
 

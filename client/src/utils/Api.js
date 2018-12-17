@@ -11,6 +11,10 @@ class API {
         );
     }
 
+    getDishesOfUser(userId) {
+        return axios.get('/api/' + 'users/' + userId);
+    }
+
     createDish(userId, dish) {
         return axios.post('/api/' + 'users/' + userId + '/' + 'dish', dish);
     }

@@ -4,6 +4,7 @@ import app from '../../base';
 import AddDishForm from '../../components/AddDishForm';
 import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
+import API from '../../utils/Api';
 
 class DishListTable extends Component {
     constructor(props) {
@@ -17,41 +18,36 @@ class DishListTable extends Component {
         };
     }
     componentDidMount() {
-        this.dishesRef = app
-            .database()
-            .ref()
-            .child('dishes')
-            .child(this.state.user.uid);
+        var api = new API();
+        api.getDishesOfUser(this.state.user.uid).then(response => {
+            if (response.status == 200) {
+                if (response.data) {
+                    let dishes = response.data;
+                    let dishArray = [];
+                    let newDish;
+                    for (let dish in dishes) {
+                        // If the dish category parameter matches the url query then add it to the array
+                        if (dishes[dish].category == this.state.category) {
+                            newDish = {
+                                id: dish,
+                                name: dishes[dish].name,
+                                history: dishes[dish].history,
+                            };
 
-        this.dishesRef.on('value', snapshot => {
-            let dishes = snapshot.val();
-            let dishArray = [];
-            let newDish;
-            for (let dish in dishes) {
-                // If the dish category parameter matches the url query then add it to the array
-                if (dishes[dish].category == this.state.category) {
-                    newDish = {
-                        id: dish,
-                        name: dishes[dish].name,
-                        history: dishes[dish].history,
-                    };
+                            if (dishes[dish].history) {
+                                newDish.lastMade = dishes[dish].history[0];
+                            }
 
-                    if (dishes[dish].history) {
-                        newDish.lastMade = dishes[dish].history[0];
+                            dishArray.push(newDish);
+                        }
                     }
-
-                    dishArray.push(newDish);
+                    this.setState({
+                        dishes: dishArray,
+                        loaded: true,
+                    });
                 }
             }
-            this.setState({
-                dishes: dishArray,
-                loaded: true,
-            });
         });
-    }
-
-    componentWillUnmount() {
-        this.dishesRef.off();
     }
 
     handleClick = id => {
