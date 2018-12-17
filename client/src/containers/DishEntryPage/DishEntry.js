@@ -58,9 +58,7 @@ class DishEntry extends Component {
         );
     }
 
-    handleUrlSubmitted = event => {
-        console.log('url submitted');
-        this.setState({stepsCreated: true, ingredientsCreated: true});
+    handleStepsAndIngredientsSubmitted = event => {
         this.getDishIngredientsAndSteps();
     };
 
@@ -70,7 +68,7 @@ class DishEntry extends Component {
                 <NewDishForm
                     dishId={this.state.dishId}
                     category={this.state.category}
-                    onClick={this.handleUrlSubmitted}
+                    onClick={this.handleStepsAndIngredientsSubmitted}
                 />
             );
         } else if (this.state.stepsCreated && this.state.loaded) {
