@@ -6,23 +6,20 @@ class API {
     }
 
     getDish(userId, dishId) {
-        return axios.get(
-            '/api/' + 'users/' + userId + '/' + 'dish' + '/' + dishId,
-        );
+        return axios.get(`/api/users/${userId}/dish/${dishId}`);
     }
 
     getDishesOfUser(userId) {
-        return axios.get('/api/' + 'users/' + userId);
+        return axios.get(`/api/users/${userId}`);
     }
 
     createDish(userId, dish) {
-        return axios.post('/api/' + 'users/' + userId + '/' + 'dish', dish);
+        return axios.post(`/api/users/${userId}/dish`, dish);
     }
 
     updateDish(userId, dishId, updatedDishFields) {
-        console.log('update dish: ' + updatedDishFields);
         return axios.put(
-            '/api/' + 'users/' + userId + '/' + 'dish' + '/' + dishId,
+            `/api/users/${userId}/dish/${dishId}`,
             updatedDishFields,
         );
     }

@@ -37,10 +37,10 @@ class Home extends Component {
         return (
             <Container>
                 <Row>
-                    <h3 class="col-centered">Categories</h3>
+                    <h3 className="col-centered">Categories</h3>
                 </Row>
                 {this.state.categoryButtons.map(categoryButton => (
-                    <Col>
+                    <Col key={categoryButton.id + 'Column'}>
                         <CategoryButton
                             key={categoryButton.id}
                             onClick={e =>
