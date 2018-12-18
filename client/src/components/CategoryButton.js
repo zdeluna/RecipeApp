@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Container, Row, Col} from 'reactstrap';
+import {Button, Container, Row} from 'reactstrap';
 
 class CategoryButton extends Component {
     state = {

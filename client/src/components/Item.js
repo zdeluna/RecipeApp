@@ -1,15 +1,6 @@
 //@format
 import React, {Component} from 'react';
-import {Route, Redirect} from 'react-router-dom';
-import {
-    Form,
-    Button,
-    FormGroup,
-    Label,
-    Input,
-    FormText,
-    Container,
-} from 'reactstrap';
+import {Button, Label, Input} from 'reactstrap';
 
 class Item extends Component {
     constructor(props) {
@@ -41,7 +32,7 @@ class Item extends Component {
     };
 
     render() {
-        if (this.state.type == 'steps') {
+        if (this.state.type === 'steps') {
             return (
                 <div>
                     <Label for="newStepInput">

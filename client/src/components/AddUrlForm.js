@@ -1,15 +1,6 @@
 import React, {Component} from 'react';
-import {Route, Redirect} from 'react-router-dom';
 import app from '../base';
-import {
-    Form,
-    Button,
-    FormGroup,
-    Label,
-    Input,
-    FormText,
-    Container,
-} from 'reactstrap';
+import {Form, Button, FormGroup, Label, Input, Container} from 'reactstrap';
 import API from '../utils/Api';
 
 class AddUrlForm extends Component {

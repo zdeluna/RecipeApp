@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
 import app from '../base';
-import {Table, Container, Row, Button} from 'reactstrap';
+import {Button} from 'reactstrap';
 import './Calendar.css';
 import 'react-widgets/dist/css/react-widgets.css';
 //import {DateTimePicker} from 'react-widgets';
-import {ReactWidgets} from 'react-widgets';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -43,7 +41,7 @@ class Calendar extends Component {
 
         var api = new API();
         api.getDish(this.state.user.uid, this.props.dishId).then(response => {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 if (response.data.history)
                     this.setState({
                         history: response.data.history,
@@ -69,7 +67,7 @@ class Calendar extends Component {
 
     /* Add the date to the history array in state */
     dateChanged = newDate => {
-        var newDate = newDate.toLocaleDateString('en-US', this.dateOptions);
+        newDate = newDate.toLocaleDateString('en-US', this.dateOptions);
         // If the user has not entered scheduled the dish, then just add the date to the end of the array
         var newHistory = this.state.history;
 

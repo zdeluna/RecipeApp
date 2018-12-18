@@ -1,20 +1,10 @@
 //@format
 
 import React, {Component} from 'react';
-import {Route, Redirect} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 import app from '../base';
 import Item from './Item';
-import {
-    Form,
-    Button,
-    FormGroup,
-    Label,
-    Input,
-    FormText,
-    Container,
-    Col,
-    Row,
-} from 'reactstrap';
+import {Form, Button, FormGroup, Container, Col, Row} from 'reactstrap';
 import API from '../utils/Api';
 
 class ItemForm extends Component {
@@ -23,7 +13,7 @@ class ItemForm extends Component {
 
         this.dishId = 0;
 
-        if (this.props.update == true) {
+        if (this.props.update === true) {
             this.dishId = this.props.match.params.dishId;
         } else this.dishId = this.props.dishId;
 
@@ -42,9 +32,7 @@ class ItemForm extends Component {
             dishId: this.dishId,
             redirect: false,
         };
-        console.log('Item form created: ' + this.state.type);
-        this.addButtonText;
-        if (this.state.type == 'ingredients') {
+        if (this.state.type === 'ingredients') {
             this.addButtonText = 'Add Ingredient';
         } else {
             this.addButtonText = 'Add Step';
@@ -56,16 +44,16 @@ class ItemForm extends Component {
     componentDidMount() {
         const api = new API();
         api.getDish(this.state.user.uid, this.state.dishId).then(response => {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 if (
-                    this.props.type == 'ingredients' &&
+                    this.props.type === 'ingredients' &&
                     response.data.ingredients
                 ) {
                     this.setState({
                         update: true,
                         itemsArray: response.data.ingredients,
                     });
-                } else if (this.props.type == 'steps' && response.data.steps) {
+                } else if (this.props.type === 'steps' && response.data.steps) {
                     this.setState({
                         update: true,
                         itemsArray: response.data.steps,
@@ -87,7 +75,7 @@ class ItemForm extends Component {
 
         const api = new API();
 
-        let itemsField = {[this.state.type]: this.state.itemsArray};
+        let itemsField = {[this.state.type]: itemsData};
         api.updateDish(this.state.user.uid, this.props.dishId, itemsField)
             .then(response => {
                 this.props.onClick();
@@ -100,10 +88,14 @@ class ItemForm extends Component {
 
     addItem = event => {
         // Set the last object of step forms to have a visible property of false
-        this.state.itemsArray[this.state.numberOfItems - 1]['visible'] = false;
 
         // Increase the number of steps listed in the state property
-        this.state.numberOfItems++;
+        let newItemsArray = this.state.itemsArray;
+        newItemsArray[this.state.numberOfItems - 1]['visible'] = false;
+
+        let numItems = this.state.numberOfItems + 1;
+
+        this.setState({itemsArray: newItemsArray, numberOfItems: numItems});
 
         // https://stackoverflow.com/questions/23966438/what-is-the-preferred-way-to-mutate-a-react-state
         // Concatenate an array with stepForms that includes the new step
@@ -117,8 +109,10 @@ class ItemForm extends Component {
     };
 
     handleChange = (id, value) => {
-        this.state.itemsArray[id].value = value;
-        this.forceUpdate();
+        let newItemsArray = this.state.itemsArray;
+        newItemsArray[id].value = value;
+
+        this.setState({itemsArray: newItemsArray});
     };
 
     handleSubmit = event => {
@@ -128,13 +122,17 @@ class ItemForm extends Component {
 
     handleDeleteItem = id => {
         this.removeItem(id - 1);
-        this.state.numberOfItems--;
 
+        // Increase the number of steps listed in the state property
+        let newItemsArray = this.state.itemsArray;
+        newItemsArray[this.state.numberOfItems - 1]['visible'] = false;
+
+        let numItems = this.state.numberOfItems - 1;
         // Set the visible property of the new last step's delete button as true
         if (this.state.numberOfItems > 1)
-            this.state.itemsArray[this.state.numberOfItems - 1][
-                'visible'
-            ] = true;
+            newItemsArray[this.state.numberOfItems - 1]['visible'] = true;
+
+        this.setState({itemsArray: newItemsArray, numberOfItems: numItems});
     };
 
     // https://stackoverflow.com/questions/29527385/removing-element-from-array-in-component-state

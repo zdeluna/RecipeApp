@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
 import app from '../base';
-import {Table, Container, Row, Button} from 'reactstrap';
+import {Button} from 'reactstrap';
 import './Notes.css';
 import Textarea from 'react-textarea-autosize';
 import API from '../utils/Api';
@@ -27,7 +26,7 @@ class Notes extends Component {
 
         var api = new API();
         api.getDish(this.state.user.uid, this.props.dishId).then(response => {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 if (response.data.notes)
                     this.setState({
                         notes: response.data.notes,

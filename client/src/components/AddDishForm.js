@@ -1,15 +1,6 @@
 import React, {Component} from 'react';
-import {Route, Redirect} from 'react-router-dom';
 import app from '../base';
-import {
-    Form,
-    Button,
-    FormGroup,
-    Label,
-    Input,
-    FormText,
-    Container,
-} from 'reactstrap';
+import {Form, Button, FormGroup, Label, Input, Container} from 'reactstrap';
 import './AddDishForm.css';
 import API from '../utils/Api';
 
@@ -50,7 +41,7 @@ class AddDishForm extends Component {
 
         const api = new API();
         api.createDish(this.state.user.uid, newDish).then(response => {
-            if (response.status == 201) this.props.onClick(response.data.id);
+            if (response.status === 201) this.props.onClick(response.data.id);
         });
     };
 

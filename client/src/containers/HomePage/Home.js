@@ -1,18 +1,9 @@
 import React, {Component} from 'react';
 import CategoryButton from '../../components/CategoryButton';
-import {Route, Redirect} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 import {Row, Col, Container} from 'reactstrap';
 import './Home.css';
 
-const styles = {
-    categoryButton: {
-        padding: '10px',
-    },
-    categoryButtonContainer: {
-        float: 'none',
-        margin: '0 auto',
-    },
-};
 class Home extends Component {
     state = {
         categoryButtons: [

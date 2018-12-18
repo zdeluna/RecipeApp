@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import app from '../../base';
 import AddDishForm from '../../components/AddDishForm';
 import {Table, Container, Row} from 'reactstrap';
@@ -20,14 +20,14 @@ class DishListTable extends Component {
     componentDidMount() {
         var api = new API();
         api.getDishesOfUser(this.state.user.uid).then(response => {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 if (response.data) {
                     let dishes = response.data;
                     let dishArray = [];
                     let newDish;
                     for (let dish in dishes) {
                         // If the dish category parameter matches the url query then add it to the array
-                        if (dishes[dish].category == this.state.category) {
+                        if (dishes[dish].category === this.state.category) {
                             newDish = {
                                 id: dish,
                                 name: dishes[dish].name,

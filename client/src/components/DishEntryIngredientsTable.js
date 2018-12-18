@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Route, Redirect, BrowserRouter, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import app from '../base';
-import {Table, Container, Row} from 'reactstrap';
+import {Table, Container} from 'reactstrap';
 import './DishEntryIngredientsTable.css';
 
 class DishEntryIngredientsTable extends Component {
@@ -24,7 +24,7 @@ class DishEntryIngredientsTable extends Component {
 
     // Consulted https://stackoverflow.com/questions/41582197/state-not-updating-when-receiving-new-props-reactjs
     componentWillReceiveProps(newProps) {
-        if (this.props != newProps) {
+        if (this.props !== newProps) {
             this.setState({entries: this.props.entries});
         }
     }

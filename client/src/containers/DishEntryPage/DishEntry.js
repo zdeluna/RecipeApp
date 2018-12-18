@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Route, Redirect} from 'react-router-dom';
 import app from '../../base';
 import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
@@ -34,7 +33,7 @@ class DishEntry extends Component {
         var api = new API();
         api.getDish(this.state.user.uid, this.props.match.params.dishId).then(
             response => {
-                if (response.status == 200) {
+                if (response.status === 200) {
                     let dish = response.data;
                     this.setState({
                         loaded: true,

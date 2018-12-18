@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Route, Redirect} from 'react-router-dom';
 import app from '../base';
 import AddUrlForm from '../components/AddUrlForm';
 import ItemForm from '../components/ItemForm';
@@ -21,13 +20,13 @@ class NewDishForm extends Component {
         console.log('next step ' + stepNumber);
 
         // If the user has entered the ingredients, then call the onClick event that will get passed to the dish entry component
-        if (stepNumber == 4) this.props.onClick();
+        if (stepNumber === 4) this.props.onClick();
     };
 
     renderForm = props => {
         const step = props.step;
-        if (step == 0 || step == 4) return null;
-        else if (step == 1) {
+        if (step === 0 || step === 4) return null;
+        else if (step === 1) {
             return (
                 <AddUrlForm
                     dishId={this.state.dishId}
@@ -35,7 +34,7 @@ class NewDishForm extends Component {
                     onClick={this.props.onClick}
                 />
             );
-        } else if (step == 2) {
+        } else if (step === 2) {
             return (
                 <ItemForm
                     key={this.state.dishId + 'stepsForm'}
@@ -44,7 +43,7 @@ class NewDishForm extends Component {
                     type={'steps'}
                 />
             );
-        } else if (step == 3) {
+        } else if (step === 3) {
             return (
                 <ItemForm
                     key={this.state.dishId + 'ingredientsForm'}
