@@ -22,6 +22,18 @@ Installation:
 
 npm install
 
+To run the react server
+
+```
+cd client && npm start
+```
+
+To run the backend server
+
+```
+node server.js
+```
+
 To run the backend and react server
 
 ```
@@ -34,9 +46,9 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
--   [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
--   [Maven](https://maven.apache.org/) - Dependency Management
--   [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+-   [React](https://reactjs.org/)
+-   [Firebase](https://firebase.google.com/)
+-       [Reactstrap](https://reactstrap.github.io/)
 
 ## Contributing
 
