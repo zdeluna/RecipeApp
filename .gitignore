@@ -1,6 +1,4 @@
-node_modules/
 recipeapp-4bd8d-firebase-adminsdk-2x3ae-e33243e2f1.json
-
 .DS_STORE
 node_modules
 scripts/flow/*/.flowconfig
@@ -25,3 +23,5 @@ chrome-user-data
 .vscode
 *.swp
 *.swo
+yarn.lock
+yarn-error.log
