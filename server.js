@@ -24,7 +24,21 @@ var database = admin.database().ref('/');
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
-    //var stepsArray = [];
+    var stepsArray = [];
+    var ingredientsArray = [];
+
+    var pageUrl = 'https://www.daringgourmet.com/paella-valenciana/';
+
+    var pageUrl =
+        'https://www.seriouseats.com/recipes/2014/02/shellfish-paella-paella-de-marisco-from-spain.html';
+
+    getRecipeStepsAndIngredientsFromWebPage(pageUrl, function(
+        err,
+        stepsArray,
+        ingredientsArray,
+    ) {
+        console.log('Steps Array: ' + stepsArray);
+    });
 });
 
 app.options('/*', function(req, res, next) {
@@ -313,31 +327,68 @@ function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
         if (error) return complete(error, err);
         var $ = cheerio.load(html);
 
-        /* Get the recipes steps */
-        $('.recipe-procedure-text').filter(function() {
-            var data = $(this);
-            var stepDescription = data.children().text();
+        getStepsFromWebPage($, steps => {
+            stepsArray = steps;
+            getIngredientsFromWebPage($, ingredients => {
+                ingredientsArray = ingredients;
+                complete(false, stepsArray, ingredientsArray);
+            });
+        });
+    });
+}
 
+function getStepsFromWebPage($, complete) {
+    var stepsArray = [];
+
+    var directionsHTML = $('h1, h2, h3')
+        .filter(function() {
+            return (
+                $(this)
+                    .text()
+                    .trim() ===
+                ('Instructions' ||
+                    'instructions' ||
+                    'directions' ||
+                    'Directions')
+            );
+        })
+        .next()
+        .children('ul')
+        .children()
+        .each(function(index, element) {
+            var stepDescription = $(this).text();
+            console.log('**STEP**: ' + stepDescription);
             var step = {id: stepsArray.length, value: stepDescription};
-
             stepsArray.push(step);
         });
 
-        /* Get the ingredients */
-        $('.ingredient').filter(function() {
-            var data = $(this);
-            var ingredientDescription = data.text();
+    complete(stepsArray);
+}
 
+function getIngredientsFromWebPage($, complete) {
+    var ingredientsArray = [];
+
+    var ingredientsHTML = $('h1, h2, h3')
+        .filter(function() {
+            return (
+                $(this)
+                    .text()
+                    .trim() === 'Ingredients'
+            );
+        })
+        .find('ul')
+        .children()
+        .each(function(index, element) {
+            var ingredientDescription = $(this).text();
+            console.log('**Ingredient**: ' + ingredientDescription);
             var ingredient = {
                 id: ingredientsArray.length,
                 value: ingredientDescription,
             };
-
             ingredientsArray.push(ingredient);
         });
 
-        complete(false, stepsArray, ingredientsArray);
-    });
+    complete(ingredientsArray);
 }
 
 /* This function will create a new dish and return an id of the dish entry in the database */
