@@ -27,7 +27,7 @@ app.listen(port, () => {
     var stepsArray = [];
     var ingredientsArray = [];
 
-    var pageUrl = 'https://www.daringgourmet.com/paella-valenciana/';
+    //var pageUrl = 'https://www.daringgourmet.com/paella-valenciana/';
 
     var pageUrl =
         'https://www.seriouseats.com/recipes/2014/02/shellfish-paella-paella-de-marisco-from-spain.html';
@@ -37,7 +37,7 @@ app.listen(port, () => {
         stepsArray,
         ingredientsArray,
     ) {
-        console.log('Steps Array: ' + stepsArray);
+        console.log('Call function');
     });
 });
 
@@ -337,27 +337,46 @@ function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
     });
 }
 
+function checkForStepsHeading(text) {
+    var acceptableStepsHeading = [
+        'instructions',
+        'Instructions',
+        'Directions',
+        'directions',
+    ];
+
+    if (acceptableStepsHeading.indexOf(text) > -1) return true;
+    else return false;
+}
+
+/* This function will parse a website and return the recipe steps in an array */
 function getStepsFromWebPage($, complete) {
     var stepsArray = [];
 
+    // Find the heading that contains instruction
     var directionsHTML = $('h1, h2, h3')
         .filter(function() {
-            return (
+            return checkForStepsHeading(
                 $(this)
                     .text()
-                    .trim() ===
-                ('Instructions' ||
-                    'instructions' ||
-                    'directions' ||
-                    'Directions')
+                    .trim(),
             );
         })
-        .next()
-        .children('ul')
-        .children()
+        .parent() // Get the parent element
+        .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
+        .children('li') // Find the children of the list
+        // Iterate through each child element and store the text of the element and add it to the array
         .each(function(index, element) {
+            // In each list item, search the instructions text.
+            var listItem = $(this)
+                .text()
+                .trim();
+            // Traverse starting at each list item and search for text
+            console.log(listItem.length);
+
             var stepDescription = $(this).text();
-            console.log('**STEP**: ' + stepDescription);
+
+            console.log('**Step: ' + stepDescription);
             var step = {id: stepsArray.length, value: stepDescription};
             stepsArray.push(step);
         });
@@ -365,6 +384,7 @@ function getStepsFromWebPage($, complete) {
     complete(stepsArray);
 }
 
+/* This function will parse a website and return the recipe ingredients in an array */
 function getIngredientsFromWebPage($, complete) {
     var ingredientsArray = [];
 
@@ -376,11 +396,18 @@ function getIngredientsFromWebPage($, complete) {
                     .trim() === 'Ingredients'
             );
         })
-        .find('ul')
+        .parent() // Get the parent element
+        .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
+        .children() // Find the children of the list
         .children()
+        .last()
+        // Iterate through each child element and store the text of the element and add it to the array
         .each(function(index, element) {
-            var ingredientDescription = $(this).text();
-            console.log('**Ingredient**: ' + ingredientDescription);
+            var ingredientDescription = $(this)
+                .text()
+                .trim();
+            console.log(index);
+            console.log('**Ingredient: ' + ingredientDescription);
             var ingredient = {
                 id: ingredientsArray.length,
                 value: ingredientDescription,
