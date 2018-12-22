@@ -55,6 +55,7 @@ Add additional notes about how to deploy this on a live system
 -   [React](https://reactjs.org/)
 -   [Firebase](https://firebase.google.com/)
 -   [Reactstrap](https://reactstrap.github.io/)
+-   [Cheerio](https://cheerio.js.org/)
 
 ## Contributing
 
