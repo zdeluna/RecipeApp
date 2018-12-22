@@ -24,21 +24,7 @@ var database = admin.database().ref('/');
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
-    var stepsArray = [];
-    var ingredientsArray = [];
-
-    //var pageUrl = 'https://www.daringgourmet.com/paella-valenciana/';
-
-    var pageUrl =
-        'https://www.seriouseats.com/recipes/2014/02/shellfish-paella-paella-de-marisco-from-spain.html';
-
-    getRecipeStepsAndIngredientsFromWebPage(pageUrl, function(
-        err,
-        stepsArray,
-        ingredientsArray,
-    ) {
-        console.log('Call function');
-    });
+    test();
 });
 
 app.options('/*', function(req, res, next) {
@@ -399,8 +385,6 @@ function getIngredientsFromWebPage($, complete) {
         .parent() // Get the parent element
         .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
         .children() // Find the children of the list
-        .children()
-        .last()
         // Iterate through each child element and store the text of the element and add it to the array
         .each(function(index, element) {
             var ingredientDescription = $(this)
@@ -438,4 +422,28 @@ function createNewDish(userId, dishName, category, dishKey) {
 /* This function returns a new key that can be used to create a new dish */
 function getNewDishKey() {
     return database.child('dishes').push().key;
+}
+
+function test() {
+    var stepsArray = [];
+    var ingredientsArray = [];
+
+    var pageUrl1 = 'https://www.daringgourmet.com/paella-valenciana/';
+
+    var pageUrl2 =
+        'https://www.seriouseats.com/recipes/2013/06/grilled-skirt-steak-fajitas-food-lab-recipe.html';
+    getRecipeStepsAndIngredientsFromWebPage(pageUrl1, function(
+        err,
+        stepsArray,
+        ingredientsArray,
+    ) {
+        console.log('Call function');
+    });
+    getRecipeStepsAndIngredientsFromWebPage(pageUrl2, function(
+        err,
+        stepsArray,
+        ingredientsArray,
+    ) {
+        console.log('Call function 2');
+    });
 }
