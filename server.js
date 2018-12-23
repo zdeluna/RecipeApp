@@ -24,7 +24,7 @@ var database = admin.database().ref('/');
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
-    test();
+    //test();
 });
 
 app.options('/*', function(req, res, next) {
@@ -335,6 +335,13 @@ function checkForStepsHeading(text) {
     else return false;
 }
 
+function checkForIngredientsHeading(text) {
+    var acceptableIngredientsHeading = ['ingredients', 'Ingredients'];
+
+    if (acceptableIngredientsHeading.indexOf(text) > -1) return true;
+    else return false;
+}
+
 /* This function will parse a website and return the recipe steps in an array */
 function getStepsFromWebPage($, complete) {
     var stepsArray = [];
@@ -376,10 +383,10 @@ function getIngredientsFromWebPage($, complete) {
 
     var ingredientsHTML = $('h1, h2, h3')
         .filter(function() {
-            return (
+            return checkForIngredientsHeading(
                 $(this)
                     .text()
-                    .trim() === 'Ingredients'
+                    .trim(),
             );
         })
         .parent() // Get the parent element

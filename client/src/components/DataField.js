@@ -4,12 +4,77 @@ import {Button} from 'reactstrap';
 import './Notes.css';
 import Textarea from 'react-textarea-autosize';
 import API from '../utils/Api';
-import DataField from './DataField';
 
-class Notes extends DataField {
-    constructor(props) {
-        super(props, 'Notes');
+class DataField extends Component {
+    constructor(props, type) {
+        super(props);
+        this.state = {
+            user: app.auth().currentUser,
+            data: '',
+            editField: false,
+            fieldCreated: false,
+            type: type,
+        };
     }
+
+    /* Store the value of the history from the database to the history in state */
+    componentDidMount() {
+        // First set the dishId and category will be used to create our url for the GET request
+        this.setState({
+            dishId: this.props.dishId,
+            category: this.props.category,
+            type: this.props.type,
+        });
+
+        var api = new API();
+        api.getDish(this.state.user.uid, this.props.dishId).then(response => {
+            if (response.status === 200) {
+                if (response.data.notes)
+                    this.setState({
+                        data: response.data.notes,
+                        fieldCreated: true,
+                    });
+            } else if (response.data.cookingTime) {
+                this.setState({
+                    data: response.data.cookingTime,
+                    fieldCreated: true,
+                });
+            } else {
+                this.setState({editField: false});
+            }
+        });
+    }
+
+    /* This function will handle adding the history state object to the database*/
+    addFieldToDatabase = (event, notes) => {
+        const api = new API();
+        let dataObject = {[this.state.type]: this.state.data};
+        api.updateDish(this.state.user.uid, this.props.dishId, dataObject)
+            .then(response => {
+                this.setState({editField: false, fieldCreated: true});
+            })
+            .catch(error => {
+                console.log(error.response);
+            });
+    };
+
+    /* This function will remove the notes from the database */
+    deleteFieldFromDatabase = event => {
+        const api = new API();
+        let dataObject = {[this.state.type]: ''};
+        api.updateDish(this.state.user.uid, this.props.dishId, dataObject)
+            .then(response => {
+                this.setState({
+                    data: null,
+                    editField: false,
+                    fieldCreated: false,
+                });
+            })
+            .catch(error => {
+                console.log(error.response);
+            });
+    };
+
     /* Add the date to the history array in state */
     fieldChanged = event => {
         this.setState({data: event.target.value});
@@ -93,4 +158,5 @@ class Notes extends DataField {
         );
     }
 }
-export default Notes;
+
+export default DataField;

@@ -6,54 +6,48 @@ import Textarea from 'react-textarea-autosize';
 import API from '../utils/Api';
 import DataField from './DataField';
 
-class Notes extends DataField {
+class CookingTime extends DataField {
     constructor(props) {
-        super(props, 'Notes');
+        super(props);
+        this.state = {
+            user: app.auth().currentUser,
+            notes: '',
+            editNotes: false,
+            notesCreated: false,
+        };
     }
-    /* Add the date to the history array in state */
-    fieldChanged = event => {
-        this.setState({data: event.target.value});
-    };
-
-    createField = () => {
-        this.setState({fieldCreated: true, editField: true});
-    };
-
-    editField = () => {
-        this.setState({editField: true});
-    };
 
     /* Render the components based on if the user has already sheduled the dish today*/
     renderComponents = props => {
-        const editField = props.editField;
-        const fieldCreated = props.fieldCreated;
+        const editNotes = props.editNotes;
+        const notesCreated = props.notesCreated;
 
         // User doesn't have any existing notes on the dish
-        if (!fieldCreated)
+        if (!notesCreated)
             return (
                 <div>
                     <Button
                         color="primary"
                         size="md"
-                        onClick={this.createField}>
+                        onClick={this.createNotes}>
                         Add Notes
                     </Button>
                 </div>
             );
 
-        if (editField)
+        if (editNotes)
             return (
                 <div>
                     <Textarea
                         id="notesTextArea"
-                        onChange={event => this.fieldChanged(event)}
-                        value={this.state.data}
+                        onChange={event => this.notesChanged(event)}
+                        value={this.state.notes}
                     />{' '}
                     <Button
                         color="primary"
                         size="md"
                         onClick={event =>
-                            this.addFieldToDatabase(event, this.state.data)
+                            this.addNotesToDatabase(event, this.state.notes)
                         }>
                         Save Notes
                     </Button>
@@ -62,7 +56,7 @@ class Notes extends DataField {
         else
             return (
                 <div>
-                    <Button color="primary" size="md" onClick={this.editFields}>
+                    <Button color="primary" size="md" onClick={this.editNotes}>
                         Edit Notes
                     </Button>
                     <Button
@@ -78,19 +72,14 @@ class Notes extends DataField {
             );
     };
 
-    removeDate(array, index) {
-        // Remove a date from the history array
-
-        return array.filter((_, i) => i !== index);
-    }
-
     render() {
         return (
             <this.renderComponents
-                fieldCreated={this.state.fieldCreated}
-                editField={this.state.editField}
+                notesCreated={this.state.notesCreated}
+                editNotes={this.state.editNotes}
             />
         );
     }
 }
-export default Notes;
+
+export default CookingTime;
