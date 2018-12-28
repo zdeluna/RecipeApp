@@ -43,7 +43,7 @@ class DishEntry extends Component {
                     if (dish.ingredients && dish.ingredients.length > 0) {
                         this.setState({
                             ingredientsCreated: true,
-                            ingredientsArray: dish.ingredients,
+                            ingredierntsArray: dish.ingredients,
                         });
                     }
                     if (dish.steps && dish.steps.length > 0) {

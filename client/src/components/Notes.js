@@ -8,20 +8,8 @@ import DataField from './DataField';
 
 class Notes extends DataField {
     constructor(props) {
-        super(props, 'Notes');
+        super(props, 'notes');
     }
-    /* Add the date to the history array in state */
-    fieldChanged = event => {
-        this.setState({data: event.target.value});
-    };
-
-    createField = () => {
-        this.setState({fieldCreated: true, editField: true});
-    };
-
-    editField = () => {
-        this.setState({editField: true});
-    };
 
     /* Render the components based on if the user has already sheduled the dish today*/
     renderComponents = props => {
@@ -62,7 +50,7 @@ class Notes extends DataField {
         else
             return (
                 <div>
-                    <Button color="primary" size="md" onClick={this.editFields}>
+                    <Button color="primary" size="md" onClick={this.editField}>
                         Edit Notes
                     </Button>
                     <Button
@@ -72,7 +60,7 @@ class Notes extends DataField {
                         Delete Notes
                     </Button>
                     <div id="notesText">
-                        <p>{this.state.notes}</p>
+                        <p>{this.getDataFieldValue()}</p>
                     </div>
                 </div>
             );

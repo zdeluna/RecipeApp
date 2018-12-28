@@ -17,30 +17,25 @@ class DataField extends Component {
         };
     }
 
-    /* Store the value of the history from the database to the history in state */
     componentDidMount() {
         // First set the dishId and category will be used to create our url for the GET request
         this.setState({
             dishId: this.props.dishId,
             category: this.props.category,
-            type: this.props.type,
         });
 
         var api = new API();
         api.getDish(this.state.user.uid, this.props.dishId).then(response => {
             if (response.status === 200) {
-                if (response.data.notes)
+                if (response.data[this.state.type]) {
+                    console.log('set state');
                     this.setState({
-                        data: response.data.notes,
+                        data: response.data[this.state.type],
                         fieldCreated: true,
                     });
-            } else if (response.data.cookingTime) {
-                this.setState({
-                    data: response.data.cookingTime,
-                    fieldCreated: true,
-                });
-            } else {
-                this.setState({editField: false});
+                } else {
+                    this.setState({editField: false});
+                }
             }
         });
     }
@@ -56,6 +51,10 @@ class DataField extends Component {
             .catch(error => {
                 console.log(error.response);
             });
+    };
+
+    getDataFieldValue = () => {
+        return this.state.data;
     };
 
     /* This function will remove the notes from the database */
@@ -88,66 +87,11 @@ class DataField extends Component {
         this.setState({editField: true});
     };
 
-    /* Render the components based on if the user has already sheduled the dish today*/
-    renderComponents = props => {
-        const editField = props.editField;
-        const fieldCreated = props.fieldCreated;
-
-        // User doesn't have any existing notes on the dish
-        if (!fieldCreated)
-            return (
-                <div>
-                    <Button
-                        color="primary"
-                        size="md"
-                        onClick={this.createField}>
-                        Add Notes
-                    </Button>
-                </div>
-            );
-
-        if (editField)
-            return (
-                <div>
-                    <Textarea
-                        id="notesTextArea"
-                        onChange={event => this.fieldChanged(event)}
-                        value={this.state.data}
-                    />{' '}
-                    <Button
-                        color="primary"
-                        size="md"
-                        onClick={event =>
-                            this.addFieldToDatabase(event, this.state.data)
-                        }>
-                        Save Notes
-                    </Button>
-                </div>
-            );
-        else
-            return (
-                <div>
-                    <Button color="primary" size="md" onClick={this.editFields}>
-                        Edit Notes
-                    </Button>
-                    <Button
-                        color="danger"
-                        size="md"
-                        onClick={event => this.deleteNotesFromDatabase(event)}>
-                        Delete Notes
-                    </Button>
-                    <div id="notesText">
-                        <p>{this.state.notes}</p>
-                    </div>
-                </div>
-            );
-    };
-
-    removeDate(array, index) {
+    removeDate = (array, index) => {
         // Remove a date from the history array
 
         return array.filter((_, i) => i !== index);
-    }
+    };
 
     render() {
         return (
