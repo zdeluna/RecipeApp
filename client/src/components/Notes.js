@@ -56,7 +56,7 @@ class Notes extends DataField {
                     <Button
                         color="danger"
                         size="md"
-                        onClick={event => this.deleteNotesFromDatabase(event)}>
+                        onClick={event => this.deleteFieldFromDatabase(event)}>
                         Delete Notes
                     </Button>
                     <div id="notesText">
@@ -65,12 +65,6 @@ class Notes extends DataField {
                 </div>
             );
     };
-
-    removeDate(array, index) {
-        // Remove a date from the history array
-
-        return array.filter((_, i) => i !== index);
-    }
 
     render() {
         return (

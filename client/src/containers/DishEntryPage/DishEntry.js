@@ -4,6 +4,7 @@ import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
 import Calendar from '../../components/Calendar';
 import Notes from '../../components/Notes';
+import CookingTime from '../../components/CookingTime';
 import NewDishForm from '../../components/NewDishForm';
 import {Container, Row, Col} from 'reactstrap';
 import API from '../../utils/Api';
@@ -11,7 +12,6 @@ import API from '../../utils/Api';
 class DishEntry extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             user: app.auth().currentUser,
             dishId: this.props.match.params.dishId,
@@ -88,6 +88,10 @@ class DishEntry extends Component {
                                 category={this.state.category}
                             />
                             <Notes
+                                dishId={this.state.dishId}
+                                category={this.state.category}
+                            />
+                            <CookingTime
                                 dishId={this.state.dishId}
                                 category={this.state.category}
                             />

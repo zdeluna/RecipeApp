@@ -8,65 +8,53 @@ import DataField from './DataField';
 
 class CookingTime extends DataField {
     constructor(props) {
-        super(props);
-        this.state = {
-            user: app.auth().currentUser,
-            notes: '',
-            editNotes: false,
-            notesCreated: false,
-        };
+        super(props, 'cookingTime');
     }
 
     /* Render the components based on if the user has already sheduled the dish today*/
     renderComponents = props => {
-        const editNotes = props.editNotes;
-        const notesCreated = props.notesCreated;
+        const editField = props.editField;
+        const fieldCreated = props.fieldCreated;
 
         // User doesn't have any existing notes on the dish
-        if (!notesCreated)
+        if (!fieldCreated)
             return (
                 <div>
                     <Button
                         color="primary"
                         size="md"
-                        onClick={this.createNotes}>
-                        Add Notes
+                        onClick={this.createField}>
+                        Add Cooking Time
                     </Button>
                 </div>
             );
 
-        if (editNotes)
+        if (editField)
             return (
                 <div>
                     <Textarea
                         id="notesTextArea"
-                        onChange={event => this.notesChanged(event)}
-                        value={this.state.notes}
+                        onChange={event => this.fieldChanged(event)}
+                        value={this.state.data}
                     />{' '}
                     <Button
                         color="primary"
                         size="md"
                         onClick={event =>
-                            this.addNotesToDatabase(event, this.state.notes)
+                            this.addFieldToDatabase(event, this.state.data)
                         }>
-                        Save Notes
+                        Save Cooking Time
                     </Button>
                 </div>
             );
         else
             return (
                 <div>
-                    <Button color="primary" size="md" onClick={this.editNotes}>
-                        Edit Notes
-                    </Button>
-                    <Button
-                        color="danger"
-                        size="md"
-                        onClick={event => this.deleteNotesFromDatabase(event)}>
-                        Delete Notes
+                    <Button color="primary" size="md" onClick={this.editField}>
+                        Edit Cooking Time
                     </Button>
                     <div id="notesText">
-                        <p>{this.state.notes}</p>
+                        <p>{this.getDataFieldValue()}</p>
                     </div>
                 </div>
             );
@@ -75,11 +63,10 @@ class CookingTime extends DataField {
     render() {
         return (
             <this.renderComponents
-                notesCreated={this.state.notesCreated}
-                editNotes={this.state.editNotes}
+                fieldCreated={this.state.fieldCreated}
+                editField={this.state.editField}
             />
         );
     }
 }
-
 export default CookingTime;
