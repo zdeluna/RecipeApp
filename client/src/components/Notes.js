@@ -1,9 +1,7 @@
-import React, {Component} from 'react';
-import app from '../base';
+import React from 'react';
 import {Button} from 'reactstrap';
 import './Notes.css';
 import Textarea from 'react-textarea-autosize';
-import API from '../utils/Api';
 import DataField from './DataField';
 
 class Notes extends DataField {

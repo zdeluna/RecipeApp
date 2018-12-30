@@ -74,7 +74,7 @@ class DishEntry extends Component {
             return (
                 <Container>
                     <Row>
-                        <Col xs="9">
+                        <Col xs="8">
                             <DishEntryIngredientsTable
                                 type="Ingredients"
                                 entries={this.state.ingredientsArray}
@@ -82,7 +82,7 @@ class DishEntry extends Component {
                                 category={this.state.category}
                             />
                         </Col>
-                        <Col xs="3">
+                        <Col xs="4">
                             <Calendar
                                 dishId={this.state.dishId}
                                 category={this.state.category}

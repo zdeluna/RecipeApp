@@ -1,4 +1,4 @@
-# Project Title
+# Recipe Scheduler
 
 This project allows users to save food recipes to a database. Users can store the dates of when they made the recipes and create notes.
 
@@ -8,21 +8,20 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+You will need to create a Firebase Application at https://firebase.google.com/
+Copy the firebase credientials stored as a json into the repository
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
 Installation:
+
+Install the dependencies of the backend server where the API calls are made.
 
 ```
 npm install
 ```
+
+Next, install the dependencies of the client.
 
 ```
 cd client && npm install
@@ -40,15 +39,11 @@ To run the backend server
 node server.js
 ```
 
-To run the backend and react server
+To run the backend on port 5000 and react server on port 3000.
 
 ```
 yarn dev
 ```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
@@ -65,8 +60,4 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 -   **Zach DeLuna** - _Initial work_ - (https://github.com/zdeluna)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+See also the list of [contributors](https://github.com/zdeluna/RecipeApp/contributors) who participated in this project.

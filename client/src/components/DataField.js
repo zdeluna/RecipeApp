@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import app from '../base';
-import {Button} from 'reactstrap';
 import './Notes.css';
-import Textarea from 'react-textarea-autosize';
 import API from '../utils/Api';
 
 class DataField extends Component {
@@ -28,7 +26,6 @@ class DataField extends Component {
         api.getDish(this.state.user.uid, this.props.dishId).then(response => {
             if (response.status === 200) {
                 if (response.data[this.state.type]) {
-                    console.log('set state');
                     this.setState({
                         data: response.data[this.state.type],
                         fieldCreated: true,

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import app from '../base';
-import {Button} from 'reactstrap';
+import {Row, Col, Button} from 'reactstrap';
 import './Calendar.css';
 import 'react-widgets/dist/css/react-widgets.css';
 //import {DateTimePicker} from 'react-widgets';
@@ -8,6 +8,7 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import API from '../utils/Api';
+import PopOver from './PopOver';
 
 class Calendar extends Component {
     constructor(props) {
@@ -46,6 +47,7 @@ class Calendar extends Component {
                     this.setState({
                         history: response.data.history,
                     });
+                this.forceUpdate();
             }
         });
     }
@@ -70,11 +72,8 @@ class Calendar extends Component {
         newDate = newDate.toLocaleDateString('en-US', this.dateOptions);
         // If the user has not entered scheduled the dish, then just add the date to the end of the array
         var newHistory = this.state.history;
-
         if (this.state.updateDate) newHistory = this.removeDate(newHistory, 0);
-
         newHistory.unshift(newDate);
-
         this.setState({history: newHistory, newScheduleDate: newHistory[0]});
     };
 
@@ -89,19 +88,30 @@ class Calendar extends Component {
             return (
                 <div>
                     {' '}
-                    <Button
-                        color="primary"
-                        size="md"
-                        onClick={this.addDateToDatabase}>
-                        Schedule Dish
-                    </Button>
-                    <DateTimePicker
-                        id="dateTimePicker"
-                        time={false}
-                        format="MMM DD YYYY"
-                        defaultValue={new Date()}
-                        onChange={value => this.dateChanged(value)}
-                    />
+                    <Row>
+                        <Col>
+                            <Button
+                                color="primary"
+                                size="md"
+                                onClick={this.addDateToDatabase}>
+                                Schedule Dish
+                            </Button>
+                        </Col>
+                        <Col>
+                            <PopOver history={this.state.history} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <DateTimePicker
+                                id="dateTimePicker"
+                                time={false}
+                                format="MMM DD YYYY"
+                                defaultValue={new Date()}
+                                onChange={value => this.dateChanged(value)}
+                            />
+                        </Col>
+                    </Row>
                 </div>
             );
         else
