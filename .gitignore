@@ -26,4 +26,4 @@ chrome-user-data
 yarn.lock
 yarn-error.log
 package-lock.json
-.env
+*.env

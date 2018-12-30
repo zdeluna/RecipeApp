@@ -3,7 +3,6 @@ import app from '../base';
 import {Row, Col, Button} from 'reactstrap';
 import './Calendar.css';
 import 'react-widgets/dist/css/react-widgets.css';
-//import {DateTimePicker} from 'react-widgets';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';

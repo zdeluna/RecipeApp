@@ -13,8 +13,6 @@ Copy the firebase credientials stored as a json into the repository
 
 ### Installing
 
-Installation:
-
 Install the dependencies of the backend server where the API calls are made.
 
 ```
