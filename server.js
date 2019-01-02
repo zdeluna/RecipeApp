@@ -12,7 +12,7 @@ app.use(cors());
 
 var admin = require('firebase-admin');
 
-var serviceAccount = require('./recipeapp-4bd8d-firebase-adminsdk-2x3ae-e33243e2f1.json');
+var serviceAccount = require('./recipeapp-4bd8d-firebase-adminsdk-2x3ae-4b33c2148d.json');
 const cheerio = require('cheerio');
 
 admin.initializeApp({
