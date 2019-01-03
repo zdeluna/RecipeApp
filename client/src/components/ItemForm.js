@@ -31,6 +31,7 @@ class ItemForm extends Component {
             update: false,
             dishId: this.dishId,
             redirect: false,
+            loading: true,
         };
         if (this.state.type === 'ingredients') {
             this.addButtonText = 'Add Ingredient';
@@ -59,6 +60,7 @@ class ItemForm extends Component {
                         itemsArray: response.data.steps,
                     });
                 }
+                this.setState({loading: false});
             }
         });
     }
@@ -156,40 +158,48 @@ class ItemForm extends Component {
             );
         }
 
-        return (
-            <Container>
-                <Row>
-                    <Col sm="12" md={{size: 6, order: 1, offset: 4}}>
-                        <Form>
-                            {this.state.itemsArray.map(item => (
+        if (!this.state.loading) {
+            return (
+                <Container>
+                    <Row>
+                        <Col sm="12" md={{size: 6, order: 1, offset: 4}}>
+                            <Form>
+                                {this.state.itemsArray.map(item => (
+                                    <FormGroup key={item.id}>
+                                        <Item
+                                            key={item.id}
+                                            value={item.value}
+                                            id={item.id}
+                                            onChange={this.handleChange}
+                                            onClick={this.handleDeleteItem}
+                                            onBlur={this.handleChange}
+                                            deleteButton={item.visible}
+                                            type={this.state.type}
+                                        />
+                                    </FormGroup>
+                                ))}
                                 <FormGroup>
-                                    <Item
-                                        key={item.id}
-                                        value={item.value}
-                                        id={item.id}
-                                        onChange={this.handleChange}
-                                        onClick={this.handleDeleteItem}
-                                        onBlur={this.handleChange}
-                                        deleteButton={item.visible}
-                                        type={this.state.type}
-                                    />
+                                    <Button
+                                        color="primary"
+                                        onClick={this.addItem}>
+                                        {this.addButtonText}
+                                    </Button>
+                                    <Button
+                                        color="primary"
+                                        onClick={event =>
+                                            this.handleSubmit(event)
+                                        }>
+                                        Save
+                                    </Button>
                                 </FormGroup>
-                            ))}
-                            <FormGroup>
-                                <Button color="primary" onClick={this.addItem}>
-                                    {this.addButtonText}
-                                </Button>
-                                <Button
-                                    color="primary"
-                                    onClick={event => this.handleSubmit(event)}>
-                                    Save
-                                </Button>
-                            </FormGroup>
-                        </Form>
-                    </Col>
-                </Row>
-            </Container>
-        );
+                            </Form>
+                        </Col>
+                    </Row>
+                </Container>
+            );
+        } else {
+            return null;
+        }
     }
 }
 

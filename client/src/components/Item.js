@@ -35,7 +35,7 @@ class Item extends Component {
         if (this.state.type === 'steps') {
             return (
                 <div>
-                    <Label for="newStepInput">
+                    <Label for="newStep">
                         Step #{this.state.id + 1}
                         <Input
                             type="text"

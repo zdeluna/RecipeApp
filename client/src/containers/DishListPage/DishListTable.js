@@ -32,6 +32,7 @@ class DishListTable extends Component {
                                 id: dish,
                                 name: dishes[dish].name,
                                 history: dishes[dish].history,
+                                cookingTime: dishes[dish].cookingTime,
                             };
 
                             if (dishes[dish].history) {
@@ -91,7 +92,9 @@ class DishListTable extends Component {
                                         {dish.name}
                                     </Link>
                                 </td>
-                                <td key={dish.id + 'time'}>40 minutes</td>
+                                <td key={dish.id + 'time'}>
+                                    {dish.cookingTime}
+                                </td>
                                 <td key={dish.id + 'date'}>{dish.lastMade}</td>
                             </tr>
                         ))}

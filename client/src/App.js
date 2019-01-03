@@ -5,8 +5,8 @@ import PrivateRoute from './PrivateRoute';
 import app from './base';
 
 import Home from './containers/HomePage/Home';
-import LogIn from './containers/LogIn';
-import SignUp from './containers/SignUp';
+import LogIn from './containers/LogInPage/LogIn';
+import SignUp from './containers/SignUpPage/SignUp';
 import DishListTable from './containers/DishListPage/DishListTable';
 import DishEntry from './containers/DishEntryPage/DishEntry';
 import ItemForm from './components/ItemForm';
