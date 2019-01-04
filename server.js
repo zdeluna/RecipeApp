@@ -40,6 +40,13 @@ app.options('/*', function(req, res, next) {
     res.send(200);
 });
 
+app.post('/api/users', (req, res) => {
+    const email = req.body.email;
+    const userId = req.body.uid;
+    console.log('in server: ' + email + userId);
+    createNewUser(userId, email).then(res.status(201).send('OK'));
+});
+
 /* Route to create a new dish */
 app.post('/api/users/:userId/dish/', (req, res) => {
     const userId = req.params.userId;
@@ -407,6 +414,13 @@ function getIngredientsFromWebPage($, complete) {
         });
 
     complete(ingredientsArray);
+}
+
+function createNewUser(userId, email) {
+    var updates = {};
+    updates['/users/' + userId] = {email: email};
+
+    return database.update(updates);
 }
 
 /* This function will create a new dish and return an id of the dish entry in the database */

@@ -23,6 +23,11 @@ class API {
             updatedDishFields,
         );
     }
+
+    createUser(userInfo) {
+        console.log('create user');
+        return axios.post(`/api/users`, userInfo);
+    }
 }
 
 export default API;
