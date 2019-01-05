@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import app from '../../base';
+import {Link} from 'react-router-dom';
 import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
 import Calendar from '../../components/Calendar';
@@ -113,6 +114,15 @@ class DishEntry extends Component {
     render() {
         return (
             <div>
+                <Row>
+                    <Col>
+                        {' '}
+                        <Link to={`/users/category/${this.state.category}`}>
+                            Go Back
+                        </Link>
+                    </Col>
+                </Row>
+
                 <Row>
                     <Col sm="12" md={{size: 6, offset: 6}}>
                         <h1>{this.state.name}</h1>

@@ -67,6 +67,10 @@ class DishListTable extends Component {
         return (
             <Container>
                 <Row>
+                    {' '}
+                    <Link to={`/`}>Go Back To Categories</Link>
+                </Row>
+                <Row>
                     <AddDishForm
                         category={this.state.category}
                         onClick={id => this.handleClick(id)}
