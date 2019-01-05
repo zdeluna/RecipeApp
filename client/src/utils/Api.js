@@ -25,7 +25,6 @@ class API {
     }
 
     createUser(userInfo) {
-        console.log('create user');
         return axios.post(`/api/users`, userInfo);
     }
 }

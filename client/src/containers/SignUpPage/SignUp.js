@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router';
+import {Link} from 'react-router-dom';
 import app from '../../base';
 import {Form, Button, Input, FormGroup, Label} from 'reactstrap';
 import API from '../../utils/Api';
@@ -16,6 +17,7 @@ class SignUp extends Component {
     handleSignUp = async event => {
         const email = this.state.email;
         const password = this.state.password;
+        const history = this.props.history;
         event.preventDefault();
         try {
             await app
@@ -29,13 +31,9 @@ class SignUp extends Component {
 
                     const api = new API();
                     let userField = {email: email, uid: user.user.uid};
-                    api.createUser(userField)
-                        .then(response => {
-                            this.props.history.push('/');
-                        })
-                        .catch(error => {
-                            console.log(error.response);
-                        });
+                    api.createUser(userField).then(response => {
+                        history.push('/');
+                    });
                 });
         } catch (error) {
             alert(error);
@@ -82,6 +80,9 @@ class SignUp extends Component {
                     <Button color="primary" type="submit">
                         Sign Up
                     </Button>
+                    <p>
+                        <Link to={`/login`}>Already have an account</Link>
+                    </p>
                 </Form>
             </div>
         );

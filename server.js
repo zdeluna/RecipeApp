@@ -44,7 +44,7 @@ app.post('/api/users', (req, res) => {
     const email = req.body.email;
     const userId = req.body.uid;
     console.log('in server: ' + email + userId);
-    createNewUser(userId, email).then(res.status(201).send('OK'));
+    createNewUser(userId, email).then(res.status(200).send('OK'));
 });
 
 /* Route to create a new dish */

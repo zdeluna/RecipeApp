@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router';
+import {Link} from 'react-router-dom';
 import app from '../../base';
 import {Form, Button, Input, FormGroup, Label} from 'reactstrap';
 
@@ -43,6 +44,9 @@ class LogIn extends Component {
                     <Button color="primary" onClick={this.hanldeLogIn}>
                         Log in
                     </Button>
+                    <p>
+                        <Link to={`/signup`}>Don't have an account</Link>
+                    </p>
                 </Form>
             </div>
         );
