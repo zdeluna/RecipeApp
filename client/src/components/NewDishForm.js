@@ -85,7 +85,7 @@ class NewDishForm extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col sm="12" md={{size: 6, offset: 3}}>
+                        <Col>
                             <this.renderForm step={this.state.step} />
                         </Col>
                     </Row>

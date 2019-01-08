@@ -1,6 +1,8 @@
 //@format
 import React, {Component} from 'react';
-import {Button, Label, Input} from 'reactstrap';
+import {Button, Label, FormGroup, Input} from 'reactstrap';
+import './Item.css';
+import Textarea from 'react-textarea-autosize';
 
 class Item extends Component {
     constructor(props) {
@@ -35,41 +37,52 @@ class Item extends Component {
         if (this.state.type === 'steps') {
             return (
                 <div>
-                    <Label for="newStep">
-                        Step #{this.state.id + 1}
-                        <Input
-                            type="text"
-                            value={this.state.value}
-                            onChange={this.handleChange}
-                            onBlur={() => this.updateInput(this.state.value)}
-                            id="newStep"
-                        />
-                    </Label>
-                    {this.props.deleteButton ? (
-                        <Button color="danger" onClick={this.handleDeleteStep}>
-                            Delete
-                        </Button>
-                    ) : null}
+                    <FormGroup id="formGroup">
+                        <Label for="newStep" className="itemLabel">
+                            Step #{this.state.id + 1}
+                            <Textarea
+                                value={this.state.value}
+                                onChange={this.handleChange}
+                                onBlur={() =>
+                                    this.updateInput(this.state.value)
+                                }
+                                id="newStep"
+                            />
+                        </Label>
+                        {this.props.deleteButton ? (
+                            <Button
+                                color="danger"
+                                onClick={this.handleDeleteStep}>
+                                Delete
+                            </Button>
+                        ) : null}
+                    </FormGroup>
                 </div>
             );
         } else {
             return (
                 <div>
-                    <Label>
-                        Ingredient #{this.state.id + 1}
-                        <Input
-                            type="text"
-                            value={this.state.value}
-                            onChange={this.handleChange}
-                            onBlur={() => this.updateInput(this.state.value)}
-                            id="newIngredient"
-                        />
-                    </Label>
-                    {this.props.deleteButton ? (
-                        <Button color="danger" onClick={this.handleDeleteStep}>
-                            Delete
-                        </Button>
-                    ) : null}
+                    <FormGroup>
+                        <Label className="itemLabel">
+                            Ingredient #{this.state.id + 1}
+                            <Input
+                                type="text"
+                                value={this.state.value}
+                                onChange={this.handleChange}
+                                onBlur={() =>
+                                    this.updateInput(this.state.value)
+                                }
+                                id={'newIngredientInput' + this.state.id}
+                            />
+                        </Label>
+                        {this.props.deleteButton ? (
+                            <Button
+                                color="danger"
+                                onClick={this.handleDeleteStep}>
+                                Delete
+                            </Button>
+                        ) : null}
+                    </FormGroup>
                 </div>
             );
         }

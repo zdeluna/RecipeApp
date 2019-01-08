@@ -6,6 +6,7 @@ import app from '../base';
 import Item from './Item';
 import {Form, Button, FormGroup, Container, Col, Row} from 'reactstrap';
 import API from '../utils/Api';
+import './ItemForm.css';
 
 class ItemForm extends Component {
     constructor(props) {
@@ -78,7 +79,7 @@ class ItemForm extends Component {
         const api = new API();
 
         let itemsField = {[this.state.type]: itemsData};
-        api.updateDish(this.state.user.uid, this.props.dishId, itemsField)
+        api.updateDish(this.state.user.uid, this.dishId, itemsField)
             .then(response => {
                 this.props.onClick();
                 //this.state.update this.setState({redirect: true});
@@ -162,7 +163,7 @@ class ItemForm extends Component {
             return (
                 <Container>
                     <Row>
-                        <Col sm="12" md={{size: 6, order: 1, offset: 4}}>
+                        <Col sm="12" md={{size: 6, offset: 3}}>
                             <Form>
                                 {this.state.itemsArray.map(item => (
                                     <FormGroup key={item.id}>
@@ -180,6 +181,7 @@ class ItemForm extends Component {
                                 ))}
                                 <FormGroup>
                                     <Button
+                                        className="formButtons"
                                         color="primary"
                                         onClick={this.addItem}>
                                         {this.addButtonText}

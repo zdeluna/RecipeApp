@@ -9,6 +9,7 @@ import CookingTime from '../../components/CookingTime';
 import NewDishForm from '../../components/NewDishForm';
 import {Container, Row, Col} from 'reactstrap';
 import API from '../../utils/Api';
+import './DishEntry.css';
 
 class DishEntry extends Component {
     constructor(props) {

@@ -1,0 +1,12 @@
+.itemLabel {
+    width: 500px;
+}
+
+#formGroup * {
+    vertical-align: middle;
+}
+
+#newStep {
+    width: 300px;
+    margin-left: 10px;
+}

@@ -1,4 +1,4 @@
-.StepsIngredientsContainer {
-    float: left;
-    font-size: 20px;
+.centered {
+    float: none;
+    margin: 0 auto;
 }
