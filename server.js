@@ -134,7 +134,6 @@ app.put('/api/users/:userId/dish/:dishId', (req, res) => {
     const updatedDishFields = req.body;
     const userId = req.params.userId;
     const dishId = req.params.dishId;
-    console.log('SERVER: ' + updatedDishFields + ' ' + userId + ' ' + dishId);
 
     // If the user is updating the url, then the steps and ingredients will be changed
     if (updatedDishFields.url) {

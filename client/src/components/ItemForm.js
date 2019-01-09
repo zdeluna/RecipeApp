@@ -79,14 +79,12 @@ class ItemForm extends Component {
         const api = new API();
 
         let itemsField = {[this.state.type]: itemsData};
-        api.updateDish(this.state.user.uid, this.dishId, itemsField)
-            .then(response => {
-                this.props.onClick();
-                //this.state.update this.setState({redirect: true});
-            })
-            .catch(error => {
-                console.log(error.response);
-            });
+        api.updateDish(this.state.user.uid, this.dishId, itemsField).then(
+            response => {
+                if (this.props.update) this.setState({redirect: true});
+                else this.props.onClick();
+            },
+        );
     };
 
     addItem = event => {
