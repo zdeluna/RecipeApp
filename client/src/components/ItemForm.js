@@ -62,6 +62,15 @@ class ItemForm extends Component {
                     });
                 }
                 this.setState({loading: false});
+
+                // If the user is updating ingredients or steps, add a delete button to each step.
+                var updatedItemsArray = this.state.itemsArray;
+
+                for (var i = 0; i < updatedItemsArray.length; i++) {
+                    updatedItemsArray[i].visible = true;
+                }
+
+                this.setState({itemsArray: updatedItemsArray});
             }
         });
     }
@@ -91,7 +100,7 @@ class ItemForm extends Component {
         // Set the last object of step forms to have a visible property of false
 
         // Increase the number of steps listed in the state property
-        let newItemsArray = this.state.itemsArray;
+        var newItemsArray = this.state.itemsArray;
         newItemsArray[this.state.numberOfItems - 1]['visible'] = false;
 
         let numItems = this.state.numberOfItems + 1;
@@ -122,29 +131,30 @@ class ItemForm extends Component {
     };
 
     handleDeleteItem = id => {
-        this.removeItem(id - 1);
+        var newItemsArray = this.removeItem(id);
 
-        // Increase the number of steps listed in the state property
-        let newItemsArray = this.state.itemsArray;
-        newItemsArray[this.state.numberOfItems - 1]['visible'] = false;
+        for (var i = 0; i < newItemsArray.length; i++) {
+            newItemsArray[i].id = i;
+        }
+        var numItems = this.state.numberOfItems - 1;
 
-        let numItems = this.state.numberOfItems - 1;
-        // Set the visible property of the new last step's delete button as true
-        if (this.state.numberOfItems > 1)
-            newItemsArray[this.state.numberOfItems - 1]['visible'] = true;
+        // Set the visible property of the new last step's delete button as true if the
+        // user is adding steps/ingredients for the first time
+        if (!this.props.update) {
+            // Increase the number of steps listed in the state property
+            newItemsArray[this.state.numberOfItems - 1]['visible'] = false;
 
+            if (this.state.numberOfItems > 1)
+                newItemsArray[this.state.numberOfItems - 1]['visible'] = true;
+        }
         this.setState({itemsArray: newItemsArray, numberOfItems: numItems});
     };
 
     // https://stackoverflow.com/questions/29527385/removing-element-from-array-in-component-state
 
     removeItem(id) {
-        // Remove the last step object from the stepForms array
-        this.setState({
-            itemsArray: this.state.itemsArray.filter((_, i) => i !== id),
-        });
+        return this.state.itemsArray.filter((_, i) => i !== id);
     }
-
     render() {
         if (this.state.redirect) {
             return (

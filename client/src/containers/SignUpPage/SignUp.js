@@ -24,11 +24,6 @@ class SignUp extends Component {
                 .auth()
                 .createUserWithEmailAndPassword(email, password)
                 .then(function(user) {
-                    var userId = user.user.uid;
-                    var userData = {
-                        username: email,
-                    };
-
                     const api = new API();
                     let userField = {email: email, uid: user.user.uid};
                     api.createUser(userField).then(response => {
