@@ -118,9 +118,9 @@ class ItemForm extends Component {
         }));
     };
 
-    handleChange = (id, value) => {
+    handleChange = (index, value) => {
         let newItemsArray = this.state.itemsArray;
-        newItemsArray[id].value = value;
+        newItemsArray[index].value = value;
 
         this.setState({itemsArray: newItemsArray});
     };
@@ -130,12 +130,14 @@ class ItemForm extends Component {
         this.addItemsToDatabase();
     };
 
-    handleDeleteItem = id => {
-        var newItemsArray = this.removeItem(id);
+    handleDeleteItem = index => {
+        console.log('delete');
+        var newItemsArray = this.removeItem(index);
+        console.log(newItemsArray);
 
-        for (var i = 0; i < newItemsArray.length; i++) {
+        /*for (var i = 0; i < newItemsArray.length; i++) {
             newItemsArray[i].id = i;
-        }
+		}*/
         var numItems = this.state.numberOfItems - 1;
 
         // Set the visible property of the new last step's delete button as true if the
@@ -148,12 +150,13 @@ class ItemForm extends Component {
                 newItemsArray[this.state.numberOfItems - 1]['visible'] = true;
         }
         this.setState({itemsArray: newItemsArray, numberOfItems: numItems});
+        console.log('state: ' + this.state.itemsArray);
     };
 
     // https://stackoverflow.com/questions/29527385/removing-element-from-array-in-component-state
 
-    removeItem(id) {
-        return this.state.itemsArray.filter((_, i) => i !== id);
+    removeItem(index) {
+        return this.state.itemsArray.filter((_, i) => i !== index);
     }
     render() {
         if (this.state.redirect) {
@@ -173,14 +176,16 @@ class ItemForm extends Component {
                     <Row>
                         <Col sm="12" md={{size: 6, offset: 3}}>
                             <Form>
-                                {this.state.itemsArray.map(item => (
-                                    <FormGroup key={item.id}>
+                                {this.state.itemsArray.map((item, index) => (
+                                    <FormGroup key={'ItemFormGroup' + index}>
                                         <Item
-                                            key={item.id}
+                                            key={item.value}
                                             value={item.value}
-                                            id={item.id}
+                                            id={index}
                                             onChange={this.handleChange}
-                                            onClick={this.handleDeleteItem}
+                                            onClick={index =>
+                                                this.handleDeleteItem(index)
+                                            }
                                             onBlur={this.handleChange}
                                             deleteButton={item.visible}
                                             type={this.state.type}

@@ -47,10 +47,10 @@ class DishEntryStepsTable extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.entries.map(entry => (
-                            <tr key={entry.id + 'r'}>
-                                <td key={entry.id + 'c'}>
-                                    {entry.id + 1}) {entry.value}
+                        {this.state.entries.map((entry, index) => (
+                            <tr key={index + 'r'}>
+                                <td key={index + 'c'}>
+                                    {index + 1}) {entry.value}
                                 </td>
                             </tr>
                         ))}
