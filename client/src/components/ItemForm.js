@@ -6,7 +6,7 @@ import app from '../base';
 import Item from './Item';
 import {Form, Button, FormGroup, Container, Col, Row} from 'reactstrap';
 import API from '../utils/Api';
-import './ItemForm.css';
+import './Item.css';
 
 class ItemForm extends Component {
     constructor(props) {
@@ -22,7 +22,6 @@ class ItemForm extends Component {
             value: '',
             user: app.auth().currentUser,
             type: this.props.type,
-            numberOfItems: 4,
             itemsArray: [
                 {id: 0, value: '', visible: false},
                 {id: 1, value: '', visible: false},
@@ -61,26 +60,22 @@ class ItemForm extends Component {
                         itemsArray: response.data.steps,
                     });
                 }
-                this.setState({loading: false});
 
-                // If the user is updating ingredients or steps, add a delete button to each step.
                 var updatedItemsArray = this.state.itemsArray;
 
                 for (var i = 0; i < updatedItemsArray.length; i++) {
                     updatedItemsArray[i].visible = true;
                 }
 
-                this.setState({itemsArray: updatedItemsArray});
+                this.setState({itemsArray: updatedItemsArray, loading: false});
             }
         });
     }
 
     addItemsToDatabase = async () => {
-        // Only send id and value fields from the stepForms array.
-        // Create a new array "stepsData" to have the filtered properties
+        // Only store the value fields from itemsArray.
         var itemsData = this.state.itemsArray.map(function(item) {
             return {
-                id: item.id,
                 value: item.value,
             };
         });
@@ -97,21 +92,10 @@ class ItemForm extends Component {
     };
 
     addItem = event => {
-        // Set the last object of step forms to have a visible property of false
-
-        // Increase the number of steps listed in the state property
-        var newItemsArray = this.state.itemsArray;
-        newItemsArray[this.state.numberOfItems - 1]['visible'] = false;
-
-        let numItems = this.state.numberOfItems + 1;
-
-        this.setState({itemsArray: newItemsArray, numberOfItems: numItems});
-
         // https://stackoverflow.com/questions/23966438/what-is-the-preferred-way-to-mutate-a-react-state
         // Concatenate an array with stepForms that includes the new step
         this.setState(state => ({
             itemsArray: state.itemsArray.concat({
-                id: this.state.numberOfItems,
                 value: '',
                 visible: true,
             }),
@@ -121,7 +105,6 @@ class ItemForm extends Component {
     handleChange = (index, value) => {
         let newItemsArray = this.state.itemsArray;
         newItemsArray[index].value = value;
-
         this.setState({itemsArray: newItemsArray});
     };
 
@@ -131,25 +114,20 @@ class ItemForm extends Component {
     };
 
     handleDeleteItem = index => {
-        console.log('delete');
         var newItemsArray = this.removeItem(index);
-        console.log(newItemsArray);
-
-        /*for (var i = 0; i < newItemsArray.length; i++) {
-            newItemsArray[i].id = i;
-		}*/
-        var numItems = this.state.numberOfItems - 1;
 
         // Set the visible property of the new last step's delete button as true if the
         // user is adding steps/ingredients for the first time
         if (!this.props.update) {
             // Increase the number of steps listed in the state property
-            newItemsArray[this.state.numberOfItems - 1]['visible'] = false;
+            newItemsArray[this.state.itemsArray.length - 1]['visible'] = false;
 
             if (this.state.numberOfItems > 1)
-                newItemsArray[this.state.numberOfItems - 1]['visible'] = true;
+                newItemsArray[this.state.itemsArray.length - 1][
+                    'visible'
+                ] = true;
         }
-        this.setState({itemsArray: newItemsArray, numberOfItems: numItems});
+        this.setState({itemsArray: newItemsArray});
         console.log('state: ' + this.state.itemsArray);
     };
 
@@ -174,14 +152,14 @@ class ItemForm extends Component {
             return (
                 <Container>
                     <Row>
-                        <Col sm="12" md={{size: 6, offset: 3}}>
+                        <Col lg={{size: 8, offset: 2}}>
                             <Form>
                                 {this.state.itemsArray.map((item, index) => (
                                     <FormGroup key={'ItemFormGroup' + index}>
                                         <Item
-                                            key={item.value}
-                                            value={item.value}
+                                            key={index + 'item'}
                                             id={index}
+                                            value={item.value}
                                             onChange={this.handleChange}
                                             onClick={index =>
                                                 this.handleDeleteItem(index)

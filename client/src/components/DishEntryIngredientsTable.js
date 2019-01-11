@@ -47,9 +47,9 @@ class DishEntryIngredientsTable extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.entries.map(entry => (
-                            <tr key={entry.id + 'r'}>
-                                <td key={entry.id + 'c'}>{entry.value}</td>
+                        {this.state.entries.map((entry, index) => (
+                            <tr key={'Trow' + index}>
+                                <td key={'Tdata' + index}>{entry.value}</td>
                             </tr>
                         ))}
                     </tbody>

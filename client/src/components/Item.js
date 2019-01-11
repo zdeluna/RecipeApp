@@ -10,8 +10,8 @@ class Item extends Component {
 
         this.state = {
             value: props.value,
-            id: props.id,
             type: props.type,
+            id: props.id,
         };
     }
 
@@ -20,6 +20,7 @@ class Item extends Component {
     };
 
     handleChange = event => {
+        console.log(event.target.value);
         this.setState({value: event.target.value}, () => {
             // Update the array contained in the steps form component
             // https://stackoverflow.com/questions/33088482/onchange-in-react-doesnt-capture-the-last-character-of-text
@@ -43,14 +44,13 @@ class Item extends Component {
                             <Textarea
                                 value={this.state.value}
                                 onChange={this.handleChange}
-                                onBlur={() =>
-                                    this.updateInput(this.state.value)
-                                }
+                                onBlur={this.handleChange}
                                 id="newStep"
                             />
                         </Label>
                         {this.props.deleteButton ? (
                             <Button
+                                className="deleteButton"
                                 color="danger"
                                 onClick={this.handleDeleteStep}>
                                 Delete
@@ -77,6 +77,7 @@ class Item extends Component {
                         </Label>
                         {this.props.deleteButton ? (
                             <Button
+                                className="deleteButton"
                                 color="danger"
                                 onClick={this.handleDeleteStep}>
                                 Delete
