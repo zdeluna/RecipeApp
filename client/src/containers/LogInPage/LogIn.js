@@ -5,17 +5,39 @@ import app from '../../base';
 import {Form, Button, Input, FormGroup, Label} from 'reactstrap';
 
 class LogIn extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: '',
+            password: '',
+        };
+    }
+
     handleLogIn = async event => {
         event.preventDefault();
-        const {email, password} = event.target.elements;
-        try {
-            await app
-                .auth()
-                .signInWithEmailAndPassword(email.value, password.value);
-            this.props.history.push('/');
-        } catch (error) {
-            alert(error);
-        }
+        const email = this.state.email;
+        const password = this.state.password;
+        const history = this.props.history;
+        app.auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(function(user) {
+                history.push('/');
+            })
+            .catch(function(error) {
+                alert(error);
+            });
+    };
+
+    handleEmailChange = event => {
+        event.preventDefault();
+
+        this.setState({email: event.target.value});
+    };
+
+    handlePasswordChange = event => {
+        event.preventDefault();
+
+        this.setState({password: event.target.value});
     };
 
     render() {
@@ -30,6 +52,7 @@ class LogIn extends Component {
                             type="email"
                             id="userEmail"
                             placeholder="Email"
+                            onChange={this.handleEmailChange}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -39,9 +62,10 @@ class LogIn extends Component {
                             type="password"
                             id="userPassword"
                             placeholder="Password"
+                            onChange={this.handlePasswordChange}
                         />
                     </FormGroup>
-                    <Button color="primary" onClick={this.hanldeLogIn}>
+                    <Button color="primary" onClick={this.handleLogIn}>
                         Log in
                     </Button>
                     <p>
