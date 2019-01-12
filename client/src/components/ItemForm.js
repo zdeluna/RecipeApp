@@ -6,7 +6,7 @@ import app from '../base';
 import Item from './Item';
 import {Form, Button, FormGroup, Container, Col, Row} from 'reactstrap';
 import API from '../utils/Api';
-import './Item.css';
+import './ItemForm.css';
 
 class ItemForm extends Component {
     constructor(props) {

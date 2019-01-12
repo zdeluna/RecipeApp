@@ -10,6 +10,7 @@ import NewDishForm from '../../components/NewDishForm';
 import {Container, Row, Col} from 'reactstrap';
 import API from '../../utils/Api';
 import './DishEntry.css';
+import {Button} from 'reactstrap';
 
 class DishEntry extends Component {
     constructor(props) {
@@ -61,6 +62,10 @@ class DishEntry extends Component {
 
     handleStepsAndIngredientsSubmitted = event => {
         this.getDishIngredientsAndSteps();
+    };
+
+    deleteEntryFromDatabase = event => {
+        console.log('Delete entry');
     };
 
     renderNewDishForm = props => {
@@ -121,6 +126,16 @@ class DishEntry extends Component {
                         <Link to={`/users/category/${this.state.category}`}>
                             Go Back
                         </Link>
+                    </Col>
+                    <Col>
+                        <Button
+                            color="danger"
+                            size="sm"
+                            onClick={event =>
+                                this.deleteEntryFromDatabase(event)
+                            }>
+                            Delete Entry
+                        </Button>
                     </Col>
                 </Row>
 
