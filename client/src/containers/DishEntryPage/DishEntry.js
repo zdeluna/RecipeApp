@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import app from '../../base';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
 import Calendar from '../../components/Calendar';
@@ -65,7 +65,12 @@ class DishEntry extends Component {
     };
 
     deleteEntryFromDatabase = event => {
-        console.log('Delete entry');
+        var api = new API();
+        api.deleteDish(this.state.user.uid, this.state.dishId).then(
+            response => {
+                console.log('delete dish');
+            },
+        );
     };
 
     renderNewDishForm = props => {

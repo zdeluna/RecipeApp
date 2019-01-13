@@ -40,6 +40,13 @@ app.options('/*', function(req, res, next) {
     res.send(200);
 });
 
+app.delete('/api/users/:userId/dish/:dishId', (req, res) => {
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+    console.log('SERVER: delete dish');
+    deleteDish(userId, dishId).then(res.status(200).send('OK'));
+});
+
 app.post('/api/users', (req, res) => {
     const email = req.body.email;
     const userId = req.body.uid;
@@ -308,6 +315,19 @@ function getAllDishesOfUser(userId) {
         .once('value', function(snapshot) {
             return snapshot.val();
         });
+}
+
+function deleteDish(userId, dishId) {
+    return database.child('/dishes/' + userId).once('value', snapshot => {
+        const updates = {};
+        snapshot.forEach(child => {
+            console.log(child.key);
+            if (child.key == dishId) {
+                updates['/dishes/' + userId + '/' + child.key] = null;
+                return database.update(updates);
+            }
+        });
+    });
 }
 
 function getRecipeStepsAndIngredientsFromWebPage(url, complete) {

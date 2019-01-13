@@ -27,6 +27,10 @@ class API {
     createUser(userInfo) {
         return axios.post(`/api/users`, userInfo);
     }
+
+    deleteDish(userId, dishId) {
+        return axios.delete(`/api/users/${userId}/dish/${dishId}`);
+    }
 }
 
 export default API;
