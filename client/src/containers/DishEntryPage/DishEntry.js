@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import app from '../../base';
-import {Link, Redirect} from 'react-router-dom';
+import {Link, Redirect, withRouter} from 'react-router-dom';
 import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
 import Calendar from '../../components/Calendar';
@@ -25,6 +25,7 @@ class DishEntry extends Component {
             loaded: false,
             stepsArray: [],
             ingredientsArray: [],
+            redirect: false,
         };
     }
     /* Make a GET request to the database to retrieve the dish information and store it in state */
@@ -68,7 +69,12 @@ class DishEntry extends Component {
         var api = new API();
         api.deleteDish(this.state.user.uid, this.state.dishId).then(
             response => {
-                console.log('delete dish');
+                if (response.status === 204) {
+                    console.log(response);
+                    console.log('delete dish');
+                    let redirect_url = '/users/category/' + this.state.category;
+                    this.props.history.push(redirect_url);
+                }
             },
         );
     };
@@ -159,4 +165,4 @@ class DishEntry extends Component {
     }
 }
 
-export default DishEntry;
+export default withRouter(DishEntry);

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import app from '../../base';
 import AddDishForm from '../../components/AddDishForm';
 import {Table, Container, Row} from 'reactstrap';
@@ -17,6 +17,12 @@ class DishListTable extends Component {
             loaded: false,
         };
     }
+
+    componentWillUnmount() {
+        this.setState({dishes: null, loaded: false});
+        console.log('unmount component');
+    }
+
     componentDidMount() {
         var api = new API();
         api.getDishesOfUser(this.state.user.uid).then(response => {
@@ -42,6 +48,8 @@ class DishListTable extends Component {
                             dishArray.push(newDish);
                         }
                     }
+                    console.log('number of dishes: ' + dishArray.length);
+
                     this.setState({
                         dishes: dishArray,
                         loaded: true,
@@ -109,4 +117,4 @@ class DishListTable extends Component {
     }
 }
 
-export default DishListTable;
+export default withRouter(DishListTable);
