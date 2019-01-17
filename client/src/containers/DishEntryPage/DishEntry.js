@@ -138,7 +138,7 @@ class DishEntry extends Component {
                             Go Back
                         </Link>
                     </Col>
-                    <Col>
+                    <Col sm="2" md={{size: 2, offset: 3}}>
                         <Button
                             color="danger"
                             size="sm"
@@ -160,6 +160,7 @@ class DishEntry extends Component {
                         <this.renderNewDishForm />
                     </Col>
                 </Row>
+                <Row />
             </div>
         );
     }
