@@ -5,6 +5,7 @@ import AddDishForm from '../../components/AddDishForm';
 import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
 import API from '../../utils/Api';
+import Loading from '../../components/Loading';
 
 class DishListTable extends Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class DishListTable extends Component {
             dishes: [],
             category: this.props.match.params.category,
             redirect: false,
-            loaded: false,
+            loading: true,
         };
     }
 
@@ -52,7 +53,7 @@ class DishListTable extends Component {
 
                     this.setState({
                         dishes: dishArray,
-                        loaded: true,
+                        loading: false,
                     });
                 }
             }
@@ -72,48 +73,53 @@ class DishListTable extends Component {
     };
 
     render() {
-        return (
-            <Container>
-                <Row>
-                    {' '}
-                    <Link to={`/`}>Go Back To Categories</Link>
-                </Row>
-                <Row>
-                    <AddDishForm
-                        category={this.state.category}
-                        onClick={id => this.handleClick(id)}
-                    />
-                </Row>
-                <Table striped className="dishTable">
-                    <thead>
-                        <tr>
-                            <th>Dish</th>
-                            <th>Time to Make</th>
-                            <th>Last made</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.dishes.map(dish => (
-                            <tr key={dish.id + 'r'}>
-                                <td key={dish.id + 'c'}>
-                                    <Link
-                                        key={dish.id + 'link'}
-                                        to={`/users/category/${
-                                            this.state.category
-                                        }/dish/${dish.id}`}>
-                                        {dish.name}
-                                    </Link>
-                                </td>
-                                <td key={dish.id + 'time'}>
-                                    {dish.cookingTime}
-                                </td>
-                                <td key={dish.id + 'date'}>{dish.lastMade}</td>
+        if (this.state.loading) {
+            return <Loading />;
+        } else
+            return (
+                <Container>
+                    <Row>
+                        {' '}
+                        <Link to={`/`}>Go Back To Categories</Link>
+                    </Row>
+                    <Row>
+                        <AddDishForm
+                            category={this.state.category}
+                            onClick={id => this.handleClick(id)}
+                        />
+                    </Row>
+                    <Table striped className="dishTable">
+                        <thead>
+                            <tr>
+                                <th>Dish</th>
+                                <th>Time to Make</th>
+                                <th>Last made</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            </Container>
-        );
+                        </thead>
+                        <tbody>
+                            {this.state.dishes.map(dish => (
+                                <tr key={dish.id + 'r'}>
+                                    <td key={dish.id + 'c'}>
+                                        <Link
+                                            key={dish.id + 'link'}
+                                            to={`/users/category/${
+                                                this.state.category
+                                            }/dish/${dish.id}`}>
+                                            {dish.name}
+                                        </Link>
+                                    </td>
+                                    <td key={dish.id + 'time'}>
+                                        {dish.cookingTime}
+                                    </td>
+                                    <td key={dish.id + 'date'}>
+                                        {dish.lastMade}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </Container>
+            );
     }
 }
 

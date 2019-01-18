@@ -4,6 +4,7 @@ import {Link, Redirect, withRouter} from 'react-router-dom';
 import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
 import Calendar from '../../components/Calendar';
+import Loading from '../../components/Loading';
 import Notes from '../../components/Notes';
 import CookingTime from '../../components/CookingTime';
 import NewDishForm from '../../components/NewDishForm';
