@@ -23,7 +23,7 @@ class DishEntry extends Component {
             name: '',
             stepsCreated: false,
             ingredientsCreated: false,
-            loaded: false,
+            loading: true,
             stepsArray: [],
             ingredientsArray: [],
             redirect: false,
@@ -41,7 +41,7 @@ class DishEntry extends Component {
                 if (response.status === 200) {
                     let dish = response.data;
                     this.setState({
-                        loaded: true,
+                        loading: false,
                         name: dish.name,
                     });
 
@@ -81,7 +81,9 @@ class DishEntry extends Component {
     };
 
     renderNewDishForm = props => {
-        if (!this.state.stepsCreated && this.state.loaded) {
+        if (this.state.loading) return <Loading />;
+
+        if (!this.state.stepsCreated) {
             return (
                 <NewDishForm
                     dishId={this.state.dishId}
@@ -89,7 +91,7 @@ class DishEntry extends Component {
                     onClick={this.handleStepsAndIngredientsSubmitted}
                 />
             );
-        } else if (this.state.stepsCreated && this.state.loaded) {
+        } else {
             return (
                 <Container>
                     <Row>
@@ -126,7 +128,7 @@ class DishEntry extends Component {
                     </Row>
                 </Container>
             );
-        } else return null;
+        }
     };
 
     render() {
