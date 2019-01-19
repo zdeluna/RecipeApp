@@ -18,14 +18,12 @@ class LogIn extends Component {
         const email = this.state.email;
         const password = this.state.password;
         const history = this.props.history;
-        app.auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(function(user) {
-                history.push('/');
-            })
-            .catch(function(error) {
-                alert(error);
-            });
+        try {
+            await app.auth().signInWithEmailAndPassword(email, password);
+            history.push('/');
+        } catch (error) {
+            alert(error);
+        }
     };
 
     handleEmailChange = event => {
