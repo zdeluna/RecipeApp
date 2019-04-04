@@ -21,6 +21,7 @@ admin.initializeApp({
 });
 
 var database = admin.database().ref('/');
+const controller = require('./controller');
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
@@ -58,21 +59,7 @@ app.post('/api/users', (req, res) => {
 
 /* Route to create a new dish */
 app.post('/api/users/:userId/dish/', (req, res) => {
-    const userId = req.params.userId;
-    const name = req.body.name;
-    const category = req.body.category;
-
-    const key = getNewDishKey();
-
-    var responseObject = {id: key};
-
-    createNewDish(userId, name, category, key).then(data => {
-        console.log('data: ' + data);
-        res.location(
-            'http://localhost:5000/api/users/' + userId + '/dish/' + key,
-        );
-        res.status(201).send(JSON.stringify(responseObject));
-    });
+    controller.createDish();
 });
 
 /* Route to add new steps to a dish*/
