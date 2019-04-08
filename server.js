@@ -12,18 +12,7 @@ app.use(cors());
 
 const dish = require('./routes/dish');
 
-var admin = require('firebase-admin');
-
-var serviceAccount = require('./recipeapp-4bd8d-firebase-adminsdk-2x3ae-4b33c2148d.json');
 const cheerio = require('cheerio');
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://recipeapp-4bd8d.firebaseio.com',
-});
-
-var database = admin.database().ref('/');
-const controller = require('./controller');
 
 app.use('/api/', dish);
 
@@ -60,7 +49,6 @@ app.post('/api/users', (req, res) => {
     console.log('in server: ' + email + userId);
     createNewUser(userId, email).then(res.status(200).send('OK'));
 });
-
 
 /* Route to add new steps to a dish*/
 app.post('/api/users/:userId/dish/:dishId/steps', (req, res) => {
@@ -123,35 +111,6 @@ app.post('/api/users/:userId/dish/:dishId/recipe/url', (req, res) => {
             });
         }
     });
-});
-
-/* Route to update dish*/
-app.put('/api/users/:userId/dish/:dishId', (req, res) => {
-    const updatedDishFields = req.body;
-    const userId = req.params.userId;
-    const dishId = req.params.dishId;
-
-    // If the user is updating the url, then the steps and ingredients will be changed
-    if (updatedDishFields.url) {
-        getRecipeStepsAndIngredientsFromWebPage(updatedDishFields.url, function(
-            err,
-            stepsArray,
-            ingredientsArray,
-        ) {
-            if (!err) {
-                updatedDishFields.steps = stepsArray;
-                updatedDishFields.ingredients = ingredientsArray;
-
-                saveDish(userId, dishId, updatedDishFields).then(response => {
-                    res.status(200).send('OK');
-                });
-            }
-        });
-    } else {
-        saveDish(userId, dishId, updatedDishFields).then(response => {
-            res.status(200).send('OK');
-        });
-    }
 });
 
 /* Route to update ingredients to a dish*/

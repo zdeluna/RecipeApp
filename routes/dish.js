@@ -3,7 +3,10 @@ const router = express.Router();
 
 const controller = require('../controllers/dish');
 
-/* Route to create a new dish */
-app.post('users/:userId/dish', controller.createDish());
+router.post('/users/:userId/dish', controller.createDish);
 
-model.exports = router;
+router.put('/users/:userId/dish', controller.updateDish);
+
+router.get('/users/:usersId', controller.getDishesOfUser);
+
+module.exports = router;
