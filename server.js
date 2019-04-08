@@ -10,6 +10,8 @@ app.use(bodyParser.json());
 app.enable('trust proxy');
 app.use(cors());
 
+const dish = require('./routes/dish');
+
 var admin = require('firebase-admin');
 
 var serviceAccount = require('./recipeapp-4bd8d-firebase-adminsdk-2x3ae-4b33c2148d.json');
@@ -22,6 +24,8 @@ admin.initializeApp({
 
 var database = admin.database().ref('/');
 const controller = require('./controller');
+
+app.use('/api/', dish);
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
@@ -57,10 +61,6 @@ app.post('/api/users', (req, res) => {
     createNewUser(userId, email).then(res.status(200).send('OK'));
 });
 
-/* Route to create a new dish */
-app.post('/api/users/:userId/dish/', (req, res) => {
-    controller.createDish();
-});
 
 /* Route to add new steps to a dish*/
 app.post('/api/users/:userId/dish/:dishId/steps', (req, res) => {
