@@ -7,6 +7,8 @@ router.post('/users/:userId/dish', controller.createDish);
 
 router.put('/users/:userId/dish', controller.updateDish);
 
-router.get('/users/:usersId', controller.getDishesOfUser);
+router.get('/users/:userId/dish/:dishId', controller.getDish);
+
+router.get('/users/:userId', controller.getDishesOfUser);
 
 module.exports = router;

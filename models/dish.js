@@ -9,16 +9,37 @@ admin.initializeApp({
 
 var database = admin.database().ref('/');
 
+/* This function returns a new key that can be used to create a new dish */
+exports.getNewDishKey = () => {
+    return database.child('dishes').push().key;
+};
+
 exports.saveDish = async (userId, dishId, updatedDishFields) => {
     return database
         .child('/dishes/' + userId + '/' + dishId)
         .update(updatedDishFields);
 };
 
-exports.getAllDishesOfUser = async userId => {
+exports.getAllDishesOfUser = userId => {
     return database
         .child('/dishes/' + userId)
         .once('value', function(snapshot) {
             return snapshot.val();
         });
+};
+
+exports.getDishFromDB = async (userId, dishId) => {
+    return database
+        .child('/dishes/' + userId + '/' + dishId)
+        .once('value', function(snapshot) {
+            return snapshot.val();
+        });
+};
+
+exports.addDish = async (userId, dishId, newDish) => {
+    console.log(userId + ' ' + dishId + ' ' + newDish);
+    let updates = {};
+    updates['/dishes/' + userId + '/' + dishId] = newDish;
+
+    return await database.update(updates);
 };

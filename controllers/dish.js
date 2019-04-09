@@ -7,11 +7,6 @@ function createNewUser(userId, email) {
     return database.update(updates);
 }
 
-/* This function returns a new key that can be used to create a new dish */
-function getNewDishKey() {
-    return database.child('dishes').push().key;
-}
-
 function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
     var json = [];
     var stepsArray = [];
@@ -105,8 +100,6 @@ function getIngredientsFromWebPage($, complete) {
             var ingredientDescription = $(this)
                 .text()
                 .trim();
-            console.log(index);
-            console.log('**Ingredient: ' + ingredientDescription);
             var ingredient = {
                 id: ingredientsArray.length,
                 value: ingredientDescription,
@@ -118,16 +111,34 @@ function getIngredientsFromWebPage($, complete) {
 }
 
 exports.createDish = async (req, res) => {
-    const userId = req.params.userId;
-    const name = req.body.name;
-    const category = req.body.category;
+    try {
+        const userId = req.params.userId;
+        const dishName = req.body.name;
+        const category = req.body.category;
 
-    const key = await getNewDishKey();
+        console.log('before getdish key');
+        const dishId = dishModel.getNewDishKey();
+        console.log('dishId: ' + dishId);
 
-    var responseObject = {id: key};
-    console.log('CREATE DISH');
-    res.location('http://localhost:5000/api/users/' + userId + '/dish/' + key);
-    res.status(201).send(JSON.stringify(responseObject));
+        let newDish = {
+            uid: userId,
+            name: dishName,
+            category: category,
+            history: [],
+        };
+
+        let responseObject = {id: dishId};
+
+        console.log('create dish: ' + dishId);
+        const dish = await dishModel.addDish(userId, dishId, newDish);
+
+        res.location(
+            'http://localhost:5000/api/users/' + userId + '/dish/' + dishId,
+        );
+        res.status(201).send(responseObject);
+    } catch (error) {
+        console.log('error2');
+    }
 };
 
 exports.updateDish = async (req, res) => {
@@ -146,16 +157,18 @@ exports.updateDish = async (req, res) => {
                 updatedDishFields.steps = stepsArray;
                 updatedDishFields.ingredients = ingredientsArray;
 
-                saveDish(userId, dishId, updatedDishFields).then(response => {
-                    res.status(200).send('OK');
-                });
+                dishModel
+                    .saveDish(userId, dishId, updatedDishFields)
+                    .then(response => {
+                        res.status(200).send('OK');
+                    });
             }
         });
     } else {
         try {
             await dishModel.saveDish(userId, dishId, updatedDishFields);
             res.status(200).send('OK');
-        } catch (eror) {
+        } catch (error) {
             console.log('error');
         }
     }
@@ -163,7 +176,23 @@ exports.updateDish = async (req, res) => {
 
 exports.getDishesOfUser = async (req, res) => {
     const userId = req.params.userId;
-    dishModel.getAllDishesOfUser(userId).then(dishes => {
+
+    try {
+        const dishes = await dishModel.getAllDishesOfUser(userId);
         res.status(200).json(dishes);
-    });
+    } catch (error) {
+        console.log('error');
+    }
+};
+
+exports.getDish = async (req, res) => {
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+
+    try {
+        const dish = await dishModel.getDishFromDB(userId, dishId);
+        res.status(200).json(dish);
+    } catch (error) {
+        console.log('error');
+    }
 };

@@ -153,24 +153,6 @@ app.put('/api/users/:userId/dish/:dishId/notes', (req, res) => {
     });
 });
 
-/* This route will get all the dishes of a user */
-app.get('/api/users/:userId', (req, res) => {
-    const userId = req.params.userId;
-    getAllDishesOfUser(userId).then(dishes => {
-        res.status(200).json(dishes);
-    });
-});
-
-/* This route gets dish information using the dish id */
-app.get('/api/users/:userId/dish/:dishId', (req, res) => {
-    var userId = req.params.userId;
-    var dishId = req.params.dishId;
-
-    getDishFromDatabase(userId, dishId, dish => {
-        res.status(200).json(dish);
-    });
-});
-
 /* This route gets dish ingredients using the dish id */
 app.get('/api/users/:userId/dish/:dishId/ingredients', (req, res) => {
     var userId = req.params.userId;
