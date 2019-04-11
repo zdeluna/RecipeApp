@@ -1,4 +1,6 @@
 const dishModel = require('../models/dish.js');
+const request = require('request');
+const cheerio = require('cheerio');
 
 function createNewUser(userId, email) {
     var updates = {};
@@ -7,24 +9,23 @@ function createNewUser(userId, email) {
     return database.update(updates);
 }
 
-function getRecipeStepsAndIngredientsFromWebPage(url, complete) {
-    var json = [];
-    var stepsArray = [];
-    var ingredientsArray = [];
+const getRecipeStepsAndIngredientsFromWebPage = async url => {
+    return new Promise(function(resolve, reject) {
+        var json = [];
+        var stepsArray = [];
+        var ingredientsArray = [];
 
-    request(url, function(error, response, html) {
-        if (error) return complete(error, err);
-        var $ = cheerio.load(html);
+        request(url, async function(error, response, html) {
+            if (error) reject(error);
+            var $ = cheerio.load(html);
 
-        getStepsFromWebPage($, steps => {
-            stepsArray = steps;
-            getIngredientsFromWebPage($, ingredients => {
-                ingredientsArray = ingredients;
-                complete(false, stepsArray, ingredientsArray);
-            });
+            stepsArray = await getStepsFromWebPage($);
+            ingredientsArray = await getIngredientsFromWebPage($);
+            console.log('steps: ' + stepsArray);
+            resolve(stepsArray, ingredientsArray);
         });
     });
-}
+};
 
 function checkForStepsHeading(text) {
     var acceptableStepsHeading = [
@@ -46,69 +47,71 @@ function checkForIngredientsHeading(text) {
 }
 
 /* This function will parse a website and return the recipe steps in an array */
-function getStepsFromWebPage($, complete) {
-    var stepsArray = [];
+const getStepsFromWebPage = async $ => {
+    return new Promise(function(resolve, reject) {
+        var stepsArray = [];
 
-    // Find the heading that contains instruction
-    var directionsHTML = $('h1, h2, h3')
-        .filter(function() {
-            return checkForStepsHeading(
-                $(this)
+        // Find the heading that contains instruction
+        var directionsHTML = $('h1, h2, h3')
+            .filter(function() {
+                return checkForStepsHeading(
+                    $(this)
+                        .text()
+                        .trim(),
+                );
+            })
+            .parent() // Get the parent element
+            .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
+            .children('li') // Find the children of the list
+            // Iterate through each child element and store the text of the element and add it to the array
+            .each(function(index, element) {
+                // In each list item, search the instructions text.
+                var listItem = $(this)
                     .text()
-                    .trim(),
-            );
-        })
-        .parent() // Get the parent element
-        .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
-        .children('li') // Find the children of the list
-        // Iterate through each child element and store the text of the element and add it to the array
-        .each(function(index, element) {
-            // In each list item, search the instructions text.
-            var listItem = $(this)
-                .text()
-                .trim();
-            // Traverse starting at each list item and search for text
-            console.log(listItem.length);
+                    .trim();
+                // Traverse starting at each list item and search for text
 
-            var stepDescription = $(this).text();
+                var stepDescription = $(this).text();
 
-            console.log('**Step: ' + stepDescription);
-            var step = {id: stepsArray.length, value: stepDescription};
-            stepsArray.push(step);
-        });
+                var step = {id: stepsArray.length, value: stepDescription};
+                stepsArray.push(step);
+            });
 
-    complete(stepsArray);
-}
+        resolve(stepsArray);
+    });
+};
 
 /* This function will parse a website and return the recipe ingredients in an array */
-function getIngredientsFromWebPage($, complete) {
-    var ingredientsArray = [];
+const getIngredientsFromWebPage = async $ => {
+    return new Promise(function(resolve, reject) {
+        var ingredientsArray = [];
 
-    var ingredientsHTML = $('h1, h2, h3')
-        .filter(function() {
-            return checkForIngredientsHeading(
-                $(this)
+        var ingredientsHTML = $('h1, h2, h3')
+            .filter(function() {
+                return checkForIngredientsHeading(
+                    $(this)
+                        .text()
+                        .trim(),
+                );
+            })
+            .parent() // Get the parent element
+            .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
+            .children() // Find the children of the list
+            // Iterate through each child element and store the text of the element and add it to the array
+            .each(function(index, element) {
+                var ingredientDescription = $(this)
                     .text()
-                    .trim(),
-            );
-        })
-        .parent() // Get the parent element
-        .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
-        .children() // Find the children of the list
-        // Iterate through each child element and store the text of the element and add it to the array
-        .each(function(index, element) {
-            var ingredientDescription = $(this)
-                .text()
-                .trim();
-            var ingredient = {
-                id: ingredientsArray.length,
-                value: ingredientDescription,
-            };
-            ingredientsArray.push(ingredient);
-        });
+                    .trim();
+                var ingredient = {
+                    id: ingredientsArray.length,
+                    value: ingredientDescription,
+                };
+                ingredientsArray.push(ingredient);
+            });
 
-    complete(ingredientsArray);
-}
+        resolve(ingredientsArray);
+    });
+};
 
 exports.createDish = async (req, res) => {
     try {
@@ -147,30 +150,33 @@ exports.updateDish = async (req, res) => {
     const dishId = req.params.dishId;
 
     // If the user is updating the url, then the steps and ingredients will be changed
-    if (updatedDishFields.url) {
-        getRecipeStepsAndIngredientsFromWebPage(updatedDishFields.url, function(
-            err,
-            stepsArray,
-            ingredientsArray,
-        ) {
-            if (!err) {
+
+    try {
+        if (updatedDishFields.url) {
+            request(updatedDishFields.url, async function(
+                error,
+                response,
+                html,
+            ) {
+                if (error) reject(error);
+                var $ = cheerio.load(html);
+
+                let stepsArray = await getStepsFromWebPage($);
+                let ingredientsArray = await getIngredientsFromWebPage($);
+
                 updatedDishFields.steps = stepsArray;
                 updatedDishFields.ingredients = ingredientsArray;
+            });
 
-                dishModel
-                    .saveDish(userId, dishId, updatedDishFields)
-                    .then(response => {
-                        res.status(200).send('OK');
-                    });
-            }
-        });
-    } else {
-        try {
+            await dishModel.saveDish(userId, dishId, updatedDishFields);
+            console.log('send update dish response');
+            res.status(200).send('OK');
+        } else {
             await dishModel.saveDish(userId, dishId, updatedDishFields);
             res.status(200).send('OK');
-        } catch (error) {
-            console.log('error');
         }
+    } catch (error) {
+        console.log(error);
     }
 };
 
