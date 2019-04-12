@@ -12,17 +12,19 @@ function createNewUser(userId, email) {
 const getRecipeStepsAndIngredientsFromWebPage = async url => {
     return new Promise(function(resolve, reject) {
         var json = [];
-        var stepsArray = [];
-        var ingredientsArray = [];
+        let dishInfo = {};
+        dishInfo.steps = [];
+        dishInfo.ingredients = [];
+        console.log('type: ' + typeof dishInfo.steps);
 
         request(url, async function(error, response, html) {
             if (error) reject(error);
             var $ = cheerio.load(html);
 
-            stepsArray = await getStepsFromWebPage($);
-            ingredientsArray = await getIngredientsFromWebPage($);
-            console.log('steps: ' + stepsArray);
-            resolve(stepsArray, ingredientsArray);
+            dishInfo.steps = await getStepsFromWebPage($);
+            dishInfo.ingredients = await getIngredientsFromWebPage($);
+            console.log(dishInfo.ingredients);
+            resolve(dishInfo);
         });
     });
 };
@@ -119,9 +121,7 @@ exports.createDish = async (req, res) => {
         const dishName = req.body.name;
         const category = req.body.category;
 
-        console.log('before getdish key');
         const dishId = dishModel.getNewDishKey();
-        console.log('dishId: ' + dishId);
 
         let newDish = {
             uid: userId,
@@ -132,7 +132,6 @@ exports.createDish = async (req, res) => {
 
         let responseObject = {id: dishId};
 
-        console.log('create dish: ' + dishId);
         const dish = await dishModel.addDish(userId, dishId, newDish);
 
         res.location(
@@ -148,28 +147,19 @@ exports.updateDish = async (req, res) => {
     const updatedDishFields = req.body;
     const userId = req.params.userId;
     const dishId = req.params.dishId;
+    let dishInfo = {};
 
     // If the user is updating the url, then the steps and ingredients will be changed
-
     try {
         if (updatedDishFields.url) {
-            request(updatedDishFields.url, async function(
-                error,
-                response,
-                html,
-            ) {
-                if (error) reject(error);
-                var $ = cheerio.load(html);
+            dishInfo = await getRecipeStepsAndIngredientsFromWebPage(
+                updatedDishFields.url,
+            );
 
-                let stepsArray = await getStepsFromWebPage($);
-                let ingredientsArray = await getIngredientsFromWebPage($);
-
-                updatedDishFields.steps = stepsArray;
-                updatedDishFields.ingredients = ingredientsArray;
-            });
+            updatedDishFields.steps = dishInfo.steps;
+            updatedDishFields.ingredients = dishInfo.ingredients;
 
             await dishModel.saveDish(userId, dishId, updatedDishFields);
-            console.log('send update dish response');
             res.status(200).send('OK');
         } else {
             await dishModel.saveDish(userId, dishId, updatedDishFields);
@@ -196,7 +186,8 @@ exports.getDish = async (req, res) => {
     const dishId = req.params.dishId;
 
     try {
-        const dish = await dishModel.getDishFromDB(userId, dishId);
+        let dish = await dishModel.getDishFromDB(userId, dishId);
+
         res.status(200).json(dish);
     } catch (error) {
         console.log('error');

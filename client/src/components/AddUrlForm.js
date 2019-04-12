@@ -31,6 +31,7 @@ class AddUrlForm extends Component {
         const api = new API();
         api.updateDish(this.state.user.uid, this.props.dishId, urlField)
             .then(response => {
+                console.log('Updated dish response returned');
                 this.setState({urlAdded: true});
                 this.props.onClick();
             })

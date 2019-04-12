@@ -29,11 +29,13 @@ exports.getAllDishesOfUser = userId => {
 };
 
 exports.getDishFromDB = async (userId, dishId) => {
-    return database
-        .child('/dishes/' + userId + '/' + dishId)
-        .once('value', function(snapshot) {
-            return snapshot.val();
-        });
+    try {
+        let dish = await database
+            .child('/dishes/' + userId + '/' + dishId)
+            .once('value');
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 exports.addDish = async (userId, dishId, newDish) => {
