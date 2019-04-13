@@ -28,14 +28,13 @@ exports.getAllDishesOfUser = userId => {
         });
 };
 
-exports.getDishFromDB = async (userId, dishId) => {
-    try {
-        let dish = await database
-            .child('/dishes/' + userId + '/' + dishId)
-            .once('value');
-    } catch (error) {
-        console.log(error);
-    }
+exports.getDishFromDatabase = async (userId, dishId) => {
+    return database
+        .child('/dishes/' + userId + '/' + dishId)
+        .once('value')
+        .then(function(snapshot) {
+            return snapshot.val();
+        });
 };
 
 exports.addDish = async (userId, dishId, newDish) => {

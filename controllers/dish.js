@@ -185,11 +185,6 @@ exports.getDish = async (req, res) => {
     const userId = req.params.userId;
     const dishId = req.params.dishId;
 
-    try {
-        let dish = await dishModel.getDishFromDB(userId, dishId);
-
-        res.status(200).json(dish);
-    } catch (error) {
-        console.log('error');
-    }
+    const dish = await dishModel.getDishFromDatabase(userId, dishId);
+    res.status(200).json(dish);
 };
