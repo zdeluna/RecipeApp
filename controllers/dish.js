@@ -188,3 +188,10 @@ exports.getDish = async (req, res) => {
     const dish = await dishModel.getDishFromDatabase(userId, dishId);
     res.status(200).json(dish);
 };
+
+exports.deleteDish = async (req, res) => {
+    const userId = req.params.userId;
+    const dishId = req.params.dishId;
+    await dishModel.deleteDishFromDatabase(userId, dishId);
+    res.status(204).end();
+};

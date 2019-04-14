@@ -9,6 +9,8 @@ router.put('/users/:userId/dish/:dishId', controller.updateDish);
 
 router.get('/users/:userId/dish/:dishId', controller.getDish);
 
+router.delete('/users/:userId/dish/:dishId', controller.deleteDish);
+
 router.get('/users/:userId', controller.getDishesOfUser);
 
 module.exports = router;

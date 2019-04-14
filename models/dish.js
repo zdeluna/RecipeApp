@@ -20,10 +20,11 @@ exports.saveDish = async (userId, dishId, updatedDishFields) => {
         .update(updatedDishFields);
 };
 
-exports.getAllDishesOfUser = userId => {
+exports.getAllDishesOfUser = async userId => {
     return database
         .child('/dishes/' + userId)
-        .once('value', function(snapshot) {
+        .once('value')
+        .then(function(snapshot) {
             return snapshot.val();
         });
 };
@@ -38,9 +39,15 @@ exports.getDishFromDatabase = async (userId, dishId) => {
 };
 
 exports.addDish = async (userId, dishId, newDish) => {
-    console.log(userId + ' ' + dishId + ' ' + newDish);
     let updates = {};
     updates['/dishes/' + userId + '/' + dishId] = newDish;
 
+    return await database.update(updates);
+};
+
+exports.deleteDishFromDatabase = async (userId, dishId) => {
+    console.log('DELETE: ' + userId + ' ' + dishId);
+    let updates = {};
+    updates['/dishes/' + userId + '/' + dishId] = null;
     return await database.update(updates);
 };
