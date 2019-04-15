@@ -10,7 +10,7 @@ class API {
     }
 
     getDishesOfUser(userId) {
-        return axios.get(`/api/users/${userId}`);
+        return axios.get(`/api/users/${userId}/dish`);
     }
 
     createDish(userId, dish) {

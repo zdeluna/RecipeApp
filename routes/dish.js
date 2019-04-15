@@ -11,6 +11,6 @@ router.get('/users/:userId/dish/:dishId', controller.getDish);
 
 router.delete('/users/:userId/dish/:dishId', controller.deleteDish);
 
-router.get('/users/:userId', controller.getDishesOfUser);
+router.get('/users/:userId/dish', controller.getDishesOfUser);
 
 module.exports = router;

@@ -21,12 +21,17 @@ exports.saveDish = async (userId, dishId, updatedDishFields) => {
 };
 
 exports.getAllDishesOfUser = async userId => {
-    return database
-        .child('/dishes/' + userId)
-        .once('value')
-        .then(function(snapshot) {
-            return snapshot.val();
-        });
+    try {
+        console.log(userId);
+        return database
+            .child('/dishes/' + userId)
+            .once('value')
+            .then(function(snapshot) {
+                return snapshot.val();
+            });
+    } catch (error) {
+        throw Error({statusCode: 422, msg: error.message});
+    }
 };
 
 exports.getDishFromDatabase = async (userId, dishId) => {

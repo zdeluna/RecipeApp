@@ -1,6 +1,7 @@
 const dishModel = require('../models/dish.js');
 const request = require('request');
 const cheerio = require('cheerio');
+const {sendErrorResponse} = require('./base.js');
 
 function createNewUser(userId, email) {
     var updates = {};
@@ -15,7 +16,6 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
         let dishInfo = {};
         dishInfo.steps = [];
         dishInfo.ingredients = [];
-        console.log('type: ' + typeof dishInfo.steps);
 
         request(url, async function(error, response, html) {
             if (error) reject(error);
@@ -23,7 +23,6 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
 
             dishInfo.steps = await getStepsFromWebPage($);
             dishInfo.ingredients = await getIngredientsFromWebPage($);
-            console.log(dishInfo.ingredients);
             resolve(dishInfo);
         });
     });
@@ -139,7 +138,7 @@ exports.createDish = async (req, res) => {
         );
         res.status(201).send(responseObject);
     } catch (error) {
-        console.log('error2');
+        sendErrorResponse(res, error);
     }
 };
 
@@ -166,7 +165,7 @@ exports.updateDish = async (req, res) => {
             res.status(200).send('OK');
         }
     } catch (error) {
-        console.log(error);
+        sendErrorResponse(res, error);
     }
 };
 
@@ -177,21 +176,29 @@ exports.getDishesOfUser = async (req, res) => {
         const dishes = await dishModel.getAllDishesOfUser(userId);
         res.status(200).json(dishes);
     } catch (error) {
-        console.log('error');
+        sendErrorResponse(res, error);
     }
 };
 
 exports.getDish = async (req, res) => {
-    const userId = req.params.userId;
-    const dishId = req.params.dishId;
+    try {
+        const userId = req.params.userId;
+        const dishId = req.params.dishId;
+        const dish = await dishModel.getDishFromDatabase(userId, dishId);
 
-    const dish = await dishModel.getDishFromDatabase(userId, dishId);
-    res.status(200).json(dish);
+        res.status(200).json(dish);
+    } catch (error) {
+        sendErrorResponse(res, error);
+    }
 };
 
 exports.deleteDish = async (req, res) => {
-    const userId = req.params.userId;
-    const dishId = req.params.dishId;
-    await dishModel.deleteDishFromDatabase(userId, dishId);
-    res.status(204).end();
+    try {
+        const userId = req.params.userId;
+        const dishId = req.params.dishId;
+        await dishModel.deleteDishFromDatabase(userId, dishId);
+        res.status(204).end();
+    } catch (error) {
+        sendErrorResposne(res, error);
+    }
 };
