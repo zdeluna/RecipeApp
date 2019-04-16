@@ -1,4 +1,5 @@
 const dishModel = require('../models/dish.js');
+const userModel = require('../models/user.js');
 const request = require('request');
 const cheerio = require('cheerio');
 const {sendErrorResponse} = require('./base.js');
@@ -173,6 +174,7 @@ exports.getDishesOfUser = async (req, res) => {
     const userId = req.params.userId;
 
     try {
+        //await userModel.checkIfUserExists(userId);
         const dishes = await dishModel.getAllDishesOfUser(userId);
         res.status(200).json(dishes);
     } catch (error) {
