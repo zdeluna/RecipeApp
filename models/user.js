@@ -1,10 +1,16 @@
 const firebase = require('../models/firebase.js');
 
+/**
+ * Create a new user in the database using the userId and email
+ * @param {String} userId
+ * @param {String} email
+ */
+
 exports.createNewUser = async (userId, email) => {
     var updates = {};
     updates['/users/' + userId] = {email: email};
 
-    return database.update(updates);
+    return firebase.database.update(updates);
 };
 
 /**
@@ -13,14 +19,13 @@ exports.createNewUser = async (userId, email) => {
  */
 
 exports.checkIfUserExists = async userId => {
-    return new Promise((resolve, reject) => {
-        const users = database
-            .child('/users/')
-            .once('value')
-            .then(function(snapshot) {
-                return snapshot.val();
+    return new Promise(async (resolve, reject) => {
+        const snapshot = await firebase.database.child('/users/').once('value');
+        if (snapshot.hasChild(userId)) return resolve();
+        else
+            return reject({
+                statusCode: 404,
+                msg: 'USER_DOES_NOT_EXIST',
             });
-        if (users.hasChild(userId)) return resolve();
-        else return reject({statusCode: 404, msg: 'USER_DOES_NOT_EXIST'});
     });
 };

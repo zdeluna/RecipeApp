@@ -4,12 +4,11 @@ const request = require('request');
 const cheerio = require('cheerio');
 const {sendErrorResponse} = require('./base.js');
 
-function createNewUser(userId, email) {
-    var updates = {};
-    updates['/users/' + userId] = {email: email};
-
-    return database.update(updates);
-}
+/**
+ * Make a http request to the url and store the steps and ingredients in an object
+ * @param {String} url
+ * @param {Promise}
+ */
 
 const getRecipeStepsAndIngredientsFromWebPage = async url => {
     return new Promise(function(resolve, reject) {
@@ -29,6 +28,12 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
     });
 };
 
+/**
+ * Check to see if the passed in text is a possible heading for steps
+ * @param {String} text
+ * @Return {boolean}
+ */
+
 function checkForStepsHeading(text) {
     var acceptableStepsHeading = [
         'instructions',
@@ -41,6 +46,12 @@ function checkForStepsHeading(text) {
     else return false;
 }
 
+/**
+ * Check to see if the passed in text is a possible heading for ingredients
+ * @param {String} text
+ * @Return {boolean}
+ */
+
 function checkForIngredientsHeading(text) {
     var acceptableIngredientsHeading = ['ingredients', 'Ingredients'];
 
@@ -48,7 +59,12 @@ function checkForIngredientsHeading(text) {
     else return false;
 }
 
-/* This function will parse a website and return the recipe steps in an array */
+/**
+ * Parse through a web page and store the steps of the recipe
+ * @param {String} $ - Represents the html contents of a page
+ * @Return {Promise}
+ */
+
 const getStepsFromWebPage = async $ => {
     return new Promise(function(resolve, reject) {
         var stepsArray = [];
@@ -83,7 +99,12 @@ const getStepsFromWebPage = async $ => {
     });
 };
 
-/* This function will parse a website and return the recipe ingredients in an array */
+/**
+ * Parse through a web page and store the ingredients of the recipe
+ * @param {String} $ - Represents the html contents of a page
+ * @Return {Promise}
+ */
+
 const getIngredientsFromWebPage = async $ => {
     return new Promise(function(resolve, reject) {
         var ingredientsArray = [];
@@ -118,6 +139,8 @@ const getIngredientsFromWebPage = async $ => {
 exports.createDish = async (req, res) => {
     try {
         const userId = req.params.userId;
+        await userModel.checkIfUserExists(userId);
+
         const dishName = req.body.name;
         const category = req.body.category;
 
@@ -146,6 +169,8 @@ exports.createDish = async (req, res) => {
 exports.updateDish = async (req, res) => {
     const updatedDishFields = req.body;
     const userId = req.params.userId;
+    await userModel.checkIfUserExists(userId);
+
     const dishId = req.params.dishId;
     let dishInfo = {};
 
@@ -174,7 +199,7 @@ exports.getDishesOfUser = async (req, res) => {
     const userId = req.params.userId;
 
     try {
-        //await userModel.checkIfUserExists(userId);
+        await userModel.checkIfUserExists(userId);
         const dishes = await dishModel.getAllDishesOfUser(userId);
         res.status(200).json(dishes);
     } catch (error) {
@@ -185,6 +210,8 @@ exports.getDishesOfUser = async (req, res) => {
 exports.getDish = async (req, res) => {
     try {
         const userId = req.params.userId;
+        await userModel.checkIfUserExists(userId);
+
         const dishId = req.params.dishId;
         const dish = await dishModel.getDishFromDatabase(userId, dishId);
 
@@ -196,6 +223,8 @@ exports.getDish = async (req, res) => {
 
 exports.deleteDish = async (req, res) => {
     try {
+        await userModel.checkIfUserExists(userId);
+
         const userId = req.params.userId;
         const dishId = req.params.dishId;
         await dishModel.deleteDishFromDatabase(userId, dishId);

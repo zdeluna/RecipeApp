@@ -1,4 +1,5 @@
 const firebase = require('../models/firebase.js');
+const userModel = require('../models/user.js');
 
 /* This function returns a new key that can be used to create a new dish */
 exports.getNewDishKey = () => {
@@ -13,7 +14,6 @@ exports.saveDish = async (userId, dishId, updatedDishFields) => {
 
 exports.getAllDishesOfUser = async userId => {
     try {
-        console.log(userId);
         return firebase.database
             .child('/dishes/' + userId)
             .once('value')
