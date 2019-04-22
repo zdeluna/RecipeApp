@@ -26,6 +26,7 @@ class SignUp extends Component {
                 .then(function(user) {
                     const api = new API();
                     let userField = {email: email, uid: user.user.uid};
+                    console.log('call create user API');
                     api.createUser(userField).then(response => {
                         history.push('/');
                     });
