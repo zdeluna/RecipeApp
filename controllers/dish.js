@@ -223,13 +223,15 @@ exports.getDish = async (req, res) => {
 
 exports.deleteDish = async (req, res) => {
     try {
+        const userId = req.params.userId;
         await userModel.checkIfUserExists(userId);
 
-        const userId = req.params.userId;
         const dishId = req.params.dishId;
+        await dishModel.checkIfDishExists(dishId);
+
         await dishModel.deleteDishFromDatabase(userId, dishId);
         res.status(204).end();
     } catch (error) {
-        sendErrorResposne(res, error);
+        sendErrorResponse(res, error);
     }
 };
