@@ -1,0 +1,334 @@
+{
+	"info": {
+		"_postman_id": "1327a71e-2383-4f1e-9fdb-25c2ec9fe043",
+		"name": "RecipeProject",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Send a recipe url",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userID\": \"343434dfdfdf\",\n\t\"dishID\": \"11111111\",\n\t\"url\": \"link\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/recipe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"recipe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a components of a dish using the dish id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/:id/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						":id",
+						""
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": ""
+						},
+						{
+							"key": "id",
+							"value": "-LN68akzo5PvdQksYrEZ"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a dish",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4bf1e8ea-a34e-488b-97f3-421152b3f348",
+						"exec": [
+							"pm.environment.set(\"userID1\", \"XOqoUyqbCMWg7HUjURF6alTSXSP2\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "22ef958d-7a4d-401e-8495-e51da2c4925f",
+						"exec": [
+							"pm.test(\"Confirm you receive a 201 status code after creating a new dish\", function() {",
+							"   ",
+							"    pm.response.to.have.status(201);",
+							"    pm.environment.set(\"dishID\", pm.response.json().id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"category\": 1,\n  \"name\": \"Fajitas\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						""
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "XOqoUyqbCMWg7HUjURF6alTSXSP2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a user's dish and check if name and category are correct",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e047ac52-a851-4d37-8ba2-8d7179f371a9",
+						"exec": [
+							"pm.test(\"Check to make sure name and category are correct\", function() {",
+							"   ",
+							"    var response = pm.response.json();",
+							"    pm.expect(response.category).to.equal(1);",
+							"    pm.expect(response.name).to.eql(\"Fajitas\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/:dishId",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						":dishId"
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "{{userID1}}"
+						},
+						{
+							"key": "dishId",
+							"value": "{{dishID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add steps to a dish",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e047ac52-a851-4d37-8ba2-8d7179f371a9",
+						"exec": [
+							"pm.test(\"Check to make sure name and category are correct\", function() {",
+							"   ",
+							"    var response = pm.response.json();",
+							"    pm.expect(response.category).to.equal(1);",
+							"    pm.expect(response.name).to.eql(\"Fajitas\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/:dishId",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						":dishId"
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "{{userID1}}"
+						},
+						{
+							"key": "dishId",
+							"value": "{{dishID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all of a user's dishes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						""
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "5BsdxLMU8WRKkg33rsgmzYLcxC42"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all of a user's dishes using a userId that does not exist",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						""
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "5BsdxLMU8WRKkg33rsgmzYLcxC41"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a user's dish where the dish does not exist",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/:dishId",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						":dishId"
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "5BsdxLMU8WRKkg33rsgmzYLcxC42"
+						},
+						{
+							"key": "dishId",
+							"value": "343234343"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

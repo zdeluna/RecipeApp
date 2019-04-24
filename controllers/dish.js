@@ -154,7 +154,6 @@ exports.createDish = async (req, res) => {
         };
 
         let responseObject = {id: dishId};
-
         const dish = await dishModel.addDish(userId, dishId, newDish);
 
         res.location(

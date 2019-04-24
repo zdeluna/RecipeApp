@@ -24,7 +24,7 @@ exports.checkIfDishExists = async dishId => {
  */
 
 exports.getNewDishKey = () => {
-    return database.child('dishes').push().key;
+    return firebase.database.child('dishes').push().key;
 };
 
 /**
