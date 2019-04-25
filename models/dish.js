@@ -6,9 +6,11 @@ const userModel = require('../models/user.js');
  * @param {String} dishId
  */
 
-exports.checkIfDishExists = async dishId => {
+exports.checkIfDishExists = async (userId, dishId) => {
     return new Promise(async (resolve, reject) => {
-        const snapshot = await firebase.database.child('/dish/').once('value');
+        const snapshot = await firebase.database
+            .child('/dishes/' + userId)
+            .once('value');
         if (snapshot.hasChild(dishId)) return resolve();
         else
             return reject({

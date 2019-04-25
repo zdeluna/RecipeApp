@@ -35,6 +35,7 @@ class DishEntry extends Component {
     }
 
     getDishIngredientsAndSteps() {
+        console.log('user id: ' + this.state.user.uid);
         console.log('call getdishingredients function');
         var api = new API();
         api.getDish(this.state.user.uid, this.props.match.params.dishId).then(

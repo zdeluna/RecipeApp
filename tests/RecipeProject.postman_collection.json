@@ -6,31 +6,44 @@
 	},
 	"item": [
 		{
-			"name": "Send a recipe url",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"userID\": \"343434dfdfdf\",\n\t\"dishID\": \"11111111\",\n\t\"url\": \"link\"\n}"
+			"name": "Get all of a user's dishes",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "873cf39a-d719-4aa2-a582-8e79b543c875",
+						"exec": [
+							"pm.environment.set(\"userID1\", \"XOqoUyqbCMWg7HUjURF6alTSXSP2\");"
+						],
+						"type": "text/javascript"
+					}
 				},
-				"url": {
-					"raw": "http://localhost:5000/api/recipe",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"recipe"
-					]
+				{
+					"listen": "test",
+					"script": {
+						"id": "5fa046c2-fea0-4d40-bcd9-60ded6161f38",
+						"exec": [
+							"pm.test(\"Check to make response status code is 200 when requesting all dishes of a user\", function() {",
+							"    ",
+							"    pm.response.to.have.status(200);",
+							"    ",
+							"    var response = pm.response.json();",
+							"    ",
+							"    if (response == null)",
+							"    {",
+							"        pm.environment.set(\"numberofDishes\", 0);",
+							"    }",
+							"    ",
+							"    else",
+							"    {",
+							"        pm.environment.set(\"numberofDishes\", Object.keys(response).length);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get a components of a dish using the dish id",
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -39,7 +52,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{host}}/api/users/:userid/dish/:id/",
+					"raw": "{{host}}/api/users/:userid/dish/",
 					"host": [
 						"{{host}}"
 					],
@@ -48,17 +61,12 @@
 						"users",
 						":userid",
 						"dish",
-						":id",
 						""
 					],
 					"variable": [
 						{
 							"key": "userid",
-							"value": ""
-						},
-						{
-							"key": "id",
-							"value": "-LN68akzo5PvdQksYrEZ"
+							"value": "{{userID1}}"
 						}
 					]
 				}
@@ -130,6 +138,66 @@
 			"response": []
 		},
 		{
+			"name": "Get all of user's dishes after a new dish has been added",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "873cf39a-d719-4aa2-a582-8e79b543c875",
+						"exec": [
+							"pm.environment.set(\"userID1\", \"XOqoUyqbCMWg7HUjURF6alTSXSP2\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5fa046c2-fea0-4d40-bcd9-60ded6161f38",
+						"exec": [
+							"pm.test(\"Check to make the number of dishes increased by 1\", function() {",
+							"   ",
+							"    var response = pm.response.json();",
+							"    ",
+							"    var expectedDishes = pm.environment.get(\"numberofDishes\") + 1;",
+							"    ",
+							"    pm.expect(Object.keys(response).length).to.eql(expectedDishes);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						""
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "{{userID1}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get a user's dish and check if name and category are correct",
 			"event": [
 				{
@@ -189,11 +257,9 @@
 					"script": {
 						"id": "e047ac52-a851-4d37-8ba2-8d7179f371a9",
 						"exec": [
-							"pm.test(\"Check to make sure name and category are correct\", function() {",
+							"pm.test(\"Check to make sure response status code is 200\", function() {",
 							"   ",
-							"    var response = pm.response.json();",
-							"    pm.expect(response.category).to.equal(1);",
-							"    pm.expect(response.name).to.eql(\"Fajitas\");",
+							"     pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -201,7 +267,327 @@
 				}
 			],
 			"request": {
-				"method": "PATCH",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"steps\": [{\"id\": 0, \"value\": \"This is step 1\"}, {\"id\": 1, \"value\": \"This is step 2\"}]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/:dishId",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						":dishId"
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "{{userID1}}"
+						},
+						{
+							"key": "dishId",
+							"value": "{{dishID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a user's dish and check if steps are added",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e047ac52-a851-4d37-8ba2-8d7179f371a9",
+						"exec": [
+							"pm.test(\"Check to make sure steps are added\", function() {",
+							"   ",
+							"    var response = pm.response.json();",
+							"    pm.expect(response.steps[0].id).to.equal(0);",
+							"    pm.expect(response.steps[0].value).to.eql(\"This is step 1\");",
+							"    ",
+							"    pm.expect(response.steps[1].id).to.equal(1);",
+							"    pm.expect(response.steps[1].value).to.eql(\"This is step 2\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userId/dish/:dishId",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userId",
+						"dish",
+						":dishId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "{{userID1}}"
+						},
+						{
+							"key": "dishId",
+							"value": "{{dishID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add ingredients to a dish",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e047ac52-a851-4d37-8ba2-8d7179f371a9",
+						"exec": [
+							"pm.test(\"Check to make sure response status code is 200 after ingredients have been added\", function() {",
+							"   ",
+							"     pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"ingredients\": [{\"id\": 0, \"value\": \"egg\"}, {\"id\": 1, \"value\": \"lettuce\"}]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/:dishId",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						":dishId"
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "{{userID1}}"
+						},
+						{
+							"key": "dishId",
+							"value": "{{dishID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a user's dish and check if ingredients are added",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e047ac52-a851-4d37-8ba2-8d7179f371a9",
+						"exec": [
+							"pm.test(\"Check to make sure steps are added\", function() {",
+							"   ",
+							"    var response = pm.response.json();",
+							"    pm.expect(response.ingredients[0].id).to.equal(0);",
+							"    pm.expect(response.ingredients[0].value).to.eql(\"egg\");",
+							"    ",
+							"    pm.expect(response.ingredients[1].id).to.equal(1);",
+							"    pm.expect(response.ingredients[1].value).to.eql(\"lettuce\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userId/dish/:dishId",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userId",
+						"dish",
+						":dishId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "{{userID1}}"
+						},
+						{
+							"key": "dishId",
+							"value": "{{dishID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all of a user's dishes using a userId that does not exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d663b412-998e-4f19-b1f0-aa1e670a46a1",
+						"exec": [
+							"pm.test(\"Check to make response status code is 404 when requesting a dish from a user that does not exist\", function() {",
+							"    ",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						""
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "5BsdxLMU8WRKkg33rsgmzYLcxC41"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a user's dish where the dish does not exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "29de8088-f789-4e9d-9fcf-1591c4996beb",
+						"exec": [
+							"pm.test(\"Check to make response status code is 404 when requesting a dish that does not exist\", function() {",
+							"    ",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/users/:userid/dish/:dishId",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":userid",
+						"dish",
+						":dishId"
+					],
+					"variable": [
+						{
+							"key": "userid",
+							"value": "{{userID1}}"
+						},
+						{
+							"key": "dishId",
+							"value": "343234343"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a user's dish",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "29de8088-f789-4e9d-9fcf-1591c4996beb",
+						"exec": [
+							"pm.test(\"Check to make response status code is 204 when deleting a dish\", function() {",
+							"    ",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -234,7 +620,36 @@
 			"response": []
 		},
 		{
-			"name": "Get all of a user's dishes",
+			"name": "Get all of a user's dishes after deleting a dish",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "873cf39a-d719-4aa2-a582-8e79b543c875",
+						"exec": [
+							"pm.environment.set(\"userID1\", \"XOqoUyqbCMWg7HUjURF6alTSXSP2\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5fa046c2-fea0-4d40-bcd9-60ded6161f38",
+						"exec": [
+							"pm.test(\"Confirm the number of dishes changed correctly after deleting a dish\", function() {",
+							"    var response = pm.response.json(); ",
+							"   ",
+							"    if (response != null)",
+							"    {",
+							"        pm.expect(Object.keys(response).length).to.eql(pm.environment.get(\"numberOfDishes\"));",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -257,73 +672,7 @@
 					"variable": [
 						{
 							"key": "userid",
-							"value": "5BsdxLMU8WRKkg33rsgmzYLcxC42"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get all of a user's dishes using a userId that does not exist",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{host}}/api/users/:userid/dish/",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users",
-						":userid",
-						"dish",
-						""
-					],
-					"variable": [
-						{
-							"key": "userid",
-							"value": "5BsdxLMU8WRKkg33rsgmzYLcxC41"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete a user's dish where the dish does not exist",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{host}}/api/users/:userid/dish/:dishId",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users",
-						":userid",
-						"dish",
-						":dishId"
-					],
-					"variable": [
-						{
-							"key": "userid",
-							"value": "5BsdxLMU8WRKkg33rsgmzYLcxC42"
-						},
-						{
-							"key": "dishId",
-							"value": "343234343"
+							"value": "{{userID1}}"
 						}
 					]
 				}

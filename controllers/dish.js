@@ -226,7 +226,7 @@ exports.deleteDish = async (req, res) => {
         await userModel.checkIfUserExists(userId);
 
         const dishId = req.params.dishId;
-        await dishModel.checkIfDishExists(dishId);
+        await dishModel.checkIfDishExists(userId, dishId);
 
         await dishModel.deleteDishFromDatabase(userId, dishId);
         res.status(204).end();
