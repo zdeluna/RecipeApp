@@ -35,20 +35,12 @@ class DishEntry extends Component {
     }
 
     getDishIngredientsAndSteps() {
-        console.log('user id: ' + this.state.user.uid);
-        console.log('call getdishingredients function');
         var api = new API();
         api.getDish(this.state.user.uid, this.props.match.params.dishId).then(
             response => {
                 if (response.status === 200) {
                     let dish = response.data;
-                    console.log(dish);
-                    this.setState({
-                        loading: false,
-                        name: dish.name,
-                    });
 
-                    console.log(typeof dish.ingredients);
                     if (dish.ingredients && dish.ingredients.length > 0) {
                         this.setState({
                             ingredientsCreated: true,
@@ -61,8 +53,12 @@ class DishEntry extends Component {
                             stepsArray: dish.steps,
                         });
                     }
-                    console.log(this.state.stepsCreated);
+
+                    this.setState({name: dish.name});
                 }
+                this.setState({
+                    loading: false,
+                });
             },
         );
     }

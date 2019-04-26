@@ -53,10 +53,12 @@ class DishListTable extends Component {
 
                     this.setState({
                         dishes: dishArray,
-                        loading: false,
                     });
                 }
             }
+            this.setState({
+                loading: false,
+            });
         });
     }
 
