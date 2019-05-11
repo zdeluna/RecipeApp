@@ -1,4 +1,10 @@
 const axios = require('axios');
+var path = require('path');
+var lib = path.join(
+    path.dirname(require.resolve('axios')),
+    'lib/adapters/http',
+);
+var http = require(lib);
 
 class API {
     contructor() {
@@ -10,7 +16,7 @@ class API {
     }
 
     getDishesOfUser(userId) {
-        return axios.get(`/api/users/${userId}/dish`);
+        return axios.get(`/api/users/${userId}/dish`, {adapter: http});
     }
 
     createDish(userId, dish) {

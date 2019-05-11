@@ -6,6 +6,7 @@
         "axios": "^0.18.0",
         "boostrap": "^2.0.0",
         "bootstrap": "^4.1.3",
+        "dotenv": "^8.0.0",
         "firebase": "^5.4.2",
         "globalize": "^1.4.0",
         "globalize-webpack-plugin": "^3.0.0",
@@ -25,13 +26,20 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "test": "react-scripts test --env=jsdom",
+        "test": "react-scripts test --env=jsdom --browser --testEnvironment=node",
         "eject": "react-scripts eject"
     },
     "devDependencies": {
+        "@babel/core": "^7.4.4",
+        "@babel/preset-env": "^7.4.4",
+        "babel-cli": "^6.26.0",
+        "enzyme": "^3.9.0",
+        "enzyme-adapter-react-16": "^1.12.1",
         "eslint-config-prettier": "^3.1.0",
         "eslint-plugin-prettier": "^2.6.2",
+        "firebase-mock": "^2.2.10",
+        "gulp-babel": "^8.0.0",
         "prettier": "1.14.3"
     },
-    "proxy": "https://recipescheduler-227221.appspot.com/"
+    "proxy": "http://localhost:5000"
 }

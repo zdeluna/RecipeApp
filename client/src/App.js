@@ -82,7 +82,12 @@ class App extends Component {
                         <Route
                             exact
                             path="/users/category/:category"
-                            component={DishListTable}
+                            render={props => (
+                                <DishListTable
+                                    {...props}
+                                    userID={app.auth().currentUser.uid}
+                                />
+                            )}
                         />
                     </Switch>
                 </div>

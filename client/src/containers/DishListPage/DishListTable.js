@@ -11,7 +11,7 @@ class DishListTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: app.auth().currentUser,
+            userID: this.props.userID, //app.auth().currentUser,
             dishes: [],
             category: this.props.match.params.category,
             redirect: false,
@@ -26,7 +26,7 @@ class DishListTable extends Component {
 
     componentDidMount() {
         var api = new API();
-        api.getDishesOfUser(this.state.user.uid).then(response => {
+        api.getDishesOfUser(this.state.userID).then(response => {
             if (response.status === 200) {
                 if (response.data) {
                     let dishes = response.data;
