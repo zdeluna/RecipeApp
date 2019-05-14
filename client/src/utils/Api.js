@@ -1,14 +1,16 @@
 const axios = require('axios');
 var path = require('path');
-var lib = path.join(
-    path.dirname(require.resolve('axios')),
-    'lib/adapters/http',
-);
-var http = require(lib);
 
 class API {
     contructor() {
+        /*
         this.host = '/api/';
+        this.lib = path.join(
+            path.dirname(require.resolve('axios')),
+            'lib/adapters/http',
+        );
+		this.http = require(this.lib);
+		*/
     }
 
     getDish(userId, dishId) {
@@ -16,7 +18,7 @@ class API {
     }
 
     getDishesOfUser(userId) {
-        return axios.get(`/api/users/${userId}/dish`, {adapter: http});
+        return axios.get(`/api/users/${userId}/dish`);
     }
 
     createDish(userId, dish) {

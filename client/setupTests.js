@@ -1,1 +1,1 @@
-global.XMLHttpRequest = undefined;
+//global.XMLHttpRequest = undefined;

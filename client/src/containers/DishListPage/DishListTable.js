@@ -21,7 +21,6 @@ class DishListTable extends Component {
 
     componentWillUnmount() {
         this.setState({dishes: null, loaded: false});
-        console.log('unmount component');
     }
 
     componentDidMount() {
