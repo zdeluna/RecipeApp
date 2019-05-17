@@ -15,7 +15,7 @@ class DishListTable extends Component {
             dishes: [],
             category: this.props.match.params.category,
             redirect: false,
-            loading: true,
+            loading: this.props.loading,
         };
     }
 
@@ -23,7 +23,7 @@ class DishListTable extends Component {
         this.setState({dishes: null, loaded: false});
     }
 
-    componentDidMount() {
+    componentDidMount = async () => {
         var api = new API();
         api.getDishesOfUser(this.state.userID).then(response => {
             if (response.status === 200) {
@@ -48,7 +48,6 @@ class DishListTable extends Component {
                             dishArray.push(newDish);
                         }
                     }
-                    console.log('number of dishes: ' + dishArray.length);
 
                     this.setState({
                         dishes: dishArray,
@@ -59,7 +58,7 @@ class DishListTable extends Component {
                 loading: false,
             });
         });
-    }
+    };
 
     handleClick = id => {
         // Redirect to the dish entry page using the id that was recently created
@@ -77,34 +76,38 @@ class DishListTable extends Component {
         if (props.loading) return <Loading />;
         else
             return (
-                <Table striped className="dishTable">
-                    <thead>
-                        <tr>
-                            <th>Dish</th>
-                            <th>Time to Make</th>
-                            <th>Last made</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.dishes.map(dish => (
-                            <tr key={dish.id + 'r'}>
-                                <td key={dish.id + 'c'}>
-                                    <Link
-                                        key={dish.id + 'link'}
-                                        to={`/users/category/${
-                                            this.state.category
-                                        }/dish/${dish.id}`}>
-                                        {dish.name}
-                                    </Link>
-                                </td>
-                                <td key={dish.id + 'time'}>
-                                    {dish.cookingTime}
-                                </td>
-                                <td key={dish.id + 'date'}>{dish.lastMade}</td>
+                <div>
+                    <Table striped className="dishTable">
+                        <thead>
+                            <tr>
+                                <th>Dish</th>
+                                <th>Time to Make</th>
+                                <th>Last made</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                            {this.state.dishes.map(dish => (
+                                <tr className="dishRow" key={dish.id + 'r'}>
+                                    <td key={dish.id + 'c'}>
+                                        <Link
+                                            key={dish.id + 'link'}
+                                            to={`/users/category/${
+                                                this.state.category
+                                            }/dish/${dish.id}`}>
+                                            {dish.name}
+                                        </Link>
+                                    </td>
+                                    <td key={dish.id + 'time'}>
+                                        {dish.cookingTime}
+                                    </td>
+                                    <td key={dish.id + 'date'}>
+                                        {dish.lastMade}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </div>
             );
     };
 

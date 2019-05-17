@@ -13,13 +13,37 @@ class API {
     }
 
     getDishesOfUser(userId) {
-        console.log(
-            '***************INNNNN MOCK FUNCTION*************************',
-        );
+        mock.onGet('/api/users/${userId}/dish').reply(
+            200,
 
-        mock.onGet('/api/users/${userId}/dish').reply(200, {
-            dishes: [{name: 'pasta'}],
-        });
+            {
+                '-LesMF0g40cA-VOSqJjD': {
+                    category: 1,
+                    ingredients: [
+                        {
+                            id: 0,
+                            value: 'egg',
+                        },
+                        {
+                            id: 1,
+                            value: 'lettuce',
+                        },
+                    ],
+                    name: 'Fajitas',
+                    steps: [
+                        {
+                            id: 0,
+                            value: 'This is step 1',
+                        },
+                        {
+                            id: 1,
+                            value: 'This is step 2',
+                        },
+                    ],
+                    uid: 'XOqoUyqbCMWg7HUjURF6alTSXSP2',
+                },
+            },
+        );
         return axios.get('/api/users/${userId}/dish');
     }
 

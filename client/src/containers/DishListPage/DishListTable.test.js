@@ -3,10 +3,17 @@ import Enzyme, {shallow, mount} from 'enzyme';
 import DishListTable from './DishListTable';
 import AddDishForm from '../../components/AddDishForm';
 import Adapter from 'enzyme-adapter-react-16';
-import {Row, Col, Container} from 'reactstrap';
-import {BrowserRouter as Router} from 'react-router-dom';
+import {Row, Col, Table, Container} from 'reactstrap';
+import {
+    Link,
+    MemoryRouter,
+    withRouter,
+    BrowserRouter as Router,
+} from 'react-router-dom';
+
 import app from '../../base';
 import API from '../../utils/Api';
+import Loading from '../../components/Loading';
 
 require('dotenv').config();
 
@@ -15,19 +22,18 @@ jest.mock('../../utils/Api');
 Enzyme.configure({adapter: new Adapter()});
 
 describe('Dish List Table Page Component', () => {
-    test('Dish list table component renders', () => {
+    test('renders', () => {
         let testID = process.env.TEST_USER_ID;
-        const wrapper = mount(
+        const wrapper = shallow(
             <Router>
                 <DishListTable userID={testID} />
             </Router>,
         );
 
         expect(wrapper.exists()).toBe(true);
-        wrapper.unmount();
     });
 
-    test('Should render add new dish form', async () => {
+    test('add new dish form should render', async () => {
         let testID = process.env.TEST_USER_ID;
 
         const wrapper = mount(
@@ -36,8 +42,19 @@ describe('Dish List Table Page Component', () => {
             </Router>,
         );
 
-        expect(wrapper.children(AddDishForm).length).toEqual(0);
+        expect(wrapper.find(AddDishForm)).toHaveLength(1);
+        //wrapper.unmount();
+    });
 
-        wrapper.unmount();
+    test('users dish link should render ', async () => {
+        let testID = process.env.TEST_USER_ID;
+
+        const wrapper = await mount(
+            <Router>
+                <DishListTable loading={false} userID={testID} />
+            </Router>,
+        );
+
+        expect(wrapper.find(Link)).toHaveLength(1);
     });
 });

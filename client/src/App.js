@@ -86,6 +86,7 @@ class App extends Component {
                                 <DishListTable
                                     {...props}
                                     userID={app.auth().currentUser.uid}
+                                    loading={true}
                                 />
                             )}
                         />
