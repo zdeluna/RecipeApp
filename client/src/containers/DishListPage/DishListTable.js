@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import app from '../../base';
 import AddDishForm from '../../components/AddDishForm';
 import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
@@ -24,6 +23,14 @@ class DishListTable extends Component {
     }
 
     componentDidMount = async () => {
+        if (!this.state.dishes || this.state.dishes.length === 0)
+            await this.getDishes();
+        else {
+            this.setState({dishes: this.props.dishes, loading: false});
+        }
+    };
+
+    getDishes = async () => {
         var api = new API();
         api.getDishesOfUser(this.state.userID).then(response => {
             if (response.status === 200) {
@@ -88,7 +95,7 @@ class DishListTable extends Component {
                         <tbody>
                             {this.state.dishes.map(dish => (
                                 <tr className="dishRow" key={dish.id + 'r'}>
-                                    <td key={dish.id + 'c'}>
+                                    <td key={dish.id + 'name'}>
                                         <Link
                                             key={dish.id + 'link'}
                                             to={`/users/category/${

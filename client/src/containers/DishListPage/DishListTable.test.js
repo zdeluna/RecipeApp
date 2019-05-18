@@ -43,10 +43,9 @@ describe('Dish List Table Page Component', () => {
         );
 
         expect(wrapper.find(AddDishForm)).toHaveLength(1);
-        //wrapper.unmount();
     });
 
-    test('users dish link should render ', async () => {
+    test('users dish link should render using mock api data ', async () => {
         let testID = process.env.TEST_USER_ID;
 
         const wrapper = await mount(
@@ -56,5 +55,52 @@ describe('Dish List Table Page Component', () => {
         );
 
         expect(wrapper.find(Link)).toHaveLength(1);
+    });
+
+    test('loading page does not show', async () => {
+        let testID = process.env.TEST_USER_ID;
+
+        const wrapper = await mount(
+            <Router>
+                <DishListTable loading={false} userID={testID} />
+            </Router>,
+        );
+
+        expect(wrapper.find(Loading)).toHaveLength(0);
+    });
+
+    test('categories link should display', async () => {
+        let testID = process.env.TEST_USER_ID;
+
+        const wrapper = await mount(
+            <Router>
+                <DishListTable loading={false} userID={testID} />
+            </Router>,
+        );
+        expect(wrapper.find(Link).text()).toEqual('Go Back To Categories');
+    });
+
+    test('the number of rows is correct given a set of dishes', async () => {
+        let testID = process.env.TEST_USER_ID;
+
+        const dishes = {
+            id1: {name: 'Fajitas'},
+            id2: {name: 'Fish tacos'},
+            id3: {name: 'Gumbo'},
+        };
+
+        const wrapper = await mount(
+            <Router>
+                <DishListTable
+                    dishes={dishes}
+                    loading={false}
+                    userID={testID}
+                />
+            </Router>,
+        );
+
+        expect(wrapper.find('tr').children()).toHaveLength(
+            Object.keys(dishes).length,
+        );
     });
 });
