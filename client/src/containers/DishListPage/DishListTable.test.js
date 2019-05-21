@@ -29,14 +29,13 @@ describe('Dish List Table Page Component', () => {
                 <DishListTable userID={testID} />
             </Router>,
         );
-
         expect(wrapper.exists()).toBe(true);
     });
 
     test('add new dish form should render', async () => {
         let testID = process.env.TEST_USER_ID;
 
-        const wrapper = mount(
+        const wrapper = await mount(
             <Router>
                 <DishListTable userID={testID} />
             </Router>,

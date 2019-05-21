@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
+import {Link, withRouter, Redirect} from 'react-router-dom';
 import AddDishForm from '../../components/AddDishForm';
 import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
@@ -16,6 +16,7 @@ class DishListTable extends Component {
             redirect: false,
             loading: this.props.loading,
         };
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentWillUnmount() {
@@ -67,7 +68,7 @@ class DishListTable extends Component {
         });
     };
 
-    handleClick = id => {
+    handleClick(id) {
         // Redirect to the dish entry page using the id that was recently created
         this.setState({dishId: id});
         var redirect_location =
@@ -77,7 +78,7 @@ class DishListTable extends Component {
             this.state.dishId;
 
         this.props.history.push(redirect_location);
-    };
+    }
 
     renderTable = props => {
         if (props.loading) return <Loading />;
