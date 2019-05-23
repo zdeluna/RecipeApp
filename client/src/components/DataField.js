@@ -7,7 +7,7 @@ class DataField extends Component {
     constructor(props, type) {
         super(props);
         this.state = {
-            user: app.auth().currentUser,
+            userID: this.props.userID,
             data: '',
             editField: false,
             fieldCreated: false,
@@ -23,7 +23,7 @@ class DataField extends Component {
         });
 
         var api = new API();
-        api.getDish(this.state.user.uid, this.props.dishId).then(response => {
+        api.getDish(this.state.userID, this.props.dishId).then(response => {
             if (response.status === 200) {
                 if (response.data[this.state.type]) {
                     this.setState({
@@ -41,7 +41,7 @@ class DataField extends Component {
     addFieldToDatabase = (event, notes) => {
         const api = new API();
         let dataObject = {[this.state.type]: this.state.data};
-        api.updateDish(this.state.user.uid, this.props.dishId, dataObject)
+        api.updateDish(this.state.userID, this.props.dishId, dataObject)
             .then(response => {
                 this.setState({editField: false, fieldCreated: true});
             })
@@ -58,7 +58,7 @@ class DataField extends Component {
     deleteFieldFromDatabase = event => {
         const api = new API();
         let dataObject = {[this.state.type]: ''};
-        api.updateDish(this.state.user.uid, this.props.dishId, dataObject)
+        api.updateDish(this.state.userID, this.props.dishId, dataObject)
             .then(response => {
                 this.setState({
                     data: null,

@@ -76,7 +76,12 @@ class App extends Component {
                         <Route
                             exact
                             path="/users/category/:category/dish/:dishId"
-                            component={DishEntry}
+                            render={props => (
+                                <DishEntry
+                                    {...props}
+                                    userID={app.auth().currentUser.uid}
+                                />
+                            )}
                         />
 
                         <Route

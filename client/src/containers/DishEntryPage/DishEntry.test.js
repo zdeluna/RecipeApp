@@ -4,6 +4,11 @@ import DishEntry from './DishEntry';
 import AddDishForm from '../../components/AddDishForm';
 import Adapter from 'enzyme-adapter-react-16';
 import {Row, Col, Table, Container} from 'reactstrap';
+import Calendar from '../../components/Calendar';
+import Loading from '../../components/Loading';
+import Notes from '../../components/Notes';
+import CookingTime from '../../components/CookingTime';
+
 import {
     Link,
     MemoryRouter,
@@ -13,7 +18,6 @@ import {
 
 import app from '../../base';
 import API from '../../utils/Api';
-import Loading from '../../components/Loading';
 
 require('dotenv').config();
 
@@ -21,7 +25,7 @@ jest.mock('../../utils/Api');
 
 Enzyme.configure({adapter: new Adapter()});
 
-describe('Dish List Table Page Component', () => {
+describe('Dish Entry Page Component', () => {
     test('renders', () => {
         let testID = process.env.TEST_USER_ID;
         const wrapper = shallow(
@@ -31,4 +35,20 @@ describe('Dish List Table Page Component', () => {
         );
         expect(wrapper.exists()).toBe(true);
     });
+});
+
+test('calendar should render', async () => {
+    let testID = process.env.TEST_USER_ID;
+    let dishId = '12345';
+    let category = '1';
+    const match = {params: {dishId: '12345'}};
+
+    const wrapper = await mount(
+        <Router>
+            <DishEntry userID={testID} category={category} match={match} />
+        </Router>,
+    );
+    //wrapper.setState({dishId: dishId});
+
+    expect(wrapper.find(Calendar)).toHaveLength(1);
 });

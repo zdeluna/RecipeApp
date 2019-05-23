@@ -17,8 +17,8 @@ class DishEntry extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: app.auth().currentUser,
-            dishId: this.props.match.params.dishId,
+            userID: this.props.userID,
+            dishId: '12345',
             category: this.props.match.params.category,
             name: '',
             stepsCreated: false,
@@ -30,38 +30,37 @@ class DishEntry extends Component {
         };
     }
     /* Make a GET request to the database to retrieve the dish information and store it in state */
-    componentDidMount() {
-        this.getDishIngredientsAndSteps();
-    }
+    componentDidMount = async () => {
+        await this.getDishIngredientsAndSteps();
+    };
 
-    getDishIngredientsAndSteps() {
+    getDishIngredientsAndSteps = async () => {
         var api = new API();
-        api.getDish(this.state.user.uid, this.props.match.params.dishId).then(
-            response => {
-                if (response.status === 200) {
-                    let dish = response.data;
+        console.log(this.state.userID + ' ' + this.state.dishId);
+        api.getDish(this.state.userID, this.state.dishId).then(response => {
+            if (response.status === 200) {
+                let dish = response.data;
 
-                    if (dish.ingredients && dish.ingredients.length > 0) {
-                        this.setState({
-                            ingredientsCreated: true,
-                            ingredientsArray: dish.ingredients,
-                        });
-                    }
-                    if (dish.steps && dish.steps.length > 0) {
-                        this.setState({
-                            stepsCreated: true,
-                            stepsArray: dish.steps,
-                        });
-                    }
-
-                    this.setState({name: dish.name});
+                if (dish.ingredients && dish.ingredients.length > 0) {
+                    this.setState({
+                        ingredientsCreated: true,
+                        ingredientsArray: dish.ingredients,
+                    });
                 }
-                this.setState({
-                    loading: false,
-                });
-            },
-        );
-    }
+                if (dish.steps && dish.steps.length > 0) {
+                    this.setState({
+                        stepsCreated: true,
+                        stepsArray: dish.steps,
+                    });
+                }
+
+                this.setState({name: dish.name});
+            }
+            this.setState({
+                loading: false,
+            });
+        });
+    };
 
     handleStepsAndIngredientsSubmitted = event => {
         this.getDishIngredientsAndSteps();
@@ -69,16 +68,12 @@ class DishEntry extends Component {
 
     deleteEntryFromDatabase = event => {
         var api = new API();
-        api.deleteDish(this.state.user.uid, this.state.dishId).then(
-            response => {
-                if (response.status === 204) {
-                    console.log(response);
-                    console.log('delete dish');
-                    let redirect_url = '/users/category/' + this.state.category;
-                    this.props.history.push(redirect_url);
-                }
-            },
-        );
+        api.deleteDish(this.state.userID, this.state.dishId).then(response => {
+            if (response.status === 204) {
+                let redirect_url = '/users/category/' + this.state.category;
+                this.props.history.push(redirect_url);
+            }
+        });
     };
 
     renderNewDishForm = props => {
@@ -105,10 +100,6 @@ class DishEntry extends Component {
                             />
                         </Col>
                         <Col xs="4">
-                            <Calendar
-                                dishId={this.state.dishId}
-                                category={this.state.category}
-                            />
                             <Notes
                                 dishId={this.state.dishId}
                                 category={this.state.category}
