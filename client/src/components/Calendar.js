@@ -13,7 +13,7 @@ class Calendar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: app.auth().currentUser,
+            user: this.props.userID,
             history: [],
             newScheduleDate: '',
             dateIsScheduled: false,
@@ -40,7 +40,7 @@ class Calendar extends Component {
         });
 
         var api = new API();
-        api.getDish(this.state.user.uid, this.props.dishId).then(response => {
+        api.getDish(this.state.userID, this.props.dishId).then(response => {
             if (response.status === 200) {
                 if (response.data.history)
                     this.setState({
@@ -57,7 +57,7 @@ class Calendar extends Component {
 
         const api = new API();
         let historyField = {history: this.state.history};
-        api.updateDish(this.state.user.uid, this.props.dishId, historyField)
+        api.updateDish(this.state.userID, this.props.dishId, historyField)
             .then(response => {
                 this.setState({dateIsScheduled: true});
             })

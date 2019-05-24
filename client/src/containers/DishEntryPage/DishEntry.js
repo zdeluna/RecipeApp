@@ -23,15 +23,21 @@ class DishEntry extends Component {
             name: '',
             stepsCreated: false,
             ingredientsCreated: false,
-            loading: true,
-            stepsArray: [],
-            ingredientsArray: [],
+            loading: false,
+            stepsArray: this.props.steps,
+            ingredientsArray: this.props.ingredients,
             redirect: false,
         };
     }
     /* Make a GET request to the database to retrieve the dish information and store it in state */
     componentDidMount = async () => {
-        await this.getDishIngredientsAndSteps();
+        if (
+            this.state.stepsArray.length == 0 ||
+            this.state.ingredientsArray.length == 0
+        ) {
+            this.setState({loading: true});
+            await this.getDishIngredientsAndSteps();
+        }
     };
 
     getDishIngredientsAndSteps = async () => {
@@ -100,13 +106,20 @@ class DishEntry extends Component {
                             />
                         </Col>
                         <Col xs="4">
+                            <Calendar
+                                dishId={this.state.dishId}
+                                category={this.state.category}
+                                userID={this.state.userID}
+                            />
                             <Notes
                                 dishId={this.state.dishId}
                                 category={this.state.category}
+                                userID={this.state.userID}
                             />
                             <CookingTime
                                 dishId={this.state.dishId}
                                 category={this.state.category}
+                                userID={this.state.userID}
                             />
                         </Col>
                     </Row>

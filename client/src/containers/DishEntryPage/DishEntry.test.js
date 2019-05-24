@@ -8,6 +8,7 @@ import Calendar from '../../components/Calendar';
 import Loading from '../../components/Loading';
 import Notes from '../../components/Notes';
 import CookingTime from '../../components/CookingTime';
+import NewDishForm from '../../components/NewDishForm';
 
 import {
     Link,
@@ -43,12 +44,25 @@ test('calendar should render', async () => {
     let category = '1';
     const match = {params: {dishId: '12345'}};
 
+    const div = document.createElement('div');
+    document.body.appendChild(div);
+
+    const steps = ['1'];
+    const ingredients = ['1'];
+
     const wrapper = await mount(
         <Router>
-            <DishEntry userID={testID} category={category} match={match} />
+            <DishEntry
+                steps={steps}
+                ingredients={ingredients}
+                userID={testID}
+                category={category}
+                match={match}
+            />
         </Router>,
+        {attachTo: div},
     );
-    //wrapper.setState({dishId: dishId});
 
+    console.log(wrapper.debug());
     expect(wrapper.find(Calendar)).toHaveLength(1);
 });
