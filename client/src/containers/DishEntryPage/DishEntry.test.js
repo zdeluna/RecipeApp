@@ -24,6 +24,8 @@ require('dotenv').config();
 
 jest.mock('../../utils/Api');
 
+const flushPromises = () => new Promise(setImmediate);
+
 Enzyme.configure({adapter: new Adapter()});
 
 describe('Dish Entry Page Component', () => {
@@ -52,17 +54,12 @@ test('calendar should render', async () => {
 
     const wrapper = await mount(
         <Router>
-            <DishEntry
-                steps={steps}
-                ingredients={ingredients}
-                userID={testID}
-                category={category}
-                match={match}
-            />
+            <DishEntry userID={testID} category={category} match={match} />
         </Router>,
         {attachTo: div},
     );
 
-    console.log(wrapper.debug());
+    await flushPromises();
+    wrapper.update();
     expect(wrapper.find(Calendar)).toHaveLength(1);
 });

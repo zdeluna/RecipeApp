@@ -31,41 +31,36 @@ class DishEntry extends Component {
     }
     /* Make a GET request to the database to retrieve the dish information and store it in state */
     componentDidMount = async () => {
-        if (
-            this.state.stepsArray.length == 0 ||
-            this.state.ingredientsArray.length == 0
-        ) {
-            this.setState({loading: true});
+        if (!this.state.stepsArray || !this.state.ingredientsArray) {
             await this.getDishIngredientsAndSteps();
+            this.setState({loading: false});
         }
     };
 
     getDishIngredientsAndSteps = async () => {
+        this.setState({loading: true});
+
         var api = new API();
-        console.log(this.state.userID + ' ' + this.state.dishId);
-        api.getDish(this.state.userID, this.state.dishId).then(response => {
-            if (response.status === 200) {
-                let dish = response.data;
+        var response = await api.getDish(this.state.userID, this.state.dishId);
+        if (response.status === 200) {
+            let dish = response.data;
 
-                if (dish.ingredients && dish.ingredients.length > 0) {
-                    this.setState({
-                        ingredientsCreated: true,
-                        ingredientsArray: dish.ingredients,
-                    });
-                }
-                if (dish.steps && dish.steps.length > 0) {
-                    this.setState({
-                        stepsCreated: true,
-                        stepsArray: dish.steps,
-                    });
-                }
-
-                this.setState({name: dish.name});
+            if (dish.ingredients && dish.ingredients.length > 0) {
+                this.setState({
+                    ingredientsCreated: true,
+                    ingredientsArray: dish.ingredients,
+                });
             }
-            this.setState({
-                loading: false,
-            });
-        });
+            if (dish.steps && dish.steps.length > 0) {
+                this.setState({
+                    stepsCreated: true,
+                    stepsArray: dish.steps,
+                });
+            }
+
+            this.setState({name: dish.name, loading: false});
+        }
+        this.setState({loading: false});
     };
 
     handleStepsAndIngredientsSubmitted = event => {
