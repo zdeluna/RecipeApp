@@ -18,7 +18,7 @@ class DishEntry extends Component {
         super(props);
         this.state = {
             userID: this.props.userID,
-            dishId: '12345',
+            dishId: this.props.match.params.dishId,
             category: this.props.match.params.category,
             name: '',
             stepsCreated: false,
