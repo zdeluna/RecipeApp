@@ -89,9 +89,8 @@ class API {
     }
 
     deleteDish(userId, dishId) {
-        /*
-		return axios.delete(`/api/users/${userId}/dish/${dishId}`);
-		*/
+        mock.onDelete('/api/users/${userId}/dish/${dishId}').reply(204);
+        return axios.delete('/api/users/${userId}/dish/${dishId}');
     }
 }
 

@@ -27,8 +27,11 @@ class DishEntry extends Component {
             stepsArray: this.props.steps,
             ingredientsArray: this.props.ingredients,
             redirect: false,
+            delete: false,
         };
+        this.deleteEntryFromDatabase = this.deleteEntryFromDatabase.bind(this);
     }
+
     /* Make a GET request to the database to retrieve the dish information and store it in state */
     componentDidMount = async () => {
         if (!this.state.stepsArray || !this.state.ingredientsArray) {
@@ -67,12 +70,13 @@ class DishEntry extends Component {
         this.getDishIngredientsAndSteps();
     };
 
-    deleteEntryFromDatabase = event => {
+    deleteEntryFromDatabase = () => {
+        this.setState({delete: true});
         var api = new API();
         api.deleteDish(this.state.userID, this.state.dishId).then(response => {
             if (response.status === 204) {
                 let redirect_url = '/users/category/' + this.state.category;
-                this.props.history.push(redirect_url);
+                //this.props.history.push(redirect_url);
             }
         });
     };
@@ -143,11 +147,10 @@ class DishEntry extends Component {
                     </Col>
                     <Col sm="2" md={{size: 2, offset: 3}}>
                         <Button
+                            id="deleteDishButton"
                             color="danger"
                             size="sm"
-                            onClick={event =>
-                                this.deleteEntryFromDatabase(event)
-                            }>
+                            onClick={this.deleteEntryFromDatabase}>
                             Delete Entry
                         </Button>
                     </Col>
@@ -169,4 +172,4 @@ class DishEntry extends Component {
     }
 }
 
-export default withRouter(DishEntry);
+export default DishEntry;
