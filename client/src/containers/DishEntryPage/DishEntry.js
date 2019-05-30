@@ -29,7 +29,6 @@ class DishEntry extends Component {
             redirect: false,
             delete: false,
         };
-        this.deleteEntryFromDatabase = this.deleteEntryFromDatabase.bind(this);
     }
 
     /* Make a GET request to the database to retrieve the dish information and store it in state */
@@ -76,7 +75,7 @@ class DishEntry extends Component {
         api.deleteDish(this.state.userID, this.state.dishId).then(response => {
             if (response.status === 204) {
                 let redirect_url = '/users/category/' + this.state.category;
-                //this.props.history.push(redirect_url);
+                <Redirect push to="redirect_url" />;
             }
         });
     };

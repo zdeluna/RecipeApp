@@ -16,19 +16,25 @@ import API from '../../utils/Api';
 import Loading from '../../components/Loading';
 
 require('dotenv').config();
+const flushPromises = () => new Promise(setImmediate);
+const match = {params: {category: 1}};
 
 jest.mock('../../utils/Api');
 
 Enzyme.configure({adapter: new Adapter()});
 
 describe('Dish List Table Page Component', () => {
-    test('renders', () => {
+    test('renders', async () => {
         let testID = process.env.TEST_USER_ID;
         const wrapper = shallow(
             <Router>
-                <DishListTable userID={testID} />
+                <DishListTable userID={testID} match={match} />
             </Router>,
         );
+
+        await flushPromises();
+        wrapper.update();
+
         expect(wrapper.exists()).toBe(true);
     });
 
@@ -37,11 +43,15 @@ describe('Dish List Table Page Component', () => {
 
         const wrapper = await mount(
             <Router>
-                <DishListTable userID={testID} />
+                <DishListTable userID={testID} match={match} />
             </Router>,
         );
 
+        await flushPromises();
+        wrapper.update();
+
         expect(wrapper.find(AddDishForm)).toHaveLength(1);
+        wrapper.unmount();
     });
 
     test('users dish link should render using mock api data ', async () => {
@@ -49,11 +59,16 @@ describe('Dish List Table Page Component', () => {
 
         const wrapper = await mount(
             <Router>
-                <DishListTable loading={false} userID={testID} />
+                <DishListTable loading={false} userID={testID} match={match} />
             </Router>,
         );
 
-        expect(wrapper.find(Link)).toHaveLength(1);
+        await flushPromises();
+        wrapper.update();
+        console.log(wrapper.debug());
+
+        expect(wrapper.find('Link .dishLink')).toHaveLength(1);
+        wrapper.unmount();
     });
 
     test('loading page does not show', async () => {
@@ -61,11 +76,15 @@ describe('Dish List Table Page Component', () => {
 
         const wrapper = await mount(
             <Router>
-                <DishListTable loading={false} userID={testID} />
+                <DishListTable loading={false} userID={testID} match={match} />
             </Router>,
         );
 
+        await flushPromises();
+        wrapper.update();
+
         expect(wrapper.find(Loading)).toHaveLength(0);
+        wrapper.unmount();
     });
 
     test('categories link should display', async () => {
@@ -73,10 +92,17 @@ describe('Dish List Table Page Component', () => {
 
         const wrapper = await mount(
             <Router>
-                <DishListTable loading={false} userID={testID} />
+                <DishListTable loading={false} userID={testID} match={match} />
             </Router>,
         );
-        expect(wrapper.find(Link).text()).toEqual('Go Back To Categories');
+
+        await flushPromises();
+        wrapper.update();
+
+        expect(wrapper.find('Link #goBackLink').text()).toEqual(
+            'Go Back To Categories',
+        );
+        wrapper.unmount();
     });
 
     test('the number of rows is correct given a set of dishes', async () => {
@@ -94,11 +120,15 @@ describe('Dish List Table Page Component', () => {
                     dishes={dishes}
                     loading={false}
                     userID={testID}
+                    match={match}
                 />
             </Router>,
         );
 
-        expect(wrapper.find('tr').children()).toHaveLength(
+        await flushPromises();
+        wrapper.update();
+
+        expect(wrapper.find('tbody tr').children()).toHaveLength(
             Object.keys(dishes).length,
         );
     });

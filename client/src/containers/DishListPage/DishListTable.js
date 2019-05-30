@@ -71,13 +71,12 @@ class DishListTable extends Component {
     handleClick(id) {
         // Redirect to the dish entry page using the id that was recently created
         this.setState({dishId: id});
-        var redirect_location =
+        var redirect_url =
             '/users/category/' +
             this.state.category +
             '/dish/' +
             this.state.dishId;
-
-        this.props.history.push(redirect_location);
+        <Redirect push to="redirect_url" />;
     }
 
     renderTable = props => {
@@ -98,6 +97,7 @@ class DishListTable extends Component {
                                 <tr className="dishRow" key={dish.id + 'r'}>
                                     <td key={dish.id + 'name'}>
                                         <Link
+                                            className="dishLink"
                                             key={dish.id + 'link'}
                                             to={`/users/category/${
                                                 this.state.category
@@ -124,7 +124,9 @@ class DishListTable extends Component {
             <Container>
                 <Row>
                     {' '}
-                    <Link to={`/`}>Go Back To Categories</Link>
+                    <Link to={`/`} id="goBackLink">
+                        Go Back To Categories
+                    </Link>
                 </Row>
                 <Row>
                     <AddDishForm
@@ -138,4 +140,4 @@ class DishListTable extends Component {
     }
 }
 
-export default withRouter(DishListTable);
+export default DishListTable;
