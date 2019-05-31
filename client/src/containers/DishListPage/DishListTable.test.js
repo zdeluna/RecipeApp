@@ -65,7 +65,6 @@ describe('Dish List Table Page Component', () => {
 
         await flushPromises();
         wrapper.update();
-        console.log(wrapper.debug());
 
         expect(wrapper.find('Link .dishLink')).toHaveLength(1);
         wrapper.unmount();
@@ -131,5 +130,6 @@ describe('Dish List Table Page Component', () => {
         expect(wrapper.find('tbody tr').children()).toHaveLength(
             Object.keys(dishes).length,
         );
+        wrapper.unmount();
     });
 });

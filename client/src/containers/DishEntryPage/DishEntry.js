@@ -140,7 +140,9 @@ class DishEntry extends Component {
                 <Row>
                     <Col>
                         {' '}
-                        <Link to={`/users/category/${this.state.category}`}>
+                        <Link
+                            to={`/users/category/${this.state.category}`}
+                            id="goBackLink">
                             Go Back
                         </Link>
                     </Col>

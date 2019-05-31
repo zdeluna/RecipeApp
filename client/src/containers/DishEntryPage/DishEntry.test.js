@@ -28,7 +28,7 @@ const flushPromises = () => new Promise(setImmediate);
 const testID = process.env.TEST_USER_ID;
 const dishId = '12345';
 const category = '1';
-const match = {params: {dishId: '12345'}};
+const match = {params: {dishId: '12345', category: 1}};
 
 Enzyme.configure({adapter: new Adapter()});
 
@@ -58,6 +58,7 @@ test('calendar should render', async () => {
     await flushPromises();
     wrapper.update();
     expect(wrapper.find(Calendar)).toHaveLength(1);
+    wrapper.unmount();
 });
 
 test('notes should render', async () => {
@@ -74,6 +75,7 @@ test('notes should render', async () => {
     await flushPromises();
     wrapper.update();
     expect(wrapper.find(Notes)).toHaveLength(1);
+    wrapper.unmount();
 });
 
 test('cooking time should render', async () => {
@@ -90,6 +92,7 @@ test('cooking time should render', async () => {
     await flushPromises();
     wrapper.update();
     expect(wrapper.find(CookingTime)).toHaveLength(1);
+    wrapper.unmount();
 });
 
 test('check to see if delete button calls handler to delete dish', async () => {
@@ -106,8 +109,6 @@ test('check to see if delete button calls handler to delete dish', async () => {
     await flushPromises();
     wrapper.update();
 
-    //console.log(wrapper.debug());
-
     const componentInstance = wrapper.find(DishEntry).instance();
     const spyOnDeleteFunction = jest.spyOn(
         componentInstance,
@@ -121,4 +122,27 @@ test('check to see if delete button calls handler to delete dish', async () => {
         .simulate('click');
 
     expect(spyOnDeleteFunction).toHaveBeenCalled();
+    wrapper.unmount();
+});
+
+test('check if go back button is rendered', async () => {
+    const div = document.createElement('div');
+    document.body.appendChild(div);
+
+    const wrapper = await mount(
+        <Router>
+            <DishEntry userID={testID} category={category} match={match} />
+        </Router>,
+        {attachTo: div},
+    );
+
+    await flushPromises();
+    wrapper.update();
+
+    expect(
+        wrapper
+            .find('#goBackLink')
+            .first()
+            .props().to,
+    ).toBe('/users/category/1');
 });
