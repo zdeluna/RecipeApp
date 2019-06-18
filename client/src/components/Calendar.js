@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import app from '../base';
 import {Row, Col, Button} from 'reactstrap';
 import './Calendar.css';
 import 'react-widgets/dist/css/react-widgets.css';
@@ -13,7 +12,7 @@ class Calendar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: this.props.userID,
+            userID: this.props.userID,
             history: [],
             newScheduleDate: '',
             dateIsScheduled: false,
@@ -57,6 +56,12 @@ class Calendar extends Component {
 
         const api = new API();
         let historyField = {history: this.state.history};
+
+        // User has selected the default date (today)
+        if (historyField.history.length == 0) {
+            this.dateChanged(new Date());
+        }
+
         api.updateDish(this.state.userID, this.props.dishId, historyField)
             .then(response => {
                 this.setState({dateIsScheduled: true});

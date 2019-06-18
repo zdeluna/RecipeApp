@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, withRouter, Redirect} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import AddDishForm from '../../components/AddDishForm';
 import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
@@ -71,12 +71,13 @@ class DishListTable extends Component {
     handleClick(id) {
         // Redirect to the dish entry page using the id that was recently created
         this.setState({dishId: id});
+        console.log('handleClick');
         var redirect_url =
             '/users/category/' +
             this.state.category +
             '/dish/' +
             this.state.dishId;
-        <Redirect push to="redirect_url" />;
+        <Redirect push to={redirect_url} />;
     }
 
     renderTable = props => {

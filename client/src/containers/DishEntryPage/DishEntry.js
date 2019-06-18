@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import app from '../../base';
-import {Link, Redirect, withRouter} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
 import Calendar from '../../components/Calendar';
@@ -41,7 +40,6 @@ class DishEntry extends Component {
 
     getDishIngredientsAndSteps = async () => {
         this.setState({loading: true});
-
         var api = new API();
         var response = await api.getDish(this.state.userID, this.state.dishId);
         if (response.status === 200) {
@@ -70,17 +68,20 @@ class DishEntry extends Component {
     };
 
     deleteEntryFromDatabase = () => {
-        this.setState({delete: true});
         var api = new API();
         api.deleteDish(this.state.userID, this.state.dishId).then(response => {
             if (response.status === 204) {
-                let redirect_url = '/users/category/' + this.state.category;
-                <Redirect push to="redirect_url" />;
+                this.setState({delete: true});
             }
         });
     };
 
     renderNewDishForm = props => {
+        if (this.state.delete) {
+            let redirect_url = '/users/category/' + this.state.category;
+
+            return <Redirect push to={redirect_url} />;
+        }
         if (this.state.loading) return <Loading />;
 
         if (!this.state.stepsCreated) {

@@ -1,5 +1,4 @@
 const axios = require('axios');
-var path = require('path');
 
 class API {
     contructor() {
