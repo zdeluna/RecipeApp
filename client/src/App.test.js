@@ -6,5 +6,5 @@ it('renders without crashing', () => {
     const div = document.createElement('div');
     document.body.appendChild(div);
     ReactDOM.render(<App />, div);
-    ReactDOM.unmountComponentAtNode(div);
+    // ReactDOM.unmountComponentAtNode(div);
 });

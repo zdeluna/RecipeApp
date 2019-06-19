@@ -63,6 +63,10 @@ class DishEntry extends Component {
         this.setState({loading: false});
     };
 
+    makeDishModeButton = event => {
+        //console.log('make dish mode');
+    };
+
     handleStepsAndIngredientsSubmitted = event => {
         this.getDishIngredientsAndSteps();
     };
@@ -149,11 +153,11 @@ class DishEntry extends Component {
                     </Col>
                     <Col sm="2" md={{size: 2, offset: 3}}>
                         <Button
-                            id="deleteDishButton"
-                            color="danger"
+                            id="makeDishModeButton"
+                            color="success"
                             size="sm"
-                            onClick={this.deleteEntryFromDatabase}>
-                            Delete Entry
+                            onClick={this.makeDishModeButton}>
+                            Make Dish Mode
                         </Button>
                     </Col>
                 </Row>
@@ -168,7 +172,17 @@ class DishEntry extends Component {
                         <this.renderNewDishForm />
                     </Col>
                 </Row>
-                <Row />
+                <Row>
+                    <Col sm="2" md={{size: 2, offset: 0}}>
+                        <Button
+                            id="deleteDishButton"
+                            color="danger"
+                            size="sm"
+                            onClick={this.deleteEntryFromDatabase}>
+                            Delete Entry
+                        </Button>
+                    </Col>
+                </Row>
             </div>
         );
     }

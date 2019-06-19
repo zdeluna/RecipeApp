@@ -58,7 +58,6 @@ test('calendar should render', async () => {
     await flushPromises();
     wrapper.update();
     expect(wrapper.find(Calendar)).toHaveLength(1);
-    wrapper.unmount();
 });
 
 test('notes should render', async () => {
@@ -75,7 +74,6 @@ test('notes should render', async () => {
     await flushPromises();
     wrapper.update();
     expect(wrapper.find(Notes)).toHaveLength(1);
-    wrapper.unmount();
 });
 
 test('cooking time should render', async () => {
@@ -92,7 +90,6 @@ test('cooking time should render', async () => {
     await flushPromises();
     wrapper.update();
     expect(wrapper.find(CookingTime)).toHaveLength(1);
-    wrapper.unmount();
 });
 
 test('check to see if delete button calls handler to delete dish', async () => {
@@ -122,7 +119,6 @@ test('check to see if delete button calls handler to delete dish', async () => {
         .simulate('click');
 
     expect(spyOnDeleteFunction).toHaveBeenCalled();
-    wrapper.unmount();
 });
 
 test('check if go back button is rendered', async () => {
@@ -145,4 +141,33 @@ test('check if go back button is rendered', async () => {
             .first()
             .props().to,
     ).toBe('/users/category/1');
+});
+
+test('check to see if make dish mode calls handler to make dish mode', async () => {
+    const div = document.createElement('div');
+    document.body.appendChild(div);
+
+    const wrapper = await mount(
+        <Router>
+            <DishEntry userID={testID} category={category} match={match} />
+        </Router>,
+        {attachTo: div},
+    );
+
+    await flushPromises();
+    wrapper.update();
+
+    const componentInstance = wrapper.find(DishEntry).instance();
+    const spyOnDeleteFunction = jest.spyOn(
+        componentInstance,
+        'makeDishModeButton',
+    );
+
+    componentInstance.forceUpdate();
+    wrapper
+        .find('#makeDishModeButton')
+        .first()
+        .simulate('click');
+
+    expect(spyOnDeleteFunction).toHaveBeenCalled();
 });
