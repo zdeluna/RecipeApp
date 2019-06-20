@@ -27,6 +27,7 @@ class DishEntry extends Component {
             ingredientsArray: this.props.ingredients,
             redirect: false,
             delete: false,
+            makeDishMode: false,
         };
     }
 
@@ -64,7 +65,7 @@ class DishEntry extends Component {
     };
 
     makeDishModeButton = event => {
-        //console.log('make dish mode');
+        this.setState({makeDishMode: true});
     };
 
     handleStepsAndIngredientsSubmitted = event => {
@@ -86,6 +87,29 @@ class DishEntry extends Component {
 
             return <Redirect push to={redirect_url} />;
         }
+
+        if (this.state.makeDishMode) {
+            let redirect_url =
+                '/users/category/' +
+                this.state.category +
+                '/dish/' +
+                this.state.dishId +
+                '/' +
+                'makeMode';
+
+            return (
+                <Redirect
+                    to={{
+                        pathname: redirect_url,
+                        state: {
+                            steps: this.state.stepsArray,
+                            ingredients: this.state.ingredientsArray,
+                        },
+                    }}
+                />
+            );
+        }
+
         if (this.state.loading) return <Loading />;
 
         if (!this.state.stepsCreated) {

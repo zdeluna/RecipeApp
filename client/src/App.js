@@ -9,6 +9,7 @@ import LogIn from './containers/LogInPage/LogIn';
 import SignUp from './containers/SignUpPage/SignUp';
 import DishListTable from './containers/DishListPage/DishListTable';
 import DishEntry from './containers/DishEntryPage/DishEntry';
+import RecipeGuide from './containers/DishEntryPage/RecipeGuide';
 import ItemForm from './components/ItemForm';
 
 class App extends Component {
@@ -94,6 +95,12 @@ class App extends Component {
                                     loading={true}
                                 />
                             )}
+                        />
+                        <Route
+                            expact
+                            path
+                            render="/users/category/:category/dish/:dishId/makeMode"
+                            render={props => <RecipeGuide {...props} />}
                         />
                     </Switch>
                 </div>
