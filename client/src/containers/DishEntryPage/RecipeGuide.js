@@ -20,7 +20,6 @@ class RecipeGuide extends Component {
     render() {
         return (
             <div>
-                <Container>Recipe Guide</Container>
                 <Container>
                     <Carousel
                         steps={this.state.steps}
