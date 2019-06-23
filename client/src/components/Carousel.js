@@ -10,16 +10,7 @@ class Carousel extends Component {
             steps: this.props.steps,
             ingredients: this.props.ingredients,
             currentStep: 0,
-            dishUrl: '',
         };
-    }
-
-    componentDidMount() {
-        // Set the state variable to the dish entry url
-        let dishUrl = window.location.pathname;
-        dishUrl = dishUrl.replace('/makeMode', '');
-
-        this.setState({dishUrl: dishUrl});
     }
 
     showNextIngredient = () => {
@@ -45,34 +36,19 @@ class Carousel extends Component {
     render() {
         return (
             <div>
-                <Row>
-                    <Col>
-                        <Link to={this.state.dishUrl}>
-                            <Button color="warning" onClick={() => this.exit()}>
-                                Exit
-                            </Button>
-                        </Link>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Container>
-                            <Button
-                                color="primary"
-                                onClick={() => this.showPreviousIngredient()}>
-                                Previous
-                            </Button>
-                            <h1>
-                                {this.state.steps[this.state.currentStep].value}
-                            </h1>
-                            <Button
-                                color="primary"
-                                onClick={() => this.showNextIngredient()}>
-                                Next
-                            </Button>
-                        </Container>
-                    </Col>
-                </Row>
+                <Container>
+                    <Button
+                        color="primary"
+                        onClick={() => this.showPreviousIngredient()}>
+                        Previous
+                    </Button>
+                    <h1>{this.state.steps[this.state.currentStep].value}</h1>
+                    <Button
+                        color="primary"
+                        onClick={() => this.showNextIngredient()}>
+                        Next
+                    </Button>
+                </Container>
             </div>
         );
     }
