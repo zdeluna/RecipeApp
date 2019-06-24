@@ -1,17 +1,54 @@
 import React, {Component} from 'react';
 import {Button, Row, Col, Container} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import API from '../utils/Api';
 
 class Carousel extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            userID: this.props.userID,
+            dishId: this.props.dishId,
             steps: this.props.steps,
             ingredients: this.props.ingredients,
             currentStep: 0,
+            loading: false,
         };
     }
+
+    /* Make a GET request to the database to retrieve the dish information and store it in state */
+    componentDidMount = async () => {
+        if (!this.state.steps || !this.state.ingredients) {
+            await this.getDishIngredientsAndSteps();
+            this.setState({loading: false});
+        }
+    };
+
+    getDishIngredientsAndSteps = async () => {
+        this.setState({loading: true});
+        var api = new API();
+        var response = await api.getDish(this.state.userID, this.state.dishId);
+        if (response.status === 200) {
+            let dish = response.data;
+
+            if (dish.ingredients && dish.ingredients.length > 0) {
+                this.setState({
+                    ingredientsCreated: true,
+                    ingredientsArray: dish.ingredients,
+                });
+            }
+            if (dish.steps && dish.steps.length > 0) {
+                this.setState({
+                    stepsCreated: true,
+                    stepsArray: dish.steps,
+                });
+            }
+
+            this.setState({name: dish.name, loading: false});
+        }
+        this.setState({loading: false});
+    };
 
     showNextIngredient = () => {
         let stepNumber = this.state.currentStep + 1;

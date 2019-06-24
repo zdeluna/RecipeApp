@@ -53,6 +53,18 @@ class App extends Component {
                         <Route exact path="/login" component={LogIn} />
                         <Route exact path="/signup" component={SignUp} />
                         <Route
+                            expact
+                            path="/users/category/:category/dish/:dishId/makeMode"
+                            render={props => (
+                                <RecipeGuide
+                                    {...props}
+                                    userID={app.auth().currentUser.uid}
+                                    loading={true}
+                                />
+                            )}
+                        />
+
+                        <Route
                             exact
                             path="/users/category/:category/dish/:dishId/ingredients"
                             render={props => (
@@ -74,6 +86,7 @@ class App extends Component {
                                 />
                             )}
                         />
+
                         <Route
                             exact
                             path="/users/category/:category/dish/:dishId"
@@ -95,12 +108,6 @@ class App extends Component {
                                     loading={true}
                                 />
                             )}
-                        />
-                        <Route
-                            expact
-                            path
-                            render="/users/category/:category/dish/:dishId/makeMode"
-                            render={props => <RecipeGuide {...props} />}
                         />
                     </Switch>
                 </div>
