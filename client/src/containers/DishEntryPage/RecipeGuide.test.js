@@ -1,8 +1,9 @@
 import React from 'react';
 import Enzyme, {shallow, mount} from 'enzyme';
-import RecipeGuide from './DishEntry';
+import RecipeGuide from './RecipeGuide';
 import Adapter from 'enzyme-adapter-react-16';
 import {Row, Col, Table, Container, Button} from 'reactstrap';
+import Carousel from '../../components/Carousel';
 
 import {
     Link,
@@ -19,10 +20,46 @@ require('dotenv').config();
 jest.mock('../../utils/Api');
 
 const flushPromises = () => new Promise(setImmediate);
+
 const testID = process.env.TEST_USER_ID;
 const dishId = '12345';
 const category = '1';
-const match = {params: {dishId: '12345', category: 1}};
+
+const ingredients = [
+    {
+        id: 0,
+        value: 'Ground beef',
+    },
+    {
+        id: 1,
+        value: 'Taco shells',
+    },
+];
+
+const steps = [
+    {
+        id: 0,
+        value: 'Cook ground beef',
+    },
+    {
+        id: 1,
+        value: 'Cook taco shells',
+    },
+];
+
+const match = {
+    params: {
+        dishId: '12345',
+        category: 1,
+    },
+};
+
+const location = {
+    state: {
+        steps: steps,
+        ingredients: ingredients,
+    },
+};
 
 Enzyme.configure({adapter: new Adapter()});
 
@@ -44,7 +81,12 @@ test('carousel should render', async () => {
 
     const wrapper = await mount(
         <Router>
-            <RecipeGuide steps ingredients} />
+            <RecipeGuide
+                userID={testID}
+                category={category}
+                match={match}
+                location={location}
+            />
         </Router>,
         {attachTo: div},
     );

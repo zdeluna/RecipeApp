@@ -25,6 +25,7 @@ require('dotenv').config();
 jest.mock('../../utils/Api');
 
 const flushPromises = () => new Promise(setImmediate);
+
 const testID = process.env.TEST_USER_ID;
 const dishId = '12345';
 const category = '1';

@@ -24,10 +24,6 @@ class RecipeGuide extends Component {
         this.setState({dishUrl: dishUrl});
     }
 
-    handleChange = event => {
-        this.setState({value: event.target.value});
-    };
-
     render() {
         return (
             <div>
@@ -39,14 +35,12 @@ class RecipeGuide extends Component {
                     </Col>
                 </Row>
 
-                <Container>
-                    <Carousel
-                        dishId={this.state.dishId}
-                        userID={this.state.userID}
-                        steps={this.state.steps}
-                        ingredients={this.state.ingredients}
-                    />
-                </Container>
+                <Carousel
+                    dishId={this.state.dishId}
+                    userID={this.state.userID}
+                    steps={this.state.steps}
+                    ingredients={this.state.ingredients}
+                />
             </div>
         );
     }
