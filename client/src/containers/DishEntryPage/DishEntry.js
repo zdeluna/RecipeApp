@@ -165,7 +165,7 @@ class DishEntry extends Component {
 
     render() {
         return (
-            <div>
+            <div id="dishEntryContainer">
                 <Row>
                     <Col>
                         {' '}
@@ -187,7 +187,7 @@ class DishEntry extends Component {
                 </Row>
 
                 <Row>
-                    <Col sm="12" md={{size: 6, offset: 6}}>
+                    <Col className="text-center">
                         <h1>{this.state.name}</h1>
                     </Col>
                 </Row>

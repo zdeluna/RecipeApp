@@ -11,6 +11,7 @@ import DishListTable from './containers/DishListPage/DishListTable';
 import DishEntry from './containers/DishEntryPage/DishEntry';
 import RecipeGuide from './containers/DishEntryPage/RecipeGuide';
 import ItemForm from './components/ItemForm';
+import './App.css';
 
 class App extends Component {
     state = {loading: true, authenticated: false, user: null};
