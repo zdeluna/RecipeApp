@@ -22,7 +22,8 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
             var $ = cheerio.load(html);
 
             dishInfo.steps = await getStepsFromWebPage($);
-            dishInfo.ingredients = await getIngredientsFromWebPage($);
+			dishInfo.ingredients = await getIngredientsFromWebPage($);
+			dishInfo.ingredientsInSteps = await getIngredientsInSteps(dishInfo.steps, dishInfo.ingredients);
             resolve(dishInfo);
         });
     });
@@ -57,6 +58,48 @@ function checkForIngredientsHeading(text) {
 
     if (acceptableIngredientsHeading.indexOf(text) > -1) return true;
     else return false;
+}
+
+function stepHasIngredient(step, ingredient){
+	// Remove the quantity measurement from ingredient
+    
+
+
+}
+
+
+
+
+
+/**
+* Iterate through steps and determine which ingredient is used in each step
+* @param {Array} steps - Steps of dish
+* @param {Array} ingredients - Ingredients of dish
+* @Return {Promise}
+ */
+
+const getIngredientsInSteps = async(steps, ingredients) => {
+	let ingredientsInStepsArray = [];
+
+	for (var stepNumber = 0; stepNumber < steps.length; stepNumber++)
+	{
+		let ingredientsInEachStep = [];
+		let stepDescription = steps[stepNumber].value;
+		
+		for(var ingredientNumber = 0; ingredientNumber < ingredients.length; ingredientNumber++)
+		{
+			let ingredientDescription = ingredients[ingredientNumber].value;
+
+			if (stepHasIngredient(stepDescription, ingredientDescription))
+			{
+				ingredientsInEachStep.push(ingredientDescription)
+			}
+
+			ingredientsInStepsArray.push(ingredientsInEachStep);
+		}
+	}
+
+	return ingredientsInStepsArray;
 }
 
 /**
