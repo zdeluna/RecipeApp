@@ -22,8 +22,15 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
             var $ = cheerio.load(html);
 
             dishInfo.steps = await getStepsFromWebPage($);
-			dishInfo.ingredients = await getIngredientsFromWebPage($);
-			dishInfo.ingredientsInSteps = await getIngredientsInSteps(dishInfo.steps, dishInfo.ingredients);
+            dishInfo.ingredients = await getIngredientsFromWebPage($);
+
+            var ingredients = Object.assign({}, dishInfo.ingredients);
+            console.log('LENGTH OF INGREDIENTS: ' + ingredients.length);
+
+            dishInfo.ingredientsInSteps = await getIngredientsInSteps(
+                dishInfo.steps,
+                ingredients,
+            );
             resolve(dishInfo);
         });
     });
@@ -60,47 +67,99 @@ function checkForIngredientsHeading(text) {
     else return false;
 }
 
-function stepHasIngredient(step, ingredient){
-	// Remove the quantity measurement from ingredient
-    
+function stepHasIngredient(step, ingredient) {
+    let ingredientBrokenIntoWordsArray = ingredient.split();
 
+    for (var i = 0; i < ingredientBrokenIntoWordsArray.length; i++) {
+        ingredientWord = ingredientBrokenIntoWordsArray[i];
 
+        if (step.includes(ingredientWord)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
+function filterAllIngredients(ingredientsArray) {
+    filteredIngredientsArray = [];
+    for (var i = 0; i < ingredientsArray.length; i++) {
+        let ingredientObject = ingredientsArray[i];
+        ingredientObject.value = filterIngredient(ingredientObject.value);
+        console.log('value: ' + ingredientObject.value);
+        filteredIngredientsArray.push(ingredientObject);
+    }
+    console.log(filteredIngredientsArray);
+    return filteredIngredientsArray;
+}
 
+function filterIngredient(ingredient) {
+    // Remove the quantity measurement from ingredient
+    ingredient = ingredient.replace(
+        /cup|tablespoon|teaspoon|gram|pounds| g | c | ml | oz |ounce|ml|and | or/gi,
+        '',
+    );
 
+    // Remove the numbers from ingredient
+    ingredient = ingredient.replace(/[0-9]/g, '');
 
+    // Remove '() and / 'from ingredient
+    ingredient = ingredient
+        .replace(/"/g, '')
+        .replace(/'/g, '')
+        .replace(/\(|\)/g, '')
+        .replace(/\//g, '');
+    // Remove the white space before and after the word
+    ingredient = ingredient.trim();
+
+    // Remove all text after a comma
+    ingredient = ingredient.replace(/\,.*/, '');
+
+    return ingredient;
+}
 
 /**
-* Iterate through steps and determine which ingredient is used in each step
-* @param {Array} steps - Steps of dish
-* @param {Array} ingredients - Ingredients of dish
-* @Return {Promise}
+ * Iterate through steps and determine which ingredient is used in each step
+ * @param {Array} steps - Steps of dish
+ * @param {Array} ingredients - Ingredients of dish
+ * @Return {Promise}
  */
 
-const getIngredientsInSteps = async(steps, ingredients) => {
-	let ingredientsInStepsArray = [];
+const getIngredientsInSteps = async (steps, ingredients) => {
+    let ingredientsInStepsArray = [];
+    let filteredIngredients = filterAllIngredients(ingredients);
 
-	for (var stepNumber = 0; stepNumber < steps.length; stepNumber++)
-	{
-		let ingredientsInEachStep = [];
-		let stepDescription = steps[stepNumber].value;
-		
-		for(var ingredientNumber = 0; ingredientNumber < ingredients.length; ingredientNumber++)
-		{
-			let ingredientDescription = ingredients[ingredientNumber].value;
+    for (var stepNumber = 0; stepNumber < steps.length; stepNumber++) {
+        let ingredientsInEachStep = [];
+        let stepDescription = steps[stepNumber].value;
+        console.log('STEP: ' + stepDescription);
 
-			if (stepHasIngredient(stepDescription, ingredientDescription))
-			{
-				ingredientsInEachStep.push(ingredientDescription)
-			}
+        for (
+            var ingredientNumber = 0;
+            ingredientNumber < filteredIngredients.length;
+            ingredientNumber++
+        ) {
+            let ingredientDescription =
+                filteredIngredients[ingredientNumber].value;
 
-			ingredientsInStepsArray.push(ingredientsInEachStep);
-		}
-	}
+            if (stepHasIngredient(stepDescription, ingredientDescription)) {
+                ingredientsInEachStep.push(ingredients[ingredientNumber]);
 
-	return ingredientsInStepsArray;
-}
+                console.log('INGREDIENT ' + ingredientDescription);
+            }
+        }
+        ingredientsInStepsArray.push(ingredientsInEachStep);
+    }
+
+    console.log('TEST: ' + ingredientsInStepsArray);
+    for (var i = 0; i < ingredientsInStepsArray.length; i++) {
+        console.log('STEP ' + i);
+        for (var j = 0; j < ingredientsInStepsArray[i]; j++) {
+            console.log(ingredientsInStepsArray[i][j].value);
+        }
+    }
+    return ingredientsInStepsArray;
+};
 
 /**
  * Parse through a web page and store the steps of the recipe
@@ -225,6 +284,7 @@ exports.updateDish = async (req, res) => {
 
             updatedDishFields.steps = dishInfo.steps;
             updatedDishFields.ingredients = dishInfo.ingredients;
+            updatedDishFields.ingredientsInSteps = dishInfo.ingredientsInSteps;
 
             await dishModel.saveDish(userId, dishId, updatedDishFields);
             res.status(200).send('OK');
