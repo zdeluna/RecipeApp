@@ -13,6 +13,7 @@ class RecipeGuide extends Component {
             category: this.props.match.params.category,
             steps: this.props.location.state.steps,
             ingredients: this.props.location.state.ingredients,
+            ingredientsInSteps: this.props.location.state.ingredientsInSteps,
             dishUrl: '',
         };
     }
@@ -40,6 +41,7 @@ class RecipeGuide extends Component {
                     userID={this.state.userID}
                     steps={this.state.steps}
                     ingredients={this.state.ingredients}
+                    ingredientsInSteps={this.state.ingredientsInSteps}
                 />
             </div>
         );

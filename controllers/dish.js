@@ -24,7 +24,10 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
             dishInfo.steps = await getStepsFromWebPage($);
             dishInfo.ingredients = await getIngredientsFromWebPage($);
 
-            var ingredients = Object.assign({}, dishInfo.ingredients);
+            // Copy ingredients array
+            var ingredients = dishInfo.ingredients.map(a =>
+                Object.assign({}, a),
+            );
             console.log('LENGTH OF INGREDIENTS: ' + ingredients.length);
 
             dishInfo.ingredientsInSteps = await getIngredientsInSteps(
@@ -68,11 +71,11 @@ function checkForIngredientsHeading(text) {
 }
 
 function stepHasIngredient(step, ingredient) {
-    let ingredientBrokenIntoWordsArray = ingredient.split();
+    let ingredientBrokenIntoWordsArray = ingredient.split(' ');
 
     for (var i = 0; i < ingredientBrokenIntoWordsArray.length; i++) {
         ingredientWord = ingredientBrokenIntoWordsArray[i];
-
+        console.log('Check: ' + ingredientWord);
         if (step.includes(ingredientWord)) {
             return true;
         }
@@ -127,7 +130,11 @@ function filterIngredient(ingredient) {
 
 const getIngredientsInSteps = async (steps, ingredients) => {
     let ingredientsInStepsArray = [];
-    let filteredIngredients = filterAllIngredients(ingredients);
+    /* We are going to copy ingredients array so that when we insert info the dishInfo field we will use the 
+	 * the orignal array instead of the one that is filtered */
+    ingredientsCopy = ingredients.map(a => Object.assign({}, a));
+
+    let filteredIngredients = filterAllIngredients(ingredientsCopy);
 
     for (var stepNumber = 0; stepNumber < steps.length; stepNumber++) {
         let ingredientsInEachStep = [];

@@ -25,6 +25,7 @@ class DishEntry extends Component {
             loading: false,
             stepsArray: this.props.steps,
             ingredientsArray: this.props.ingredients,
+            ingredientsInStepsArray: this.props.ingredientsInSteps,
             redirect: false,
             delete: false,
             makeDishMode: false,
@@ -59,7 +60,11 @@ class DishEntry extends Component {
                 });
             }
 
-            this.setState({name: dish.name, loading: false});
+            this.setState({
+                name: dish.name,
+                loading: false,
+                ingredientsInSteps: dish.ingredientsInSteps,
+            });
         }
         this.setState({loading: false});
     };
@@ -104,6 +109,7 @@ class DishEntry extends Component {
                         state: {
                             steps: this.state.stepsArray,
                             ingredients: this.state.ingredientsArray,
+                            ingredientsInSteps: this.state.ingredientsInSteps,
                         },
                     }}
                 />

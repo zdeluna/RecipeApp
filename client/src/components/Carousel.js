@@ -12,9 +12,11 @@ class Carousel extends Component {
             dishId: this.props.dishId,
             steps: this.props.steps,
             ingredients: this.props.ingredients,
+            ingredientsInSteps: this.props.ingredientsInSteps,
             currentStep: 0,
             loading: false,
         };
+        console.log('INGREDIENTS: ' + this.state.ingredientsInSteps);
     }
 
     /* Make a GET request to the database to retrieve the dish information and store it in state */
@@ -45,7 +47,11 @@ class Carousel extends Component {
                 });
             }
 
-            this.setState({name: dish.name, loading: false});
+            this.setState({
+                name: dish.name,
+                loading: false,
+                ingredientsInSteps: dish.ingredientsInSteps,
+            });
         }
         this.setState({loading: false});
     };
@@ -85,6 +91,13 @@ class Carousel extends Component {
                         onClick={() => this.showNextIngredient()}>
                         Next
                     </Button>
+                </Container>
+                <Container>
+                    {this.state.ingredientsInSteps[this.state.currentStep].map(
+                        ingredient => (
+                            <h5>{ingredient.value}</h5>
+                        ),
+                    )}
                 </Container>
             </div>
         );
