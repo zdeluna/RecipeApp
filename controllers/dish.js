@@ -70,12 +70,21 @@ function checkForIngredientsHeading(text) {
     else return false;
 }
 
+/**
+ * Return True if ingredient is found in step, otherwise return False
+ * @param {String} step
+ * @param {String} ingredient
+ * @Return {Boolean}
+ */
+
 function stepHasIngredient(step, ingredient) {
     let ingredientBrokenIntoWordsArray = ingredient.split(' ');
 
     for (var i = 0; i < ingredientBrokenIntoWordsArray.length; i++) {
         ingredientWord = ingredientBrokenIntoWordsArray[i];
-        console.log('Check: ' + ingredientWord);
+
+        /* Ignore all strings of length 1 */
+        if (ingredientWord.length == 1) continue;
         if (step.includes(ingredientWord)) {
             return true;
         }
@@ -84,22 +93,34 @@ function stepHasIngredient(step, ingredient) {
     return false;
 }
 
+/**
+ * Store an array of the filtered ingredients
+ * * @param {Array} ingredients array
+ * @Return {Array}filtered ingredients array
+ */
+
 function filterAllIngredients(ingredientsArray) {
     filteredIngredientsArray = [];
     for (var i = 0; i < ingredientsArray.length; i++) {
         let ingredientObject = ingredientsArray[i];
         ingredientObject.value = filterIngredient(ingredientObject.value);
-        console.log('value: ' + ingredientObject.value);
         filteredIngredientsArray.push(ingredientObject);
     }
     console.log(filteredIngredientsArray);
     return filteredIngredientsArray;
 }
 
+/**
+ * Filter through ingredient string and remove words not used when searching through recipe steps in order to pair
+ * ingredients with steps
+ * @param {String} ingredient
+ * @Return {String} filtered ingredient
+ */
+
 function filterIngredient(ingredient) {
     // Remove the quantity measurement from ingredient
     ingredient = ingredient.replace(
-        /cup|tablespoon|teaspoon|gram|pounds| g | c | ml | oz |ounce|ml|and | or/gi,
+        /cup|tablespoon|teaspoon|gram|pounds| g | c | ml | oz |ounce|ml/gi,
         '',
     );
 
@@ -112,11 +133,29 @@ function filterIngredient(ingredient) {
         .replace(/'/g, '')
         .replace(/\(|\)/g, '')
         .replace(/\//g, '');
-    // Remove the white space before and after the word
-    ingredient = ingredient.trim();
+
+    console.log('Some Filter: ' + ingredient);
+    // Remove some common words
+    ingredient = ingredient.replace(/\band\b/gi, '');
+    ingredient = ingredient.replace(/\bor\b/gi, '');
+    ingredient = ingredient.replace(/\bfor\b/gi, '');
+    ingredient = ingredient.replace(/\bthe\b/gi, '');
 
     // Remove all text after a comma
     ingredient = ingredient.replace(/\,.*/, '');
+
+    // Remove all text after a semicolon
+    ingredient = ingredient.replace(/\;.*/, '');
+
+    // Replace all double spaces with single spaces
+    ingredient = ingredient.replace(/  /g, ' ');
+
+    // Change all letters to lowercase
+    ingredient = ingredient.toLowerCase();
+
+    // Remove the white space before and after the word
+    ingredient = ingredient.trim();
+    console.log('FILTERED INGREDIENT: ' + ingredient);
 
     return ingredient;
 }
@@ -138,8 +177,7 @@ const getIngredientsInSteps = async (steps, ingredients) => {
 
     for (var stepNumber = 0; stepNumber < steps.length; stepNumber++) {
         let ingredientsInEachStep = [];
-        let stepDescription = steps[stepNumber].value;
-        console.log('STEP: ' + stepDescription);
+        let stepDescription = steps[stepNumber].value.toLowerCase();
 
         for (
             var ingredientNumber = 0;
