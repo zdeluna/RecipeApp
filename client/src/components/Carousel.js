@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button, Row, Col, Container} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import API from '../utils/Api';
+import './Carousel.css';
 
 class Carousel extends Component {
     constructor(props) {
@@ -79,19 +80,33 @@ class Carousel extends Component {
         return (
             <div>
                 <Container>
-                    <Button
-                        color="primary"
-                        onClick={() => this.showPreviousIngredient()}>
-                        Previous
-                    </Button>
-                    <h1>{this.state.steps[this.state.currentStep].value}</h1>
-                    <Button
-                        color="primary"
-                        onClick={() => this.showNextIngredient()}>
-                        Next
-                    </Button>
+                    <Row>
+                        <Col>
+                            <Button
+                                color="primary"
+                                size="lg"
+                                onClick={() => this.showPreviousIngredient()}>
+                                Previous
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button
+                                color="primary"
+                                size="lg"
+                                onClick={() => this.showNextIngredient()}>
+                                Next
+                            </Button>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <h1>
+                            {this.state.steps[this.state.currentStep].value}
+                        </h1>
+                    </Row>
                 </Container>
                 <Container>
+                    <h5 id="ingredientsHeading">Ingredients</h5>
                     {this.state.ingredientsInSteps[this.state.currentStep].map(
                         ingredient => (
                             <h5>{ingredient.value}</h5>
