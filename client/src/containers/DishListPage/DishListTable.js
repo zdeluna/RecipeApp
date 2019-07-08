@@ -70,19 +70,19 @@ class DishListTable extends Component {
 
     handleClick(id) {
         // Redirect to the dish entry page using the id that was recently created
-        this.setState({dishId: id});
-        console.log('handleClick');
-        var redirect_url =
-            '/users/category/' +
-            this.state.category +
-            '/dish/' +
-            this.state.dishId;
-        <Redirect push to={redirect_url} />;
+        this.setState({dishId: id, redirect: true});
     }
 
     renderTable = props => {
         if (props.loading) return <Loading />;
-        else
+        if (this.state.redirect) {
+            var redirect_url =
+                '/users/category/' +
+                this.state.category +
+                '/dish/' +
+                this.state.dishId;
+            return <Redirect push to={redirect_url} />;
+        } else
             return (
                 <div>
                     <Table striped className="dishTable">

@@ -16,7 +16,6 @@ class Carousel extends Component {
             currentStep: 0,
             loading: false,
         };
-        console.log('INGREDIENTS: ' + this.state.ingredientsInSteps);
     }
 
     /* Make a GET request to the database to retrieve the dish information and store it in state */
