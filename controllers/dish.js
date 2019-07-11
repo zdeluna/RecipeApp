@@ -28,7 +28,6 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
             var ingredients = dishInfo.ingredients.map(a =>
                 Object.assign({}, a),
             );
-            console.log('LENGTH OF INGREDIENTS: ' + ingredients.length);
 
             dishInfo.ingredientsInSteps = await getIngredientsInSteps(
                 dishInfo.steps,
@@ -46,6 +45,9 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
  */
 
 function checkForStepsHeading(text) {
+    // Remove semicolon
+    text = text.replace(/:/gi, '');
+    console.log(text);
     var acceptableStepsHeading = [
         'instructions',
         'Instructions',
@@ -53,8 +55,13 @@ function checkForStepsHeading(text) {
         'directions',
     ];
 
-    if (acceptableStepsHeading.indexOf(text) > -1) return true;
-    else return false;
+    if (acceptableStepsHeading.indexOf(text) > -1) {
+        console.log('********FOUND STEP*********: ' + text);
+        return true;
+    } else {
+        console.log('*******DID NOT FIND STEP HEADING*******');
+        return false;
+    }
 }
 
 /**
@@ -64,10 +71,16 @@ function checkForStepsHeading(text) {
  */
 
 function checkForIngredientsHeading(text) {
-    var acceptableIngredientsHeading = ['ingredients', 'Ingredients'];
+    // Remove semicolon
+    text = text.replace(/:/gi, '');
 
-    if (acceptableIngredientsHeading.indexOf(text) > -1) return true;
-    else return false;
+    var acceptableIngredientsHeading = ['ingredients', 'ingredients:'];
+
+    if (acceptableIngredientsHeading.indexOf(text) > -1) {
+        console.log('********FOUND INGREDIENT*********: ' + text);
+
+        return true;
+    } else return false;
 }
 
 /**
@@ -106,7 +119,6 @@ function filterAllIngredients(ingredientsArray) {
         ingredientObject.value = filterIngredient(ingredientObject.value);
         filteredIngredientsArray.push(ingredientObject);
     }
-    console.log(filteredIngredientsArray);
     return filteredIngredientsArray;
 }
 
@@ -155,7 +167,6 @@ function filterIngredient(ingredient) {
 
     // Remove the white space before and after the word
     ingredient = ingredient.trim();
-    console.log('FILTERED INGREDIENT: ' + ingredient);
 
     return ingredient;
 }
@@ -189,21 +200,33 @@ const getIngredientsInSteps = async (steps, ingredients) => {
 
             if (stepHasIngredient(stepDescription, ingredientDescription)) {
                 ingredientsInEachStep.push(ingredients[ingredientNumber]);
-
-                console.log('INGREDIENT ' + ingredientDescription);
             }
         }
         ingredientsInStepsArray.push(ingredientsInEachStep);
     }
 
-    console.log('TEST: ' + ingredientsInStepsArray);
-    for (var i = 0; i < ingredientsInStepsArray.length; i++) {
-        console.log('STEP ' + i);
-        for (var j = 0; j < ingredientsInStepsArray[i]; j++) {
-            console.log(ingredientsInStepsArray[i][j].value);
-        }
-    }
     return ingredientsInStepsArray;
+};
+
+const findHeading = ($, heading) => {
+    var html = $('h1, h2, h3, h4, h5').filter(function() {
+        if (heading == 'ingredients') {
+            return checkForIngredientsHeading(
+                $(this)
+                    .text()
+                    .trim()
+                    .toLowerCase(),
+            );
+        } else {
+            return checkForStepsHeading(
+                $(this)
+                    .text()
+                    .trim()
+                    .toLowerCase(),
+            );
+        }
+    });
+    return html;
 };
 
 /**
@@ -213,18 +236,13 @@ const getIngredientsInSteps = async (steps, ingredients) => {
  */
 
 const getStepsFromWebPage = async $ => {
-    return new Promise(function(resolve, reject) {
+    return new Promise(async (resolve, reject) => {
         var stepsArray = [];
 
         // Find the heading that contains instruction
-        var directionsHTML = $('h1, h2, h3')
-            .filter(function() {
-                return checkForStepsHeading(
-                    $(this)
-                        .text()
-                        .trim(),
-                );
-            })
+        var stepsHTML = await findHeading($, 'steps');
+
+        stepsHTML
             .parent() // Get the parent element
             .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
             .children('li') // Find the children of the list
@@ -240,6 +258,7 @@ const getStepsFromWebPage = async $ => {
 
                 var step = {id: stepsArray.length, value: stepDescription};
                 stepsArray.push(step);
+                console.log('Added step to array: ' + stepDescription);
             });
 
         resolve(stepsArray);
@@ -253,17 +272,12 @@ const getStepsFromWebPage = async $ => {
  */
 
 const getIngredientsFromWebPage = async $ => {
-    return new Promise(function(resolve, reject) {
+    return new Promise(async (resolve, reject) => {
         var ingredientsArray = [];
 
-        var ingredientsHTML = $('h1, h2, h3')
-            .filter(function() {
-                return checkForIngredientsHeading(
-                    $(this)
-                        .text()
-                        .trim(),
-                );
-            })
+        var ingredientsHTML = await findHeading($, 'ingredients');
+
+        ingredientsHTML
             .parent() // Get the parent element
             .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
             .children() // Find the children of the list
@@ -277,8 +291,10 @@ const getIngredientsFromWebPage = async $ => {
                     value: ingredientDescription,
                 };
                 ingredientsArray.push(ingredient);
+                console.log(
+                    'Added ingredient to array: ' + ingredientDescription,
+                );
             });
-
         resolve(ingredientsArray);
     });
 };
