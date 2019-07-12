@@ -47,7 +47,6 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
 function checkForStepsHeading(text) {
     // Remove semicolon
     text = text.replace(/:/gi, '');
-    console.log(text);
     var acceptableStepsHeading = [
         'instructions',
         'Instructions',
@@ -56,10 +55,8 @@ function checkForStepsHeading(text) {
     ];
 
     if (acceptableStepsHeading.indexOf(text) > -1) {
-        console.log('********FOUND STEP*********: ' + text);
         return true;
     } else {
-        console.log('*******DID NOT FIND STEP HEADING*******');
         return false;
     }
 }
@@ -77,8 +74,6 @@ function checkForIngredientsHeading(text) {
     var acceptableIngredientsHeading = ['ingredients', 'ingredients:'];
 
     if (acceptableIngredientsHeading.indexOf(text) > -1) {
-        console.log('********FOUND INGREDIENT*********: ' + text);
-
         return true;
     } else return false;
 }
@@ -146,7 +141,6 @@ function filterIngredient(ingredient) {
         .replace(/\(|\)/g, '')
         .replace(/\//g, '');
 
-    console.log('Some Filter: ' + ingredient);
     // Remove some common words
     ingredient = ingredient.replace(/\band\b/gi, '');
     ingredient = ingredient.replace(/\bor\b/gi, '');
@@ -226,6 +220,7 @@ const findHeading = ($, heading) => {
             );
         }
     });
+
     return html;
 };
 
@@ -258,10 +253,23 @@ const getStepsFromWebPage = async $ => {
 
                 var step = {id: stepsArray.length, value: stepDescription};
                 stepsArray.push(step);
-                console.log('Added step to array: ' + stepDescription);
             });
 
         resolve(stepsArray);
+    });
+};
+
+const findList = async $ => {
+    return new Promise(async (resolve, reject) => {
+        let ingredients = '';
+        var searchHTML = $.parent();
+
+        let ingredientsHTML = searchHTML.find('ul, ol');
+        while (ingredientsHTML == '') {
+            searchHTML = searchHTML.parent();
+            ingredientsHTML = searchHTML.find('ul, ol');
+        }
+        resolve(ingredientsHTML);
     });
 };
 
@@ -275,11 +283,10 @@ const getIngredientsFromWebPage = async $ => {
     return new Promise(async (resolve, reject) => {
         var ingredientsArray = [];
 
-        var ingredientsHTML = await findHeading($, 'ingredients');
+        var headingHTML = await findHeading($, 'ingredients');
+        ingredientsHTML = await findList(headingHTML);
 
         ingredientsHTML
-            .parent() // Get the parent element
-            .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
             .children() // Find the children of the list
             // Iterate through each child element and store the text of the element and add it to the array
             .each(function(index, element) {
@@ -291,9 +298,7 @@ const getIngredientsFromWebPage = async $ => {
                     value: ingredientDescription,
                 };
                 ingredientsArray.push(ingredient);
-                console.log(
-                    'Added ingredient to array: ' + ingredientDescription,
-                );
+                console.log('********ADDED INGREDIENT: ' + ingredient.value);
             });
         resolve(ingredientsArray);
     });
