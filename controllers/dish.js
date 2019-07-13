@@ -16,25 +16,31 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
         let dishInfo = {};
         dishInfo.steps = [];
         dishInfo.ingredients = [];
+        try {
+            request(url, async function(error, response, html) {
+                try {
+                    if (error) reject(error);
+                    var $ = cheerio.load(html);
+                    dishInfo.steps = await getStepsFromWebPage($);
+                    dishInfo.ingredients = await getIngredientsFromWebPage($);
 
-        request(url, async function(error, response, html) {
-            if (error) reject(error);
-            var $ = cheerio.load(html);
+                    // Copy ingredients array
+                    var ingredients = dishInfo.ingredients.map(a =>
+                        Object.assign({}, a),
+                    );
 
-            dishInfo.steps = await getStepsFromWebPage($);
-            dishInfo.ingredients = await getIngredientsFromWebPage($);
-
-            // Copy ingredients array
-            var ingredients = dishInfo.ingredients.map(a =>
-                Object.assign({}, a),
-            );
-
-            dishInfo.ingredientsInSteps = await getIngredientsInSteps(
-                dishInfo.steps,
-                ingredients,
-            );
-            resolve(dishInfo);
-        });
+                    dishInfo.ingredientsInSteps = await getIngredientsInSteps(
+                        dishInfo.steps,
+                        ingredients,
+                    );
+                    resolve(dishInfo);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        } catch (error) {
+            reject(error);
+        }
     });
 };
 
@@ -47,12 +53,7 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
 function checkForStepsHeading(text) {
     // Remove semicolon
     text = text.replace(/:/gi, '');
-    var acceptableStepsHeading = [
-        'instructions',
-        'Instructions',
-        'Directions',
-        'directions',
-    ];
+    var acceptableStepsHeading = ['instructions', 'directions', 'preparation'];
 
     if (acceptableStepsHeading.indexOf(text) > -1) {
         return true;
@@ -202,26 +203,33 @@ const getIngredientsInSteps = async (steps, ingredients) => {
     return ingredientsInStepsArray;
 };
 
-const findHeading = ($, heading) => {
-    var html = $('h1, h2, h3, h4, h5').filter(function() {
-        if (heading == 'ingredients') {
-            return checkForIngredientsHeading(
-                $(this)
-                    .text()
-                    .trim()
-                    .toLowerCase(),
-            );
-        } else {
-            return checkForStepsHeading(
-                $(this)
-                    .text()
-                    .trim()
-                    .toLowerCase(),
-            );
-        }
-    });
+const findHeading = async ($, heading) => {
+    return new Promise(async (resolve, reject) => {
+        var html = $('h1, h2, h3, h4, h5').filter(function() {
+            if (heading == 'ingredients') {
+                return checkForIngredientsHeading(
+                    $(this)
+                        .text()
+                        .trim()
+                        .toLowerCase(),
+                );
+            } else {
+                return checkForStepsHeading(
+                    $(this)
+                        .text()
+                        .trim()
+                        .toLowerCase(),
+                );
+            }
+        });
 
-    return html;
+        if (html == '') {
+            console.log('REJECT HEADING NOT FOUND');
+            reject();
+        }
+
+        return html;
+    });
 };
 
 /**
@@ -232,32 +240,41 @@ const findHeading = ($, heading) => {
 
 const getStepsFromWebPage = async $ => {
     return new Promise(async (resolve, reject) => {
-        var stepsArray = [];
+        try {
+            var stepsArray = [];
 
-        // Find the heading that contains instruction
-        var stepsHTML = await findHeading($, 'steps');
+            // Find the heading that contains instruction
+            var stepsHTML = await findHeading($, 'steps');
 
-        stepsHTML
-            .parent() // Get the parent element
-            .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
-            .children('li') // Find the children of the list
-            // Iterate through each child element and store the text of the element and add it to the array
-            .each(function(index, element) {
-                // In each list item, search the instructions text.
-                var listItem = $(this)
-                    .text()
-                    .trim();
-                // Traverse starting at each list item and search for text
+            stepsHTML
+                .parent() // Get the parent element
+                .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
+                .children('li') // Find the children of the list
+                // Iterate through each child element and store the text of the element and add it to the array
+                .each(function(index, element) {
+                    // In each list item, search the instructions text.
+                    var listItem = $(this)
+                        .text()
+                        .trim();
+                    // Traverse starting at each list item and search for text
 
-                var stepDescription = $(this).text();
+                    var stepDescription = $(this).text();
 
-                var step = {id: stepsArray.length, value: stepDescription};
-                stepsArray.push(step);
-            });
+                    var step = {id: stepsArray.length, value: stepDescription};
+                    stepsArray.push(step);
+                });
 
-        resolve(stepsArray);
+            resolve(stepsArray);
+        } catch (error) {
+            reject(error);
+        }
     });
 };
+
+/**
+ * Search through DOM for an unordered or orderlist list but investigating current node and traversing up the DOM tree if not found
+ * @Return {Promise}
+ */
 
 const findList = async $ => {
     return new Promise(async (resolve, reject) => {
@@ -268,7 +285,16 @@ const findList = async $ => {
         while (ingredientsHTML == '') {
             searchHTML = searchHTML.parent();
             ingredientsHTML = searchHTML.find('ul, ol');
+            //console.log('NEW: ' + searchHTML);
+
+            /* If we make it to the top level without finding it, send back a reject */
+            if (searchHTML.initialize) {
+                console.log('OUT OF LOOP');
+
+                reject();
+            }
         }
+        console.log('OUT OF LOOP');
         resolve(ingredientsHTML);
     });
 };
@@ -281,26 +307,32 @@ const findList = async $ => {
 
 const getIngredientsFromWebPage = async $ => {
     return new Promise(async (resolve, reject) => {
-        var ingredientsArray = [];
+        try {
+            var ingredientsArray = [];
 
-        var headingHTML = await findHeading($, 'ingredients');
-        ingredientsHTML = await findList(headingHTML);
+            var headingHTML = await findHeading($, 'ingredients');
+            ingredientsHTML = await findList(headingHTML);
 
-        ingredientsHTML
-            .children() // Find the children of the list
-            // Iterate through each child element and store the text of the element and add it to the array
-            .each(function(index, element) {
-                var ingredientDescription = $(this)
-                    .text()
-                    .trim();
-                var ingredient = {
-                    id: ingredientsArray.length,
-                    value: ingredientDescription,
-                };
-                ingredientsArray.push(ingredient);
-                console.log('********ADDED INGREDIENT: ' + ingredient.value);
-            });
-        resolve(ingredientsArray);
+            ingredientsHTML
+                .children() // Find the children of the list
+                // Iterate through each child element and store the text of the element and add it to the array
+                .each(function(index, element) {
+                    var ingredientDescription = $(this)
+                        .text()
+                        .trim();
+                    var ingredient = {
+                        id: ingredientsArray.length,
+                        value: ingredientDescription,
+                    };
+                    ingredientsArray.push(ingredient);
+                    console.log(
+                        '********ADDED INGREDIENT: ' + ingredient.value,
+                    );
+                });
+            resolve(ingredientsArray);
+        } catch (error) {
+            reject(error);
+        }
     });
 };
 
@@ -359,6 +391,7 @@ exports.updateDish = async (req, res) => {
             res.status(200).send('OK');
         }
     } catch (error) {
+        console.log('SEND ERROR RESPONSE: ' + error);
         sendErrorResponse(res, error);
     }
 };
