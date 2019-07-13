@@ -11,7 +11,7 @@ const {sendErrorResponse} = require('./base.js');
  */
 
 const getRecipeStepsAndIngredientsFromWebPage = async url => {
-    return new Promise(function(resolve, reject) {
+    return new Promise(async (resolve, reject) => {
         var json = [];
         let dishInfo = {};
         dishInfo.steps = [];
@@ -35,10 +35,12 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
                     );
                     resolve(dishInfo);
                 } catch (error) {
-                    reject(error);
+                    return reject(error);
                 }
             });
         } catch (error) {
+            console.log('reject at other function');
+
             reject(error);
         }
     });
@@ -266,7 +268,10 @@ const getStepsFromWebPage = async $ => {
 
             resolve(stepsArray);
         } catch (error) {
-            reject(error);
+            reject({
+                statusCode: 404,
+                msg: 'CANNOT_RETRIEVE_STEPS',
+            });
         }
     });
 };
@@ -331,7 +336,10 @@ const getIngredientsFromWebPage = async $ => {
                 });
             resolve(ingredientsArray);
         } catch (error) {
-            reject(error);
+            reject({
+                statusCode: 404,
+                msg: 'CANNOT_RETRIEVE_INGREDIENTS',
+            });
         }
     });
 };
@@ -391,7 +399,7 @@ exports.updateDish = async (req, res) => {
             res.status(200).send('OK');
         }
     } catch (error) {
-        console.log('SEND ERROR RESPONSE: ' + error);
+        console.log('SEND ERROR RESPONSE: ' + error.msg);
         sendErrorResponse(res, error);
     }
 };
