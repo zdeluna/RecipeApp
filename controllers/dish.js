@@ -16,33 +16,28 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
         let dishInfo = {};
         dishInfo.steps = [];
         dishInfo.ingredients = [];
-        try {
-            request(url, async function(error, response, html) {
-                try {
-                    if (error) reject(error);
-                    var $ = cheerio.load(html);
-                    dishInfo.steps = await getStepsFromWebPage($);
-                    dishInfo.ingredients = await getIngredientsFromWebPage($);
+        request(url, async function(error, response, html) {
+            try {
+                if (error) reject(error);
+                var $ = cheerio.load(html);
+                dishInfo.steps = await getStepsFromWebPage($);
+                dishInfo.ingredients = await getIngredientsFromWebPage($);
 
-                    // Copy ingredients array
-                    var ingredients = dishInfo.ingredients.map(a =>
-                        Object.assign({}, a),
-                    );
+                // Copy ingredients array
+                var ingredients = dishInfo.ingredients.map(a =>
+                    Object.assign({}, a),
+                );
 
-                    dishInfo.ingredientsInSteps = await getIngredientsInSteps(
-                        dishInfo.steps,
-                        ingredients,
-                    );
-                    resolve(dishInfo);
-                } catch (error) {
-                    return reject(error);
-                }
-            });
-        } catch (error) {
-            console.log('reject at other function');
-
-            reject(error);
-        }
+                dishInfo.ingredientsInSteps = await getIngredientsInSteps(
+                    dishInfo.steps,
+                    ingredients,
+                );
+                return resolve(dishInfo);
+            } catch (error) {
+                console.log('reject function');
+                return reject(error);
+            }
+        });
     });
 };
 
@@ -230,7 +225,7 @@ const findHeading = async ($, heading) => {
             reject();
         }
 
-        return html;
+        resolve(html);
     });
 };
 
@@ -244,10 +239,8 @@ const getStepsFromWebPage = async $ => {
     return new Promise(async (resolve, reject) => {
         try {
             var stepsArray = [];
-
             // Find the heading that contains instruction
             var stepsHTML = await findHeading($, 'steps');
-
             stepsHTML
                 .parent() // Get the parent element
                 .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
@@ -265,7 +258,6 @@ const getStepsFromWebPage = async $ => {
                     var step = {id: stepsArray.length, value: stepDescription};
                     stepsArray.push(step);
                 });
-
             resolve(stepsArray);
         } catch (error) {
             reject({
@@ -290,7 +282,6 @@ const findList = async $ => {
         while (ingredientsHTML == '') {
             searchHTML = searchHTML.parent();
             ingredientsHTML = searchHTML.find('ul, ol');
-            //console.log('NEW: ' + searchHTML);
 
             /* If we make it to the top level without finding it, send back a reject */
             if (searchHTML.initialize) {
@@ -299,7 +290,6 @@ const findList = async $ => {
                 reject();
             }
         }
-        console.log('OUT OF LOOP');
         resolve(ingredientsHTML);
     });
 };
