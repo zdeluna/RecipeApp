@@ -240,11 +240,12 @@ const getStepsFromWebPage = async $ => {
         try {
             var stepsArray = [];
             // Find the heading that contains instruction
-            var stepsHTML = await findHeading($, 'steps');
+            var headingHTML = await findHeading($, 'steps');
+            console.log('HEADING: ' + headingHTML);
+            stepsHTML = await findList(headingHTML);
+            console.log('PRINT STEPS:  ' + stepsHTML);
             stepsHTML
-                .parent() // Get the parent element
-                .find('ul, ol') // Traverse from the parent element and search of an ordered or unordered list
-                .children('li') // Find the children of the list
+                .children() // Find the children of the list
                 // Iterate through each child element and store the text of the element and add it to the array
                 .each(function(index, element) {
                     // In each list item, search the instructions text.
@@ -269,28 +270,56 @@ const getStepsFromWebPage = async $ => {
 };
 
 /**
- * Search through DOM for an unordered or orderlist list but investigating current node and traversing up the DOM tree if not found
+ * Search through DOM for an unordered or orderlist list but investigating current node and traversing down the DOM tree if not found
  * @Return {Promise}
  */
 
-const findList = async $ => {
+const findList = async headingNode => {
     return new Promise(async (resolve, reject) => {
-        let ingredients = '';
-        var searchHTML = $.parent();
+        let listElements = '';
+        let listHTML = '';
 
-        let ingredientsHTML = searchHTML.find('ul, ol');
-        while (ingredientsHTML == '') {
+        // First check the children of the heading node for text
+        listElements = headingNode.children().text();
+
+        if (listElements != '') {
+            console.log('FOUND TEXT UNDER************');
+            resolve(headingNode);
+        }
+
+        // First check the next sibling of heading node for text
+        listElements = headingNode.next().text();
+
+        if (listElements != '') {
+            console.log('FOUND TEXT NEXT TO*************');
+            resolve(headingNode.next());
+        }
+
+        listElements = headingNode
+            .parent()
+            .next()
+            .text();
+
+        if (listElements != '') {
+            console.log('FOUND TEXT ABOVE and Next to');
+            resolve(headingNode.parent().next());
+        }
+
+        // Otherwise start from the parent of the heading node and traverse up to find an ordered or unordered list
+        let searchHTML = headingNode;
+
+        while (listElements == '') {
             searchHTML = searchHTML.parent();
-            ingredientsHTML = searchHTML.find('ul, ol');
+            listElements = searchHTML.find('ul, ol');
 
-            /* If we make it to the top level without finding it, send back a reject */
+            //If we make it to the top level without finding it, send back a reject
             if (searchHTML.initialize) {
                 console.log('OUT OF LOOP');
 
                 reject();
             }
         }
-        resolve(ingredientsHTML);
+        resolve(listElements);
     });
 };
 
