@@ -229,6 +229,16 @@ const findHeading = async ($, heading) => {
     });
 };
 
+const cleanList = async listHTML => {
+    return new Promise(async (resolve, reject) => {
+        /* Check to make sure we are searching through most nested ordered list or unordered list */
+        if (listHTML.find('ol, ul')) {
+            listHTML = listHTML.find('ol, ul').last();
+        }
+        resolve(listHTML);
+    });
+};
+
 /**
  * Parse through a web page and store the steps of the recipe
  * @param {String} $ - Represents the html contents of a page
@@ -244,8 +254,9 @@ const getStepsFromWebPage = async $ => {
             console.log('HEADING: ' + headingHTML);
             stepsHTML = await findList(headingHTML);
             console.log('PRINT STEPS:  ' + stepsHTML);
+            stepsHTML = await cleanList(stepsHTML);
             stepsHTML
-                .children() // Find the children of the list
+                .children('li') // Find the children of the list
                 // Iterate through each child element and store the text of the element and add it to the array
                 .each(function(index, element) {
                     // In each list item, search the instructions text.
@@ -292,7 +303,7 @@ const findList = async headingNode => {
 
         if (listElements != '') {
             console.log('FOUND TEXT NEXT TO*************');
-            resolve(headingNode.next());
+            return resolve(headingNode.next());
         }
 
         listElements = headingNode
@@ -307,7 +318,7 @@ const findList = async headingNode => {
 
         // Otherwise start from the parent of the heading node and traverse up to find an ordered or unordered list
         let searchHTML = headingNode;
-
+        console.log('SEARCHING THROUGH TRAVERSING TREE');
         while (listElements == '') {
             searchHTML = searchHTML.parent();
             listElements = searchHTML.find('ul, ol');
@@ -336,6 +347,7 @@ const getIngredientsFromWebPage = async $ => {
 
             var headingHTML = await findHeading($, 'ingredients');
             ingredientsHTML = await findList(headingHTML);
+            ingredientsHTML = await cleanList(ingredientsHTML);
 
             ingredientsHTML
                 .children() // Find the children of the list
