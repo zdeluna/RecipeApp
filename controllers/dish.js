@@ -229,11 +229,19 @@ const findHeading = async ($, heading) => {
     });
 };
 
+/**
+ * Check to make sure list html is referring to the most nested list
+ * @param {String} listHTML - The html of the contents after the "Instructions" or "Ingredients" heading
+ * @Return {Promise}
+ */
+
 const cleanList = async listHTML => {
     return new Promise(async (resolve, reject) => {
-        /* Check to make sure we are searching through most nested ordered list or unordered list */
-        if (listHTML.find('ol, ul')) {
-            listHTML = listHTML.find('ol, ul').last();
+        /* Check to make sure we are searching through most nested ordered list or unordered list.
+		 * If we are not, then return the nested ordered or unordered list */
+
+        if (listHTML.find('ol, ul').children().length > 0) {
+            listHTML = listHTML.find('ol, ul');
         }
         resolve(listHTML);
     });
@@ -253,7 +261,6 @@ const getStepsFromWebPage = async $ => {
             var headingHTML = await findHeading($, 'steps');
             console.log('HEADING: ' + headingHTML);
             stepsHTML = await findList(headingHTML);
-            console.log('PRINT STEPS:  ' + stepsHTML);
             stepsHTML = await cleanList(stepsHTML);
             stepsHTML
                 .children('li') // Find the children of the list
