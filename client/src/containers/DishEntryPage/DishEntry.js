@@ -42,8 +42,8 @@ class DishEntry extends Component {
 
     getDishIngredientsAndSteps = async () => {
         this.setState({loading: true});
-        var api = new API();
-        var response = await api.getDish(this.state.userID, this.state.dishId);
+        let api = new API();
+        let response = await api.getDish(this.state.userID, this.state.dishId);
         if (response.status === 200) {
             let dish = response.data;
 

@@ -247,6 +247,17 @@ const cleanList = async listHTML => {
     });
 };
 
+const removeNumberLabel = text => {
+    // Remove the number label in the format "1."
+    let newText = text.replace(/^\d+\.\s*/, '');
+    if (newText.length != text.length) return newText;
+
+    // Remove the number label in the format "1)"
+    newText = text.replace(/^\d+\)\s*/, '');
+
+    return newText;
+};
+
 /**
  * Parse through a web page and store the steps of the recipe
  * @param {String} $ - Represents the html contents of a page
@@ -266,13 +277,12 @@ const getStepsFromWebPage = async $ => {
                 .children('li') // Find the children of the list
                 // Iterate through each child element and store the text of the element and add it to the array
                 .each(function(index, element) {
-                    // In each list item, search the instructions text.
-                    var listItem = $(this)
+                    var stepDescription = $(this)
                         .text()
                         .trim();
-                    // Traverse starting at each list item and search for text
-
-                    var stepDescription = $(this).text();
+                    /* Remove step number if text already contained them.*/
+                    console.log('ADDED STEP: ' + stepDescription);
+                    stepDescription = removeNumberLabel(stepDescription);
 
                     var step = {id: stepsArray.length, value: stepDescription};
                     stepsArray.push(step);

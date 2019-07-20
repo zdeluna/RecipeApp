@@ -58,7 +58,7 @@ class Calendar extends Component {
         let historyField = {history: this.state.history};
 
         // User has selected the default date (today)
-        if (historyField.history.length == 0) {
+        if (historyField.history.length === 0) {
             this.dateChanged(new Date());
         }
 

@@ -10,6 +10,7 @@ import {
     Container,
 } from 'reactstrap';
 import API from '../utils/Api';
+import './AddUrlForm.css';
 
 class AddUrlForm extends Component {
     constructor(props) {
@@ -38,14 +39,13 @@ class AddUrlForm extends Component {
         let urlField = {url: this.state.value};
         try {
             const api = new API();
-            var response = await api.updateDish(
+            let response = await api.updateDish(
                 this.state.user.uid,
                 this.props.dishId,
                 urlField,
             );
 
-            if (response.status == 200) {
-                console.log('Updated dish response returned');
+            if (response.status === 200) {
                 this.setState({urlAdded: true});
                 this.props.onClick();
             }
@@ -56,7 +56,7 @@ class AddUrlForm extends Component {
     renderAlert = props => {
         if (this.state.showAlert) {
             return (
-                <Alert color="primary">
+                <Alert id="url_alert" color="primary">
                     Could not find ingredients/steps in Url.
                 </Alert>
             );

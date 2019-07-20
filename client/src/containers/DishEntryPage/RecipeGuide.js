@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Col, Container, Row} from 'reactstrap';
+import {Button, Col, Row} from 'reactstrap';
 import Carousel from '../../components/Carousel';
 import {Link} from 'react-router-dom';
 

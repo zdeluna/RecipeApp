@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Button, Row, Col, Container} from 'reactstrap';
-import {Link} from 'react-router-dom';
 import API from '../utils/Api';
 import './Carousel.css';
 
