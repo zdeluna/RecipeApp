@@ -1,6 +1,14 @@
 import React, {Component} from 'react';
 import app from '../base';
-import {Form, Button, FormGroup, Label, Input, Container} from 'reactstrap';
+import {
+    Alert,
+    Form,
+    Button,
+    FormGroup,
+    Label,
+    Input,
+    Container,
+} from 'reactstrap';
 import API from '../utils/Api';
 
 class AddUrlForm extends Component {
@@ -11,6 +19,7 @@ class AddUrlForm extends Component {
             value: '',
             user: app.auth().currentUser,
             urlAdded: false,
+            showAlert: false,
         };
     }
 
@@ -27,17 +36,31 @@ class AddUrlForm extends Component {
     addRecipeLink = async () => {
         // prettier-ignore
         let urlField = {url: this.state.value};
+        try {
+            const api = new API();
+            var response = await api.updateDish(
+                this.state.user.uid,
+                this.props.dishId,
+                urlField,
+            );
 
-        const api = new API();
-        api.updateDish(this.state.user.uid, this.props.dishId, urlField)
-            .then(response => {
+            if (response.status == 200) {
                 console.log('Updated dish response returned');
                 this.setState({urlAdded: true});
                 this.props.onClick();
-            })
-            .catch(error => {
-                console.log(error.response);
-            });
+            }
+        } catch (error) {
+            this.setState({showAlert: true});
+        }
+    };
+    renderAlert = props => {
+        if (this.state.showAlert) {
+            return (
+                <Alert color="primary">
+                    Could not find ingredients/steps in Url.
+                </Alert>
+            );
+        } else return null;
     };
 
     render() {
@@ -56,6 +79,7 @@ class AddUrlForm extends Component {
                         </FormGroup>
                         <Button color="primary">Submit</Button>
                     </Form>
+                    <this.renderAlert />
                 </Container>
             </div>
         );

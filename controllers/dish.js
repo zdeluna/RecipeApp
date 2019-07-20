@@ -280,7 +280,7 @@ const getStepsFromWebPage = async $ => {
             resolve(stepsArray);
         } catch (error) {
             reject({
-                statusCode: 404,
+                statusCode: 422,
                 msg: 'CANNOT_RETRIEVE_STEPS',
             });
         }
@@ -375,7 +375,7 @@ const getIngredientsFromWebPage = async $ => {
             resolve(ingredientsArray);
         } catch (error) {
             reject({
-                statusCode: 404,
+                statusCode: 422,
                 msg: 'CANNOT_RETRIEVE_INGREDIENTS',
             });
         }
