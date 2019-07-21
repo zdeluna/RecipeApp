@@ -22,12 +22,7 @@ class ItemForm extends Component {
             value: '',
             user: app.auth().currentUser,
             type: this.props.type,
-            itemsArray: [
-                {id: 0, value: '', visible: false},
-                {id: 1, value: '', visible: false},
-                {id: 2, value: '', visible: false},
-                {id: 3, value: '', visible: true},
-            ],
+            itemsArray: [{id: 0, value: '', visible: false}],
             update: false,
             dishId: this.dishId,
             redirect: false,

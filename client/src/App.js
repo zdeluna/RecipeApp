@@ -4,7 +4,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import app from './base';
 
-import Home from './containers/HomePage/Home';
+import Category from './containers/CategoriesPage/Category';
 import LogIn from './containers/LogInPage/LogIn';
 import SignUp from './containers/SignUpPage/SignUp';
 import DishListTable from './containers/DishListPage/DishListTable';
@@ -47,8 +47,8 @@ class App extends Component {
                     <Switch>
                         <PrivateRoute
                             exact
-                            path="/"
-                            component={Home}
+                            path="/users/category"
+                            component={Category}
                             authenticated={authenticated}
                         />
                         <Route exact path="/login" component={LogIn} />

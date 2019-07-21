@@ -163,7 +163,7 @@ function filterIngredient(ingredient) {
     return ingredient;
 }
 
-/**
+/*
  * Iterate through steps and determine which ingredient is used in each step
  * @param {Array} steps - Steps of dish
  * @param {Array} ingredients - Ingredients of dish
@@ -199,6 +199,13 @@ const getIngredientsInSteps = async (steps, ingredients) => {
 
     return ingredientsInStepsArray;
 };
+
+/*
+* Return the html that contains "Ingredients" or "Steps/Instructions/Directions"
+* @param {String} $ - html to search
+* @param {String} heading - the type of heading to search for such "ingredients"
+ * @Return {Promise containing the html}
+ */
 
 const findHeading = async ($, heading) => {
     return new Promise(async (resolve, reject) => {
@@ -247,6 +254,12 @@ const cleanList = async listHTML => {
     });
 };
 
+/**
+ * Remove the number labels in a text such as "1." or "1)"
+ * @param {String} text - The text containing the number label
+ * @Return {String}
+ */
+
 const removeNumberLabel = text => {
     // Remove the number label in the format "1."
     let newText = text.replace(/^\d+\.\s*/, '');
@@ -281,7 +294,6 @@ const getStepsFromWebPage = async $ => {
                         .text()
                         .trim();
                     /* Remove step number if text already contained them.*/
-                    console.log('ADDED STEP: ' + stepDescription);
                     stepDescription = removeNumberLabel(stepDescription);
 
                     var step = {id: stepsArray.length, value: stepDescription};
@@ -311,7 +323,6 @@ const findList = async headingNode => {
         listElements = headingNode.children().text();
 
         if (listElements != '') {
-            console.log('FOUND TEXT UNDER************');
             resolve(headingNode);
         }
 
@@ -319,7 +330,6 @@ const findList = async headingNode => {
         listElements = headingNode.next().text();
 
         if (listElements != '') {
-            console.log('FOUND TEXT NEXT TO*************');
             return resolve(headingNode.next());
         }
 
@@ -329,7 +339,6 @@ const findList = async headingNode => {
             .text();
 
         if (listElements != '') {
-            console.log('FOUND TEXT ABOVE and Next to');
             resolve(headingNode.parent().next());
         }
 
@@ -342,8 +351,6 @@ const findList = async headingNode => {
 
             //If we make it to the top level without finding it, send back a reject
             if (searchHTML.initialize) {
-                console.log('OUT OF LOOP');
-
                 reject();
             }
         }
@@ -378,9 +385,6 @@ const getIngredientsFromWebPage = async $ => {
                         value: ingredientDescription,
                     };
                     ingredientsArray.push(ingredient);
-                    console.log(
-                        '********ADDED INGREDIENT: ' + ingredient.value,
-                    );
                 });
             resolve(ingredientsArray);
         } catch (error) {
@@ -412,9 +416,15 @@ exports.createDish = async (req, res) => {
         let responseObject = {id: dishId};
         const dish = await dishModel.addDish(userId, dishId, newDish);
 
-        res.location(
-            'http://localhost:5000/api/users/' + userId + '/dish/' + dishId,
-        );
+        let dishUrl =
+            req.protocol +
+            '://' +
+            req.get('host') +
+            '/api/users/' +
+            userId +
+            '/dish/' +
+            dishId;
+        res.location(dishUrl);
         res.status(201).send(responseObject);
     } catch (error) {
         sendErrorResponse(res, error);

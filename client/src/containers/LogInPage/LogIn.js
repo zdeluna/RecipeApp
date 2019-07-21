@@ -20,7 +20,7 @@ class LogIn extends Component {
         const history = this.props.history;
         try {
             await app.auth().signInWithEmailAndPassword(email, password);
-            history.push('/');
+            history.push('/users/category');
         } catch (error) {
             alert(error);
         }

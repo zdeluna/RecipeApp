@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import CategoryButton from '../../components/CategoryButton';
 import {Redirect} from 'react-router-dom';
 import {Row, Col, Container} from 'reactstrap';
-import './Home.css';
+import './Category.css';
 
-class Home extends Component {
+class Category extends Component {
     state = {
         categoryButtons: [
             {id: 1, value: 'Dinner'},
@@ -24,13 +24,13 @@ class Home extends Component {
     render() {
         if (this.state.redirect) {
             if (this.state.category === 1) {
-                return <Redirect push to="users/category/1" />;
+                return <Redirect push to="/users/category/1" />;
             } else if (this.state.category === 2) {
-                return <Redirect push to="users/category/2" />;
+                return <Redirect push to="/users/category/2" />;
             } else if (this.state.category === 3) {
-                return <Redirect push to="users/category/3" />;
+                return <Redirect push to="/users/category/3" />;
             } else if (this.state.category === 4) {
-                return <Redirect push to="users/category/4" />;
+                return <Redirect push to="/users/category/4" />;
             }
         }
 
@@ -55,4 +55,4 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export default Category;
