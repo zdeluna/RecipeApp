@@ -6,6 +6,7 @@ import app from './base';
 
 import Category from './containers/CategoriesPage/Category';
 import LogIn from './containers/LogInPage/LogIn';
+import Home from './containers/HomePage/Home';
 import SignUp from './containers/SignUpPage/SignUp';
 import DishListTable from './containers/DishListPage/DishListTable';
 import DishEntry from './containers/DishEntryPage/DishEntry';
@@ -45,6 +46,7 @@ class App extends Component {
             <Router>
                 <div>
                     <Switch>
+                        <Route exact path="/" component={Home} />
                         <PrivateRoute
                             exact
                             path="/users/category"
