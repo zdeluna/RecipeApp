@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {Redirect} from 'react-router-dom';
-import {Col, Container, Row} from 'reactstrap';
+import {Col, Container, Jumbotron, Row} from 'reactstrap';
 import './Home.css';
+import screenshot1 from '../../static/images/landingPageImage1.png';
+import screenshot2 from '../../static/images/landingPageImage2.png';
+import screenshot3 from '../../static/images/landingPageImage3.png';
 
 class Home extends Component {
     state = {
@@ -16,17 +19,47 @@ class Home extends Component {
     render() {
         return (
             <Container>
+                <Row id="topRow">
+                    <Col id="leftColumn" />
+                    <Col>
+                        <Link className="homeLinks" to={`/signup`}>
+                            Signup
+                        </Link>
+
+                        <Link className="homeLinks" to={`/login`}>
+                            Login
+                        </Link>
+                    </Col>
+                </Row>
+
                 <Row>
                     <Col>
-                        <Link to={`/signup`}>Signup</Link>
-                    </Col>
-                    <Col>
-                        <Link to={`/login`}>Login</Link>
+                        <h1 className="display-3">Recipe Scheduler</h1>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <h1 className="text-center">Recipe Scheduler</h1>
+                        <p className="lead">Organize your favorite recipes.</p>
+                        <img class="screenshot" src={screenshot1} />
+                    </Col>
+                </Row>
+                <hr />
+                <Row>
+                    <Col>
+                        <p className="lead">
+                            Upload recipe from an webpage or enter manually.
+                        </p>
+                        <img class="screenshot" src={screenshot2} />
+                    </Col>
+                </Row>
+                <hr />
+                <Row>
+                    <Col>
+                        <p className="lead">
+                            Easily follow directions without having to scroll
+                            back and forth.
+                        </p>
+                        <img class="screenshot" src={screenshot3} />
                     </Col>
                 </Row>
             </Container>

@@ -100,6 +100,8 @@ class Carousel extends Component {
 
                     <Row>
                         <h1>
+                            {this.state.currentStep + 1}
+                            ).
                             {this.state.steps[this.state.currentStep].value}
                         </h1>
                     </Row>

@@ -3,6 +3,7 @@ import app from '../base';
 import AddUrlForm from '../components/AddUrlForm';
 import ItemForm from '../components/ItemForm';
 import {Button, Row, Col, Container} from 'reactstrap';
+import './NewDishForm.css';
 
 class NewDishForm extends Component {
     constructor(props) {
@@ -66,6 +67,7 @@ class NewDishForm extends Component {
                     <Row>
                         <Col>
                             <Button
+                                className="newFormButtons"
                                 color="primary"
                                 size="lg"
                                 value="0"
@@ -75,6 +77,7 @@ class NewDishForm extends Component {
                         </Col>
                         <Col>
                             <Button
+                                className="newFormButtons"
                                 color="primary"
                                 size="lg"
                                 value="1"

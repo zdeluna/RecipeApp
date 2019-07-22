@@ -2,3 +2,22 @@
     float: none;
     margin: 0 auto;
 }
+
+.screenshot {
+    border-style: solid;
+    border-width: 1px;
+}
+
+.homeLinks {
+    font-size: 25px;
+    margin: 40px;
+}
+
+#topRow {
+    width: 100%;
+}
+
+#leftColumn {
+    width: 90%;
+    padding-left: 200px;
+}
