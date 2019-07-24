@@ -4,6 +4,8 @@ This project allows users to save food recipes to a database. Users can store th
 
 ![Screenshot 1](/client/src/static/images/landingPageImage1.png?raw=true 'Screenshot 1')
 
+![Screenshot 2](/client/src/static/images/landingPageImage3.png?raw=true 'Screenshot 2')
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
