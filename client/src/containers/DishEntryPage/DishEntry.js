@@ -29,6 +29,7 @@ class DishEntry extends Component {
             redirect: false,
             delete: false,
             makeDishMode: false,
+            url: '',
         };
     }
 
@@ -58,6 +59,10 @@ class DishEntry extends Component {
                     stepsCreated: true,
                     stepsArray: dish.steps,
                 });
+            }
+
+            if (dish.url) {
+                this.setState({url: dish.url});
             }
 
             this.setState({
@@ -195,6 +200,9 @@ class DishEntry extends Component {
                 <Row>
                     <Col className="text-center">
                         <h1>{this.state.name}</h1>
+                        <a href={this.state.url}>
+                            <h5>{this.state.url}</h5>
+                        </a>
                     </Col>
                 </Row>
                 <Row>

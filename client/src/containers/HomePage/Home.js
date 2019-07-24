@@ -40,7 +40,7 @@ class Home extends Component {
                 <Row>
                     <Col>
                         <p className="lead">Organize your favorite recipes.</p>
-                        <img class="screenshot" src={screenshot1} />
+                        <img className="screenshot" src={screenshot1} />
                     </Col>
                 </Row>
                 <hr />
@@ -49,7 +49,7 @@ class Home extends Component {
                         <p className="lead">
                             Upload recipe from an webpage or enter manually.
                         </p>
-                        <img class="screenshot" src={screenshot2} />
+                        <img className="screenshot" src={screenshot2} />
                     </Col>
                 </Row>
                 <hr />
@@ -59,7 +59,7 @@ class Home extends Component {
                             Easily follow directions without having to scroll
                             back and forth.
                         </p>
-                        <img class="screenshot" src={screenshot3} />
+                        <img className="screenshot" src={screenshot3} />
                     </Col>
                 </Row>
             </Container>

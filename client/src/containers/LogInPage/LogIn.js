@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
 import app from '../../base';
-import {Form, Button, Input, FormGroup, Label} from 'reactstrap';
+import {Container, Form, Button, Input, FormGroup, Label} from 'reactstrap';
 
 class LogIn extends Component {
     constructor(props) {
@@ -41,35 +41,37 @@ class LogIn extends Component {
     render() {
         return (
             <div>
-                <h1>Log in</h1>
-                <Form>
-                    <FormGroup>
-                        <Label for="userEmail">Email</Label>
-                        <Input
-                            name="email"
-                            type="email"
-                            id="userEmail"
-                            placeholder="Email"
-                            onChange={this.handleEmailChange}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="userPassword">Password</Label>
-                        <Input
-                            name="password"
-                            type="password"
-                            id="userPassword"
-                            placeholder="Password"
-                            onChange={this.handlePasswordChange}
-                        />
-                    </FormGroup>
-                    <Button color="primary" onClick={this.handleLogIn}>
-                        Log in
-                    </Button>
-                    <p>
-                        <Link to={`/signup`}>Don't have an account</Link>
-                    </p>
-                </Form>
+                <Container>
+                    <h1>Log in</h1>
+                    <Form>
+                        <FormGroup>
+                            <Label for="userEmail">Email</Label>
+                            <Input
+                                name="email"
+                                type="email"
+                                id="userEmail"
+                                placeholder="Email"
+                                onChange={this.handleEmailChange}
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="userPassword">Password</Label>
+                            <Input
+                                name="password"
+                                type="password"
+                                id="userPassword"
+                                placeholder="Password"
+                                onChange={this.handlePasswordChange}
+                            />
+                        </FormGroup>
+                        <Button color="primary" onClick={this.handleLogIn}>
+                            Log in
+                        </Button>
+                        <p>
+                            <Link to={`/signup`}>Don't have an account</Link>
+                        </p>
+                    </Form>
+                </Container>
             </div>
         );
     }

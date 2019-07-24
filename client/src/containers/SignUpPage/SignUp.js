@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
 import app from '../../base';
-import {Form, Button, Input, FormGroup, Label} from 'reactstrap';
+import {Container, Form, Button, Input, FormGroup, Label} from 'reactstrap';
 import API from '../../utils/Api';
 
 class SignUp extends Component {
@@ -50,35 +50,37 @@ class SignUp extends Component {
     render() {
         return (
             <div>
-                <h1>Sign up</h1>
-                <Form onSubmit={this.handleSignUp}>
-                    <FormGroup>
-                        <Label for="userEmail">Email</Label>
-                        <Input
-                            name="email"
-                            type="email"
-                            id="userEmail"
-                            placeholder="Email"
-                            onChange={this.handleEmailChange}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="userPassword">Password</Label>
-                        <Input
-                            name="password"
-                            type="password"
-                            id="userPassword"
-                            placeholder="Password"
-                            onChange={this.handlePasswordChange}
-                        />
-                    </FormGroup>
-                    <Button color="primary" type="submit">
-                        Sign Up
-                    </Button>
-                    <p>
-                        <Link to={`/login`}>Already have an account</Link>
-                    </p>
-                </Form>
+                <Container>
+                    <h1>Sign up</h1>
+                    <Form onSubmit={this.handleSignUp}>
+                        <FormGroup>
+                            <Label for="userEmail">Email</Label>
+                            <Input
+                                name="email"
+                                type="email"
+                                id="userEmail"
+                                placeholder="Email"
+                                onChange={this.handleEmailChange}
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="userPassword">Password</Label>
+                            <Input
+                                name="password"
+                                type="password"
+                                id="userPassword"
+                                placeholder="Password"
+                                onChange={this.handlePasswordChange}
+                            />
+                        </FormGroup>
+                        <Button color="primary" type="submit">
+                            Sign Up
+                        </Button>
+                        <p>
+                            <Link to={`/login`}>Already have an account</Link>
+                        </p>
+                    </Form>
+                </Container>
             </div>
         );
     }
