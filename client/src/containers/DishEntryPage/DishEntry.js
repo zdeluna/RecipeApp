@@ -149,11 +149,13 @@ class DishEntry extends Component {
                                 category={this.state.category}
                                 userID={this.state.userID}
                             />
+                            <hr />
                             <Notes
                                 dishId={this.state.dishId}
                                 category={this.state.category}
                                 userID={this.state.userID}
                             />
+                            <hr />
                             <CookingTime
                                 dishId={this.state.dishId}
                                 category={this.state.category}

@@ -15,24 +15,47 @@ class Notes extends DataField {
         const fieldCreated = props.fieldCreated;
 
         // User doesn't have any existing notes on the dish
+        if (!fieldCreated)
+            return (
+                <div>
+                    <Button
+                        color="primary"
+                        size="md"
+                        onClick={this.createField}>
+                        Add Notes
+                    </Button>
+                </div>
+            );
 
-        return (
-            <div>
-                <Textarea
-                    id="notesTextArea"
-                    onChange={event => this.fieldChanged(event)}
-                    value={this.state.data}
-                />{' '}
-                <Button
-                    color="primary"
-                    size="md"
-                    onClick={event =>
-                        this.addFieldToDatabase(event, this.state.data)
-                    }>
-                    Save Notes
-                </Button>
-            </div>
-        );
+        if (editField)
+            return (
+                <div>
+                    <Textarea
+                        id="notesTextArea"
+                        onChange={event => this.fieldChanged(event)}
+                        value={this.state.data}
+                    />{' '}
+                    <Button
+                        color="primary"
+                        size="md"
+                        onClick={event =>
+                            this.addFieldToDatabase(event, this.state.data)
+                        }>
+                        Save Notes
+                    </Button>
+                </div>
+            );
+        else
+            return (
+                <div>
+                    <Button color="primary" size="md" onClick={this.editField}>
+                        Edit Notes
+                    </Button>
+                    <div id="notesText">
+                        <p>{this.getDataFieldValue()}</p>
+                    </div>
+                </div>
+            );
     };
 
     render() {
