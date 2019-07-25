@@ -60,6 +60,6 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Authors
 
--   **Zach DeLuna** - _Initial work_ - (https://github.com/zdeluna)
+## Authors
 
-See also the list of [contributors](https://github.com/zdeluna/RecipeApp/contributors) who participated in this project.
+-   **Zach DeLuna** - _Initial work_ - (https://github.com/zdeluna)

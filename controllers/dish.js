@@ -23,7 +23,8 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
                 dishInfo.steps = await getStepsFromWebPage($);
                 dishInfo.ingredients = await getIngredientsFromWebPage($);
 
-                // Copy ingredients array
+                /* Copy ingredients array so that we can send it as a parameter when
+				 *  determine which ingredients are in each step in the function getIngredientsInSteps*/
                 var ingredients = dishInfo.ingredients.map(a =>
                     Object.assign({}, a),
                 );
@@ -34,7 +35,6 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
                 );
                 return resolve(dishInfo);
             } catch (error) {
-                console.log('reject function');
                 return reject(error);
             }
         });
