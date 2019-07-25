@@ -60,6 +60,4 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Authors
 
-## Authors
-
 -   **Zach DeLuna** - _Initial work_ - (https://github.com/zdeluna)
