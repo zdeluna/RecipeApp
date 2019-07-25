@@ -89,6 +89,12 @@ class Carousel extends Component {
                             </Button>
                         </Col>
                         <Col>
+                            <h3>
+                                {this.state.currentStep + 1}/
+                                {this.state.steps.length}
+                            </h3>
+                        </Col>
+                        <Col>
                             <Button
                                 color="primary"
                                 size="lg"
