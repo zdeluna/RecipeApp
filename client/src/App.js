@@ -15,7 +15,7 @@ import ItemForm from './components/ItemForm';
 import './App.css';
 
 class App extends Component {
-    state = {loading: true, authenticated: false, user: null};
+    state = {loading: true, authenticated: false, user: {uid: ''}};
 
     componentWillMount() {
         app.auth().onAuthStateChanged(user => {
@@ -28,7 +28,7 @@ class App extends Component {
             } else {
                 this.setState({
                     authenticated: false,
-                    currentUser: null,
+                    currentUser: {uid: ''},
                     loading: false,
                 });
             }
@@ -66,7 +66,6 @@ class App extends Component {
                                 />
                             )}
                         />
-
                         <Route
                             exact
                             path="/users/category/:category/dish/:dishId/ingredients"
@@ -89,18 +88,14 @@ class App extends Component {
                                 />
                             )}
                         />
-
-                        <Route
+                        <PrivateRoute
                             exact
                             path="/users/category/:category/dish/:dishId"
-                            render={props => (
-                                <DishEntry
-                                    {...props}
-                                    userID={app.auth().currentUser.uid}
-                                />
-                            )}
+                            component={DishEntry}
+                            authenticated={authenticated}
+                            userID={this.state.currentUser.uid}
                         />
-
+                        )} />
                         <Route
                             exact
                             path="/users/category/:category"

@@ -47,6 +47,11 @@ const steps = [
     },
 ];
 
+const ingredientsInSteps = [
+    [{id: 0, value: 'ground beef'}],
+    [{id: 0, value: 'taco shells'}],
+];
+
 const match = {
     params: {
         dishId: '12345',
@@ -58,6 +63,7 @@ const location = {
     state: {
         steps: steps,
         ingredients: ingredients,
+        ingredientsInSteps: ingredientsInSteps,
     },
 };
 

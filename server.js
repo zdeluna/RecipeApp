@@ -34,27 +34,3 @@ app.options('/*', function(req, res, next) {
     );
     res.send(200);
 });
-
-function test() {
-    var stepsArray = [];
-    var ingredientsArray = [];
-
-    var pageUrl1 = 'https://www.daringgourmet.com/paella-valenciana/';
-
-    var pageUrl2 =
-        'https://www.seriouseats.com/recipes/2013/06/grilled-skirt-steak-fajitas-food-lab-recipe.html';
-    getRecipeStepsAndIngredientsFromWebPage(pageUrl1, function(
-        err,
-        stepsArray,
-        ingredientsArray,
-    ) {
-        console.log('Call function');
-    });
-    getRecipeStepsAndIngredientsFromWebPage(pageUrl2, function(
-        err,
-        stepsArray,
-        ingredientsArray,
-    ) {
-        console.log('Call function 2');
-    });
-}
