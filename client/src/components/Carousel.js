@@ -115,8 +115,10 @@ class Carousel extends Component {
                 <Container>
                     <h5 id="ingredientsHeading">Ingredients</h5>
                     {this.state.ingredientsInSteps[this.state.currentStep].map(
-                        ingredient => (
-                            <h5>{ingredient.value}</h5>
+                        (ingredient, index) => (
+                            <h5 key={'ingredient' + index}>
+                                {ingredient.value}
+                            </h5>
                         ),
                     )}
                 </Container>
