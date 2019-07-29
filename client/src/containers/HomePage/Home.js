@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {Redirect} from 'react-router-dom';
-import {Col, Container, Jumbotron, Row} from 'reactstrap';
+import {Col, Container, Row} from 'reactstrap';
 import './Home.css';
 import screenshot1 from '../../static/images/landingPageImage1.png';
 import screenshot2 from '../../static/images/landingPageImage2.png';
@@ -40,7 +39,11 @@ class Home extends Component {
                 <Row>
                     <Col>
                         <p className="lead">Organize your favorite recipes.</p>
-                        <img className="screenshot" src={screenshot1} />
+                        <img
+                            className="screenshot"
+                            src={screenshot1}
+                            alt="screenshot1"
+                        />
                     </Col>
                 </Row>
                 <hr />
@@ -49,7 +52,11 @@ class Home extends Component {
                         <p className="lead">
                             Upload recipe from an webpage or enter manually.
                         </p>
-                        <img className="screenshot" src={screenshot2} />
+                        <img
+                            className="screenshot"
+                            src={screenshot2}
+                            alt="screenshot2"
+                        />
                     </Col>
                 </Row>
                 <hr />
@@ -59,7 +66,11 @@ class Home extends Component {
                             Easily follow directions without having to scroll
                             back and forth.
                         </p>
-                        <img className="screenshot" src={screenshot3} />
+                        <img
+                            className="screenshot"
+                            src={screenshot3}
+                            alt="screenshot3"
+                        />
                     </Col>
                 </Row>
             </Container>

@@ -55,39 +55,33 @@ class App extends Component {
                         />
                         <Route exact path="/login" component={LogIn} />
                         <Route exact path="/signup" component={SignUp} />
-                        <Route
+                        <PrivateRoute
                             expact
                             path="/users/category/:category/dish/:dishId/makeMode"
-                            render={props => (
-                                <RecipeGuide
-                                    {...props}
-                                    userID={app.auth().currentUser.uid}
-                                    loading={true}
-                                />
-                            )}
+                            component={RecipeGuide}
+                            authenticated={authenticated}
+                            userID={this.state.currentUser.uid}
+                            loading={true}
                         />
-                        <Route
+                        )} />
+                        <PrivateRoute
                             exact
                             path="/users/category/:category/dish/:dishId/ingredients"
-                            render={props => (
-                                <ItemForm
-                                    {...props}
-                                    update={true}
-                                    type={'ingredients'}
-                                />
-                            )}
+                            component={ItemForm}
+                            authenticated={authenticated}
+                            update={true}
+                            type={'ingredients'}
                         />
-                        <Route
+                        )} />
+                        <PrivateRoute
                             exact
                             path="/users/category/:category/dish/:dishId/steps"
-                            render={props => (
-                                <ItemForm
-                                    {...props}
-                                    update={true}
-                                    type={'steps'}
-                                />
-                            )}
+                            component={ItemForm}
+                            authenticated={authenticated}
+                            update={true}
+                            type={'steps'}
                         />
+                        )} />
                         <PrivateRoute
                             exact
                             path="/users/category/:category/dish/:dishId"
@@ -96,17 +90,15 @@ class App extends Component {
                             userID={this.state.currentUser.uid}
                         />
                         )} />
-                        <Route
+                        <PrivateRoute
                             exact
                             path="/users/category/:category"
-                            render={props => (
-                                <DishListTable
-                                    {...props}
-                                    userID={app.auth().currentUser.uid}
-                                    loading={true}
-                                />
-                            )}
+                            component={DishListTable}
+                            authenticated={authenticated}
+                            userID={this.state.currentUser.uid}
+                            loading={true}
                         />
+                        )} />
                     </Switch>
                 </div>
             </Router>
