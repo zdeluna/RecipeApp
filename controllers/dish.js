@@ -12,20 +12,20 @@ const {sendErrorResponse} = require('./base.js');
 
 const getRecipeStepsAndIngredientsFromWebPage = async url => {
     return new Promise(async (resolve, reject) => {
-        var json = [];
+        let json = [];
         let dishInfo = {};
         dishInfo.steps = [];
         dishInfo.ingredients = [];
         request(url, async function(error, response, html) {
             try {
                 if (error) reject(error);
-                var $ = cheerio.load(html);
+                let $ = cheerio.load(html);
                 dishInfo.steps = await getStepsFromWebPage($);
                 dishInfo.ingredients = await getIngredientsFromWebPage($);
 
                 /* Copy ingredients array so that we can send it as a parameter when
 				 *  determine which ingredients are in each step in the function getIngredientsInSteps*/
-                var ingredients = dishInfo.ingredients.map(a =>
+                let ingredients = dishInfo.ingredients.map(a =>
                     Object.assign({}, a),
                 );
 
@@ -50,7 +50,11 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
 function checkForStepsHeading(text) {
     // Remove semicolon
     text = text.replace(/:/gi, '');
-    var acceptableStepsHeading = ['instructions', 'directions', 'preparation'];
+    const acceptableStepsHeading = [
+        'instructions',
+        'directions',
+        'preparation',
+    ];
 
     if (acceptableStepsHeading.indexOf(text) > -1) {
         return true;
@@ -69,7 +73,7 @@ function checkForIngredientsHeading(text) {
     // Remove semicolon
     text = text.replace(/:/gi, '');
 
-    var acceptableIngredientsHeading = ['ingredients', 'ingredients:'];
+    const acceptableIngredientsHeading = ['ingredients', 'ingredients:'];
 
     if (acceptableIngredientsHeading.indexOf(text) > -1) {
         return true;
@@ -106,8 +110,8 @@ function stepHasIngredient(step, ingredient) {
  */
 
 function filterAllIngredients(ingredientsArray) {
-    filteredIngredientsArray = [];
-    for (var i = 0; i < ingredientsArray.length; i++) {
+    let filteredIngredientsArray = [];
+    for (let i = 0; i < ingredientsArray.length; i++) {
         let ingredientObject = ingredientsArray[i];
         ingredientObject.value = filterIngredient(ingredientObject.value);
         filteredIngredientsArray.push(ingredientObject);
@@ -178,12 +182,12 @@ const getIngredientsInSteps = async (steps, ingredients) => {
 
     let filteredIngredients = filterAllIngredients(ingredientsCopy);
 
-    for (var stepNumber = 0; stepNumber < steps.length; stepNumber++) {
+    for (let stepNumber = 0; stepNumber < steps.length; stepNumber++) {
         let ingredientsInEachStep = [];
         let stepDescription = steps[stepNumber].value.toLowerCase();
 
         for (
-            var ingredientNumber = 0;
+            let ingredientNumber = 0;
             ingredientNumber < filteredIngredients.length;
             ingredientNumber++
         ) {
@@ -209,7 +213,7 @@ const getIngredientsInSteps = async (steps, ingredients) => {
 
 const findHeading = async ($, heading) => {
     return new Promise(async (resolve, reject) => {
-        var html = $('h1, h2, h3, h4, h5').filter(function() {
+        let html = $('h1, h2, h3, h4, h5').filter(function() {
             if (heading == 'ingredients') {
                 return checkForIngredientsHeading(
                     $(this)
@@ -280,9 +284,9 @@ const removeNumberLabel = text => {
 const getStepsFromWebPage = async $ => {
     return new Promise(async (resolve, reject) => {
         try {
-            var stepsArray = [];
+            let stepsArray = [];
             // Find the heading that contains instruction
-            var headingHTML = await findHeading($, 'steps');
+            let headingHTML = await findHeading($, 'steps');
             console.log('HEADING: ' + headingHTML);
             stepsHTML = await findList(headingHTML);
             stepsHTML = await cleanList(stepsHTML);
@@ -290,13 +294,13 @@ const getStepsFromWebPage = async $ => {
                 .children('li') // Find the children of the list
                 // Iterate through each child element and store the text of the element and add it to the array
                 .each(function(index, element) {
-                    var stepDescription = $(this)
+                    let stepDescription = $(this)
                         .text()
                         .trim();
                     /* Remove step number if text already contained them.*/
                     stepDescription = removeNumberLabel(stepDescription);
 
-                    var step = {id: stepsArray.length, value: stepDescription};
+                    let step = {id: stepsArray.length, value: stepDescription};
                     stepsArray.push(step);
                 });
             resolve(stepsArray);
@@ -367,9 +371,9 @@ const findList = async headingNode => {
 const getIngredientsFromWebPage = async $ => {
     return new Promise(async (resolve, reject) => {
         try {
-            var ingredientsArray = [];
+            let ingredientsArray = [];
 
-            var headingHTML = await findHeading($, 'ingredients');
+            let headingHTML = await findHeading($, 'ingredients');
             ingredientsHTML = await findList(headingHTML);
             ingredientsHTML = await cleanList(ingredientsHTML);
 
@@ -377,10 +381,10 @@ const getIngredientsFromWebPage = async $ => {
                 .children() // Find the children of the list
                 // Iterate through each child element and store the text of the element and add it to the array
                 .each(function(index, element) {
-                    var ingredientDescription = $(this)
+                    let ingredientDescription = $(this)
                         .text()
                         .trim();
-                    var ingredient = {
+                    let ingredient = {
                         id: ingredientsArray.length,
                         value: ingredientDescription,
                     };
