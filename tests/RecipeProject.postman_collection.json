@@ -627,7 +627,7 @@
 					"script": {
 						"id": "873cf39a-d719-4aa2-a582-8e79b543c875",
 						"exec": [
-							"pm.environment.set(\"userID1\", \"XOqoUyqbCMWg7HUjURF6alTSXSP2\");"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -642,7 +642,7 @@
 							"   ",
 							"    if (response != null)",
 							"    {",
-							"        pm.expect(Object.keys(response).length).to.eql(pm.environment.get(\"numberOfDishes\"));",
+							"        pm.expect(Object.keys(response).length).to.eql(pm.environment.get(\"numberofDishes\"));",
 							"    }",
 							"});"
 						],
