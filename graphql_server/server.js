@@ -1,7 +1,10 @@
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
 const schema = require('./schema/schema');
+const startMongo = require('./config/mongo');
 const app = express();
+
+startMongo();
 
 app.use(
     '/graphql',

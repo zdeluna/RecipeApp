@@ -9,6 +9,8 @@ const {
     GraphQLList,
 } = graphql;
 
+const User = require('../models/User');
+
 var dishes = [
     {name: 'Risotto', cookingTime: '40 minutes', id: '1', uid: '1'},
     {name: 'Tacos', cookingTime: '20 minutes', id: '2', uid: '2'},
@@ -68,6 +70,26 @@ const RootQuery = new GraphQLObjectType({
     },
 });
 
+const Mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+        addUser: {
+            type: UserType,
+            args: {
+                email: {type: GraphQLString},
+            },
+
+            resolve(parent, args) {
+                let user = new User({
+                    email: args.email,
+                });
+                return user.save();
+            },
+        },
+    },
+});
+
 module.exports = new GraphQLSchema({
     query: RootQuery,
+    mutation: Mutation,
 });
