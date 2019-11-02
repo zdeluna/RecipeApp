@@ -10,16 +10,7 @@ const {
 } = graphql;
 
 const User = require('../models/User');
-
-var dishes = [
-    {name: 'Risotto', cookingTime: '40 minutes', id: '1', uid: '1'},
-    {name: 'Tacos', cookingTime: '20 minutes', id: '2', uid: '2'},
-];
-
-var users = [
-    {email: 'zach.deluna@gmail.com', id: '1'},
-    {email: 'usertest@gmail.com', id: '2'},
-];
+const Dish = require('../models/Dish');
 
 const DishType = new GraphQLObjectType({
     name: 'Dish',
@@ -30,7 +21,7 @@ const DishType = new GraphQLObjectType({
         user: {
             type: UserType,
             resolve(parent, args) {
-                return _.find(users, {id: parent.uid});
+                return User.findById(parent.uid);
             },
         },
     }),
@@ -41,6 +32,12 @@ const UserType = new GraphQLObjectType({
     fields: () => ({
         id: {type: GraphQLID},
         email: {type: GraphQLString},
+        dishes: {
+            type: new GraphQLList(DishType),
+            resolve(parent, args) {
+                return Dish.find({uid: parent.id});
+            },
+        },
     }),
 });
 
@@ -51,20 +48,26 @@ const RootQuery = new GraphQLObjectType({
             type: DishType,
             args: {id: {type: GraphQLID}},
             resolve(parent, args) {
-                return _.find(dishes, {id: args.id});
+                return Dish.findById(args.id);
             },
         },
         dishes: {
             type: new GraphQLList(DishType),
             resolve(parent, args) {
-                return dishes;
+                return Dish.find({});
             },
         },
         user: {
             type: UserType,
             args: {id: {type: GraphQLID}},
             resolve(parent, args) {
-                return _.find(users, {id: args.id});
+                return Users.findById(args.id);
+            },
+        },
+        users: {
+            type: new GraphQLList(UserType),
+            resolve(parent, args) {
+                return User.find({});
             },
         },
     },
@@ -84,6 +87,25 @@ const Mutation = new GraphQLObjectType({
                     email: args.email,
                 });
                 return user.save();
+            },
+        },
+        addDish: {
+            type: DishType,
+            args: {
+                name: {type: GraphQLString},
+                cookingTime: {type: GraphQLString},
+                uid: {type: GraphQLID},
+                category: {type: GraphQLString},
+            },
+
+            resolve(parent, args) {
+                let dish = new Dish({
+                    name: args.name,
+                    cookingTime: args.cookingTime,
+                    uid: args.uid,
+                    category: args.category,
+                });
+                return dish.save();
             },
         },
     },
