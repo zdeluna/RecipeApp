@@ -4,6 +4,9 @@ const schema = require('./schema/schema');
 const startMongo = require('./config/mongo');
 const app = express();
 
+const cors = require('cors');
+app.use(cors());
+
 startMongo();
 
 app.use(

@@ -5,6 +5,30 @@ import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
 import API from '../../utils/Api';
 import Loading from '../../components/Loading';
+import ApolloClient from 'apollo-boost';
+import {ApolloProvider} from 'react-apollo';
+import {gql} from 'apollo-boost';
+import {graphql} from 'react-apollo';
+import {useQuery} from '@apollo/react-hooks';
+import {Query} from 'react-apollo';
+
+const getDishesQuery = gql`
+    {
+        dishes {
+            name
+        }
+    }
+`;
+
+function ShowTable() {
+    const {loading, error, data} = useQuery(getDishesQuery);
+    console.log('get query');
+    return null;
+}
+
+const client = new ApolloClient({
+    uri: 'http://localhost:4000/graphql',
+});
 
 class DishListTable extends Component {
     constructor(props) {
@@ -24,14 +48,18 @@ class DishListTable extends Component {
     }
 
     componentDidMount = async () => {
+        /*
         if (!this.state.dishes || this.state.dishes.length === 0)
             await this.getDishes();
         else {
             this.setState({dishes: this.props.dishes, loading: false});
-        }
+}*/
+        //const {loading, error, data} = useQuery(getDishesQuery);
+        //      console.log(data);
     };
 
     getDishes = async () => {
+        /*
         var api = new API();
         api.getDishesOfUser(this.state.userID).then(response => {
             if (response.status === 200) {
@@ -65,7 +93,7 @@ class DishListTable extends Component {
             this.setState({
                 loading: false,
             });
-        });
+});*/
     };
 
     handleClick(id) {
@@ -74,6 +102,7 @@ class DishListTable extends Component {
     }
 
     renderTable = props => {
+        /*
         if (props.loading) return <Loading />;
         if (this.state.redirect) {
             var redirect_url =
@@ -82,61 +111,63 @@ class DishListTable extends Component {
                 '/dish/' +
                 this.state.dishId;
             return <Redirect push to={redirect_url} />;
-        } else
-            return (
-                <div>
-                    <Table striped className="dishTable">
-                        <thead>
-                            <tr>
-                                <th>Dish</th>
-                                <th>Time to Make</th>
-                                <th>Last made</th>
+				} else */
+
+        return (
+            <div>
+                <Table striped className="dishTable">
+                    <thead>
+                        <tr>
+                            <th>Dish</th>
+                            <th>Time to Make</th>
+                            <th>Last made</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.dishes.map(dish => (
+                            <tr className="dishRow" key={dish.id + 'r'}>
+                                <td key={dish.id + 'name'}>
+                                    <Link
+                                        className="dishLink"
+                                        key={dish.id + 'link'}
+                                        to={`/users/category/${
+                                            this.state.category
+                                        }/dish/${dish.id}`}>
+                                        {dish.name}
+                                    </Link>
+                                </td>
+                                <td key={dish.id + 'time'}>
+                                    {dish.cookingTime}
+                                </td>
+                                <td key={dish.id + 'date'}>{dish.lastMade}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {this.state.dishes.map(dish => (
-                                <tr className="dishRow" key={dish.id + 'r'}>
-                                    <td key={dish.id + 'name'}>
-                                        <Link
-                                            className="dishLink"
-                                            key={dish.id + 'link'}
-                                            to={`/users/category/${
-                                                this.state.category
-                                            }/dish/${dish.id}`}>
-                                            {dish.name}
-                                        </Link>
-                                    </td>
-                                    <td key={dish.id + 'time'}>
-                                        {dish.cookingTime}
-                                    </td>
-                                    <td key={dish.id + 'date'}>
-                                        {dish.lastMade}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </div>
-            );
+                        ))}
+                    </tbody>
+                </Table>
+            </div>
+        );
     };
 
     render() {
         return (
-            <Container>
-                <Row>
-                    {' '}
-                    <Link to={`/`} id="goBackLink">
-                        Go Back To Categories
-                    </Link>
-                </Row>
-                <Row>
-                    <AddDishForm
-                        category={this.state.category}
-                        onClick={id => this.handleClick(id)}
-                    />
-                </Row>
-                <this.renderTable loading={this.state.loading} />
-            </Container>
+            <ApolloProvider client={client}>
+                <Container>
+                    <Row>
+                        {' '}
+                        <Link to={`/`} id="goBackLink">
+                            Go Back To Categories
+                        </Link>
+                    </Row>
+                    <Row>
+                        <AddDishForm
+                            category={this.state.category}
+                            onClick={id => this.handleClick(id)}
+                        />
+                    </Row>
+                    <ShowTable />
+                    <this.renderTable loading={this.state.loading} />
+                </Container>
+            </ApolloProvider>
         );
     }
 }

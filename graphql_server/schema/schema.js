@@ -7,6 +7,7 @@ const {
     GraphQLSchema,
     GraphQLID,
     GraphQLList,
+    GraphQLNonNull,
 } = graphql;
 
 const User = require('../models/User');
@@ -79,7 +80,7 @@ const Mutation = new GraphQLObjectType({
         addUser: {
             type: UserType,
             args: {
-                email: {type: GraphQLString},
+                email: {type: new GraphQLNonNull(GraphQLString)},
             },
 
             resolve(parent, args) {
@@ -92,10 +93,10 @@ const Mutation = new GraphQLObjectType({
         addDish: {
             type: DishType,
             args: {
-                name: {type: GraphQLString},
+                name: {type: new GraphQLNonNull(GraphQLString)},
                 cookingTime: {type: GraphQLString},
-                uid: {type: GraphQLID},
-                category: {type: GraphQLString},
+                uid: {type: new GraphQLNonNull(GraphQLID)},
+                category: {type: new GraphQLNonNull(GraphQLString)},
             },
 
             resolve(parent, args) {

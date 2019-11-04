@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "client": "cd client && npm start",
-        "server": "nodemon server.js",
+        "server": "nodemon graphql_server/server.js",
         "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
         "start": "node server.js"
     },
@@ -14,6 +14,7 @@
         "express": "^4.16.2",
         "firebase-admin": "^6.0.0",
         "globalize-webpack-plugin": "^3.0.0",
+        "graphql": "^14.5.8",
         "request": "^2.88.0"
     },
     "devDependencies": {
