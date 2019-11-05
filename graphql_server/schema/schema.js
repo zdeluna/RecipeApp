@@ -19,6 +19,7 @@ const DishType = new GraphQLObjectType({
         id: {type: GraphQLID},
         name: {type: GraphQLString},
         cookingTime: {type: GraphQLString},
+        category: {type: GraphQLString},
         user: {
             type: UserType,
             resolve(parent, args) {

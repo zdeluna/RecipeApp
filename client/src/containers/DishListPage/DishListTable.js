@@ -15,8 +15,10 @@ import {Query} from 'react-apollo';
 const getDishesQuery = gql`
     {
         dishes {
+            id
             name
             cookingTime
+            category
         }
     }
 `;
@@ -25,8 +27,18 @@ function ShowTable() {
     const {loading, error, data} = useQuery(getDishesQuery);
     console.log('get query');
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>;
+    if (loading)
+        return (
+            <tr>
+                <p>Loading...</p>
+            </tr>
+        );
+    if (error)
+        return (
+            <tr>
+                <p>Error :(</p>
+            </tr>
+        );
 
     return data.dishes.map(dish => (
         <tr className="dishRow" key={dish.id + 'r'}>
@@ -61,67 +73,12 @@ class DishListTable extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    componentWillUnmount() {
-        this.setState({dishes: null, loaded: false});
-    }
-
-    componentDidMount = async () => {
-        /*
-        if (!this.state.dishes || this.state.dishes.length === 0)
-            await this.getDishes();
-        else {
-            this.setState({dishes: this.props.dishes, loading: false});
-}*/
-        //const {loading, error, data} = useQuery(getDishesQuery);
-        //      console.log(data);
-    };
-
-    getDishes = async () => {
-        /*
-        var api = new API();
-        api.getDishesOfUser(this.state.userID).then(response => {
-            if (response.status === 200) {
-                if (response.data) {
-                    let dishes = response.data;
-                    let dishArray = [];
-                    let newDish;
-                    for (let dish in dishes) {
-                        // If the dish category parameter matches the url query then add it to the array
-                        if (dishes[dish].category === this.state.category) {
-                            newDish = {
-                                id: dish,
-                                name: dishes[dish].name,
-                                history: dishes[dish].history,
-                                cookingTime: dishes[dish].cookingTime,
-                            };
-
-                            if (dishes[dish].history) {
-                                newDish.lastMade = dishes[dish].history[0];
-                            }
-
-                            dishArray.push(newDish);
-                        }
-                    }
-
-                    this.setState({
-                        dishes: dishArray,
-                    });
-                }
-            }
-            this.setState({
-                loading: false,
-            });
-});*/
-    };
-
     handleClick(id) {
         // Redirect to the dish entry page using the id that was recently created
         this.setState({dishId: id, redirect: true});
     }
 
-    renderTable = props => {
-        /*
-        if (props.loading) return <Loading />;
+    renderTable = () => {
         if (this.state.redirect) {
             var redirect_url =
                 '/users/category/' +
@@ -129,24 +86,23 @@ class DishListTable extends Component {
                 '/dish/' +
                 this.state.dishId;
             return <Redirect push to={redirect_url} />;
-				} else */
-
-        return (
-            <div>
-                <Table striped className="dishTable">
-                    <thead>
-                        <tr>
-                            <th>Dish</th>
-                            <th>Time to Make</th>
-                            <th>Last made</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ShowTable />
-                    </tbody>
-                </Table>
-            </div>
-        );
+        } else
+            return (
+                <div>
+                    <Table striped className="dishTable">
+                        <thead>
+                            <tr>
+                                <th>Dish</th>
+                                <th>Time to Make</th>
+                                <th>Last made</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ShowTable />
+                        </tbody>
+                    </Table>
+                </div>
+            );
     };
 
     render() {
@@ -166,7 +122,7 @@ class DishListTable extends Component {
                         />
                     </Row>
 
-                    <this.renderTable loading={this.state.loading} />
+                    <this.renderTable />
                 </Container>
             </ApolloProvider>
         );
