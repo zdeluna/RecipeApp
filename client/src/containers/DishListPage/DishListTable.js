@@ -16,6 +16,7 @@ const getDishesQuery = gql`
     {
         dishes {
             name
+            cookingTime
         }
     }
 `;
@@ -23,7 +24,24 @@ const getDishesQuery = gql`
 function ShowTable() {
     const {loading, error, data} = useQuery(getDishesQuery);
     console.log('get query');
-    return null;
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :(</p>;
+
+    return data.dishes.map(dish => (
+        <tr className="dishRow" key={dish.id + 'r'}>
+            <td key={dish.id + 'name'}>
+                <Link
+                    className="dishLink"
+                    key={dish.id + 'link'}
+                    to={`/users/category/${dish.category}/dish/${dish.id}`}>
+                    {dish.name}
+                </Link>
+            </td>
+            <td key={dish.id + 'time'}>{dish.cookingTime}</td>
+            <td key={dish.id + 'date'}>{dish.lastMade}</td>
+        </tr>
+    ));
 }
 
 const client = new ApolloClient({
@@ -124,24 +142,7 @@ class DishListTable extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.dishes.map(dish => (
-                            <tr className="dishRow" key={dish.id + 'r'}>
-                                <td key={dish.id + 'name'}>
-                                    <Link
-                                        className="dishLink"
-                                        key={dish.id + 'link'}
-                                        to={`/users/category/${
-                                            this.state.category
-                                        }/dish/${dish.id}`}>
-                                        {dish.name}
-                                    </Link>
-                                </td>
-                                <td key={dish.id + 'time'}>
-                                    {dish.cookingTime}
-                                </td>
-                                <td key={dish.id + 'date'}>{dish.lastMade}</td>
-                            </tr>
-                        ))}
+                        <ShowTable />
                     </tbody>
                 </Table>
             </div>
@@ -164,7 +165,7 @@ class DishListTable extends Component {
                             onClick={id => this.handleClick(id)}
                         />
                     </Row>
-                    <ShowTable />
+
                     <this.renderTable loading={this.state.loading} />
                 </Container>
             </ApolloProvider>
