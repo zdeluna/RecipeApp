@@ -5,8 +5,7 @@ import './AddDishForm.css';
 import API from '../utils/Api';
 import {ApolloClient} from 'apollo-boost';
 import {ApolloProvider} from 'react-apollo';
-import {gql} from 'apollo-boost';
-import {graphql} from 'react-apollo';
+import gql from 'graphql-tag';
 import {useMutation} from '@apollo/react-hooks';
 import {Query} from 'react-apollo';
 
@@ -20,11 +19,7 @@ const ADD_DISH = gql`
 
 function AddDishForm(props) {
     let input = {value: ''};
-    const [addDish, {data}] = useMutation(ADD_DISH, {
-        onCompleted({addDish}) {
-            console.log('DATAIN' + data);
-        },
-    });
+    const [addDish, {data}] = useMutation(ADD_DISH);
 
     return (
         <Container>
@@ -39,10 +34,14 @@ function AddDishForm(props) {
                             uid: props.uid,
                         },
                     });
+                    if (data) {
+                        console.log('DATA: ' + data.addDish.id);
+                    }
+
                     input.value = '';
-                    console.log(data);
-                    // props.onClick(data.id);
-                    //var keys = Object.keys(data);
+                    if (data && data.addDish) {
+                        props.onClick(data.addDish.id);
+                    }
                 }}>
                 <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                     <Label for="newDishInput">New Dish Name: </Label>
