@@ -14,14 +14,17 @@ const ADD_DISH = gql`
     mutation addDish($name: String!, $category: String!, $uid: ID!) {
         addDish(name: $name, category: $category, uid: $uid) {
             id
-            name
         }
     }
 `;
 
-function AddDish(props) {
+function AddDishForm(props) {
     let input = {value: ''};
-    const [addDish, {data}] = useMutation(ADD_DISH);
+    const [addDish, {data}] = useMutation(ADD_DISH, {
+        onCompleted({addDish}) {
+            console.log('DATAIN' + data);
+        },
+    });
 
     return (
         <Container>
@@ -37,6 +40,9 @@ function AddDish(props) {
                         },
                     });
                     input.value = '';
+                    console.log(data);
+                    // props.onClick(data.id);
+                    //var keys = Object.keys(data);
                 }}>
                 <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                     <Label for="newDishInput">New Dish Name: </Label>
@@ -52,51 +58,6 @@ function AddDish(props) {
             </Form>
         </Container>
     );
-}
-
-class AddDishForm extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            value: '',
-            user: app.auth().currentUser,
-            category: this.props.category,
-        };
-    }
-
-    handleChange = event => {
-        this.setState({value: event.target.value});
-    };
-
-    // Make a call to the api to handle parsing the recipe from the url
-    addNewDish = async (userId, dishName, category) => {
-        // prettier-ignore
-
-        let newDish = {};
-        newDish.name = dishName;
-        newDish.category = category;
-
-        /*
-		const api = new API();
-
-        api.createDish(this.state.user.uid, newDish).then(response => {
-            if (response.status === 201) this.props.onClick(response.data.id);
-		
-
-});*/
-    };
-
-    render() {
-        return (
-            <div>
-                <AddDish
-                    category={this.state.category}
-                    uid={this.state.user.uid}
-                />
-            </div>
-        );
-    }
 }
 
 export default AddDishForm;

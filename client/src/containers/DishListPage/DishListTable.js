@@ -5,8 +5,6 @@ import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
 import API from '../../utils/Api';
 import Loading from '../../components/Loading';
-import ApolloClient from 'apollo-boost';
-import {ApolloProvider} from 'react-apollo';
 import {gql} from 'apollo-boost';
 import {graphql} from 'react-apollo';
 import {useQuery} from '@apollo/react-hooks';
@@ -56,10 +54,6 @@ function ShowTable() {
     ));
 }
 
-const client = new ApolloClient({
-    uri: 'http://localhost:4000/graphql',
-});
-
 class DishListTable extends Component {
     constructor(props) {
         super(props);
@@ -107,24 +101,23 @@ class DishListTable extends Component {
 
     render() {
         return (
-            <ApolloProvider client={client}>
-                <Container>
-                    <Row>
-                        {' '}
-                        <Link to={`/`} id="goBackLink">
-                            Go Back To Categories
-                        </Link>
-                    </Row>
-                    <Row>
-                        <AddDishForm
-                            category={this.state.category}
-                            onClick={id => this.handleClick(id)}
-                        />
-                    </Row>
+            <Container>
+                <Row>
+                    {' '}
+                    <Link to={`/`} id="goBackLink">
+                        Go Back To Categories
+                    </Link>
+                </Row>
+                <Row>
+                    <AddDishForm
+                        category={this.state.category}
+                        onClick={id => this.handleClick(id)}
+                        uid={this.state.userID}
+                    />
+                </Row>
 
-                    <this.renderTable />
-                </Container>
-            </ApolloProvider>
+                <this.renderTable />
+            </Container>
         );
     }
 }
