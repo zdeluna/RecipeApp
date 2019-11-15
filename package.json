@@ -3,11 +3,15 @@
     "version": "1.0.0",
     "scripts": {
         "client": "cd client && npm start",
-        "server": "nodemon graphql_server/server.js",
-        "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+        "restServer": "nodemon server.js",
+		"gqlServer": "nodemon graphql_server/index.js"
+
+        "dev": "concurrently --kill-others-on-fail \"npm run restServer\" \"npm run gqlServer\" \"npm run client\"",
         "start": "node server.js"
     },
     "dependencies": {
+        "apollo-datasource-rest": "^0.6.6",
+        "apollo-server": "^2.9.9",
         "body-parser": "^1.18.3",
         "cheerio": "^1.0.0-rc.2",
         "cors": "^2.8.4",

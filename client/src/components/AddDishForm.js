@@ -3,8 +3,6 @@ import app from '../base';
 import {Form, Button, FormGroup, Label, Input, Container} from 'reactstrap';
 import './AddDishForm.css';
 import API from '../utils/Api';
-import {ApolloClient} from 'apollo-boost';
-import {ApolloProvider} from 'react-apollo';
 import gql from 'graphql-tag';
 import {useMutation} from '@apollo/react-hooks';
 import {Query} from 'react-apollo';

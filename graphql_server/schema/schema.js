@@ -13,6 +13,14 @@ const {
 const User = require('../models/User');
 const Dish = require('../models/Dish');
 
+const StepType = new GraphQLObjectType({
+    name: 'Step',
+    fields: () => ({
+        id: {type: GraphQLInt},
+        value: {type: GraphQLString},
+    }),
+});
+
 const DishType = new GraphQLObjectType({
     name: 'Dish',
     fields: () => ({
@@ -20,6 +28,8 @@ const DishType = new GraphQLObjectType({
         name: {type: GraphQLString},
         cookingTime: {type: GraphQLString},
         category: {type: GraphQLString},
+
+        steps: {type: new GraphQLList(StepType)},
         user: {
             type: UserType,
             resolve(parent, args) {
@@ -98,6 +108,7 @@ const Mutation = new GraphQLObjectType({
                 cookingTime: {type: GraphQLString},
                 uid: {type: new GraphQLNonNull(GraphQLID)},
                 category: {type: new GraphQLNonNull(GraphQLString)},
+                //steps: {type: new GraphQLList(StepType)},
             },
 
             resolve(parent, args) {
@@ -106,6 +117,7 @@ const Mutation = new GraphQLObjectType({
                     cookingTime: args.cookingTime,
                     uid: args.uid,
                     category: args.category,
+                    steps: args.steps,
                 });
                 return dish.save();
             },

@@ -6,6 +6,7 @@ const dishSchema = new Schema({
     cookingTime: String,
     uid: String,
     category: String,
+    steps: [{id: String, value: String}],
 });
 
 module.exports = mongoose.model('Dish', dishSchema);

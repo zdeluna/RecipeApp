@@ -11,6 +11,30 @@ import {Container, Row, Col} from 'reactstrap';
 import API from '../../utils/Api';
 import './DishEntry.css';
 import {Button} from 'reactstrap';
+import {graphql} from 'react-apollo';
+import {useQuery} from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+
+const GET_DISH = gql`
+    query getDish($id: ID!) {
+        dish(id: $id) {
+            name
+            cookingTime
+            category
+        }
+    }
+`;
+
+function DishEntryPage(props) {
+    const {loading, error, data} = useQuery(GET_DISH, {
+        variables: {id: props.dishId},
+    });
+    console.log(data);
+
+    const [steps, setSteps] = useState(data.dish.steps);
+
+    return null;
+}
 
 class DishEntry extends Component {
     constructor(props) {
@@ -32,14 +56,6 @@ class DishEntry extends Component {
             url: '',
         };
     }
-
-    /* Make a GET request to the database to retrieve the dish information and store it in state */
-    componentDidMount = async () => {
-        if (!this.state.stepsArray || !this.state.ingredientsArray) {
-            await this.getDishIngredientsAndSteps();
-            this.setState({loading: false});
-        }
-    };
 
     getDishIngredientsAndSteps = async () => {
         this.setState({loading: true});
@@ -92,6 +108,8 @@ class DishEntry extends Component {
     };
 
     renderNewDishForm = props => {
+        return <DishEntryPage dishId={this.props.match.params.dishId} />;
+
         if (this.state.delete) {
             let redirect_url = '/users/category/' + this.state.category;
 
