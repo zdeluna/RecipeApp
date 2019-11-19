@@ -24,7 +24,7 @@ const GET_DISH = gql`
         }
     }
 `;
-
+/*
 function DishEntryPage(props) {
     const {loading, error, data} = useQuery(GET_DISH, {
         variables: {id: props.dishId},
@@ -34,7 +34,7 @@ function DishEntryPage(props) {
     const [steps, setSteps] = useState(data.dish.steps);
 
     return null;
-}
+}*/
 
 class DishEntry extends Component {
     constructor(props) {
@@ -108,7 +108,7 @@ class DishEntry extends Component {
     };
 
     renderNewDishForm = props => {
-        return <DishEntryPage dishId={this.props.match.params.dishId} />;
+        // return <DishEntryPage dishId={this.props.match.params.dishId} />;
 
         if (this.state.delete) {
             let redirect_url = '/users/category/' + this.state.category;

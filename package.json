@@ -4,8 +4,7 @@
     "scripts": {
         "client": "cd client && npm start",
         "restServer": "nodemon server.js",
-		"gqlServer": "nodemon graphql_server/index.js"
-
+        "gqlServer": "nodemon graphql_server/index.js",
         "dev": "concurrently --kill-others-on-fail \"npm run restServer\" \"npm run gqlServer\" \"npm run client\"",
         "start": "node server.js"
     },

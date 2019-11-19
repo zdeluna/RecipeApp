@@ -2,12 +2,12 @@ const {gql} = require('apollo-server');
 
 const typeDefs = gql`
     type Query {
-        dish(id: ID!): Dish
-        dishes: [Dish]
+        dish(userID: String!, dishID: String!): Dish
+        dishes(userID: String!): [Dish]
     }
 
     type Dish {
-        id: ID!
+        id: ID
         name: String
         cookingTime: String
         category: String

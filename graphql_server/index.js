@@ -2,7 +2,7 @@ const {ApolloServer} = require('apollo-server');
 const typeDefs = require('./schema/schema2.js');
 const resolvers = require('./resolvers');
 
-const dishAPI = require('./datasources/Dish');
+const DishAPI = require('./datasources/Dish');
 
 const server = new ApolloServer({
     typeDefs,

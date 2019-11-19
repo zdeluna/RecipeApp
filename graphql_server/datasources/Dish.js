@@ -3,20 +3,42 @@ const {RESTDataSource} = require('apollo-datasource-rest');
 class DishAPI extends RESTDataSource {
     constructor() {
         super();
-        this.baseURL = 'https://localhost:5000/api/';
+        this.baseURL = 'http://localhost:5000/api/';
     }
 
     dishReducer(dish) {
         return {
-            id: dish.id,
-            cookingTime: dish.cookingTime,
+            name: dish.name,
             category: dish.category,
+            cookingTime: dish.cookingTime,
         };
+    }
+
+    dishesReducer(dishes) {
+        let dishArray = [];
+        let newDish;
+
+        for (let dish in dishes) {
+            newDish = {
+                id: dish,
+                name: dishes[dish].name,
+                history: dishes[dish].history,
+                cookingTime: dishes[dish].cookingTime,
+            };
+            console.log(newDish.name);
+            dishArray.push(newDish);
+        }
+        return dishArray;
     }
 
     async getDishById({userId, dishId}) {
         const res = await this.get(`/users/${userId}/dish/${dishId}`);
-        return this.dishReducer(res[0]);
+        return this.dishReducer(res);
+    }
+
+    async getAllDishes({userId}) {
+        const res = await this.get(`/users/${userId}/dish`);
+        return this.dishesReducer(res);
     }
 }
 
