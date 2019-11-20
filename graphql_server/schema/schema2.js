@@ -2,8 +2,12 @@ const {gql} = require('apollo-server');
 
 const typeDefs = gql`
     type Query {
-        dish(userID: String!, dishID: String!): Dish
-        dishes(userID: String!): [Dish]
+        dish(userId: String!, dishId: String!): Dish
+        dishes(userId: String!): [Dish]
+    }
+
+    type Mutation {
+        addDish(userId: String!, name: String!, category: String!): String
     }
 
     type Dish {

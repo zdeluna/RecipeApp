@@ -25,7 +25,6 @@ class DishAPI extends RESTDataSource {
                 history: dishes[dish].history,
                 cookingTime: dishes[dish].cookingTime,
             };
-            console.log(newDish.name);
             dishArray.push(newDish);
         }
         return dishArray;
@@ -39,6 +38,16 @@ class DishAPI extends RESTDataSource {
     async getAllDishes({userId}) {
         const res = await this.get(`/users/${userId}/dish`);
         return this.dishesReducer(res);
+    }
+
+    async createDish({userId, name, category}) {
+        const res = await this.post(`/users/${userId}/dish`, {
+            userId: userId,
+            name: name,
+            category: category,
+        });
+        console.log('Object: ' + res);
+        return res.id;
     }
 }
 

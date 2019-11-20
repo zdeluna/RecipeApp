@@ -5,14 +5,12 @@ import {Table, Container, Row} from 'reactstrap';
 import './DishListTable.css';
 import API from '../../utils/Api';
 import Loading from '../../components/Loading';
-import {gql} from 'apollo-boost';
-import {graphql} from 'react-apollo';
+import gql from 'graphql-tag';
 import {useQuery} from '@apollo/react-hooks';
-import {Query} from 'react-apollo';
 
-const getDishesQuery = gql`
-    {
-        dishes {
+const GET_DISHES = gql`
+    query getDishes($userId: String!) {
+        dishes(userId: $userId) {
             id
             name
             cookingTime
@@ -21,9 +19,12 @@ const getDishesQuery = gql`
     }
 `;
 
-function ShowTable() {
-    const {loading, error, data} = useQuery(getDishesQuery);
-    console.log('get query');
+function ShowTable(props) {
+    console.log('user id is: ' + props.uid);
+    const {loading, error, data} = useQuery(GET_DISHES, {
+        variables: {userId: props.uid},
+    });
+    console.log(error);
 
     if (loading)
         return (
@@ -92,7 +93,7 @@ class DishListTable extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            <ShowTable />
+                            <ShowTable uid={this.state.userID} />
                         </tbody>
                     </Table>
                 </div>

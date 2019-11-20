@@ -8,10 +8,8 @@ import {useMutation} from '@apollo/react-hooks';
 import {Query} from 'react-apollo';
 
 const ADD_DISH = gql`
-    mutation addDish($name: String!, $category: String!, $uid: ID!) {
-        addDish(name: $name, category: $category, uid: $uid) {
-            id
-        }
+    mutation addDish($userId: String!, $name: String!, $category: String!) {
+        addDish(userId: $userId, name: $name, category: $category)
     }
 `;
 
@@ -27,9 +25,9 @@ function AddDishForm(props) {
                     e.preventDefault();
                     addDish({
                         variables: {
+                            userId: props.uid,
                             name: input.value,
                             category: props.category,
-                            uid: props.uid,
                         },
                     });
                     if (data) {

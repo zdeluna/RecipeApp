@@ -15,7 +15,7 @@ const cache = new InMemoryCache();
 const client = new ApolloClient({
     cache,
     link: new HttpLink({
-        uri: 'http://localhost:4000/graphql',
+        uri: 'http://localhost:4000/',
         headers: {
             'client-name': 'Recipe Scheduler [web]',
             'client-version': '1.0.0',
