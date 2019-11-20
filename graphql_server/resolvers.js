@@ -6,11 +6,17 @@ module.exports = {
             dataSources.dishAPI.getAllDishes({userId: userId}),
     },
     Mutation: {
-        addDish: (_, {userId, name, category}, {dataSources}) =>
-            dataSources.dishAPI.createDish({
+        addDish: async (_, {userId, name, category}, {dataSources}) => {
+            const results = await dataSources.dishAPI.createDish({
                 userId: userId,
                 name: name,
                 category: category,
-            }),
+            });
+            return {
+                dishId: results.id,
+                success: true,
+                message: 'The dish was created successfully',
+            };
+        },
     },
 };

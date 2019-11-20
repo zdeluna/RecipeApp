@@ -9,13 +9,21 @@ import {Query} from 'react-apollo';
 
 const ADD_DISH = gql`
     mutation addDish($userId: String!, $name: String!, $category: String!) {
-        addDish(userId: $userId, name: $name, category: $category)
+        addDish(userId: $userId, name: $name, category: $category) {
+            success
+            message
+            dishId
+        }
     }
 `;
 
 function AddDishForm(props) {
     let input = {value: ''};
-    const [addDish, {data}] = useMutation(ADD_DISH);
+    const [addDish, {data}] = useMutation(ADD_DISH, {
+        onCompleted({addDish}) {
+            props.onClick(addDish.dishId);
+        },
+    });
 
     return (
         <Container>
@@ -30,14 +38,8 @@ function AddDishForm(props) {
                             category: props.category,
                         },
                     });
-                    if (data) {
-                        console.log('DATA: ' + data.addDish.id);
-                    }
 
                     input.value = '';
-                    if (data && data.addDish) {
-                        props.onClick(data.addDish.id);
-                    }
                 }}>
                 <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                     <Label for="newDishInput">New Dish Name: </Label>

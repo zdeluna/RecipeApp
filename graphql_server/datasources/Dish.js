@@ -47,7 +47,7 @@ class DishAPI extends RESTDataSource {
             category: category,
         });
         console.log('Object: ' + res);
-        return res.id;
+        return res;
     }
 }
 
