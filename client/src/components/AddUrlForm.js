@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import app from '../base';
 import {
     Alert,
@@ -12,49 +12,41 @@ import {
 import API from '../utils/Api';
 import './AddUrlForm.css';
 
-class AddUrlForm extends Component {
-    constructor(props) {
-        super(props);
+const AddUrlForm = props => {
+    let urlAdded = false;
+    const [url, setUrl] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
 
-        this.state = {
-            value: '',
-            user: app.auth().currentUser,
-            urlAdded: false,
-            showAlert: false,
-        };
-    }
-
-    handleChange = event => {
-        this.setState({value: event.target.value});
+    const handleChange = event => {
+        setUrl(event.target.value);
     };
 
-    handleSubmit = event => {
+    const handleSubmit = event => {
         event.preventDefault();
         this.addRecipeLink();
     };
 
     // Make a call to the api to handle parsing the recipe from the url
-    addRecipeLink = async () => {
+    const addRecipeLink = async () => {
         // prettier-ignore
-        let urlField = {url: this.state.value};
+        let urlField = {url: {url}};
         try {
             const api = new API();
             let response = await api.updateDish(
-                this.state.user.uid,
-                this.props.dishId,
+                props.userId,
+                props.dishId,
                 urlField,
             );
 
             if (response.status === 200) {
-                this.setState({urlAdded: true});
                 this.props.onClick();
             }
         } catch (error) {
-            this.setState({showAlert: true});
+            console.log(error);
         }
     };
-    renderAlert = props => {
-        if (this.state.showAlert) {
+    const RenderAlert = props => {
+        if ({showAlert} == true) {
             return (
                 <Alert id="url_alert" color="primary">
                     Could not find ingredients/steps in Url.
@@ -63,27 +55,25 @@ class AddUrlForm extends Component {
         } else return null;
     };
 
-    render() {
-        return (
-            <div>
-                <Container>
-                    <Form inline onSubmit={this.handleSubmit}>
-                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                            <Label for="newUrlInput">Recipe Url:</Label>
-                            <Input
-                                type="text"
-                                value={this.state.value}
-                                onChange={this.handleChange}
-                                id="newUrlInput"
-                            />
-                        </FormGroup>
-                        <Button color="primary">Submit</Button>
-                    </Form>
-                    <this.renderAlert />
-                </Container>
-            </div>
-        );
-    }
-}
+    return (
+        <div>
+            <Container>
+                <Form inline onSubmit={this.handleSubmit}>
+                    <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                        <Label for="newUrlInput">Recipe Url:</Label>
+                        <Input
+                            type="text"
+                            value={url}
+                            onChange={this.handleChange}
+                            id="newUrlInput"
+                        />
+                    </FormGroup>
+                    <Button color="primary">Submit</Button>
+                </Form>
+                <RenderAlert />
+            </Container>
+        </div>
+    );
+};
 
 export default AddUrlForm;

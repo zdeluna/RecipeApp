@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import app from '../base';
 import {Form, Button, FormGroup, Label, Input, Container} from 'reactstrap';
 import './AddDishForm.css';
@@ -17,7 +17,7 @@ const ADD_DISH = gql`
     }
 `;
 
-function AddDishForm(props) {
+const AddDishForm = props => {
     let input = {value: ''};
     const [addDish, {data}] = useMutation(ADD_DISH, {
         onCompleted({addDish}) {
@@ -55,6 +55,6 @@ function AddDishForm(props) {
             </Form>
         </Container>
     );
-}
+};
 
 export default AddDishForm;

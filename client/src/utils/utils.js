@@ -26,8 +26,8 @@ export default function withFetchDataHook(Component) {
     return function WrappedComponent(props) {
         const {loading, error, data} = useQuery(GET_DISH, {
             variables: {
-                userId: 'BjiTW5feIaQhZXy93EZ3yvfHQV93',
-                dishId: '-LtSIeHo0UoGJrbkgDKF',
+                userId: props.userId,
+                dishId: props.dishId,
             },
         });
 

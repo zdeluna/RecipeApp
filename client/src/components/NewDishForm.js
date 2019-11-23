@@ -30,6 +30,7 @@ class NewDishForm extends Component {
             return (
                 <AddUrlForm
                     dishId={this.state.dishId}
+                    userId={this.state.user.uid}
                     category={this.props.category}
                     onClick={this.props.onClick}
                 />
