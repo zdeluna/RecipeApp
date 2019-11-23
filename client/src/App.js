@@ -87,7 +87,8 @@ class App extends Component {
                             path="/users/category/:category/dish/:dishId"
                             component={DishEntry}
                             authenticated={authenticated}
-                            userID={this.state.currentUser.uid}
+                            userId={this.state.currentUser.uid}
+                            dishId="-LuEw3mo35yVcW012iLD"
                         />
                         )} />
                         <PrivateRoute

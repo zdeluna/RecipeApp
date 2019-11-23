@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, Component} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
@@ -14,33 +14,23 @@ import {Button} from 'reactstrap';
 import {graphql} from 'react-apollo';
 import {useQuery} from '@apollo/react-hooks';
 import gql from 'graphql-tag';
+import withFetchDataHook from '../../utils/utils.js';
 
 const GET_DISH = gql`
-    query getDish($id: ID!) {
-        dish(id: $id) {
+    query getDish($userId: String!, $dishId: String!) {
+        dish(userId: $userId, dishId: $dishId) {
             name
             cookingTime
             category
         }
     }
 `;
-/*
-function DishEntryPage(props) {
-    const {loading, error, data} = useQuery(GET_DISH, {
-        variables: {id: props.dishId},
-    });
-    console.log(data);
-
-    const [steps, setSteps] = useState(data.dish.steps);
-
-    return null;
-}*/
 
 class DishEntry extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userID: this.props.userID,
+            userID: this.props.userId,
             dishId: this.props.match.params.dishId,
             category: this.props.match.params.category,
             name: '',
@@ -57,36 +47,40 @@ class DishEntry extends Component {
         };
     }
 
+    componentDidMount = async () => {
+        console.log('next');
+
+        await this.getDishIngredientsAndSteps();
+        this.setState({loading: false});
+    };
+
     getDishIngredientsAndSteps = async () => {
         this.setState({loading: true});
-        let api = new API();
-        let response = await api.getDish(this.state.userID, this.state.dishId);
-        if (response.status === 200) {
-            let dish = response.data;
+        let dish = this.props.dish;
 
-            if (dish.ingredients && dish.ingredients.length > 0) {
-                this.setState({
-                    ingredientsCreated: true,
-                    ingredientsArray: dish.ingredients,
-                });
-            }
-            if (dish.steps && dish.steps.length > 0) {
-                this.setState({
-                    stepsCreated: true,
-                    stepsArray: dish.steps,
-                });
-            }
-
-            if (dish.url) {
-                this.setState({url: dish.url});
-            }
-
+        if (dish.ingredients && dish.ingredients.length > 0) {
             this.setState({
-                name: dish.name,
-                loading: false,
-                ingredientsInSteps: dish.ingredientsInSteps,
+                ingredientsCreated: true,
+                ingredientsArray: dish.ingredients,
             });
         }
+        if (dish.steps && dish.steps.length > 0) {
+            this.setState({
+                stepsCreated: true,
+                stepsArray: dish.steps,
+            });
+        }
+
+        if (dish.url) {
+            this.setState({url: dish.url});
+        }
+
+        this.setState({
+            name: dish.name,
+            loading: false,
+            ingredientsInSteps: dish.ingredientsInSteps,
+        });
+
         this.setState({loading: false});
     };
 
@@ -108,8 +102,6 @@ class DishEntry extends Component {
     };
 
     renderNewDishForm = props => {
-        // return <DishEntryPage dishId={this.props.match.params.dishId} />;
-
         if (this.state.delete) {
             let redirect_url = '/users/category/' + this.state.category;
 
@@ -245,5 +237,4 @@ class DishEntry extends Component {
         );
     }
 }
-
-export default DishEntry;
+export default withFetchDataHook(DishEntry);

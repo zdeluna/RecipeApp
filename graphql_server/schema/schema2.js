@@ -25,6 +25,7 @@ const typeDefs = gql`
         name: String
         cookingTime: String
         category: String
+        userId: String
     }
 
     type User {

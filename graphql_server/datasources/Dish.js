@@ -8,9 +8,11 @@ class DishAPI extends RESTDataSource {
 
     dishReducer(dish) {
         return {
+            id: dish,
             name: dish.name,
             category: dish.category,
             cookingTime: dish.cookingTime,
+            userId: dish.userId,
         };
     }
 
@@ -24,6 +26,8 @@ class DishAPI extends RESTDataSource {
                 name: dishes[dish].name,
                 history: dishes[dish].history,
                 cookingTime: dishes[dish].cookingTime,
+                category: dishes[dish].category,
+                userId: dishes[dish].userId,
             };
             dishArray.push(newDish);
         }
@@ -32,6 +36,7 @@ class DishAPI extends RESTDataSource {
 
     async getDishById({userId, dishId}) {
         const res = await this.get(`/users/${userId}/dish/${dishId}`);
+        console.log('RES: ' + res);
         return this.dishReducer(res);
     }
 

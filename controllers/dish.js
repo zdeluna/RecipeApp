@@ -411,7 +411,7 @@ exports.createDish = async (req, res) => {
         const dishId = dishModel.getNewDishKey();
 
         let newDish = {
-            uid: userId,
+            userId: userId,
             name: dishName,
             category: category,
             history: [],
