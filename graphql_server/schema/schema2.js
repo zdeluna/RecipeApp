@@ -26,6 +26,18 @@ const typeDefs = gql`
         cookingTime: String
         category: String
         userId: String
+        steps: [Step]
+        ingredients: [Ingredient]
+    }
+
+    type Step {
+        id: Int
+        value: String
+    }
+
+    type Ingredient {
+        id: Int
+        value: String
     }
 
     type User {

@@ -16,16 +16,6 @@ import {useQuery} from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import withFetchDataHook from '../../utils/utils.js';
 
-const GET_DISH = gql`
-    query getDish($userId: String!, $dishId: String!) {
-        dish(userId: $userId, dishId: $dishId) {
-            name
-            cookingTime
-            category
-        }
-    }
-`;
-
 class DishEntry extends Component {
     constructor(props) {
         super(props);
@@ -57,7 +47,7 @@ class DishEntry extends Component {
     getDishIngredientsAndSteps = async () => {
         this.setState({loading: true});
         let dish = this.props.dish;
-
+        console.log(dish.name);
         if (dish.ingredients && dish.ingredients.length > 0) {
             this.setState({
                 ingredientsCreated: true,

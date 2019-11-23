@@ -13,6 +13,8 @@ class DishAPI extends RESTDataSource {
             category: dish.category,
             cookingTime: dish.cookingTime,
             userId: dish.userId,
+            steps: dish.steps,
+            ingredients: dish.ingredients,
         };
     }
 
@@ -21,14 +23,7 @@ class DishAPI extends RESTDataSource {
         let newDish;
 
         for (let dish in dishes) {
-            newDish = {
-                id: dish,
-                name: dishes[dish].name,
-                history: dishes[dish].history,
-                cookingTime: dishes[dish].cookingTime,
-                category: dishes[dish].category,
-                userId: dishes[dish].userId,
-            };
+            newDish = this.dishReducer(dish);
             dishArray.push(newDish);
         }
         return dishArray;
