@@ -18,5 +18,21 @@ module.exports = {
                 message: 'The dish was created successfully',
             };
         },
+        updateDish: async (
+            _,
+            {userId, dishId, name, url, steps, ingredients, cookingTime},
+            {datasources},
+        ) => {
+            console.log('update dish');
+            const results = await dataSources.dishAPI.updateDish({
+                userId,
+                dishId,
+                dishFields,
+            });
+            return {
+                success: true,
+                message: 'The dish was successfully updated',
+            };
+        },
     },
 };

@@ -1,131 +1,63 @@
-const graphql = require('graphql');
-const _ = require('lodash');
-const {
-    GraphQLObjectType,
-    GraphQLString,
-    GraphQLInt,
-    GraphQLSchema,
-    GraphQLID,
-    GraphQLList,
-    GraphQLNonNull,
-} = graphql;
+const {gql} = require('apollo-server');
 
-const User = require('../models/User');
-const Dish = require('../models/Dish');
+const typeDefs = gql`
+    type AddDishResponse {
+        success: Boolean!
+        message: String
+        dishId: String
+    }
 
-const StepType = new GraphQLObjectType({
-    name: 'Step',
-    fields: () => ({
-        id: {type: GraphQLInt},
-        value: {type: GraphQLString},
-    }),
-});
+    type UpdateDishResponse {
+        success: Boolean!
+        message: String
+    }
 
-const DishType = new GraphQLObjectType({
-    name: 'Dish',
-    fields: () => ({
-        id: {type: GraphQLID},
-        name: {type: GraphQLString},
-        cookingTime: {type: GraphQLString},
-        category: {type: GraphQLString},
+    type Step {
+        id: Int
+        value: String
+    }
 
-        steps: {type: new GraphQLList(StepType)},
-        user: {
-            type: UserType,
-            resolve(parent, args) {
-                return User.findById(parent.uid);
-            },
-        },
-    }),
-});
+    type Ingredient {
+        id: Int
+        value: String
+    }
 
-const UserType = new GraphQLObjectType({
-    name: 'User',
-    fields: () => ({
-        id: {type: GraphQLID},
-        email: {type: GraphQLString},
-        dishes: {
-            type: new GraphQLList(DishType),
-            resolve(parent, args) {
-                return Dish.find({uid: parent.id});
-            },
-        },
-    }),
-});
+    type Dish {
+        id: ID
+        name: String
+        cookingTime: String
+        category: String
+        userId: String
+        steps: [Step]
+        ingredients: [Ingredient]
+        url: String
+    }
 
-const RootQuery = new GraphQLObjectType({
-    name: 'RootQueryType',
-    fields: {
-        dish: {
-            type: DishType,
-            args: {id: {type: GraphQLID}},
-            resolve(parent, args) {
-                return Dish.findById(args.id);
-            },
-        },
-        dishes: {
-            type: new GraphQLList(DishType),
-            resolve(parent, args) {
-                return Dish.find({});
-            },
-        },
-        user: {
-            type: UserType,
-            args: {id: {type: GraphQLID}},
-            resolve(parent, args) {
-                return Users.findById(args.id);
-            },
-        },
-        users: {
-            type: new GraphQLList(UserType),
-            resolve(parent, args) {
-                return User.find({});
-            },
-        },
-    },
-});
+    type User {
+        id: ID!
+        email: String
+        dishes: [Dish]
+    }
 
-const Mutation = new GraphQLObjectType({
-    name: 'Mutation',
-    fields: {
-        addUser: {
-            type: UserType,
-            args: {
-                email: {type: new GraphQLNonNull(GraphQLString)},
-            },
+    type Query {
+        dish(userId: String!, dishId: String!): Dish
+        dishes(userId: String!): [Dish]
+    }
 
-            resolve(parent, args) {
-                let user = new User({
-                    email: args.email,
-                });
-                return user.save();
-            },
-        },
-        addDish: {
-            type: DishType,
-            args: {
-                name: {type: new GraphQLNonNull(GraphQLString)},
-                cookingTime: {type: GraphQLString},
-                uid: {type: new GraphQLNonNull(GraphQLID)},
-                category: {type: new GraphQLNonNull(GraphQLString)},
-                //steps: {type: new GraphQLList(StepType)},
-            },
+    type Mutation {
+        addDish(
+            userId: String!
+            name: String!
+            category: String!
+        ): AddDishResponse!
+        updateDish(
+            userId: String
+            name: String
+            category: String
+            cookingTime: String
+            url: String
+        ): UpdateDishResponse
+    }
+`;
 
-            resolve(parent, args) {
-                let dish = new Dish({
-                    name: args.name,
-                    cookingTime: args.cookingTime,
-                    uid: args.uid,
-                    category: args.category,
-                    steps: args.steps,
-                });
-                return dish.save();
-            },
-        },
-    },
-});
-
-module.exports = new GraphQLSchema({
-    query: RootQuery,
-    mutation: Mutation,
-});
+module.exports = typeDefs;

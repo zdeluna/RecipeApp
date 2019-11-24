@@ -1,5 +1,5 @@
 const {ApolloServer} = require('apollo-server');
-const typeDefs = require('./schema/schema2.js');
+const typeDefs = require('./schema/schema.js');
 const resolvers = require('./resolvers');
 
 const DishAPI = require('./datasources/Dish');

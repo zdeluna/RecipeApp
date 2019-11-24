@@ -11,11 +11,28 @@ import {
 } from 'reactstrap';
 import API from '../utils/Api';
 import './AddUrlForm.css';
+import gql from 'graphql-tag';
+import {useMutation} from '@apollo/react-hooks';
+import {Query} from 'react-apollo';
+
+const UPDATE_DISH = gql`
+    mutation updateDish($userId: String!, $dishId: String!, $url: String!) {
+        updateDish(userId: $userId, dishId: $dishId, url: $url) {
+            success
+            message
+        }
+    }
+`;
 
 const AddUrlForm = props => {
     let urlAdded = false;
     const [url, setUrl] = useState('');
     const [showAlert, setShowAlert] = useState(false);
+    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+        onCompleted({addDish}) {
+            this.props.onClick();
+        },
+    });
 
     const handleChange = event => {
         setUrl(event.target.value);
@@ -30,20 +47,13 @@ const AddUrlForm = props => {
     const addRecipeLink = async () => {
         // prettier-ignore
         let urlField = {url: {url}};
-        try {
-            const api = new API();
-            let response = await api.updateDish(
-                props.userId,
-                props.dishId,
-                urlField,
-            );
-
-            if (response.status === 200) {
-                this.props.onClick();
-            }
-        } catch (error) {
-            console.log(error);
-        }
+        updateDish({
+            variables: {
+                userId: props.userId,
+                dishId: props.dishId,
+                url: urlField,
+            },
+        });
     };
     const RenderAlert = props => {
         if ({showAlert} == true) {

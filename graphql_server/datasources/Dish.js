@@ -15,6 +15,7 @@ class DishAPI extends RESTDataSource {
             userId: dish.userId,
             steps: dish.steps,
             ingredients: dish.ingredients,
+            url: dish.url,
         };
     }
 
@@ -46,7 +47,14 @@ class DishAPI extends RESTDataSource {
             name: name,
             category: category,
         });
-        console.log('Object: ' + res);
+        return res;
+    }
+
+    async updateDish({userId, disId, dishFields}) {
+        const res = await this.put(
+            `/users/${userId}/dish/${dishId}`,
+            dishFields,
+        );
         return res;
     }
 }
