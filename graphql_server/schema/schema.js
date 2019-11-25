@@ -51,10 +51,8 @@ const typeDefs = gql`
             category: String!
         ): AddDishResponse!
         updateDish(
-            userId: String
-            name: String
-            category: String
-            cookingTime: String
+            userId: String!
+            dishId: String!
             url: String
         ): UpdateDishResponse
     }

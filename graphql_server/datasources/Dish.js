@@ -50,10 +50,10 @@ class DishAPI extends RESTDataSource {
         return res;
     }
 
-    async updateDish({userId, disId, dishFields}) {
+    async updateDish(userId, dishId, dishObject) {
         const res = await this.put(
             `/users/${userId}/dish/${dishId}`,
-            dishFields,
+            dishObject,
         );
         return res;
     }
