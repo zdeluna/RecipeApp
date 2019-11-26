@@ -22,6 +22,16 @@ const typeDefs = gql`
         value: String
     }
 
+    input StepInput {
+        id: Int
+        value: String
+    }
+
+    input IngredientInput {
+        id: Int
+        value: String
+    }
+
     type Dish {
         id: ID
         name: String
@@ -53,6 +63,12 @@ const typeDefs = gql`
         updateDish(
             userId: String!
             dishId: String!
+            name: String
+            cookingTime: String
+            category: String
+            userId: String
+            steps: [StepInput]
+            ingredients: [IngredientInput]
             url: String
         ): UpdateDishResponse
     }

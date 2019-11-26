@@ -19,12 +19,16 @@ module.exports = {
                 message: 'The dish was created successfully',
             };
         },
-        updateDish: async (_, {userId, dishId, url}, {dataSources}) => {
-            let dataFields = {url: url};
+        updateDish: async (_, dishObject, {dataSources}) => {
+            let dataFields = {}; /*
+Object.keys(dishFieldsObject).forEach(function(key, index) {
+dataFields[key] = 
+});*/
+
             const results = await dataSources.dishAPI.updateDish(
-                userId,
-                dishId,
-                dataFields,
+                dishObject.userId,
+                dishObject.dishId,
+                dishObject,
             );
             return {
                 success: true,
