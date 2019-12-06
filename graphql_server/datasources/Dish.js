@@ -6,9 +6,9 @@ class DishAPI extends RESTDataSource {
         this.baseURL = 'http://localhost:5000/api/';
     }
 
-    dishReducer(dish) {
+    dishReducer(dish, dishId) {
         return {
-            id: dish,
+            id: dishId,
             name: dish.name,
             category: dish.category,
             cookingTime: dish.cookingTime,
@@ -23,21 +23,25 @@ class DishAPI extends RESTDataSource {
         let dishArray = [];
         let newDish;
 
-        for (let dish in dishes) {
-            newDish = this.dishReducer(dish);
+        Object.keys(dishes).forEach((key, index) => {
+            console.log(dishes[key]);
+            newDish = this.dishReducer(dishes[key], key);
             dishArray.push(newDish);
-        }
+        });
+
+        console.log(dishArray.length);
         return dishArray;
     }
 
     async getDishById({userId, dishId}) {
         const res = await this.get(`/users/${userId}/dish/${dishId}`);
         console.log('RES: ' + res);
-        return this.dishReducer(res);
+        return this.dishReducer(res, dishId);
     }
 
     async getAllDishes({userId}) {
         const res = await this.get(`/users/${userId}/dish`);
+        //return res;
         return this.dishesReducer(res);
     }
 

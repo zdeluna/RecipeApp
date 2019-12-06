@@ -9,6 +9,7 @@ const GET_DISH = gql`
         dish(userId: $userId, dishId: $dishId) {
             name
             cookingTime
+            url
             category
             steps {
                 id
@@ -27,7 +28,7 @@ export default function withFetchDataHook(Component) {
         const {loading, error, data} = useQuery(GET_DISH, {
             variables: {
                 userId: props.userId,
-                dishId: props.dishId,
+                dishId: props.match.params.dishId,
             },
         });
 

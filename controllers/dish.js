@@ -440,6 +440,8 @@ exports.updateDish = async (req, res) => {
     const userId = req.params.userId;
     await userModel.checkIfUserExists(userId);
 
+    console.log('IN SERVER ' + req.params.dishId + ' ' + userId);
+
     const dishId = req.params.dishId;
     let dishInfo = {};
 

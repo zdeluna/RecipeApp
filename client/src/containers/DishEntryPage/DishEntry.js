@@ -47,7 +47,7 @@ class DishEntry extends Component {
     getDishIngredientsAndSteps = async () => {
         this.setState({loading: true});
         let dish = this.props.dish;
-        console.log(dish.name);
+        console.log('DISH NAME: ' + dish.name);
         if (dish.ingredients && dish.ingredients.length > 0) {
             this.setState({
                 ingredientsCreated: true,

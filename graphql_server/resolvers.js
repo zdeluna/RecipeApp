@@ -20,10 +20,7 @@ module.exports = {
             };
         },
         updateDish: async (_, dishObject, {dataSources}) => {
-            let dataFields = {}; /*
-Object.keys(dishFieldsObject).forEach(function(key, index) {
-dataFields[key] = 
-});*/
+            let dataFields = {};
 
             const results = await dataSources.dishAPI.updateDish(
                 dishObject.userId,

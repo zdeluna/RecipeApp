@@ -16,7 +16,7 @@ import {useMutation} from '@apollo/react-hooks';
 import {Query} from 'react-apollo';
 
 const UPDATE_DISH = gql`
-    mutation updateDish($userId: String!, $dishId: String!, $url: String!) {
+    mutation updateDish($userId: String!, $dishId: String!, $url: String) {
         updateDish(userId: $userId, dishId: $dishId, url: $url) {
             success
             message
@@ -27,31 +27,39 @@ const UPDATE_DISH = gql`
 const AddUrlForm = props => {
     let urlAdded = false;
     const [url, setUrl] = useState('');
+    const [userId, setUserId] = useState(props.userId);
+    const [dishId, setDishId] = useState(props.dishId);
     const [showAlert, setShowAlert] = useState(false);
     const [updateDish, {data}] = useMutation(UPDATE_DISH, {
         onCompleted({addDish}) {
-            this.props.onClick();
+            props.onClick();
+            console.log('completed');
         },
     });
 
-    const handleChange = event => {
-        setUrl(event.target.value);
-    };
+    console.log(userId + ' ' + dishId);
 
     const handleSubmit = event => {
         event.preventDefault();
-        this.addRecipeLink();
+        addRecipeLink();
+    };
+
+    const handleChange = event => {
+        let url = event.target.value;
+        setUrl(url);
+        console.log(url);
     };
 
     // Make a call to the api to handle parsing the recipe from the url
     const addRecipeLink = async () => {
+        console.log('UPDATE DISH');
         // prettier-ignore
-        let urlField = {url: {url}};
+        let urlField = {url: 'https://www.seriouseats.com/recipes/2013/06/grilled-skirt-steak-fajitas-food-lab-recipe.html'};
         updateDish({
             variables: {
-                userId: props.userId,
-                dishId: props.dishId,
-                url: urlField,
+                userId: userId,
+                dishId: dishId,
+                url: url,
             },
         });
     };
@@ -68,13 +76,15 @@ const AddUrlForm = props => {
     return (
         <div>
             <Container>
-                <Form inline onSubmit={this.handleSubmit}>
+                <Form inline onSubmit={handleSubmit}>
                     <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                         <Label for="newUrlInput">Recipe Url:</Label>
                         <Input
                             type="text"
                             value={url}
-                            onChange={this.handleChange}
+                            onChange={e => {
+                                handleChange(e);
+                            }}
                             id="newUrlInput"
                         />
                     </FormGroup>
