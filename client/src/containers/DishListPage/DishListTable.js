@@ -24,7 +24,6 @@ function ShowTable(props) {
     const {loading, error, data} = useQuery(GET_DISHES, {
         variables: {userId: props.uid},
     });
-    console.log(error);
 
     if (loading)
         return (

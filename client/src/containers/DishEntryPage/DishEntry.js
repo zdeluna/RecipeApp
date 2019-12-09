@@ -1,4 +1,4 @@
-import React, {useState, Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
@@ -16,94 +16,78 @@ import {useQuery} from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import withFetchDataHook from '../../utils/utils.js';
 
-class DishEntry extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            userID: this.props.userId,
-            dishId: this.props.match.params.dishId,
-            category: this.props.match.params.category,
-            name: '',
-            stepsCreated: false,
-            ingredientsCreated: false,
-            loading: false,
-            stepsArray: this.props.steps,
-            ingredientsArray: this.props.ingredients,
-            ingredientsInStepsArray: this.props.ingredientsInSteps,
-            redirect: false,
-            delete: false,
-            makeDishMode: false,
-            url: '',
-        };
+const GET_DISH = gql`
+    query getDish($userId: String!, $dishId: String!) {
+        dish(userId: $userId, dishId: $dishId) {
+            name
+            cookingTime
+            url
+            category
+            steps {
+                id
+                value
+            }
+            ingredients {
+                id
+                value
+            }
+        }
     }
+`;
 
-    componentDidMount = async () => {
-        console.log('next');
+const DishEntry = props => {
+    const [userId, setUserId] = useState(props.userId);
+    const [dishId, setDishId] = useState(props.dishId);
+    const [category, setCategory] = useState(props.category);
+    const [dish, setDish] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [makeDishMode, setMakeDishMode] = useState(false);
+    const [deleteDishMode, setDeleteDishMode] = useState(false);
 
-        await this.getDishIngredientsAndSteps();
-        this.setState({loading: false});
-    };
-
-    getDishIngredientsAndSteps = async () => {
-        this.setState({loading: true});
-        let dish = this.props.dish;
-        console.log('DISH NAME: ' + dish.name);
-        if (dish.ingredients && dish.ingredients.length > 0) {
-            this.setState({
-                ingredientsCreated: true,
-                ingredientsArray: dish.ingredients,
-            });
-        }
-        if (dish.steps && dish.steps.length > 0) {
-            this.setState({
-                stepsCreated: true,
-                stepsArray: dish.steps,
-            });
-        }
-
-        if (dish.url) {
-            this.setState({url: dish.url});
-        }
-
-        this.setState({
-            name: dish.name,
-            loading: false,
-            ingredientsInSteps: dish.ingredientsInSteps,
+    useEffect(() => {
+        const {loading, error, dishData} = useQuery(GET_DISH, {
+            variables: {
+                userId: userId,
+                dishId: dishId,
+            },
+            onCompleted() {
+                console.log('DATA is loaded');
+                setDish(dish);
+                setLoading(false);
+            },
         });
+    });
 
-        this.setState({loading: false});
+    const makeDishModeButton = event => {
+        setMakeDishMode(true);
     };
 
-    makeDishModeButton = event => {
-        this.setState({makeDishMode: true});
+    const handleStepsAndIngredientsSubmitted = event => {
+        //getDishIngredientsAndSteps();
     };
 
-    handleStepsAndIngredientsSubmitted = event => {
-        this.getDishIngredientsAndSteps();
-    };
-
-    deleteEntryFromDatabase = () => {
+    const deleteEntryFromDatabase = () => {
         var api = new API();
-        api.deleteDish(this.state.userID, this.state.dishId).then(response => {
+        api.deleteDish(userId, dishId).then(response => {
             if (response.status === 204) {
-                this.setState({delete: true});
+                setDeleteDishMode(true);
             }
         });
     };
 
-    renderNewDishForm = props => {
-        if (this.state.delete) {
-            let redirect_url = '/users/category/' + this.state.category;
+    const RenderNewDishForm = props => {
+        if (deleteDishMode) {
+            let redirect_url = '/users/category/' + category;
 
             return <Redirect push to={redirect_url} />;
         }
 
-        if (this.state.makeDishMode) {
+        if (makeDishMode) {
             let redirect_url =
                 '/users/category/' +
-                this.state.category +
+                category +
                 '/dish/' +
-                this.state.dishId +
+                dishId +
                 '/' +
                 'makeMode';
 
@@ -112,23 +96,21 @@ class DishEntry extends Component {
                     to={{
                         pathname: redirect_url,
                         state: {
-                            steps: this.state.stepsArray,
-                            ingredients: this.state.ingredientsArray,
-                            ingredientsInSteps: this.state.ingredientsInSteps,
+                            steps: '1',
+                            ingredients: '1',
+                            ingredientsInSteps: '1',
                         },
                     }}
                 />
             );
         }
 
-        if (this.state.loading) return <Loading />;
-
-        if (!this.state.stepsCreated) {
+        if (!dish.steps) {
             return (
                 <NewDishForm
-                    dishId={this.state.dishId}
-                    category={this.state.category}
-                    onClick={this.handleStepsAndIngredientsSubmitted}
+                    dishId={dishId}
+                    category={category}
+                    onClick={handleStepsAndIngredientsSubmitted}
                 />
             );
         } else {
@@ -138,52 +120,52 @@ class DishEntry extends Component {
                         <Col xs="8">
                             <DishEntryIngredientsTable
                                 type="Ingredients"
-                                entries={this.state.ingredientsArray}
-                                dishId={this.state.dishId}
-                                category={this.state.category}
+                                entries={dish.ingredients}
+                                dishId={dishId}
+                                category={category}
                             />
                         </Col>
                         <Col xs="4">
                             <Calendar
-                                dishId={this.state.dishId}
-                                category={this.state.category}
-                                userID={this.state.userID}
+                                dishId={dishId}
+                                category={category}
+                                userID={userId}
                             />
                             <hr />
                             <Notes
-                                dishId={this.state.dishId}
-                                category={this.state.category}
-                                userID={this.state.userID}
+                                dishId={dishId}
+                                category={category}
+                                userID={userId}
                             />
                             <hr />
                             <CookingTime
-                                dishId={this.state.dishId}
-                                category={this.state.category}
-                                userID={this.state.userID}
+                                dishId={dishId}
+                                category={category}
+                                userID={userId}
                             />
                         </Col>
                     </Row>
                     <Row>
                         <DishEntryStepsTable
                             type="Directions"
-                            entries={this.state.stepsArray}
-                            dishId={this.state.dishId}
-                            category={this.state.category}
+                            entries={dish.steps}
+                            dishId={dishId}
+                            category={category}
                         />
                     </Row>
                 </Container>
             );
         }
     };
-
-    render() {
+    if (loading) return <Loading />;
+    else
         return (
             <div id="dishEntryContainer">
                 <Row>
                     <Col>
                         {' '}
                         <Link
-                            to={`/users/category/${this.state.category}`}
+                            to={`/users/category/${category}`}
                             id="goBackLink">
                             Go Back
                         </Link>
@@ -193,7 +175,7 @@ class DishEntry extends Component {
                             id="makeDishModeButton"
                             color="success"
                             size="sm"
-                            onClick={this.makeDishModeButton}>
+                            onClick={makeDishModeButton}>
                             Make Dish Mode
                         </Button>
                     </Col>
@@ -201,15 +183,15 @@ class DishEntry extends Component {
 
                 <Row>
                     <Col className="text-center">
-                        <h1>{this.state.name}</h1>
-                        <a href={this.state.url}>
-                            <h5>{this.state.url}</h5>
+                        <h1>{dish.name}</h1>
+                        <a href={dish.url}>
+                            <h5>{dish.url}</h5>
                         </a>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <this.renderNewDishForm />
+                        <RenderNewDishForm />
                     </Col>
                 </Row>
                 <Row>
@@ -218,13 +200,12 @@ class DishEntry extends Component {
                             id="deleteDishButton"
                             color="danger"
                             size="sm"
-                            onClick={this.deleteEntryFromDatabase}>
+                            onClick={deleteEntryFromDatabase}>
                             Delete Entry
                         </Button>
                     </Col>
                 </Row>
             </div>
         );
-    }
-}
-export default withFetchDataHook(DishEntry);
+};
+export default DishEntry;
