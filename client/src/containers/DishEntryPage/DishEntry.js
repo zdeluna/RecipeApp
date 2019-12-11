@@ -37,34 +37,29 @@ const GET_DISH = gql`
 
 const DishEntry = props => {
     const [userId, setUserId] = useState(props.userId);
-    const [dishId, setDishId] = useState(props.dishId);
+    const [dishId, setDishId] = useState(props.match.params.dishId);
     const [category, setCategory] = useState(props.category);
     const [dish, setDish] = useState({});
-    const [loading, setLoading] = useState(true);
     const [makeDishMode, setMakeDishMode] = useState(false);
     const [deleteDishMode, setDeleteDishMode] = useState(false);
 
-    useEffect(() => {
-        const {loading, error, dishData} = useQuery(GET_DISH, {
-            variables: {
-                userId: userId,
-                dishId: dishId,
-            },
-            onCompleted() {
-                console.log('DATA is loaded');
-                setDish(dish);
-                setLoading(false);
-            },
-        });
+    const {loading, error, dishData} = useQuery(GET_DISH, {
+        variables: {
+            userId: userId,
+            dishId: dishId,
+        },
+        onCompleted(dishData) {
+            console.log('DATA is loaded' + dishData.dish);
+
+            setDish(dishData.dish);
+        },
     });
 
     const makeDishModeButton = event => {
         setMakeDishMode(true);
     };
 
-    const handleStepsAndIngredientsSubmitted = event => {
-        //getDishIngredientsAndSteps();
-    };
+    const handleStepsAndIngredientsSubmitted = event => {};
 
     const deleteEntryFromDatabase = () => {
         var api = new API();

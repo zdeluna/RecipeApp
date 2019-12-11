@@ -20,6 +20,17 @@ const UPDATE_DISH = gql`
         updateDish(userId: $userId, dishId: $dishId, url: $url) {
             success
             message
+dish {
+				id
+                steps {
+                    id
+                    value
+                }
+                ingredients {
+                    id
+                    value
+                }
+            }
         }
     }
 `;
@@ -31,9 +42,13 @@ const AddUrlForm = props => {
     const [dishId, setDishId] = useState(props.dishId);
     const [showAlert, setShowAlert] = useState(false);
     const [updateDish, {data}] = useMutation(UPDATE_DISH, {
-        onCompleted({addDish}) {
-            props.onClick();
+        onCompleted(updateDishResponse) {
+            // props.onClick();
             console.log('completed');
+			console.log(updateDishResponse.updateDish.dish);
+				
+		
+
         },
     });
 
@@ -54,7 +69,6 @@ const AddUrlForm = props => {
     const addRecipeLink = async () => {
         console.log('UPDATE DISH');
         // prettier-ignore
-        let urlField = {url: 'https://www.seriouseats.com/recipes/2013/06/grilled-skirt-steak-fajitas-food-lab-recipe.html'};
         updateDish({
             variables: {
                 userId: userId,

@@ -10,6 +10,7 @@ const typeDefs = gql`
     type UpdateDishResponse {
         success: Boolean!
         message: String
+        dish: Dish
     }
 
     type Step {

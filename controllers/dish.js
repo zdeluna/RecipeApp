@@ -457,10 +457,13 @@ exports.updateDish = async (req, res) => {
             updatedDishFields.ingredientsInSteps = dishInfo.ingredientsInSteps;
 
             await dishModel.saveDish(userId, dishId, updatedDishFields);
-            res.status(200).send('OK');
+            const dish = await dishModel.getDishFromDatabase(userId, dishId);
+
+            res.status(200).send(dish);
         } else {
             await dishModel.saveDish(userId, dishId, updatedDishFields);
-            res.status(200).send('OK');
+            const dish = await dishModel.getDishFromDatabase(userId, dishId);
+            res.status(200).send(dish);
         }
     } catch (error) {
         console.log('SEND ERROR RESPONSE: ' + error.msg);

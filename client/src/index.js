@@ -23,6 +23,12 @@ const client = new ApolloClient({
     }),
 });
 
+cache.writeData({
+    data: {
+        dishes: [],
+    },
+});
+
 ReactDOM.render(
     <ApolloProvider client={client}>
         <App />

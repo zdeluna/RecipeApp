@@ -22,14 +22,18 @@ module.exports = {
         updateDish: async (_, dishObject, {dataSources}) => {
             let dataFields = {};
 
-            const results = await dataSources.dishAPI.updateDish(
+            const result = await dataSources.dishAPI.updateDish(
                 dishObject.userId,
                 dishObject.dishId,
                 dishObject,
             );
+
+            result.id = result.dishId;
+
             return {
                 success: true,
                 message: 'The dish was successfully updated',
+                dish: result,
             };
         },
     },
