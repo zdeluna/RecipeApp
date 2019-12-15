@@ -6,6 +6,7 @@ import API from '../utils/Api';
 import gql from 'graphql-tag';
 import {useMutation} from '@apollo/react-hooks';
 import {Query} from 'react-apollo';
+import {useApolloClient} from '@apollo/react-hooks';
 
 const ADD_DISH = gql`
     mutation addDish($userId: String!, $name: String!, $category: String!) {
@@ -19,6 +20,7 @@ const ADD_DISH = gql`
 
 const AddDishForm = props => {
     let input = {value: ''};
+    const client = useApolloClient();
     const [addDish, {data}] = useMutation(ADD_DISH, {
         onCompleted({addDish}) {
             props.onClick(addDish.dishId);

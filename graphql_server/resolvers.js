@@ -7,7 +7,6 @@ module.exports = {
     },
     Mutation: {
         addDish: async (_, {userId, name, category}, {dataSources}) => {
-            console.log('add Dish');
             const results = await dataSources.dishAPI.createDish({
                 userId: userId,
                 name: name,
@@ -20,15 +19,11 @@ module.exports = {
             };
         },
         updateDish: async (_, dishObject, {dataSources}) => {
-            let dataFields = {};
-
-            const result = await dataSources.dishAPI.updateDish(
+            let result = await dataSources.dishAPI.updateDish(
                 dishObject.userId,
                 dishObject.dishId,
                 dishObject,
             );
-
-            result.id = result.dishId;
 
             return {
                 success: true,

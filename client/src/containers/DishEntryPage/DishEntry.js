@@ -15,10 +15,12 @@ import {graphql} from 'react-apollo';
 import {useQuery} from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import withFetchDataHook from '../../utils/utils.js';
+import {useApolloClient} from '@apollo/react-hooks';
 
 const GET_DISH = gql`
     query getDish($userId: String!, $dishId: String!) {
         dish(userId: $userId, dishId: $dishId) {
+            id
             name
             cookingTime
             url
@@ -43,6 +45,8 @@ const DishEntry = props => {
     const [makeDishMode, setMakeDishMode] = useState(false);
     const [deleteDishMode, setDeleteDishMode] = useState(false);
 
+    const client = useApolloClient();
+
     const {loading, error, dishData} = useQuery(GET_DISH, {
         variables: {
             userId: userId,
@@ -59,7 +63,34 @@ const DishEntry = props => {
         setMakeDishMode(true);
     };
 
-    const handleStepsAndIngredientsSubmitted = event => {};
+    const handleStepsAndIngredientsSubmitted = () => {
+        console.log('IN FUNCTION');
+        //Handle after user has submitted steps
+        const dishData = client.readQuery({
+            query: gql`
+                query ReadDish($userId: String!, $dishId: String!) {
+                    dish(userId: $userId, dishId: $dishId) {
+                        id
+                        category
+                        cookingTime
+                        name
+                        url
+                        steps {
+                            id
+                            value
+                        }
+                        ingredients {
+                            id
+                            value
+                        }
+                    }
+                }
+            `,
+            variables: {userId: userId, dishId: dishId},
+        });
+        console.log('READ QUERY: ' + dishData);
+        setDish(dishData.dish);
+    };
 
     const deleteEntryFromDatabase = () => {
         var api = new API();

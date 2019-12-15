@@ -415,6 +415,7 @@ exports.createDish = async (req, res) => {
             name: dishName,
             category: category,
             history: [],
+            dishId: dishId,
         };
 
         let responseObject = {id: dishId};

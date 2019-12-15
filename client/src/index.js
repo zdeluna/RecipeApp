@@ -11,7 +11,7 @@ import {HttpLink} from 'apollo-link-http';
 import {ApolloProvider, useQuery} from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({dataIdFromObject: object => object.id});
 const client = new ApolloClient({
     cache,
     link: new HttpLink({
@@ -21,12 +21,6 @@ const client = new ApolloClient({
             'client-version': '1.0.0',
         },
     }),
-});
-
-cache.writeData({
-    data: {
-        dishes: [],
-    },
 });
 
 ReactDOM.render(
