@@ -15,28 +15,7 @@ import gql from 'graphql-tag';
 import {useMutation} from '@apollo/react-hooks';
 import {Query} from 'react-apollo';
 import {useApolloClient} from '@apollo/react-hooks';
-
-const UPDATE_DISH = gql`
-    mutation updateDish($userId: String!, $dishId: String!, $url: String) {
-        updateDish(userId: $userId, dishId: $dishId, url: $url) {
-            success
-            message
-            dish {
-                id
-                name
-                url
-                steps {
-                    id
-                    value
-                }
-                ingredients {
-                    id
-                    value
-                }
-            }
-        }
-    }
-`;
+import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
 
 const AddUrlForm = props => {
     const client = useApolloClient();
@@ -48,8 +27,7 @@ const AddUrlForm = props => {
     const [showAlert, setShowAlert] = useState(false);
     const [updateDish, {data}] = useMutation(UPDATE_DISH, {
         onCompleted(updateDishResponse) {
-            console.log('AFTER UPDATE: ' + updateDishResponse);
-            //props.onClick();
+            props.onClick();
         },
     });
 

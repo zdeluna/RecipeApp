@@ -20,17 +20,16 @@ import {useApolloClient} from '@apollo/react-hooks';
 const GET_DISH = gql`
     query getDish($userId: String!, $dishId: String!) {
         dish(userId: $userId, dishId: $dishId) {
+            __typename
             id
             name
             cookingTime
             url
             category
             steps {
-                id
                 value
             }
             ingredients {
-                id
                 value
             }
         }
@@ -63,32 +62,14 @@ const DishEntry = props => {
         setMakeDishMode(true);
     };
 
-    const handleStepsAndIngredientsSubmitted = () => {
+    const handleStepsAndIngredientsSubmitted = dish => {
         console.log('IN FUNCTION');
         //Handle after user has submitted steps
         const dishData = client.readQuery({
-            query: gql`
-                query ReadDish($userId: String!, $dishId: String!) {
-                    dish(userId: $userId, dishId: $dishId) {
-                        id
-                        category
-                        cookingTime
-                        name
-                        url
-                        steps {
-                            id
-                            value
-                        }
-                        ingredients {
-                            id
-                            value
-                        }
-                    }
-                }
-            `,
+            query: GET_DISH,
             variables: {userId: userId, dishId: dishId},
         });
-        console.log('READ QUERY: ' + dishData);
+        console.log(dishData);
         setDish(dishData.dish);
     };
 

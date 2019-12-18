@@ -7,17 +7,7 @@ import API from '../../utils/Api';
 import Loading from '../../components/Loading';
 import gql from 'graphql-tag';
 import {useQuery} from '@apollo/react-hooks';
-
-const GET_DISHES = gql`
-    query getDishes($userId: String!) {
-        dishes(userId: $userId) {
-            id
-            name
-            cookingTime
-            category
-        }
-    }
-`;
+import {GET_DISHES} from '../../api/queries/dish/getAllDishes';
 
 function ShowTable(props) {
     console.log('user id is: ' + props.uid);

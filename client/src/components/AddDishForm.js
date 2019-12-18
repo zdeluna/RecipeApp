@@ -7,16 +7,7 @@ import gql from 'graphql-tag';
 import {useMutation} from '@apollo/react-hooks';
 import {Query} from 'react-apollo';
 import {useApolloClient} from '@apollo/react-hooks';
-
-const ADD_DISH = gql`
-    mutation addDish($userId: String!, $name: String!, $category: String!) {
-        addDish(userId: $userId, name: $name, category: $category) {
-            success
-            message
-            dishId
-        }
-    }
-`;
+import {ADD_DISH} from '../api/mutations/dish/createDish';
 
 const AddDishForm = props => {
     let input = {value: ''};
