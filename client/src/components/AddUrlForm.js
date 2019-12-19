@@ -31,8 +31,6 @@ const AddUrlForm = props => {
         },
     });
 
-    console.log(userId + ' ' + dishId);
-
     const handleSubmit = event => {
         event.preventDefault();
         addRecipeLink();
