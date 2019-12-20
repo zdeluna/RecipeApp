@@ -45,7 +45,7 @@ class Item extends Component {
                                 value={this.state.value}
                                 onChange={this.handleChange}
                                 onBlur={this.handleChange}
-                                id="newStep"
+                                className="newStep"
                             />
                         </Label>
                         {this.props.deleteButton ? (

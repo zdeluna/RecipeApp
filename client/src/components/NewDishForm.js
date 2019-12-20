@@ -39,6 +39,7 @@ class NewDishForm extends Component {
             return (
                 <ItemForm
                     key={this.state.dishId + 'stepsForm'}
+                    userId={this.state.user.uid}
                     dishId={this.state.dishId}
                     onClick={e => this.handleClick(e, 3)}
                     type={'steps'}
@@ -48,6 +49,7 @@ class NewDishForm extends Component {
             return (
                 <ItemForm
                     key={this.state.dishId + 'ingredientsForm'}
+                    userId={this.state.user.uid}
                     dishId={this.state.dishId}
                     onClick={e => this.handleClick(e, 4)}
                     type={'ingredients'}
