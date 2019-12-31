@@ -1,49 +1,38 @@
 //@format
 
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {Redirect} from 'react-router-dom';
 import app from '../base';
 import Item from './Item';
 import {Form, Button, FormGroup, Container, Col, Row} from 'reactstrap';
-import API from '../utils/Api';
 import './ItemForm.css';
-import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
-import {useMutation} from '@apollo/react-hooks';
-import {useApolloClient} from '@apollo/react-hooks';
 
 const ItemForm = props => {
-    const client = useApolloClient();
+    console.log('ITEM FORM');
     const [userId, setUserId] = useState(props.userId);
     const [dishId, setDishId] = useState(props.dishId);
     const [type, setType] = useState(props.type);
     const [update, setUpdate] = useState(false);
+    const [isMounted, setMounted] = useState(false);
     const [itemsArray, setItemsArray] = useState([{value: '', visible: false}]);
 
-    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
-        onCompleted(updateDishResponse) {
-            props.onClick();
-        },
-    });
+    const ref = useRef(false);
+    useEffect(() => {
+        ref.current = true;
+        return () => {
+            ref.current = false;
+        };
+    }, []);
 
-    const addItemsToDatabase = async () => {
+    const addItemsToDatabase = () => {
+        console.log('USER: ' + userId);
         // Only store the value fields from itemsArray.
         let itemsData = itemsArray.map(function(item) {
             return {
                 value: item.value,
             };
         });
-        console.log({
-            userId: userId,
-            dishId: dishId,
-            [type]: itemsData,
-        });
-        updateDish({
-            variables: {
-                userId: userId,
-                dishId: dishId,
-                [type]: itemsData,
-            },
-        });
+        props.onClick(itemsData);
     };
 
     const addItem = event => {
@@ -62,6 +51,7 @@ const ItemForm = props => {
     };
 
     const handleSubmit = event => {
+        console.log('Submit form');
         event.preventDefault();
         addItemsToDatabase();
     };
@@ -71,15 +61,6 @@ const ItemForm = props => {
         let newItemsArray = removeItem(index);
         console.log(newItemsArray);
 
-        /*
-        // Set the visible property of the new last step's delete button as true if the
-        // user is adding steps/ingredients for the first time
-        if (!update) {
-            newItemsArray[newItemsArray.length - 1]['visible'] = false;
-
-            if (newItemsArray.length > 1)
-                newItemsArray[newItemsArray.length - 1]['visible'] = true;
-}*/
         setItemsArray(newItemsArray);
     };
 
@@ -91,7 +72,7 @@ const ItemForm = props => {
         <Container>
             <Row>
                 <Col lg={{size: 8, offset: 2}}>
-                    <Form>
+                    <Form onSubmit={handleSubmit}>
                         {itemsArray.map((item, index) => (
                             <FormGroup key={'ItemFormGroup' + index}>
                                 <Item
@@ -113,11 +94,7 @@ const ItemForm = props => {
                                 onClick={addItem}>
                                 Add
                             </Button>
-                            <Button
-                                color="primary"
-                                onClick={event => handleSubmit(event)}>
-                                Save
-                            </Button>
+                            <Button color="primary">Save</Button>
                         </FormGroup>
                     </Form>
                 </Col>

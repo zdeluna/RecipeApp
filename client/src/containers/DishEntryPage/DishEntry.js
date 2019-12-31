@@ -37,10 +37,16 @@ const GET_DISH = gql`
 `;
 
 const DishEntry = props => {
+    console.log('Render dish entry');
+    console.log('USER IN DISH: ' + props.userId);
     const [userId, setUserId] = useState(props.userId);
+    console.log('USER IN DISH: ' + userId);
+
     const [dishId, setDishId] = useState(props.match.params.dishId);
     const [category, setCategory] = useState(props.category);
-    const [dish, setDish] = useState({});
+    const [dish, setDish] = useState([]);
+    const [steps, setSteps] = useState([]);
+    const [ingredients, setIngredients] = useState([]);
     const [makeDishMode, setMakeDishMode] = useState(false);
     const [deleteDishMode, setDeleteDishMode] = useState(false);
 
@@ -53,8 +59,15 @@ const DishEntry = props => {
         },
         onCompleted(dishData) {
             console.log('DATA is loaded' + dishData.dish);
-
-            setDish(dishData.dish);
+            console.log(dishData.dish);
+            setDish(...dish, dishData.dish);
+            if (dishData.dish.steps && dishData.dish.steps.length) {
+                setSteps(dishData.dish.steps);
+            }
+            if (dishData.dish.ingredients && dishData.dish.ingredients.length)
+                setIngredients(dishData.dish.ingredients);
+            console.log('DISH');
+            console.log({dish});
         },
     });
 
@@ -71,6 +84,12 @@ const DishEntry = props => {
         });
         console.log(dishData);
         setDish(dishData.dish);
+        if (dishData.dish.steps && dishData.dish.steps.length) {
+            setSteps(dishData.dish.steps);
+        }
+        if (dishData.dish.ingredients && dishData.dish.ingredients.length) {
+            setIngredients(dishData.dish.ingredients);
+        }
     };
 
     const deleteEntryFromDatabase = () => {
@@ -83,6 +102,9 @@ const DishEntry = props => {
     };
 
     const RenderNewDishForm = props => {
+        if (steps) console.log('STEPS: ' + steps.length);
+        if (ingredients) console.log('INGREDIENTS: ' + ingredients.length);
+        /*
         if (deleteDishMode) {
             let redirect_url = '/users/category/' + category;
 
@@ -111,16 +133,23 @@ const DishEntry = props => {
                 />
             );
         }
-
-        if (!dish.steps) {
+                    */
+        if (steps.length < 1 || ingredients.length < 1) {
+            console.log('render dish form');
+            console.log(steps);
+            console.log(ingredients);
             return (
                 <NewDishForm
                     dishId={dishId}
+                    userId={userId}
                     category={category}
                     onClick={handleStepsAndIngredientsSubmitted}
+                    steps={steps}
+                    ingredients={ingredients}
                 />
             );
         } else {
+            console.log('Render dish info');
             return (
                 <Container>
                     <Row>

@@ -1,103 +1,121 @@
-import React, {Component} from 'react';
+import React, {useState, useRef} from 'react';
 import app from '../base';
 import AddUrlForm from '../components/AddUrlForm';
 import ItemForm from '../components/ItemForm';
 import {Button, Row, Col, Container} from 'reactstrap';
 import './NewDishForm.css';
+import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
+import {useMutation} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/react-hooks';
 
-class NewDishForm extends Component {
-    constructor(props) {
-        super(props);
+const NewDishForm = props => {
+    const client = useApolloClient();
 
-        this.state = {
-            user: app.auth().currentUser,
-            dishId: this.props.dishId,
-            step: 0,
-        };
-    }
+    const [userId, setUserId] = useState(props.userId);
+    const [dishId, setDishId] = useState(props.dishId);
+    const [step, setStep] = useState(0);
+    const [steps, setSteps] = useState([]);
+    const [ingredients, setIngredients] = useState([]);
 
-    handleClick = (e, stepNumber) => {
-        this.setState({step: stepNumber});
+    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+        onCompleted(updateDishResponse) {
+            props.onClick();
+        },
+    });
 
-        // If the user has entered the ingredients, then call the onClick event that will get passed to the dish entry component
-        if (stepNumber === 4) this.props.onClick();
+    const addSteps = steps => {
+        setSteps(steps);
+        setStep(3);
     };
 
-    renderForm = props => {
-        const step = props.step;
+    const addIngredients = ingredients => {
+        setIngredients(ingredients);
+        updateDish({
+            variables: {
+                userId: userId,
+                dishId: dishId,
+                steps: steps,
+                ingredients: ingredients,
+            },
+        });
+    };
+
+    const handleClick = (event, stepNumber) => {
+        setStep(stepNumber);
+    };
+
+    const RenderForm = props => {
         if (step === 0 || step === 4) return null;
         else if (step === 1) {
             return (
                 <AddUrlForm
-                    dishId={this.state.dishId}
-                    userId={this.state.user.uid}
-                    category={this.props.category}
-                    onClick={this.props.onClick}
+                    dishId={dishId}
+                    userId={userId}
+                    category={props.category}
+                    onClick={props.onClick}
                 />
             );
         } else if (step === 2) {
             return (
                 <ItemForm
-                    key={this.state.dishId + 'stepsForm'}
-                    userId={this.state.user.uid}
-                    dishId={this.state.dishId}
-                    onClick={e => this.handleClick(e, 3)}
+                    key={dishId + 'steps'}
+                    userId={userId}
+                    dishId={dishId}
+                    onClick={addSteps}
                     type={'steps'}
                 />
             );
         } else if (step === 3) {
             return (
                 <ItemForm
-                    key={this.state.dishId + 'ingredientsForm'}
-                    userId={this.state.user.uid}
-                    dishId={this.state.dishId}
-                    onClick={e => this.handleClick(e, 4)}
+                    key={dishId + 'ingredients'}
+                    userId={userId}
+                    dishId={dishId}
+                    onClick={addIngredients}
                     type={'ingredients'}
                 />
             );
         }
     };
 
-    render() {
-        return (
-            <div>
-                <Container>
-                    <Row>
-                        <Col sm="12" md={{size: 6, offset: 3}}>
-                            <h3>{this.state.name}</h3>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Button
-                                className="newFormButtons"
-                                color="primary"
-                                size="lg"
-                                value="0"
-                                onClick={e => this.handleClick(e, 1)}>
-                                Add Url of Recipe
-                            </Button>
-                        </Col>
-                        <Col>
-                            <Button
-                                className="newFormButtons"
-                                color="primary"
-                                size="lg"
-                                value="1"
-                                onClick={e => this.handleClick(e, 2)}>
-                                Add Steps Manually
-                            </Button>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <this.renderForm step={this.state.step} />
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
-        );
-    }
-}
+    return (
+        <div>
+            <Container>
+                <Row>
+                    <Col sm="12" md={{size: 6, offset: 3}}>
+                        <h3>{props.name}</h3>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Button
+                            className="newFormButtons"
+                            color="primary"
+                            size="lg"
+                            value="0"
+                            onClick={e => handleClick(e, 1)}>
+                            Add Url of Recipe
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            className="newFormButtons"
+                            color="primary"
+                            size="lg"
+                            value="1"
+                            onClick={e => handleClick(e, 2)}>
+                            Add Steps Manually
+                        </Button>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <RenderForm />
+                    </Col>
+                </Row>
+            </Container>
+        </div>
+    );
+};
 
 export default NewDishForm;

@@ -39,7 +39,6 @@ const AddUrlForm = props => {
     const handleChange = event => {
         let url = event.target.value;
         setUrl(url);
-        console.log(url);
     };
 
     // Make a call to the api to handle parsing the recipe from the url
