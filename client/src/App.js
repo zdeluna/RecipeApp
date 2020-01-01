@@ -69,6 +69,7 @@ class App extends Component {
                             path="/users/category/:category/dish/:dishId/ingredients"
                             component={ItemForm}
                             authenticated={authenticated}
+                            userId={this.state.currentUser.uid}
                             update={true}
                             type={'ingredients'}
                         />
@@ -78,6 +79,7 @@ class App extends Component {
                             path="/users/category/:category/dish/:dishId/steps"
                             component={ItemForm}
                             authenticated={authenticated}
+                            userId={this.state.currentUser.uid}
                             update={true}
                             type={'steps'}
                         />

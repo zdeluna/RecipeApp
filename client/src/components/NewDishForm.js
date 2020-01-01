@@ -13,7 +13,13 @@ const NewDishForm = props => {
 
     const [userId, setUserId] = useState(props.userId);
     const [dishId, setDishId] = useState(props.dishId);
-    const [step, setStep] = useState(0);
+    const [progressNumber, setProgressNumber] = useState(0);
+    /*  Progress Number
+        1: User wants to get steps/ingredients from url
+        2: User is setting steps
+        3: User is setting ingredients
+    */
+
     const [steps, setSteps] = useState([]);
     const [ingredients, setIngredients] = useState([]);
 
@@ -25,7 +31,7 @@ const NewDishForm = props => {
 
     const addSteps = steps => {
         setSteps(steps);
-        setStep(3);
+        setProgressNumber(3);
     };
 
     const addIngredients = ingredients => {
@@ -40,13 +46,13 @@ const NewDishForm = props => {
         });
     };
 
-    const handleClick = (event, stepNumber) => {
-        setStep(stepNumber);
+    const handleClick = (event, progressNumber) => {
+        setProgressNumber(progressNumber);
     };
 
-    const RenderForm = props => {
-        if (step === 0 || step === 4) return null;
-        else if (step === 1) {
+    const RenderForm = () => {
+        if (progressNumber === 0 || progressNumber === 4) return null;
+        else if (progressNumber === 1) {
             return (
                 <AddUrlForm
                     dishId={dishId}
@@ -55,7 +61,7 @@ const NewDishForm = props => {
                     onClick={props.onClick}
                 />
             );
-        } else if (step === 2) {
+        } else if (progressNumber === 2) {
             return (
                 <ItemForm
                     key={dishId + 'steps'}
@@ -65,7 +71,7 @@ const NewDishForm = props => {
                     type={'steps'}
                 />
             );
-        } else if (step === 3) {
+        } else if (progressNumber === 3) {
             return (
                 <ItemForm
                     key={dishId + 'ingredients'}

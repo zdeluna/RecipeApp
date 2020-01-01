@@ -14,7 +14,6 @@ import {Button} from 'reactstrap';
 import {graphql} from 'react-apollo';
 import {useQuery} from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import withFetchDataHook from '../../utils/utils.js';
 import {useApolloClient} from '@apollo/react-hooks';
 
 const GET_DISH = gql`
@@ -37,13 +36,9 @@ const GET_DISH = gql`
 `;
 
 const DishEntry = props => {
-    console.log('Render dish entry');
-    console.log('USER IN DISH: ' + props.userId);
     const [userId, setUserId] = useState(props.userId);
-    console.log('USER IN DISH: ' + userId);
-
     const [dishId, setDishId] = useState(props.match.params.dishId);
-    const [category, setCategory] = useState(props.category);
+    const [category, setCategory] = useState(props.match.params.category);
     const [dish, setDish] = useState([]);
     const [steps, setSteps] = useState([]);
     const [ingredients, setIngredients] = useState([]);
@@ -58,16 +53,12 @@ const DishEntry = props => {
             dishId: dishId,
         },
         onCompleted(dishData) {
-            console.log('DATA is loaded' + dishData.dish);
-            console.log(dishData.dish);
             setDish(...dish, dishData.dish);
             if (dishData.dish.steps && dishData.dish.steps.length) {
                 setSteps(dishData.dish.steps);
             }
             if (dishData.dish.ingredients && dishData.dish.ingredients.length)
                 setIngredients(dishData.dish.ingredients);
-            console.log('DISH');
-            console.log({dish});
         },
     });
 
@@ -76,13 +67,11 @@ const DishEntry = props => {
     };
 
     const handleStepsAndIngredientsSubmitted = dish => {
-        console.log('IN FUNCTION');
         //Handle after user has submitted steps
         const dishData = client.readQuery({
             query: GET_DISH,
             variables: {userId: userId, dishId: dishId},
         });
-        console.log(dishData);
         setDish(dishData.dish);
         if (dishData.dish.steps && dishData.dish.steps.length) {
             setSteps(dishData.dish.steps);
@@ -102,8 +91,6 @@ const DishEntry = props => {
     };
 
     const RenderNewDishForm = props => {
-        if (steps) console.log('STEPS: ' + steps.length);
-        if (ingredients) console.log('INGREDIENTS: ' + ingredients.length);
         /*
         if (deleteDishMode) {
             let redirect_url = '/users/category/' + category;
@@ -135,9 +122,6 @@ const DishEntry = props => {
         }
                     */
         if (steps.length < 1 || ingredients.length < 1) {
-            console.log('render dish form');
-            console.log(steps);
-            console.log(ingredients);
             return (
                 <NewDishForm
                     dishId={dishId}
@@ -149,14 +133,13 @@ const DishEntry = props => {
                 />
             );
         } else {
-            console.log('Render dish info');
             return (
                 <Container>
                     <Row>
                         <Col xs="8">
                             <DishEntryIngredientsTable
                                 type="Ingredients"
-                                entries={dish.ingredients}
+                                entries={ingredients}
                                 dishId={dishId}
                                 category={category}
                             />
@@ -184,7 +167,7 @@ const DishEntry = props => {
                     <Row>
                         <DishEntryStepsTable
                             type="Directions"
-                            entries={dish.steps}
+                            entries={steps}
                             dishId={dishId}
                             category={category}
                         />
@@ -201,7 +184,7 @@ const DishEntry = props => {
                     <Col>
                         {' '}
                         <Link
-                            to={`/users/category/${category}`}
+                            to={`/users/category/${dish.category}`}
                             id="goBackLink">
                             Go Back
                         </Link>
