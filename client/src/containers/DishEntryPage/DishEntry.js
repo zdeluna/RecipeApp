@@ -148,7 +148,7 @@ const DishEntry = props => {
                             <Calendar
                                 dishId={dishId}
                                 category={category}
-                                userID={userId}
+                                userId={userId}
                             />
                             <hr />
                             <Notes

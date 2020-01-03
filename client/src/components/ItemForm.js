@@ -29,10 +29,15 @@ const GET_DISH = gql`
 
 const ItemForm = props => {
     const [userId, setUserId] = useState(props.userId);
-    const [dishId, setDishId] = useState(props.match.params.dishId);
-    const [category, setCategory] = useState(props.match.params.category);
     const [type, setType] = useState(props.type);
     const [update, setUpdate] = useState(props.update);
+
+    let dishid = update ? props.match.params.dishId : props.dishId;
+    const [dishId, setDishId] = useState(dishid);
+
+    let dishCategory = update ? props.match.params.category : props.category;
+    const [category, setCategory] = useState(dishCategory);
+
     const [isMounted, setMounted] = useState(false);
     const [itemsArray, setItemsArray] = useState([{value: '', visible: false}]);
 

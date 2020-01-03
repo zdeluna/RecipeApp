@@ -1,93 +1,92 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {Row, Col, Button} from 'reactstrap';
 import './Calendar.css';
 import 'react-widgets/dist/css/react-widgets.css';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import API from '../utils/Api';
 import PopOver from './PopOver';
+import {useApolloClient} from '@apollo/react-hooks';
+import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
+import {useMutation} from '@apollo/react-hooks';
 
-class Calendar extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            userID: this.props.userID,
-            history: [],
-            newScheduleDate: '',
-            dateIsScheduled: false,
-            updateDate: false,
-        };
+const Calendar = props => {
+    const [userId, setUserId] = useState(props.userId);
+    const [dishId, setDishId] = useState(props.dishId);
+    const [category, setCategory] = useState(props.category);
+    const [history, setHistory] = useState([]);
+    const [newScheduleDate, setNewScheduleDate] = useState('');
+    const [dateIsScheduled, setDateIsScheduled] = useState(false);
+    const [updateDate, setUpdateDate] = useState(false);
+    const [datePickerValue, setDatePickerValue] = useState(new Date());
+    const client = useApolloClient();
 
-        Moment.locale('en');
-        momentLocalizer();
+    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+        onCompleted(updateDishResponse) {
+            setDateIsScheduled(true);
 
-        this.dateOptions = {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        };
-    }
+            // props.onClick();
+        },
+    });
 
-    /* Store the value of the history from the database to the history in state */
-    componentDidMount() {
-        // First set the dishId and category will be used to create our url for the GET request
-        this.setState({
-            dishId: this.props.dishId,
-            category: this.props.category,
-        });
+    Moment.locale('en');
+    momentLocalizer();
 
-        var api = new API();
-        api.getDish(this.state.userID, this.props.dishId).then(response => {
-            if (response.status === 200) {
-                if (response.data.history)
-                    this.setState({
-                        history: response.data.history,
-                    });
-                this.forceUpdate();
-            }
-        });
-    }
+    const dateOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    };
 
     /* This function will handle adding the history state object to the database*/
-    addDateToDatabase = async () => {
+    const addDateToDatabase = async () => {
         // If the state update field is true, then we need to make a put request instead of a post request
 
-        const api = new API();
-        let historyField = {history: this.state.history};
+        let historyField = {history: history};
 
         // User has selected the default date (today)
         if (historyField.history.length === 0) {
-            this.dateChanged(new Date());
+            dateChanged(new Date());
         }
 
-        api.updateDish(this.state.userID, this.props.dishId, historyField)
-            .then(response => {
-                this.setState({dateIsScheduled: true});
-            })
-            .catch(error => {
-                console.log(error.response);
-            });
+        updateDish({
+            variables: {
+                userId: userId,
+                dishId: dishId,
+                history: historyField,
+            },
+        });
     };
 
     /* Add the date to the history array in state */
-    dateChanged = newDate => {
-        newDate = newDate.toLocaleDateString('en-US', this.dateOptions);
+    const dateChanged = newDate => {
+        setDatePickerValue(newDate);
+
+        newDate = newDate.toLocaleDateString('en-US', dateOptions);
+        console.log('New Date: ' + newDate);
         // If the user has not entered scheduled the dish, then just add the date to the end of the array
-        var newHistory = this.state.history;
-        if (this.state.updateDate) newHistory = this.removeDate(newHistory, 0);
+        let newHistory = history;
+        if (updateDate) newHistory = removeDate(newHistory, 0);
+
         newHistory.unshift(newDate);
-        this.setState({history: newHistory, newScheduleDate: newHistory[0]});
+        setHistory(newHistory);
+        setNewScheduleDate(newHistory[0]);
     };
 
-    updateDate = () => {
-        this.setState({updateDate: true, dateIsScheduled: false});
+    const updateCurrentDate = () => {
+        setUpdateDate(true);
+        setDateIsScheduled(false);
+    };
+
+    const removeDate = (array, index) => {
+        // Remove a date from the history array
+
+        return array.filter((_, i) => i !== index);
     };
 
     /* Render the components based on if the user has already sheduled the dish today*/
-    renderComponents = props => {
-        const dateIsScheduled = props.dateIsScheduled;
+    const RenderComponents = () => {
         if (!dateIsScheduled)
             return (
                 <div>
@@ -97,12 +96,12 @@ class Calendar extends Component {
                             <Button
                                 color="primary"
                                 size="md"
-                                onClick={this.addDateToDatabase}>
+                                onClick={addDateToDatabase}>
                                 Schedule Dish
                             </Button>
                         </Col>
                         <Col>
-                            <PopOver history={this.state.history} />
+                            <PopOver history={history} />
                         </Col>
                     </Row>
                     <Row>
@@ -111,8 +110,9 @@ class Calendar extends Component {
                                 id="dateTimePicker"
                                 time={false}
                                 format="MMM DD YYYY"
+                                value={datePickerValue}
                                 defaultValue={new Date()}
-                                onChange={value => this.dateChanged(value)}
+                                onChange={value => dateChanged(value)}
                             />
                         </Col>
                     </Row>
@@ -121,29 +121,22 @@ class Calendar extends Component {
         else
             return (
                 <div>
-                    <h3>Scheduled for {this.state.newScheduleDate}</h3>
-                    <Button color="primary" size="md" onClick={this.updateDate}>
+                    <h3>Scheduled for {newScheduleDate}</h3>
+                    <Button
+                        color="primary"
+                        size="md"
+                        onClick={updateCurrentDate}>
                         Reschedule Dish
                     </Button>
                 </div>
             );
     };
 
-    removeDate(array, index) {
-        // Remove a date from the history array
-
-        return array.filter((_, i) => i !== index);
-    }
-
-    render() {
-        return (
-            <div id="calendarComponent">
-                <this.renderComponents
-                    dateIsScheduled={this.state.dateIsScheduled}
-                />
-            </div>
-        );
-    }
-}
+    return (
+        <div id="calendarComponent">
+            <RenderComponents />
+        </div>
+    );
+};
 
 export default Calendar;
