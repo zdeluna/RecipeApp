@@ -16,6 +16,7 @@ class DishAPI extends RESTDataSource {
             steps: dish.steps,
             ingredients: dish.ingredients,
             url: dish.url,
+            history: dish.history,
         };
     }
 

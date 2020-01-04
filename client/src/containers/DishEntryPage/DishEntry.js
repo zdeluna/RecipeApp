@@ -15,33 +15,17 @@ import {graphql} from 'react-apollo';
 import {useQuery} from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import {useApolloClient} from '@apollo/react-hooks';
-
-const GET_DISH = gql`
-    query getDish($userId: String!, $dishId: String!) {
-        dish(userId: $userId, dishId: $dishId) {
-            __typename
-            id
-            name
-            cookingTime
-            url
-            category
-            steps {
-                value
-            }
-            ingredients {
-                value
-            }
-        }
-    }
-`;
+import {GET_DISH} from '../../api/queries/dish/getDish';
 
 const DishEntry = props => {
     const [userId, setUserId] = useState(props.userId);
     const [dishId, setDishId] = useState(props.match.params.dishId);
+    const [name, setName] = useState('');
+    const [url, setUrl] = useState('');
     const [category, setCategory] = useState(props.match.params.category);
-    const [dish, setDish] = useState([]);
     const [steps, setSteps] = useState([]);
     const [ingredients, setIngredients] = useState([]);
+    const [history, setHistory] = useState([]);
     const [makeDishMode, setMakeDishMode] = useState(false);
     const [deleteDishMode, setDeleteDishMode] = useState(false);
 
@@ -52,13 +36,16 @@ const DishEntry = props => {
             userId: userId,
             dishId: dishId,
         },
-        onCompleted(dishData) {
-            setDish(...dish, dishData.dish);
-            if (dishData.dish.steps && dishData.dish.steps.length) {
-                setSteps(dishData.dish.steps);
+        onCompleted({dish}) {
+            console.log(dish);
+            if (dish.steps && dish.steps.length) {
+                setSteps(dish.steps);
             }
-            if (dishData.dish.ingredients && dishData.dish.ingredients.length)
-                setIngredients(dishData.dish.ingredients);
+            if (dish.ingredients && dish.ingredients.length)
+                setIngredients(dish.ingredients);
+            if (dish.history) setHistory(dish.history);
+            if (dish.url) setUrl(dish.url);
+            if (dish.name) setName(dish.name);
         },
     });
 
@@ -72,7 +59,6 @@ const DishEntry = props => {
             query: GET_DISH,
             variables: {userId: userId, dishId: dishId},
         });
-        setDish(dishData.dish);
         if (dishData.dish.steps && dishData.dish.steps.length) {
             setSteps(dishData.dish.steps);
         }
@@ -149,6 +135,7 @@ const DishEntry = props => {
                                 dishId={dishId}
                                 category={category}
                                 userId={userId}
+                                history={history}
                             />
                             <hr />
                             <Notes
@@ -184,7 +171,7 @@ const DishEntry = props => {
                     <Col>
                         {' '}
                         <Link
-                            to={`/users/category/${dish.category}`}
+                            to={`/users/category/${category}`}
                             id="goBackLink">
                             Go Back
                         </Link>
@@ -202,9 +189,9 @@ const DishEntry = props => {
 
                 <Row>
                     <Col className="text-center">
-                        <h1>{dish.name}</h1>
-                        <a href={dish.url}>
-                            <h5>{dish.url}</h5>
+                        <h1>{name}</h1>
+                        <a href={url}>
+                            <h5>{url}</h5>
                         </a>
                     </Col>
                 </Row>

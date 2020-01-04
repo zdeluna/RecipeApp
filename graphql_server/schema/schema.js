@@ -42,6 +42,7 @@ const typeDefs = gql`
         steps: [Step]
         ingredients: [Ingredient]
         url: String
+        history: [String]
     }
 
     type User {
@@ -71,6 +72,7 @@ const typeDefs = gql`
             steps: [StepInput]
             ingredients: [IngredientInput]
             url: String
+            history: [String]
         ): UpdateDishResponse
     }
 `;

@@ -14,15 +14,16 @@ const Calendar = props => {
     const [userId, setUserId] = useState(props.userId);
     const [dishId, setDishId] = useState(props.dishId);
     const [category, setCategory] = useState(props.category);
-    const [history, setHistory] = useState([]);
+    const [history, setHistory] = useState(props.history);
     const [newScheduleDate, setNewScheduleDate] = useState('');
     const [dateIsScheduled, setDateIsScheduled] = useState(false);
     const [updateDate, setUpdateDate] = useState(false);
     const [datePickerValue, setDatePickerValue] = useState(new Date());
     const client = useApolloClient();
-
+    console.log('IN CALENDAR: ' + props.history);
     const [updateDish, {data}] = useMutation(UPDATE_DISH, {
         onCompleted(updateDishResponse) {
+            console.log('Completed Update');
             setDateIsScheduled(true);
 
             // props.onClick();
@@ -42,11 +43,10 @@ const Calendar = props => {
     /* This function will handle adding the history state object to the database*/
     const addDateToDatabase = async () => {
         // If the state update field is true, then we need to make a put request instead of a post request
-
-        let historyField = {history: history};
+        console.log('Add to database');
 
         // User has selected the default date (today)
-        if (historyField.history.length === 0) {
+        if (history.length === 0) {
             dateChanged(new Date());
         }
 
@@ -54,7 +54,7 @@ const Calendar = props => {
             variables: {
                 userId: userId,
                 dishId: dishId,
-                history: historyField,
+                history: history,
             },
         });
     };

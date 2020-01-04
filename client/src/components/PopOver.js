@@ -6,7 +6,7 @@ class PopOver extends Component {
         super(props);
         this.state = {
             showPopover: false,
-            history: [],
+            history: this.props.history,
         };
     }
 
