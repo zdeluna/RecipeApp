@@ -11,12 +11,13 @@ class DishAPI extends RESTDataSource {
             id: dishId,
             name: dish.name,
             category: dish.category,
-            cookingTime: dish.cookingTime,
             userId: dish.userId,
             steps: dish.steps,
             ingredients: dish.ingredients,
             url: dish.url,
             history: dish.history,
+            cookingTime: dish.cookingTime,
+            notes: dish.notes,
         };
     }
 

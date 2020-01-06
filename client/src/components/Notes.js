@@ -1,46 +1,111 @@
-import React from 'react';
-import {Button} from 'reactstrap';
+import React, {useState, useEffect, useRef} from 'react';
+import {Button, Input} from 'reactstrap';
 import './Notes.css';
 import Textarea from 'react-textarea-autosize';
 import DataField from './DataField';
+import {useApolloClient} from '@apollo/react-hooks';
+import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
+import {GET_DISH} from '../api/queries/dish/getDish';
+import {useMutation, useQuery} from '@apollo/react-hooks';
 
-class Notes extends DataField {
-    constructor(props) {
-        super(props, 'notes');
-    }
+const Notes = props => {
+    const [userId, setUserId] = useState(props.userId);
+    const [dishId, setDishId] = useState(props.dishId);
+    const [notes, setNotes] = useState(props.notes);
+    const [fieldCreated, setFieldCreated] = notes
+        ? useState(true)
+        : useState(false);
+    const client = useApolloClient();
+    const [isEditing, setEditing] = useState(false);
+
+    const toggleEditing = () => {
+        setEditing(!isEditing);
+        console.log('toggle');
+    };
+
+    const inputEl = useRef(null);
+
+    useEffect(
+        () => {
+            if (isEditing) {
+                console.log(inputEl.current);
+                console.log('focus');
+                //inputEl.current.focus();
+            } else {
+                console.log('unfocus');
+            }
+        },
+        [isEditing],
+    );
+
+    const {loading, error, dishData} = useQuery(GET_DISH, {
+        variables: {
+            userId: userId,
+            dishId: dishId,
+        },
+        onCompleted({dish}) {
+            if (dish.notes) setNotes(dish.notes);
+        },
+    });
+
+    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+        onCompleted(updateDishResponse) {},
+    });
+
+    const fieldChanged = event => {
+        setEditing(true);
+
+        setNotes(event.target.value);
+    };
+
+    const createField = () => {
+        setFieldCreated(true);
+    };
+
+    const addNotesToDatabase = async () => {
+        setEditing(false);
+        setFieldCreated(true);
+
+        updateDish({
+            variables: {
+                userId: userId,
+                dishId: dishId,
+                notes: notes,
+            },
+        });
+    };
+
+    const setEditMode = event => {
+        console.log(inputEl);
+        setEditing(true);
+    };
 
     /* Render the components based on if the user has already sheduled the dish today*/
-    renderComponents = props => {
-        const editField = props.editField;
-        const fieldCreated = props.fieldCreated;
-
-        // User doesn't have any existing notes on the dish
+    const RenderComponents = () => {
         if (!fieldCreated)
             return (
                 <div>
-                    <Button
-                        color="primary"
-                        size="md"
-                        onClick={this.createField}>
+                    <Button color="primary" size="md" onClick={createField}>
                         Add Notes
                     </Button>
                 </div>
             );
 
-        if (editField)
+        if (isEditing)
             return (
                 <div>
-                    <Textarea
+                    <input
                         id="notesTextArea"
-                        onChange={event => this.fieldChanged(event)}
-                        value={this.state.data}
+                        onChange={fieldChanged}
+                        value={notes}
+                        ref={inputEl}
+                        type="text"
+                        autoFocus
                     />{' '}
                     <Button
                         color="primary"
                         size="md"
-                        onClick={event =>
-                            this.addFieldToDatabase(event, this.state.data)
-                        }>
+                        onClick={addNotesToDatabase}>
                         Save Notes
                     </Button>
                 </div>
@@ -48,23 +113,16 @@ class Notes extends DataField {
         else
             return (
                 <div>
-                    <Button color="primary" size="md" onClick={this.editField}>
+                    <Button color="primary" size="md" onClick={setEditMode}>
                         Edit Notes
                     </Button>
                     <div id="notesText">
-                        <p>{this.getDataFieldValue()}</p>
+                        <p>{notes}</p>
                     </div>
                 </div>
             );
     };
 
-    render() {
-        return (
-            <this.renderComponents
-                fieldCreated={this.state.fieldCreated}
-                editField={this.state.editField}
-            />
-        );
-    }
-}
+    return <RenderComponents />;
+};
 export default Notes;

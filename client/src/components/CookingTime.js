@@ -1,46 +1,111 @@
-import React from 'react';
-import {Button} from 'reactstrap';
+import React, {useState, useEffect, useRef} from 'react';
+import {Button, Input} from 'reactstrap';
 import './Notes.css';
 import Textarea from 'react-textarea-autosize';
 import DataField from './DataField';
+import {useApolloClient} from '@apollo/react-hooks';
+import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
+import {GET_DISH} from '../api/queries/dish/getDish';
+import {useMutation, useQuery} from '@apollo/react-hooks';
 
-class CookingTime extends DataField {
-    constructor(props) {
-        super(props, 'cookingTime');
-    }
+const CookingTime = props => {
+    const [userId, setUserId] = useState(props.userId);
+    const [dishId, setDishId] = useState(props.dishId);
+    const [cookingTime, setCookingTime] = useState(props.cookingTime);
+    const [fieldCreated, setFieldCreated] = cookingTime
+        ? useState(true)
+        : useState(false);
+    const client = useApolloClient();
+    const [isEditing, setEditing] = useState(false);
+
+    const toggleEditing = () => {
+        setEditing(!isEditing);
+        console.log('toggle');
+    };
+
+    const inputEl = useRef(null);
+
+    useEffect(
+        () => {
+            if (isEditing) {
+                console.log(inputEl.current);
+                console.log('focus');
+                //inputEl.current.focus();
+            } else {
+                console.log('unfocus');
+            }
+        },
+        [isEditing],
+    );
+
+    const {loading, error, dishData} = useQuery(GET_DISH, {
+        variables: {
+            userId: userId,
+            dishId: dishId,
+        },
+        onCompleted({dish}) {
+            if (dish.cookingTime) setCookingTime(dish.cookingTime);
+        },
+    });
+
+    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+        onCompleted(updateDishResponse) {},
+    });
+
+    const fieldChanged = event => {
+        setEditing(true);
+
+        setCookingTime(event.target.value);
+    };
+
+    const createField = () => {
+        setFieldCreated(true);
+    };
+
+    const addCookingTimeToDatabase = async () => {
+        setEditing(false);
+        setFieldCreated(true);
+
+        updateDish({
+            variables: {
+                userId: userId,
+                dishId: dishId,
+                cookingTime: cookingTime,
+            },
+        });
+    };
+
+    const setEditMode = event => {
+        console.log(inputEl);
+        setEditing(true);
+    };
 
     /* Render the components based on if the user has already sheduled the dish today*/
-    renderComponents = props => {
-        const editField = props.editField;
-        const fieldCreated = props.fieldCreated;
-
-        // User doesn't have any existing notes on the dish
+    const RenderComponents = () => {
         if (!fieldCreated)
             return (
                 <div>
-                    <Button
-                        color="primary"
-                        size="md"
-                        onClick={this.createField}>
+                    <Button color="primary" size="md" onClick={createField}>
                         Add Cooking Time
                     </Button>
                 </div>
             );
 
-        if (editField)
+        if (isEditing)
             return (
                 <div>
-                    <Textarea
+                    <input
                         id="notesTextArea"
-                        onChange={event => this.fieldChanged(event)}
-                        value={this.state.data}
+                        onChange={fieldChanged}
+                        value={cookingTime}
+                        ref={inputEl}
+                        type="text"
+                        autoFocus
                     />{' '}
                     <Button
                         color="primary"
                         size="md"
-                        onClick={event =>
-                            this.addFieldToDatabase(event, this.state.data)
-                        }>
+                        onClick={addCookingTimeToDatabase}>
                         Save Cooking Time
                     </Button>
                 </div>
@@ -48,23 +113,16 @@ class CookingTime extends DataField {
         else
             return (
                 <div>
-                    <Button color="primary" size="md" onClick={this.editField}>
+                    <Button color="primary" size="md" onClick={setEditMode}>
                         Edit Cooking Time
                     </Button>
                     <div id="notesText">
-                        <p>{this.getDataFieldValue()}</p>
+                        <p>{cookingTime}</p>
                     </div>
                 </div>
             );
     };
 
-    render() {
-        return (
-            <this.renderComponents
-                fieldCreated={this.state.fieldCreated}
-                editField={this.state.editField}
-            />
-        );
-    }
-}
+    return <RenderComponents />;
+};
 export default CookingTime;

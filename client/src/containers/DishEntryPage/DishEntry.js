@@ -12,16 +12,19 @@ import API from '../../utils/Api';
 import './DishEntry.css';
 import {Button} from 'reactstrap';
 import {graphql} from 'react-apollo';
-import {useQuery} from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import {useApolloClient} from '@apollo/react-hooks';
 import {GET_DISH} from '../../api/queries/dish/getDish';
+import {UPDATE_DISH} from '../../api/mutations/dish/updateDish';
+import {useMutation, useQuery} from '@apollo/react-hooks';
 
 const DishEntry = props => {
     const [userId, setUserId] = useState(props.userId);
     const [dishId, setDishId] = useState(props.match.params.dishId);
     const [name, setName] = useState('');
     const [url, setUrl] = useState('');
+    const [cookingTime, setCookingTime] = useState('');
+    const [notes, setNotes] = useState('');
     const [category, setCategory] = useState(props.match.params.category);
     const [steps, setSteps] = useState([]);
     const [ingredients, setIngredients] = useState([]);
@@ -30,6 +33,10 @@ const DishEntry = props => {
     const [deleteDishMode, setDeleteDishMode] = useState(false);
 
     const client = useApolloClient();
+
+    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+        onCompleted(updateDishResponse) {},
+    });
 
     const {loading, error, dishData} = useQuery(GET_DISH, {
         variables: {
@@ -46,8 +53,19 @@ const DishEntry = props => {
             if (dish.history) setHistory(dish.history);
             if (dish.url) setUrl(dish.url);
             if (dish.name) setName(dish.name);
+            if (dish.cookingTime) setCookingTime(dish.cookingTime);
+            if (dish.notes) setNotes(dish.notes);
         },
     });
+
+    const updateCurrentDish = updateFields => {
+        console.log('Update current dish');
+        updateFields.userId = userId;
+        updateFields.dishId = dishId;
+        updateDish({
+            variables: updateFields,
+        });
+    };
 
     const makeDishModeButton = event => {
         setMakeDishMode(true);
@@ -140,14 +158,14 @@ const DishEntry = props => {
                             <hr />
                             <Notes
                                 dishId={dishId}
-                                category={category}
-                                userID={userId}
+                                userId={userId}
+                                notes={notes}
                             />
                             <hr />
                             <CookingTime
                                 dishId={dishId}
-                                category={category}
-                                userID={userId}
+                                userId={userId}
+                                cookingTime={cookingTime}
                             />
                         </Col>
                     </Row>

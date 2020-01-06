@@ -7,6 +7,7 @@ export const GET_DISH = gql`
             id
             name
             cookingTime
+            notes
             url
             category
             history

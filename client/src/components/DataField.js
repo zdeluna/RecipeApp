@@ -7,50 +7,19 @@ class DataField extends Component {
         super(props);
         this.state = {
             userID: this.props.userID,
-            data: '',
+            data: this.props.data,
             editField: false,
             fieldCreated: false,
             type: type,
         };
-    }
-
-    componentDidMount() {
-        // First set the dishId and category will be used to create our url for the GET request
-        this.setState({
-            dishId: this.props.dishId,
-            category: this.props.category,
-        });
-
-        var api = new API();
-        api.getDish(this.state.userID, this.props.dishId).then(response => {
-            if (response.status === 200) {
-                if (response.data[this.state.type]) {
-                    this.setState({
-                        data: response.data[this.state.type],
-                        fieldCreated: true,
-                    });
-                } else {
-                    this.setState({editField: false});
-                }
-            }
-        });
+        if (this.state.data) this.state.fieldCreated = true;
     }
 
     /* This function will handle adding the history state object to the database*/
     addFieldToDatabase = (event, notes) => {
-        const api = new API();
         let dataObject = {[this.state.type]: this.state.data};
-        api.updateDish(this.state.userID, this.props.dishId, dataObject)
-            .then(response => {
-                this.setState({editField: false, fieldCreated: true});
-            })
-            .catch(error => {
-                console.log(error.response);
-            });
-    };
-
-    getDataFieldValue = () => {
-        return this.state.data;
+        this.props.updateCurrentDish(dataObject);
+        this.setState({editField: false, fieldCreated: true});
     };
 
     /* This function will remove the notes from the database */
@@ -72,6 +41,7 @@ class DataField extends Component {
 
     /* Add the date to the history array in state */
     fieldChanged = event => {
+        console.log('CHANGED: ' + this.state.data);
         this.setState({data: event.target.value});
     };
 
@@ -82,21 +52,6 @@ class DataField extends Component {
     editField = () => {
         this.setState({editField: true});
     };
-
-    removeDate = (array, index) => {
-        // Remove a date from the history array
-
-        return array.filter((_, i) => i !== index);
-    };
-
-    render() {
-        return (
-            <this.renderComponents
-                fieldCreated={this.state.fieldCreated}
-                editField={this.state.editField}
-            />
-        );
-    }
 }
 
 export default DataField;

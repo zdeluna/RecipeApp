@@ -36,13 +36,14 @@ const typeDefs = gql`
     type Dish {
         id: ID
         name: String
-        cookingTime: String
         category: String
         userId: String
         steps: [Step]
         ingredients: [Ingredient]
         url: String
         history: [String]
+        cookingTime: String
+        notes: String
     }
 
     type User {
@@ -66,13 +67,14 @@ const typeDefs = gql`
             userId: String!
             dishId: String!
             name: String
-            cookingTime: String
             category: String
             userId: String
             steps: [StepInput]
             ingredients: [IngredientInput]
             url: String
             history: [String]
+            cookingTime: String
+            notes: String
         ): UpdateDishResponse
     }
 `;

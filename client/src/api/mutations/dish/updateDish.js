@@ -8,6 +8,8 @@ export const UPDATE_DISH = gql`
         $steps: [StepInput]
         $ingredients: [IngredientInput]
         $history: [String]
+        $cookingTime: String
+        $notes: String
     ) {
         updateDish(
             userId: $userId
@@ -16,6 +18,8 @@ export const UPDATE_DISH = gql`
             steps: $steps
             ingredients: $ingredients
             history: $history
+            cookingTime: $cookingTime
+            notes: $notes
         ) {
             success
             message
@@ -31,6 +35,8 @@ export const UPDATE_DISH = gql`
                     value
                 }
                 history
+                cookingTime
+                notes
             }
         }
     }
