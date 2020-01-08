@@ -8,7 +8,6 @@ import Notes from '../../components/Notes';
 import CookingTime from '../../components/CookingTime';
 import NewDishForm from '../../components/NewDishForm';
 import {Container, Row, Col} from 'reactstrap';
-import API from '../../utils/Api';
 import './DishEntry.css';
 import {Button} from 'reactstrap';
 import {graphql} from 'react-apollo';
@@ -16,6 +15,7 @@ import gql from 'graphql-tag';
 import {useApolloClient} from '@apollo/react-hooks';
 import {GET_DISH} from '../../api/queries/dish/getDish';
 import {UPDATE_DISH} from '../../api/mutations/dish/updateDish';
+import {DELETE_DISH} from '../../api/mutations/dish/deleteDish';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 
 const DishEntry = props => {
@@ -35,6 +35,10 @@ const DishEntry = props => {
     const client = useApolloClient();
 
     const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+        onCompleted(updateDishResponse) {},
+    });
+
+    const [deleteDish, {deleteDishResponse}] = useMutation(DELETE_DISH, {
         onCompleted(updateDishResponse) {},
     });
 
@@ -86,12 +90,8 @@ const DishEntry = props => {
     };
 
     const deleteEntryFromDatabase = () => {
-        var api = new API();
-        api.deleteDish(userId, dishId).then(response => {
-            if (response.status === 204) {
-                setDeleteDishMode(true);
-            }
-        });
+        deleteDish({variables: {userId: userId, dishId: dishId}});
+        props.history.push(`/users/category/${category}`);
     };
 
     const RenderNewDishForm = props => {

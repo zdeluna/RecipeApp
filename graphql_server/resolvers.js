@@ -31,5 +31,12 @@ module.exports = {
                 dish: result,
             };
         },
+        deleteDish: async (_, {userId, dishId}, {dataSources}) => {
+            dataSources.dishAPI.deleteDish({userId: userId, dishId: dishId});
+            return {
+                success: true,
+                message: 'The dish was successfully deleted',
+            };
+        },
     },
 };

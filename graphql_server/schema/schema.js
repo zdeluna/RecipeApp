@@ -7,6 +7,11 @@ const typeDefs = gql`
         dishId: String
     }
 
+    type DeleteDishResponse {
+        success: Boolean!
+        message: String
+    }
+
     type UpdateDishResponse {
         success: Boolean!
         message: String
@@ -76,6 +81,7 @@ const typeDefs = gql`
             cookingTime: String
             notes: String
         ): UpdateDishResponse
+        deleteDish(userId: String!, dishId: String!): DeleteDishResponse
     }
 `;
 

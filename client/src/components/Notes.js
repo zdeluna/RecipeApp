@@ -44,7 +44,10 @@ const Notes = props => {
             dishId: dishId,
         },
         onCompleted({dish}) {
-            if (dish.notes) setNotes(dish.notes);
+            if (dish.notes) {
+                setNotes(dish.notes);
+                setFieldCreated(true);
+            }
         },
     });
 
@@ -54,12 +57,12 @@ const Notes = props => {
 
     const fieldChanged = event => {
         setEditing(true);
-
         setNotes(event.target.value);
     };
 
     const createField = () => {
         setFieldCreated(true);
+        setEditing(true);
     };
 
     const addNotesToDatabase = async () => {

@@ -7,7 +7,7 @@ import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import PopOver from './PopOver';
 import {useApolloClient} from '@apollo/react-hooks';
-import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
+import {UPDATE_DISH_HISTORY} from '../api/mutations/dish/updateDish';
 import {useMutation} from '@apollo/react-hooks';
 
 const Calendar = props => {
@@ -19,13 +19,12 @@ const Calendar = props => {
     const [dateIsScheduled, setDateIsScheduled] = useState(false);
     const [updateDate, setUpdateDate] = useState(false);
     const [datePickerValue, setDatePickerValue] = useState(new Date());
+
     const client = useApolloClient();
     console.log('IN CALENDAR: ' + props.history);
-    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+    const [updateDish, {data}] = useMutation(UPDATE_DISH_HISTORY, {
         onCompleted(updateDishResponse) {
             console.log('Completed Update');
-            setDateIsScheduled(true);
-
             // props.onClick();
         },
     });
@@ -46,7 +45,7 @@ const Calendar = props => {
         console.log('Add to database');
 
         // User has selected the default date (today)
-        if (history.length === 0) {
+        if (!newScheduleDate) {
             dateChanged(new Date());
         }
 
@@ -57,6 +56,7 @@ const Calendar = props => {
                 history: history,
             },
         });
+        setDateIsScheduled(true);
     };
 
     /* Add the date to the history array in state */

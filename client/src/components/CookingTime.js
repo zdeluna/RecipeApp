@@ -44,7 +44,10 @@ const CookingTime = props => {
             dishId: dishId,
         },
         onCompleted({dish}) {
-            if (dish.cookingTime) setCookingTime(dish.cookingTime);
+            if (dish.cookingTime) {
+                setCookingTime(dish.cookingTime);
+                setFieldCreated(true);
+            }
         },
     });
 
@@ -60,6 +63,7 @@ const CookingTime = props => {
 
     const createField = () => {
         setFieldCreated(true);
+        setEditing(true);
     };
 
     const addCookingTimeToDatabase = async () => {

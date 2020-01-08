@@ -37,7 +37,6 @@ class DishAPI extends RESTDataSource {
 
     async getDishById({userId, dishId}) {
         const res = await this.get(`/users/${userId}/dish/${dishId}`);
-        console.log('RES: ' + res);
         return this.dishReducer(res, dishId);
     }
 
@@ -53,6 +52,11 @@ class DishAPI extends RESTDataSource {
             name: name,
             category: category,
         });
+        return res;
+    }
+
+    async deleteDish({userId, dishId}) {
+        const res = await this.delete(`/users/${userId}/dish/${dishId}`);
         return res;
     }
 

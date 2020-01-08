@@ -41,3 +41,16 @@ export const UPDATE_DISH = gql`
         }
     }
 `;
+
+export const UPDATE_DISH_HISTORY = gql`
+    mutation updateDish(
+        $userId: String!
+        $dishId: String!
+        $history: [String]
+    ) {
+        updateDish(userId: $userId, dishId: $dishId, history: $history) {
+            success
+            message
+        }
+    }
+`;
