@@ -28,6 +28,11 @@ const typeDefs = gql`
         value: String
     }
 
+    type IngredientsInStep {
+        step: Int
+        ingredients: [Ingredient]
+    }
+
     input StepInput {
         id: Int
         value: String
@@ -49,6 +54,7 @@ const typeDefs = gql`
         history: [String]
         cookingTime: String
         notes: String
+        ingredientsInSteps: [IngredientsInStep]
     }
 
     type User {

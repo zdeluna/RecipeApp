@@ -16,19 +16,13 @@ class Carousel extends Component {
             currentStep: 0,
             loading: false,
         };
+        console.log(this.state.ingredientsInSteps);
     }
-
-    /* Make a GET request to the database to retrieve the dish information and store it in state */
-    componentDidMount = async () => {
-        if (!this.state.steps || !this.state.ingredients) {
-            await this.getDishIngredientsAndSteps();
-            this.setState({loading: false});
-        }
-    };
 
     getDishIngredientsAndSteps = async () => {
         this.setState({loading: true});
         var api = new API();
+        /*
         var response = await api.getDish(this.state.userID, this.state.dishId);
         if (response.status === 200) {
             let dish = response.data;
@@ -52,7 +46,7 @@ class Carousel extends Component {
                 ingredientsInSteps: dish.ingredientsInSteps,
             });
         }
-        this.setState({loading: false});
+this.setState({loading: false});*/
     };
 
     showNextIngredient = () => {
@@ -114,13 +108,11 @@ class Carousel extends Component {
                 </Container>
                 <Container>
                     <h5 id="ingredientsHeading">Ingredients</h5>
-                    {this.state.ingredientsInSteps[this.state.currentStep].map(
-                        (ingredient, index) => (
-                            <h5 key={'ingredient' + index}>
-                                {ingredient.value}
-                            </h5>
-                        ),
-                    )}
+                    {this.state.ingredientsInSteps[
+                        this.state.currentStep
+                    ].ingredients.map((ingredient, index) => (
+                        <h5 key={'ingredient' + index}>{ingredient.value}</h5>
+                    ))}
                 </Container>
             </div>
         );

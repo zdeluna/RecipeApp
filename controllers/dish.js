@@ -33,6 +33,7 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
                     dishInfo.steps,
                     ingredients,
                 );
+                console.log('IN SERVER: ' + dishInfo.ingredientsInSteps);
                 return resolve(dishInfo);
             } catch (error) {
                 return reject(error);
@@ -183,6 +184,9 @@ const getIngredientsInSteps = async (steps, ingredients) => {
     let filteredIngredients = filterAllIngredients(ingredientsCopy);
 
     for (let stepNumber = 0; stepNumber < steps.length; stepNumber++) {
+        let ingredientsStepObject = {};
+        ingredientsStepObject.step = stepNumber;
+
         let ingredientsInEachStep = [];
         let stepDescription = steps[stepNumber].value.toLowerCase();
 
@@ -198,7 +202,8 @@ const getIngredientsInSteps = async (steps, ingredients) => {
                 ingredientsInEachStep.push(ingredients[ingredientNumber]);
             }
         }
-        ingredientsInStepsArray.push(ingredientsInEachStep);
+        ingredientsStepObject.ingredients = ingredientsInEachStep;
+        ingredientsInStepsArray.push(ingredientsStepObject);
     }
 
     return ingredientsInStepsArray;

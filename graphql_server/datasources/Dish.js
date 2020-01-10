@@ -18,6 +18,7 @@ class DishAPI extends RESTDataSource {
             history: dish.history,
             cookingTime: dish.cookingTime,
             notes: dish.notes,
+            ingredientsInSteps: dish.ingredientsInSteps,
         };
     }
 

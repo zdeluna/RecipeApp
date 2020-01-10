@@ -17,6 +17,12 @@ export const GET_DISH = gql`
             ingredients {
                 value
             }
+            ingredientsInSteps {
+                step
+                ingredients {
+                    value
+                }
+            }
         }
     }
 `;

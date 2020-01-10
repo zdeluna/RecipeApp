@@ -28,6 +28,7 @@ const DishEntry = props => {
     const [category, setCategory] = useState(props.match.params.category);
     const [steps, setSteps] = useState([]);
     const [ingredients, setIngredients] = useState([]);
+    const [ingredientsInSteps, setIngredientsInSteps] = useState([]);
     const [history, setHistory] = useState([]);
     const [makeDishMode, setMakeDishMode] = useState(false);
     const [deleteDishMode, setDeleteDishMode] = useState(false);
@@ -39,7 +40,9 @@ const DishEntry = props => {
     });
 
     const [deleteDish, {deleteDishResponse}] = useMutation(DELETE_DISH, {
-        onCompleted(updateDishResponse) {},
+        onCompleted(updateDishResponse) {
+            props.history.push(`/users/category/${category}`);
+        },
     });
 
     const {loading, error, dishData} = useQuery(GET_DISH, {
@@ -59,6 +62,11 @@ const DishEntry = props => {
             if (dish.name) setName(dish.name);
             if (dish.cookingTime) setCookingTime(dish.cookingTime);
             if (dish.notes) setNotes(dish.notes);
+            if (dish.ingredientsInSteps) {
+                console.log('IN ENTRY: ');
+                console.log(dish.ingredientsInSteps);
+                setIngredientsInSteps(dish.ingredientsInSteps);
+            }
         },
     });
 
@@ -91,17 +99,9 @@ const DishEntry = props => {
 
     const deleteEntryFromDatabase = () => {
         deleteDish({variables: {userId: userId, dishId: dishId}});
-        props.history.push(`/users/category/${category}`);
     };
 
     const RenderNewDishForm = props => {
-        /*
-        if (deleteDishMode) {
-            let redirect_url = '/users/category/' + category;
-
-            return <Redirect push to={redirect_url} />;
-        }
-
         if (makeDishMode) {
             let redirect_url =
                 '/users/category/' +
@@ -116,15 +116,15 @@ const DishEntry = props => {
                     to={{
                         pathname: redirect_url,
                         state: {
-                            steps: '1',
-                            ingredients: '1',
-                            ingredientsInSteps: '1',
+                            steps: steps,
+                            ingredients: ingredients,
+                            ingredientsInSteps: ingredientsInSteps,
                         },
                     }}
                 />
             );
         }
-                    */
+
         if (steps.length < 1 || ingredients.length < 1) {
             return (
                 <NewDishForm
