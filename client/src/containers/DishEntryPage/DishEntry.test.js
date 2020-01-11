@@ -51,7 +51,7 @@ test('calendar should render', async () => {
 
     const wrapper = await mount(
         <Router>
-            <DishEntry userID={testID} category={category} match={match} />
+            <DishEntry userId={testID} category={category} match={match} />
         </Router>,
         {attachTo: div},
     );
@@ -67,7 +67,7 @@ test('notes should render', async () => {
 
     const wrapper = await mount(
         <Router>
-            <DishEntry userID={testID} category={category} match={match} />
+            <DishEntry userId={testID} category={category} match={match} />
         </Router>,
         {attachTo: div},
     );
@@ -83,7 +83,7 @@ test('cooking time should render', async () => {
 
     const wrapper = await mount(
         <Router>
-            <DishEntry userID={testID} category={category} match={match} />
+            <DishEntry userId={testID} category={category} match={match} />
         </Router>,
         {attachTo: div},
     );
@@ -99,7 +99,7 @@ test('check to see if delete button calls handler to delete dish', async () => {
 
     const wrapper = await mount(
         <Router>
-            <DishEntry userID={testID} category={category} match={match} />
+            <DishEntry userId={testID} category={category} match={match} />
         </Router>,
         {attachTo: div},
     );
@@ -128,7 +128,7 @@ test('check if go back button is rendered', async () => {
 
     const wrapper = await mount(
         <Router>
-            <DishEntry userID={testID} category={category} match={match} />
+            <DishEntry userId={testID} category={category} match={match} />
         </Router>,
         {attachTo: div},
     );
@@ -150,7 +150,7 @@ test('check to see if make dish mode calls handler to make dish mode', async () 
 
     const wrapper = await mount(
         <Router>
-            <DishEntry userID={testID} category={category} match={match} />
+            <DishEntry userId={testID} category={category} match={match} />
         </Router>,
         {attachTo: div},
     );

@@ -1,44 +1,22 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import {Button, Input} from 'reactstrap';
 import './Notes.css';
-import Textarea from 'react-textarea-autosize';
-import DataField from './DataField';
-import {useApolloClient} from '@apollo/react-hooks';
 import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
 import {GET_DISH} from '../api/queries/dish/getDish';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 
 const CookingTime = props => {
-    const [userId, setUserId] = useState(props.userId);
-    const [dishId, setDishId] = useState(props.dishId);
+    const [userId] = useState(props.userId);
+    const [dishId] = useState(props.dishId);
     const [cookingTime, setCookingTime] = useState(props.cookingTime);
     const [fieldCreated, setFieldCreated] = cookingTime
         ? useState(true)
         : useState(false);
-    const client = useApolloClient();
     const [isEditing, setEditing] = useState(false);
-
-    const toggleEditing = () => {
-        setEditing(!isEditing);
-        console.log('toggle');
-    };
 
     const inputEl = useRef(null);
 
-    useEffect(
-        () => {
-            if (isEditing) {
-                console.log(inputEl.current);
-                console.log('focus');
-                //inputEl.current.focus();
-            } else {
-                console.log('unfocus');
-            }
-        },
-        [isEditing],
-    );
-
-    const {loading, error, dishData} = useQuery(GET_DISH, {
+    useQuery(GET_DISH, {
         variables: {
             userId: userId,
             dishId: dishId,
@@ -51,9 +29,7 @@ const CookingTime = props => {
         },
     });
 
-    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
-        onCompleted(updateDishResponse) {},
-    });
+    const [updateDish] = useMutation(UPDATE_DISH);
 
     const fieldChanged = event => {
         setEditing(true);
@@ -98,7 +74,7 @@ const CookingTime = props => {
         if (isEditing)
             return (
                 <div>
-                    <input
+                    <Input
                         id="notesTextArea"
                         onChange={fieldChanged}
                         value={cookingTime}

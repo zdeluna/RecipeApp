@@ -1,18 +1,12 @@
-import React, {useState} from 'react';
-import app from '../base';
+import React from 'react';
 import {Form, Button, FormGroup, Label, Input, Container} from 'reactstrap';
 import './AddDishForm.css';
-import API from '../utils/Api';
-import gql from 'graphql-tag';
 import {useMutation} from '@apollo/react-hooks';
-import {Query} from 'react-apollo';
-import {useApolloClient} from '@apollo/react-hooks';
 import {ADD_DISH} from '../api/mutations/dish/createDish';
 
 const AddDishForm = props => {
     let input = {value: ''};
-    const client = useApolloClient();
-    const [addDish, {data}] = useMutation(ADD_DISH, {
+    const [addDish] = useMutation(ADD_DISH, {
         onCompleted({addDish}) {
             props.onClick(addDish.dishId);
         },
@@ -26,7 +20,7 @@ const AddDishForm = props => {
                     e.preventDefault();
                     addDish({
                         variables: {
-                            userId: props.uid,
+                            userId: props.userId,
                             name: input.value,
                             category: props.category,
                         },

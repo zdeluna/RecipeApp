@@ -8,8 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {ApolloClient} from 'apollo-client';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {HttpLink} from 'apollo-link-http';
-import {ApolloProvider, useQuery} from '@apollo/react-hooks';
-import gql from 'graphql-tag';
+import {ApolloProvider} from '@apollo/react-hooks';
 
 const cache = new InMemoryCache({dataIdFromObject: object => object.id});
 const client = new ApolloClient({

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import {Component} from 'react';
 import './Notes.css';
 import API from '../utils/Api';
 

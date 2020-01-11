@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
@@ -10,8 +10,6 @@ import NewDishForm from '../../components/NewDishForm';
 import {Container, Row, Col} from 'reactstrap';
 import './DishEntry.css';
 import {Button} from 'reactstrap';
-import {graphql} from 'react-apollo';
-import gql from 'graphql-tag';
 import {useApolloClient} from '@apollo/react-hooks';
 import {GET_DISH} from '../../api/queries/dish/getDish';
 import {UPDATE_DISH} from '../../api/mutations/dish/updateDish';
@@ -19,33 +17,30 @@ import {DELETE_DISH} from '../../api/mutations/dish/deleteDish';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 
 const DishEntry = props => {
-    const [userId, setUserId] = useState(props.userId);
-    const [dishId, setDishId] = useState(props.match.params.dishId);
+    const [userId] = useState(props.userId);
+    const [dishId] = useState(props.match.params.dishId);
     const [name, setName] = useState('');
     const [url, setUrl] = useState('');
     const [cookingTime, setCookingTime] = useState('');
     const [notes, setNotes] = useState('');
-    const [category, setCategory] = useState(props.match.params.category);
+    const [category] = useState(props.match.params.category);
     const [steps, setSteps] = useState([]);
     const [ingredients, setIngredients] = useState([]);
     const [ingredientsInSteps, setIngredientsInSteps] = useState([]);
     const [history, setHistory] = useState([]);
     const [makeDishMode, setMakeDishMode] = useState(false);
-    const [deleteDishMode, setDeleteDishMode] = useState(false);
 
     const client = useApolloClient();
 
-    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
-        onCompleted(updateDishResponse) {},
-    });
+    const [updateDish] = useMutation(UPDATE_DISH);
 
-    const [deleteDish, {deleteDishResponse}] = useMutation(DELETE_DISH, {
+    const [deleteDish] = useMutation(DELETE_DISH, {
         onCompleted(updateDishResponse) {
             props.history.push(`/users/category/${category}`);
         },
     });
 
-    const {loading, error, dishData} = useQuery(GET_DISH, {
+    const {loading} = useQuery(GET_DISH, {
         variables: {
             userId: userId,
             dishId: dishId,
@@ -69,15 +64,6 @@ const DishEntry = props => {
             }
         },
     });
-
-    const updateCurrentDish = updateFields => {
-        console.log('Update current dish');
-        updateFields.userId = userId;
-        updateFields.dishId = dishId;
-        updateDish({
-            variables: updateFields,
-        });
-    };
 
     const makeDishModeButton = event => {
         setMakeDishMode(true);

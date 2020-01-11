@@ -1,15 +1,11 @@
 //@format
 
 import React, {useState, useEffect, useRef} from 'react';
-import {Redirect} from 'react-router-dom';
-import app from '../base';
 import Item from './Item';
 import {Form, Button, FormGroup, Container, Col, Row} from 'reactstrap';
 import './ItemForm.css';
-import {graphql} from 'react-apollo';
 import {useQuery, useMutation} from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import {useApolloClient} from '@apollo/react-hooks';
 import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
 
 const GET_DISH = gql`
@@ -28,30 +24,29 @@ const GET_DISH = gql`
 `;
 
 const ItemForm = props => {
-    const [userId, setUserId] = useState(props.userId);
-    const [type, setType] = useState(props.type);
-    const [update, setUpdate] = useState(props.update);
+    const [userId] = useState(props.userId);
+    const [type] = useState(props.type);
+    const [update] = useState(props.update);
 
     let dishid = update ? props.match.params.dishId : props.dishId;
-    const [dishId, setDishId] = useState(dishid);
+    const [dishId] = useState(dishid);
 
     let dishCategory = update ? props.match.params.category : props.category;
-    const [category, setCategory] = useState(dishCategory);
+    const [category] = useState(dishCategory);
 
-    const [isMounted, setMounted] = useState(false);
     const [itemsArray, setItemsArray] = useState([{value: '', visible: false}]);
 
-    const {loading, error, dishData} = useQuery(GET_DISH, {
+    useQuery(GET_DISH, {
         variables: {
             userId: userId,
             dishId: dishId,
         },
         onCompleted({dish}) {
             if (update) {
-                if (type == 'steps' && dish.steps && dish.steps.length)
+                if (type === 'steps' && dish.steps && dish.steps.length)
                     setItemsArray(dish.steps);
                 if (
-                    type == 'ingredients' &&
+                    type === 'ingredients' &&
                     dish.ingredients &&
                     dish.ingredients.length
                 )
@@ -59,8 +54,6 @@ const ItemForm = props => {
             }
         },
     });
-
-    const client = useApolloClient();
 
     const ref = useRef(false);
     useEffect(() => {
@@ -70,7 +63,7 @@ const ItemForm = props => {
         };
     }, []);
 
-    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+    const [updateDish] = useMutation(UPDATE_DISH, {
         onCompleted(updateDishResponse) {
             props.history.push(`/users/category/${category}/dish/${dishId}`);
         },

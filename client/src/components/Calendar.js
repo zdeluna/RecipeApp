@@ -6,28 +6,20 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import PopOver from './PopOver';
-import {useApolloClient} from '@apollo/react-hooks';
 import {UPDATE_DISH_HISTORY} from '../api/mutations/dish/updateDish';
 import {useMutation} from '@apollo/react-hooks';
 
 const Calendar = props => {
-    const [userId, setUserId] = useState(props.userId);
-    const [dishId, setDishId] = useState(props.dishId);
-    const [category, setCategory] = useState(props.category);
+    const [userId] = useState(props.userId);
+    const [dishId] = useState(props.dishId);
     const [history, setHistory] = useState(props.history);
     const [newScheduleDate, setNewScheduleDate] = useState('');
     const [dateIsScheduled, setDateIsScheduled] = useState(false);
     const [updateDate, setUpdateDate] = useState(false);
     const [datePickerValue, setDatePickerValue] = useState(new Date());
 
-    const client = useApolloClient();
     console.log('IN CALENDAR: ' + props.history);
-    const [updateDish, {data}] = useMutation(UPDATE_DISH_HISTORY, {
-        onCompleted(updateDishResponse) {
-            console.log('Completed Update');
-            // props.onClick();
-        },
-    });
+    const [updateDish] = useMutation(UPDATE_DISH_HISTORY);
 
     Moment.locale('en');
     momentLocalizer();

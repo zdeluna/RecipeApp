@@ -15,9 +15,14 @@ import ItemForm from './components/ItemForm';
 import './App.css';
 
 class App extends Component {
-    state = {loading: true, authenticated: false, user: {uid: ''}};
+    state = {
+        currentUser: '',
+        loading: true,
+        authenticated: false,
+        user: {uid: ''},
+    };
 
-    componentWillMount() {
+    componentDidMount() {
         app.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setState({
@@ -97,7 +102,7 @@ class App extends Component {
                             path="/users/category/:category"
                             component={DishListTable}
                             authenticated={authenticated}
-                            userID={this.state.currentUser.uid}
+                            userId={this.state.currentUser.uid}
                             loading={true}
                         />
                         )} />

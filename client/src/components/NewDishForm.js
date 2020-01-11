@@ -1,18 +1,14 @@
-import React, {useState, useRef} from 'react';
-import app from '../base';
+import React, {useState} from 'react';
 import AddUrlForm from '../components/AddUrlForm';
 import ItemForm from '../components/ItemForm';
 import {Button, Row, Col, Container} from 'reactstrap';
 import './NewDishForm.css';
 import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
 import {useMutation} from '@apollo/react-hooks';
-import {useApolloClient} from '@apollo/react-hooks';
 
 const NewDishForm = props => {
-    const client = useApolloClient();
-
-    const [userId, setUserId] = useState(props.userId);
-    const [dishId, setDishId] = useState(props.dishId);
+    const [userId] = useState(props.userId);
+    const [dishId] = useState(props.dishId);
     const [progressNumber, setProgressNumber] = useState(0);
     /*  Progress Number
         1: User wants to get steps/ingredients from url
@@ -23,7 +19,7 @@ const NewDishForm = props => {
     const [steps, setSteps] = useState([]);
     const [ingredients, setIngredients] = useState([]);
 
-    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+    const [updateDish] = useMutation(UPDATE_DISH, {
         onCompleted(updateDishResponse) {
             props.onClick();
         },

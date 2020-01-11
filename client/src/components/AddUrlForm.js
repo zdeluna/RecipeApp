@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import app from '../base';
 import {
     Alert,
     Form,
@@ -9,23 +8,16 @@ import {
     Input,
     Container,
 } from 'reactstrap';
-import API from '../utils/Api';
 import './AddUrlForm.css';
-import gql from 'graphql-tag';
 import {useMutation} from '@apollo/react-hooks';
-import {Query} from 'react-apollo';
-import {useApolloClient} from '@apollo/react-hooks';
 import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
 
 const AddUrlForm = props => {
-    const client = useApolloClient();
-
-    let urlAdded = false;
     const [url, setUrl] = useState('');
-    const [userId, setUserId] = useState(props.userId);
-    const [dishId, setDishId] = useState(props.dishId);
-    const [showAlert, setShowAlert] = useState(false);
-    const [updateDish, {data}] = useMutation(UPDATE_DISH, {
+    const [userId] = useState(props.userId);
+    const [dishId] = useState(props.dishId);
+    const [showAlert] = useState(false);
+    const [updateDish] = useMutation(UPDATE_DISH, {
         onCompleted(updateDishResponse) {
             props.onClick();
         },
@@ -54,7 +46,7 @@ const AddUrlForm = props => {
         });
     };
     const RenderAlert = props => {
-        if ({showAlert} == true) {
+        if ({showAlert} === true) {
             return (
                 <Alert id="url_alert" color="primary">
                     Could not find ingredients/steps in Url.
