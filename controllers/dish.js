@@ -446,8 +446,6 @@ exports.updateDish = async (req, res) => {
     const userId = req.params.userId;
     await userModel.checkIfUserExists(userId);
 
-    console.log('IN SERVER ' + req.params.dishId + ' ' + userId);
-
     const dishId = req.params.dishId;
     let dishInfo = {};
 
@@ -467,6 +465,9 @@ exports.updateDish = async (req, res) => {
 
             res.status(200).send(dish);
         } else {
+            if (updatedDishFields.history)
+                updatedDishFields.lastMade = updatedDishFields.history[0];
+
             await dishModel.saveDish(userId, dishId, updatedDishFields);
             const dish = await dishModel.getDishFromDatabase(userId, dishId);
             res.status(200).send(dish);

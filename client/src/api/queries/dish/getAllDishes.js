@@ -7,6 +7,7 @@ export const GET_DISHES = gql`
             name
             cookingTime
             category
+            lastMade
         }
     }
 `;

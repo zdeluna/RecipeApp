@@ -12,7 +12,6 @@ import './DishEntry.css';
 import {Button} from 'reactstrap';
 import {useApolloClient} from '@apollo/react-hooks';
 import {GET_DISH} from '../../api/queries/dish/getDish';
-import {UPDATE_DISH} from '../../api/mutations/dish/updateDish';
 import {DELETE_DISH} from '../../api/mutations/dish/deleteDish';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 
@@ -31,8 +30,6 @@ const DishEntry = props => {
     const [makeDishMode, setMakeDishMode] = useState(false);
 
     const client = useApolloClient();
-
-    const [updateDish] = useMutation(UPDATE_DISH);
 
     const [deleteDish] = useMutation(DELETE_DISH, {
         onCompleted(updateDishResponse) {

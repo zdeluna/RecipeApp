@@ -55,6 +55,7 @@ const typeDefs = gql`
         cookingTime: String
         notes: String
         ingredientsInSteps: [IngredientsInStep]
+        lastMade: String
     }
 
     type User {
@@ -86,6 +87,7 @@ const typeDefs = gql`
             history: [String]
             cookingTime: String
             notes: String
+            lastMade: String
         ): UpdateDishResponse
         deleteDish(userId: String!, dishId: String!): DeleteDishResponse
     }
