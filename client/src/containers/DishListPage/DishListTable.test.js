@@ -10,26 +10,57 @@ import {
     withRouter,
     BrowserRouter as Router,
 } from 'react-router-dom';
+import {act} from 'react-dom/test-utils';
 
-import app from '../../base';
-import API from '../../utils/Api';
 import Loading from '../../components/Loading';
+import {MockedProvider} from '@apollo/react-testing';
+import {GET_DISHES} from '../../api/queries/dish/getAllDishes';
 
 require('dotenv').config();
 const flushPromises = () => new Promise(setImmediate);
 const match = {params: {category: 1}};
 
-jest.mock('../../utils/Api');
+const testId = process.env.TEST_USER_ID;
 
 Enzyme.configure({adapter: new Adapter()});
 
+const dishes = [
+    {
+        id: '111111',
+        name: 'Fajitas',
+        category: '1',
+        lastMade: 'Saturday January 1st',
+        cookingTime: '22 minutes',
+    },
+    {
+        id: '111112',
+        name: 'Tacos',
+        category: '1',
+        lastMade: 'Sunday January 2nd',
+        cookingTime: '43 minutes',
+    },
+];
+
+const mocks = [
+    {
+        request: {
+            query: GET_DISHES,
+            variables: {userId: testId},
+        },
+        result: {
+            data: {
+                dishes: dishes,
+            },
+        },
+    },
+];
+
 describe('Dish List Table Page Component', () => {
     test('renders', async () => {
-        let testID = process.env.TEST_USER_ID;
         const wrapper = shallow(
-            <Router>
-                <DishListTable userID={testID} match={match} />
-            </Router>,
+            <MockedProvider mocks={mocks} addTypename={false}>
+                <DishListTable userId={testId} match={match} />
+            </MockedProvider>,
         );
 
         await flushPromises();
@@ -39,97 +70,80 @@ describe('Dish List Table Page Component', () => {
     });
 
     test('add new dish form should render', async () => {
-        let testID = process.env.TEST_USER_ID;
+        await act(async () => {
+            const wrapper = await mount(
+                <Router>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                        <DishListTable userId={testId} match={match} />
+                    </MockedProvider>
+                </Router>,
+            );
 
-        const wrapper = await mount(
-            <Router>
-                <DishListTable userID={testID} match={match} />
-            </Router>,
-        );
+            await flushPromises();
+            wrapper.update();
 
-        await flushPromises();
-        wrapper.update();
-
-        expect(wrapper.find(AddDishForm)).toHaveLength(1);
-        wrapper.unmount();
+            expect(wrapper.find(AddDishForm)).toHaveLength(1);
+            wrapper.unmount();
+        });
     });
 
     test('users dish link should render using mock api data ', async () => {
-        let testID = process.env.TEST_USER_ID;
+        await act(async () => {
+            const wrapper = await mount(
+                <Router>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                        <DishListTable userId={testId} match={match} />
+                    </MockedProvider>
+                </Router>,
+            );
 
-        const wrapper = await mount(
-            <Router>
-                <DishListTable loading={false} userID={testID} match={match} />
-            </Router>,
-        );
+            await flushPromises();
+            wrapper.update();
 
-        await flushPromises();
-        wrapper.update();
-
-        expect(wrapper.find('Link .dishLink')).toHaveLength(1);
-        wrapper.unmount();
+            expect(wrapper.find('Link.dishLink')).toHaveLength(
+                Object.keys(dishes).length,
+            );
+            wrapper.unmount();
+        });
     });
 
-    test('loading page does not show', async () => {
-        let testID = process.env.TEST_USER_ID;
+    test('Go back link should display', async () => {
+        await act(async () => {
+            const wrapper = await mount(
+                <Router>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                        <DishListTable userId={testId} match={match} />
+                    </MockedProvider>
+                </Router>,
+            );
 
-        const wrapper = await mount(
-            <Router>
-                <DishListTable loading={false} userID={testID} match={match} />
-            </Router>,
-        );
+            await flushPromises();
+            wrapper.update();
 
-        await flushPromises();
-        wrapper.update();
-
-        expect(wrapper.find(Loading)).toHaveLength(0);
-        wrapper.unmount();
-    });
-
-    test('categories link should display', async () => {
-        let testID = process.env.TEST_USER_ID;
-
-        const wrapper = await mount(
-            <Router>
-                <DishListTable loading={false} userID={testID} match={match} />
-            </Router>,
-        );
-
-        await flushPromises();
-        wrapper.update();
-
-        expect(wrapper.find('Link #goBackLink').text()).toEqual(
-            'Go Back To Categories',
-        );
-        wrapper.unmount();
+            expect(wrapper.find('Link #goBackLink').text()).toEqual(
+                'Go Back To Categories',
+            );
+            wrapper.unmount();
+        });
     });
 
     test('the number of rows is correct given a set of dishes', async () => {
-        let testID = process.env.TEST_USER_ID;
+        await act(async () => {
+            const wrapper = await mount(
+                <Router>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                        <DishListTable userId={testId} match={match} />
+                    </MockedProvider>
+                </Router>,
+            );
 
-        const dishes = {
-            id1: {name: 'Fajitas'},
-            id2: {name: 'Fish tacos'},
-            id3: {name: 'Gumbo'},
-        };
+            await flushPromises();
+            wrapper.update();
 
-        const wrapper = await mount(
-            <Router>
-                <DishListTable
-                    dishes={dishes}
-                    loading={false}
-                    userID={testID}
-                    match={match}
-                />
-            </Router>,
-        );
-
-        await flushPromises();
-        wrapper.update();
-
-        expect(wrapper.find('tbody tr').children()).toHaveLength(
-            Object.keys(dishes).length,
-        );
-        wrapper.unmount();
+            expect(wrapper.find('tbody tr')).toHaveLength(
+                Object.keys(dishes).length,
+            );
+            wrapper.unmount();
+        });
     });
 });
