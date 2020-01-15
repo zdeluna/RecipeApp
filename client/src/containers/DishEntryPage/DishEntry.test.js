@@ -30,7 +30,7 @@ const flushPromises = () => new Promise(setImmediate);
 const testId = process.env.TEST_USER_ID;
 const dishId = '12345';
 const category = '1';
-const match = {params: {dishId: '12345', category: 1}};
+const match = {params: {dishId: dishId, category: 1}};
 
 import {MockedProvider} from '@apollo/react-testing';
 import {GET_DISH} from '../../api/queries/dish/getDish';
@@ -41,17 +41,22 @@ const dish = {
     id: '111111',
     name: 'Fajitas',
     category: '1',
-    lastMade: 'Saturday January 1st',
+    lastMade: 'Saturday, January 11, 2020',
     cookingTime: '22 minutes',
     steps: [{value: 'Light the grill'}],
     ingredients: [{value: 'Steak'}],
+    history: ['Saturday, January 11, 2020'],
+    ingredientsInSteps: [{step: 1, ingredients: [{value: 'Cheese'}]}],
+    notes: 'This is a note',
+    url: 'http://recipeaddress.com',
+    __typename: 'Dish',
 };
 
 const mocks = [
     {
         request: {
             query: GET_DISH,
-            variables: {userId: testId, dishId: '13456'},
+            variables: {userId: testId, dishId: dishId},
         },
         result: {
             data: {
@@ -78,6 +83,7 @@ describe('Dish Entry Page Component', () => {
     test('calendar should render', async () => {
         await act(async () => {
             const div = document.createElement('div');
+            document.body.appendChild(div);
 
             const wrapper = await mount(
                 <Router>
@@ -90,43 +96,54 @@ describe('Dish Entry Page Component', () => {
 
             await flushPromises();
             wrapper.update();
-            console.log(wrapper.debug());
             expect(wrapper.find(Calendar)).toHaveLength(1);
             wrapper.unmount();
         });
     });
-    /*
+
     test('notes should render', async () => {
-        const div = document.createElement('div');
-        document.body.appendChild(div);
+        await act(async () => {
+            const div = document.createElement('div');
+            document.body.appendChild(div);
 
-        const wrapper = await mount(
-            <Router>
-                <DishEntry userId={testID} category={category} match={match} />
-            </Router>,
-            {attachTo: div},
-        );
+            const wrapper = await mount(
+                <Router>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                        <DishEntry userId={testId} match={match} />
+                    </MockedProvider>
+                </Router>,
+                {attachTo: div},
+            );
 
-        await flushPromises();
-        wrapper.update();
-        expect(wrapper.find(Notes)).toHaveLength(1);
+            await flushPromises();
+            wrapper.update();
+            expect(wrapper.find(Notes)).toHaveLength(1);
+            wrapper.unmount();
+        });
     });
 
     test('cooking time should render', async () => {
-        const div = document.createElement('div');
-        document.body.appendChild(div);
+        await act(async () => {
+            const div = document.createElement('div');
+            document.body.appendChild(div);
 
-        const wrapper = await mount(
-            <Router>
-                <DishEntry userId={testID} category={category} match={match} />
-            </Router>,
-            {attachTo: div},
-        );
+            const wrapper = await mount(
+                <Router>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                        <DishEntry userId={testId} match={match} />
+                    </MockedProvider>
+                </Router>,
+                {attachTo: div},
+            );
 
-        await flushPromises();
-        wrapper.update();
-        expect(wrapper.find(CookingTime)).toHaveLength(1);
+            await flushPromises();
+            wrapper.update();
+            expect(wrapper.find(CookingTime)).toHaveLength(1);
+            wrapper.unmount();
+        });
     });
+
+    /*
 
     test('check to see if delete button calls handler to delete dish', async () => {
         const div = document.createElement('div');

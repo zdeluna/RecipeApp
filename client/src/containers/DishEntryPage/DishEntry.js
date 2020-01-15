@@ -43,7 +43,6 @@ const DishEntry = props => {
             dishId: dishId,
         },
         onCompleted({dish}) {
-            console.log(dish);
             if (dish.steps && dish.steps.length) {
                 setSteps(dish.steps);
             }
@@ -55,8 +54,6 @@ const DishEntry = props => {
             if (dish.cookingTime) setCookingTime(dish.cookingTime);
             if (dish.notes) setNotes(dish.notes);
             if (dish.ingredientsInSteps) {
-                console.log('IN ENTRY: ');
-                console.log(dish.ingredientsInSteps);
                 setIngredientsInSteps(dish.ingredientsInSteps);
             }
         },
