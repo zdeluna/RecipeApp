@@ -18,7 +18,6 @@ const Calendar = props => {
     const [updateDate, setUpdateDate] = useState(false);
     const [datePickerValue, setDatePickerValue] = useState(new Date());
 
-    console.log('IN CALENDAR: ' + props.history);
     const [updateDish] = useMutation(UPDATE_DISH_HISTORY);
 
     Moment.locale('en');

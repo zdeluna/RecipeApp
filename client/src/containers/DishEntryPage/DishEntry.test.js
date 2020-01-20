@@ -10,6 +10,7 @@ import Notes from '../../components/Notes';
 import CookingTime from '../../components/CookingTime';
 import NewDishForm from '../../components/NewDishForm';
 import {act} from 'react-dom/test-utils';
+import wait from 'waait';
 
 import {
     Link,
@@ -21,6 +22,10 @@ import {
 import app from '../../base';
 import API from '../../utils/Api';
 
+import {MockedProvider} from '@apollo/react-testing';
+import {GET_DISH} from '../../api/queries/dish/getDish';
+import {DELETE_DISH} from '../../api/mutations/dish/deleteDish';
+
 require('dotenv').config();
 
 jest.mock('../../utils/Api');
@@ -31,9 +36,6 @@ const testId = process.env.TEST_USER_ID;
 const dishId = '12345';
 const category = '1';
 const match = {params: {dishId: dishId, category: 1}};
-
-import {MockedProvider} from '@apollo/react-testing';
-import {GET_DISH} from '../../api/queries/dish/getDish';
 
 Enzyme.configure({adapter: new Adapter()});
 
@@ -64,20 +66,36 @@ const mocks = [
             },
         },
     },
+    {
+        request: {
+            query: DELETE_DISH,
+            variables: {userId: testId, dishId: dishId},
+        },
+        result: {
+            data: {
+                deleteDish: {
+                    success: true,
+                    message: 'The dish has been deleted',
+                },
+            },
+        },
+    },
 ];
 
-describe('Dish Entry Page Component', () => {
+describe('Dish Entry Page Component', async () => {
     test('renders', async () => {
-        const wrapper = shallow(
-            <MockedProvider mocks={mocks} addTypename={false}>
-                <DishEntry userId={testId} match={match} />
-            </MockedProvider>,
-        );
+        await act(async () => {
+            const wrapper = shallow(
+                <MockedProvider mocks={mocks} addTypename={false}>
+                    <DishEntry userId={testId} match={match} />
+                </MockedProvider>,
+            );
 
-        await flushPromises();
-        wrapper.update();
+            await flushPromises();
+            wrapper.update();
 
-        expect(wrapper.exists()).toBe(true);
+            expect(wrapper.exists()).toBe(true);
+        });
     });
 
     test('calendar should render', async () => {
@@ -143,85 +161,111 @@ describe('Dish Entry Page Component', () => {
         });
     });
 
-    /*
+    test('check to see if delete button redirects after deleting a dish', async () => {
+        await act(async () => {
+            const div = document.createElement('div');
+            document.body.appendChild(div);
 
-    test('check to see if delete button calls handler to delete dish', async () => {
-        const div = document.createElement('div');
-        document.body.appendChild(div);
+            const historyMock = {push: jest.fn()};
 
-        const wrapper = await mount(
-            <Router>
-                <DishEntry userId={testID} category={category} match={match} />
-            </Router>,
-            {attachTo: div},
-        );
+            const wrapper = await mount(
+                <Router>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                        <DishEntry
+                            userId={testId}
+                            history={historyMock}
+                            match={match}
+                        />
+                    </MockedProvider>
+                </Router>,
+                {attachTo: div},
+            );
 
-        await flushPromises();
-        wrapper.update();
+            await flushPromises();
+            wrapper.update();
 
-        const componentInstance = wrapper.find(DishEntry).instance();
-        const spyOnDeleteFunction = jest.spyOn(
-            componentInstance,
-            'deleteEntryFromDatabase',
-        );
-
-        componentInstance.forceUpdate();
-        wrapper
-            .find('#deleteDishButton')
-            .first()
-            .simulate('click');
-
-        expect(spyOnDeleteFunction).toHaveBeenCalled();
-    });
-
-    test('check if go back button is rendered', async () => {
-        const div = document.createElement('div');
-        document.body.appendChild(div);
-
-        const wrapper = await mount(
-            <Router>
-                <DishEntry userId={testID} category={category} match={match} />
-            </Router>,
-            {attachTo: div},
-        );
-
-        await flushPromises();
-        wrapper.update();
-
-        expect(
             wrapper
-                .find('#goBackLink')
+                .find('#deleteDishButton')
                 .first()
-                .props().to,
-        ).toBe('/users/category/1');
+                .props()
+                .onClick();
+
+            wrapper.update();
+            await wait();
+
+            expect(historyMock.push.mock.calls[0]).toEqual([
+                '/users/category/1',
+            ]);
+        });
     });
 
-    test('check to see if make dish mode calls handler to make dish mode', async () => {
-        const div = document.createElement('div');
-        document.body.appendChild(div);
+    test('check to see if back button redirects', async () => {
+        await act(async () => {
+            const div = document.createElement('div');
+            document.body.appendChild(div);
 
-        const wrapper = await mount(
-            <Router>
-                <DishEntry userId={testID} category={category} match={match} />
-            </Router>,
-            {attachTo: div},
-        );
+            const historyMock = {push: jest.fn()};
 
-        await flushPromises();
-        wrapper.update();
+            const wrapper = await mount(
+                <Router>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                        <DishEntry
+                            userId={testId}
+                            history={historyMock}
+                            match={match}
+                        />
+                    </MockedProvider>
+                </Router>,
+                {attachTo: div},
+            );
 
-        const componentInstance = wrapper.find(DishEntry).instance();
-        const spyOnDeleteFunction = jest.spyOn(
-            componentInstance,
-            'makeDishModeButton',
-        );
+            await flushPromises();
+            wrapper.update();
 
-        componentInstance.forceUpdate();
-        wrapper
-            .find('#makeDishModeButton')
-            .first()
-            .simulate('click');
+            expect(
+                wrapper
+                    .find('#goBackLink')
+                    .first()
+                    .props().to,
+            ).toBe('/users/category/1');
+        });
+    });
 
-        expect(spyOnDeleteFunction).toHaveBeenCalled();
-                });*/
+    test('check to see if make dish mode is rendered once button is clicked', async () => {
+        await act(async () => {
+            const div = document.createElement('div');
+            document.body.appendChild(div);
+
+            const historyMock = {push: jest.fn()};
+
+            const wrapper = await mount(
+                <Router>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                        <DishEntry
+                            userId={testId}
+                            history={historyMock}
+                            match={match}
+                        />
+                    </MockedProvider>
+                </Router>,
+                {attachTo: div},
+            );
+
+            await flushPromises();
+            wrapper.update();
+
+            wrapper
+                .find('#makeDishModeButton')
+                .first()
+                .props()
+                .onClick();
+
+            wrapper.update();
+            await wait();
+
+            expect(historyMock.push.mock.calls[0][0]).toEqual(
+                `/users/category/${category}/dish/${dishId}/makeMode`,
+            );
+        });
+    });
 });

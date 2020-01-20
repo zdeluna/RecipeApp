@@ -28,6 +28,7 @@ const DishEntry = props => {
     const [ingredientsInSteps, setIngredientsInSteps] = useState([]);
     const [history, setHistory] = useState([]);
     const [makeDishMode, setMakeDishMode] = useState(false);
+    const [deleteDishState, setDeleteDishState] = useState(false);
 
     const client = useApolloClient();
 
@@ -78,10 +79,11 @@ const DishEntry = props => {
     };
 
     const deleteEntryFromDatabase = () => {
+        setDeleteDishState(true);
         deleteDish({variables: {userId: userId, dishId: dishId}});
     };
 
-    const RenderNewDishForm = props => {
+    const RenderNewDishForm = () => {
         if (makeDishMode) {
             let redirect_url =
                 '/users/category/' +
@@ -91,18 +93,11 @@ const DishEntry = props => {
                 '/' +
                 'makeMode';
 
-            return (
-                <Redirect
-                    to={{
-                        pathname: redirect_url,
-                        state: {
-                            steps: steps,
-                            ingredients: ingredients,
-                            ingredientsInSteps: ingredientsInSteps,
-                        },
-                    }}
-                />
-            );
+            props.history.push(redirect_url, {
+                steps: steps,
+                ingredients: ingredients,
+                ingredientsInSteps: ingredientsInSteps,
+            });
         }
 
         if (steps.length < 1 || ingredients.length < 1) {
