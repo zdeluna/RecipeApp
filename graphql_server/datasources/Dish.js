@@ -1,9 +1,10 @@
 const {RESTDataSource} = require('apollo-datasource-rest');
+//const {RESTDataSource} = require('apollo-server-cloud-functions');
 
 class DishAPI extends RESTDataSource {
     constructor() {
         super();
-        this.baseURL = 'http://localhost:5000/api/';
+        this.baseURL = 'https://recipescheduler-227221.appspot.com/api/';
     }
 
     dishReducer(dish, dishId) {
@@ -44,8 +45,8 @@ class DishAPI extends RESTDataSource {
 
     async getAllDishes({userId}) {
         const res = await this.get(`/users/${userId}/dish`);
-        //return res;
-        return this.dishesReducer(res);
+        if (!res) return null;
+        else return this.dishesReducer(res);
     }
 
     async createDish({userId, name, category}) {

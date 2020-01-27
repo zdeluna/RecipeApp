@@ -2,27 +2,25 @@ const express = require('express');
 var request = require('request');
 var cors = require('cors');
 
-const app = express();
-const port = process.env.PORT || 5000;
+const restApp = express();
+const REST_PORT = process.env.PORT || 5000;
 const bodyParser = require('body-parser');
 
-app.use(bodyParser.json());
-app.enable('trust proxy');
-app.use(cors());
+restApp.use(bodyParser.json());
+restApp.enable('trust proxy');
+restApp.use(cors());
 
 const dish = require('./routes/dish');
 const user = require('./routes/user');
 
-const cheerio = require('cheerio');
+restApp.use('/api/users', user);
+restApp.use('/api/', dish);
 
-app.use('/api/users', user);
-app.use('/api/', dish);
-
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
+restApp.listen(REST_PORT, () => {
+    console.log(`Listening on port ${REST_PORT}`);
 });
 
-app.options('/*', function(req, res, next) {
+restApp.options('/*', function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header(
         'Access-Control-Allow-Methods',

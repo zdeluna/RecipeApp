@@ -1,4 +1,4 @@
-const {ApolloServer} = require('apollo-server');
+const {ApolloServer, gql} = require('apollo-server-cloud-functions');
 const typeDefs = require('./schema/schema.js');
 const resolvers = require('./resolvers');
 
@@ -10,8 +10,18 @@ const server = new ApolloServer({
     dataSources: () => ({
         dishAPI: new DishAPI(),
     }),
+    playground: true,
+    introspection: true,
+    context: ({req, res}) => ({
+        headers: req.headers,
+        req,
+        res,
+    }),
 });
 
-server.listen().then(({url}) => {
-    console.log(`Server ready at ${url}`);
+exports.handler = server.createHandler({
+    cors: {
+        origin: '*',
+        credentials: true,
+    },
 });

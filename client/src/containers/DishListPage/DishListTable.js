@@ -22,6 +22,10 @@ const DishListTable = props => {
     if (loading) return <Loading />;
     if (error) return <p>Error :(</p>;
 
+    const handleClick = dishId => {
+        props.history.push(`/users/category/${category}/dish/${dishId}`);
+    };
+
     const ShowTableRows = () => {
         return dishes.map(dish => (
             <tr className="dishRow" key={dish.id + 'r'}>
@@ -69,7 +73,7 @@ const DishListTable = props => {
             <Row>
                 <AddDishForm
                     category={category}
-                    onClick={id => this.handleClick(id)}
+                    onClick={id => handleClick(id)}
                     userId={userId}
                 />
             </Row>

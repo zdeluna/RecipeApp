@@ -14,7 +14,8 @@ const cache = new InMemoryCache({dataIdFromObject: object => object.id});
 const client = new ApolloClient({
     cache,
     link: new HttpLink({
-        uri: 'http://localhost:4000/',
+        uri:
+            'https://us-central1-recipescheduler-227221.cloudfunctions.net/handler',
         headers: {
             'client-name': 'Recipe Scheduler [web]',
             'client-version': '1.0.0',
