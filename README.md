@@ -29,19 +29,25 @@ Next, install the dependencies of the client.
 cd client && npm install
 ```
 
-To run the react server
+To run the React server on port 3000
 
 ```
 npm run client
 ```
 
-To run the backend server
+To run the backend REST server on port 5000
 
 ```
-npm run server
+npm run restServer
 ```
 
-To run the backend on port 5000 and react server on port 3000.
+To run the GraphQL server on port 4000
+
+```
+npm run graphQLServer
+```
+
+To run the client, REST, and GraphQL server concurrently
 
 ```
 npm run dev
@@ -51,6 +57,8 @@ npm run dev
 
 -   [React](https://reactjs.org/)
 -   [Firebase](https://firebase.google.com/)
+-   [GraphQL](https://graphql.org/)
+-   [Apollo](https://www.apollographql.com/)
 -   [Reactstrap](https://reactstrap.github.io/)
 -   [Cheerio](https://cheerio.js.org/)
 
