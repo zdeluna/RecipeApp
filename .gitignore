@@ -15,6 +15,7 @@ coverage/
 fixtures/dom/public/react-dom.js
 fixtures/dom/public/react.js
 test/the-files-to-test.generated.js
+utils/parseRecipe/tests/websites/*
 *.log*
 chrome-user-data
 *.sublime-project
