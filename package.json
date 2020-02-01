@@ -6,7 +6,8 @@
         "restServer": "nodemon server.js",
         "graphQLServer": "GRAPH_ENV=test nodemon graphql_server/index.js",
         "dev": "concurrently --kill-others-on-fail \"npm run restServer\"  \"npm run graphQLServer\" \"npm run client\"",
-        "start": "node server.js"
+        "start": "node server.js",
+        "test": "jest"
     },
     "dependencies": {
         "apollo-datasource-rest": "^0.6.11",
@@ -21,9 +22,12 @@
         "globalize-webpack-plugin": "^3.0.0",
         "graphql": "^14.5.8",
         "react-router": "^5.1.2",
-        "request": "^2.88.0"
+        "request": "^2.88.0",
+        "util": "^0.12.1"
     },
     "devDependencies": {
-        "concurrently": "^3.5.0"
+        "concurrently": "^3.5.0",
+        "fs": "0.0.1-security",
+        "jest": "^25.1.0"
     }
 }

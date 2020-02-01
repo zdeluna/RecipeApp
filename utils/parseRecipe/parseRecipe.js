@@ -1,6 +1,6 @@
 const request = require('request');
 const cheerio = require('cheerio');
-const {sendErrorResponse} = require('../controllers/base.js');
+const {sendErrorResponse} = require('../../controllers/base.js');
 
 /**
  * Parse through a web page and store the steps of the recipe
@@ -17,6 +17,8 @@ exports.getStepsFromWebPage = async $ => {
             console.log('HEADING: ' + headingHTML);
             stepsHTML = await findList(headingHTML);
             stepsHTML = await cleanList(stepsHTML);
+            console.log('HEADING: ' + stepsHTML);
+
             stepsHTML
                 .children('li') // Find the children of the list
                 // Iterate through each child element and store the text of the element and add it to the array
@@ -187,7 +189,7 @@ const cleanList = async listHTML => {
  * @Return {boolean}
  */
 
-function checkForStepsHeading(text) {
+const checkForStepsHeading = text => {
     // Remove semicolon
     text = text.replace(/:/gi, '');
     const acceptableStepsHeading = [
@@ -201,7 +203,7 @@ function checkForStepsHeading(text) {
     } else {
         return false;
     }
-}
+};
 
 /**
  * Check to see if the passed in text is a possible heading for ingredients
@@ -209,7 +211,7 @@ function checkForStepsHeading(text) {
  * @Return {boolean}
  */
 
-function checkForIngredientsHeading(text) {
+const checkForIngredientsHeading = text => {
     // Remove semicolon
     text = text.replace(/:/gi, '');
 
@@ -218,4 +220,21 @@ function checkForIngredientsHeading(text) {
     if (acceptableIngredientsHeading.indexOf(text) > -1) {
         return true;
     } else return false;
-}
+};
+
+/**
+ * Remove the number labels in a text such as "1." or "1)"
+ * @param {String} text - The text containing the number label
+ * @Return {String}
+ */
+
+const removeNumberLabel = text => {
+    // Remove the number label in the format "1."
+    let newText = text.replace(/^\d+\.\s*/, '');
+    if (newText.length != text.length) return newText;
+
+    // Remove the number label in the format "1)"
+    newText = text.replace(/^\d+\)\s*/, '');
+
+    return newText;
+};

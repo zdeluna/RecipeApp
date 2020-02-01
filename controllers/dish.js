@@ -174,23 +174,6 @@ const getIngredientsInSteps = async (steps, ingredients) => {
     return ingredientsInStepsArray;
 };
 
-/**
- * Remove the number labels in a text such as "1." or "1)"
- * @param {String} text - The text containing the number label
- * @Return {String}
- */
-
-const removeNumberLabel = text => {
-    // Remove the number label in the format "1."
-    let newText = text.replace(/^\d+\.\s*/, '');
-    if (newText.length != text.length) return newText;
-
-    // Remove the number label in the format "1)"
-    newText = text.replace(/^\d+\)\s*/, '');
-
-    return newText;
-};
-
 exports.createDish = async (req, res) => {
     try {
         const userId = req.params.userId;
