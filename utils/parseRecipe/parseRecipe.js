@@ -17,7 +17,7 @@ exports.getStepsFromWebPage = async $ => {
             console.log('HEADING: ' + headingHTML);
             stepsHTML = await findList(headingHTML);
             stepsHTML = await cleanList(stepsHTML);
-            console.log('HEADING: ' + stepsHTML);
+            console.log('STEPS: ' + stepsHTML);
 
             stepsHTML
                 .children('li') // Find the children of the list
@@ -28,6 +28,9 @@ exports.getStepsFromWebPage = async $ => {
                         .trim();
                     /* Remove step number if text already contained them.*/
                     stepDescription = removeNumberLabel(stepDescription);
+
+                    /* Remove extra long whitepace*/
+                    stepDescription = removeLongWhiteSpace(stepDescription);
 
                     let step = {id: stepsArray.length, value: stepDescription};
                     stepsArray.push(step);
@@ -48,7 +51,7 @@ exports.getStepsFromWebPage = async $ => {
  * @Return {Promise}
  */
 
-const getIngredientsFromWebPage = async $ => {
+exports.getIngredientsFromWebPage = async $ => {
     return new Promise(async (resolve, reject) => {
         try {
             let ingredientsArray = [];
@@ -86,21 +89,32 @@ const getIngredientsFromWebPage = async $ => {
  */
 
 const findList = async headingNode => {
+    console.log('call find list');
     return new Promise(async (resolve, reject) => {
         let listElements = '';
         let listHTML = '';
 
         // First check the children of the heading node for text
-        listElements = headingNode.children().text();
+        listElements = headingNode
+            .children()
+            .text()
+            .trim();
 
         if (listElements != '') {
-            resolve(headingNode);
+            console.log('Text in child node');
+            console.log(listElements);
+            console.log(listElements.length);
+            return resolve(headingNode);
         }
 
         // First check the next sibling of heading node for text
-        listElements = headingNode.next().text();
+        listElements = headingNode
+            .next()
+            .text()
+            .trim();
 
         if (listElements != '') {
+            console.log('Text in sibling node');
             return resolve(headingNode.next());
         }
 
@@ -229,12 +243,21 @@ const checkForIngredientsHeading = text => {
  */
 
 const removeNumberLabel = text => {
+    // Remove the "Step" label if the step description begins with Step #.
+    let newText = text;
+    if (newText.substring(0, 4) == 'Step')
+        newText = text.replace(/Step [0-9]/, '').trim();
+
     // Remove the number label in the format "1."
-    let newText = text.replace(/^\d+\.\s*/, '');
-    if (newText.length != text.length) return newText;
+    newText = newText.replace(/^\d+\.\s*/, '');
 
     // Remove the number label in the format "1)"
-    newText = text.replace(/^\d+\)\s*/, '');
+    newText = newText.replace(/^\d+\)\s*/, '');
 
     return newText;
+};
+
+const removeLongWhiteSpace = text => {
+    let newString = text.replace(/\s\s+/g, ' ');
+    return newString;
 };
