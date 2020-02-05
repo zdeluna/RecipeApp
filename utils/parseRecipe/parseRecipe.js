@@ -32,6 +32,8 @@ exports.getStepsFromWebPage = async $ => {
                     /* Remove extra long whitepace*/
                     stepDescription = removeLongWhiteSpace(stepDescription);
 
+                    /* Allrecipes has the word 'advertisement' at the end of each step*/
+                    stepDescription = removeAdvertisement(stepDescription);
                     let step = {id: stepsArray.length, value: stepDescription};
                     stepsArray.push(step);
                 });
@@ -55,13 +57,29 @@ exports.getIngredientsFromWebPage = async $ => {
     return new Promise(async (resolve, reject) => {
         try {
             let ingredientsArray = [];
-
+            let ingredientsHTML;
             let headingHTML = await findHeading($, 'ingredients');
-            ingredientsHTML = await findList(headingHTML);
-            ingredientsHTML = await cleanList(ingredientsHTML);
+            ingredientsHTML = await findList2(headingHTML, $);
 
+            if (!ingredientsHTML.length) {
+                console.log('search again ' + headingHTML.parent());
+                ingredientsHTML = await findList2(headingHTML.parent(), $);
+            }
+            if (!ingredientsHTML.length) {
+                console.log(
+                    'search again again ' + headingHTML.parent().next(),
+                );
+                ingredientsHTML = await findList2(
+                    headingHTML.parent().next(),
+                    $,
+                );
+            }
+
+            if (ingredientsHTML.length) console.log('FOUND LIST');
+            ingredientsHTML = await cleanList(ingredientsHTML);
+            console.log('Ingredients: ' + ingredientsHTML);
             ingredientsHTML
-                .children() // Find the children of the list
+                .children('li') // Find the children of the list
                 // Iterate through each child element and store the text of the element and add it to the array
                 .each(function(index, element) {
                     let ingredientDescription = $(this)
@@ -80,6 +98,23 @@ exports.getIngredientsFromWebPage = async $ => {
                 msg: 'CANNOT_RETRIEVE_INGREDIENTS',
             });
         }
+    });
+};
+
+/* Search through DOM starting at node in order to find <ul> or <ol> element*/
+
+const findList2 = async (node, $) => {
+    return new Promise(async (resolve, reject) => {
+        // Check to see if descendants have ul or ol
+        let listHTML = node.find('ul, ol');
+
+        if (listHTML.length) return resolve(listHTML);
+
+        // Check to see if parent has ul or ol
+        listHTML = node.parent().find('ul, ol');
+
+        if (listHTML.length) return resolve(listHTML);
+        return resolve(false);
     });
 };
 
@@ -102,8 +137,6 @@ const findList = async headingNode => {
 
         if (listElements != '') {
             console.log('Text in child node');
-            console.log(listElements);
-            console.log(listElements.length);
             return resolve(headingNode);
         }
 
@@ -260,4 +293,8 @@ const removeNumberLabel = text => {
 const removeLongWhiteSpace = text => {
     let newString = text.replace(/\s\s+/g, ' ');
     return newString;
+};
+
+const removeAdvertisement = text => {
+    return text.replace(/Advertisement/, '').trim();
 };
