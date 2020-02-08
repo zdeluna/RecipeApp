@@ -10,6 +10,8 @@ const readFile = util.promisify(fs.readFile);
 const path = require('path');
 let seriousEatsHTML;
 let allRecipesHTML;
+let damnDeliciousHTML;
+let foodNetworkHTML;
 
 let seriousEatsPath = path.join(
     __dirname,
@@ -17,6 +19,11 @@ let seriousEatsPath = path.join(
 );
 
 let allRecipesPath = path.join(__dirname, '/websites/AllRecipesRecipe.html');
+let damnDeliciousPath = path.join(
+    __dirname,
+    '/websites/DamnDeliciousRecipe.html',
+);
+let foodNetworkPath = path.join(__dirname, '/websites/FoodNetworkRecipe.html');
 
 beforeAll(async () => {
     try {
@@ -25,11 +32,17 @@ beforeAll(async () => {
 
         content = await readFile(allRecipesPath, 'utf8');
         allRecipesHTML = await cheerio.load(content);
+
+        content = await readFile(damnDeliciousPath, 'utf8');
+        damnDeliciousHTML = await cheerio.load(content);
+
+        content = await readFile(foodNetworkPath, 'utf8');
+        foodNetworkHTML = await cheerio.load(content);
     } catch (error) {
         console.log(error);
     }
 });
-
+/*
 test('get steps from a serious eats recipe', async () => {
     const steps = await getStepsFromWebPage(seriousEatsHTML);
     expect(steps.length).toBe(2);
@@ -71,4 +84,29 @@ test('get ingredients from an allrecipes recipe', async () => {
         '2 tablespoons ghee (clarified butter)',
     );
     expect(ingredients[1].value).toEqual('1  onion, finely chopped');
+});
+
+test('get steps from a damn delicious recipe', async () => {
+    const steps = await getStepsFromWebPage(damnDeliciousHTML);
+    expect(steps.length).toBe(7);
+    expect(steps[0].value).toEqual(
+        'FOR THE KOREAN BEEF: In a small bowl, whisk together brown sugar, soy sauce, ginger, sesame oil and Sriracha.',
+    );
+    expect(steps[6].value).toEqual(
+        'Divide farro into bowls. Top with ground beef mixture, kimchi, cabbage and avocado, drizzled with Sriracha mayonnaise and garnished with green onions and sesame seeds, if desired.',
+    );
+});
+
+test('get ingredients from a damn delicious recipe', async () => {
+    const ingredients = await getIngredientsFromWebPage(damnDeliciousHTML);
+    expect(ingredients.length).toBe(19);
+    expect(ingredients[0].value).toEqual('1/4 cup brown sugar, packed');
+    expect(ingredients[18].value).toEqual('1/4 teaspoon sesame seeds');
+});
+*/
+test('get ingredients from a food network recipe', async () => {
+    const ingredients = await getIngredientsFromWebPage(foodNetworkHTML);
+    expect(ingredients.length).toBe(9);
+    expect(ingredients[0].value).toEqual('5 tablespoons chipotle powder');
+    expect(ingredients[8].value).toEqual('Zest of 2 limes');
 });

@@ -58,28 +58,21 @@ exports.getIngredientsFromWebPage = async $ => {
         try {
             let ingredientsArray = [];
             let ingredientsHTML;
+            let ingredientsType = '';
             let headingHTML = await findHeading($, 'ingredients');
             ingredientsHTML = await findList2(headingHTML, $);
 
-            if (!ingredientsHTML.length) {
-                console.log('search again ' + headingHTML.parent());
-                ingredientsHTML = await findList2(headingHTML.parent(), $);
-            }
-            if (!ingredientsHTML.length) {
-                console.log(
-                    'search again again ' + headingHTML.parent().next(),
-                );
-                ingredientsHTML = await findList2(
-                    headingHTML.parent().next(),
-                    $,
-                );
+            if (ingredientsHTML.length) {
+                ingredientsHTML = await cleanList(ingredientsHTML);
+                ingredientsType = 'li';
+            } else {
+                console.log('Did not find list');
+                ingredientsHTML = await findElements(headingHTML, $);
+                ingredientsType = 'p';
             }
 
-            if (ingredientsHTML.length) console.log('FOUND LIST');
-            ingredientsHTML = await cleanList(ingredientsHTML);
-            console.log('Ingredients: ' + ingredientsHTML);
             ingredientsHTML
-                .children('li') // Find the children of the list
+                .children(ingredientsType) // Find the children of the list
                 // Iterate through each child element and store the text of the element and add it to the array
                 .each(function(index, element) {
                     let ingredientDescription = $(this)
@@ -105,15 +98,42 @@ exports.getIngredientsFromWebPage = async $ => {
 
 const findList2 = async (node, $) => {
     return new Promise(async (resolve, reject) => {
-        // Check to see if descendants have ul or ol
-        let listHTML = node.find('ul, ol');
+        let listHTML;
+        const MAX_LEVELS = 3;
+        let currentLevel = 0;
 
-        if (listHTML.length) return resolve(listHTML);
+        while (currentLevel < MAX_LEVELS) {
+            listHTML = node.find('ul, ol');
 
-        // Check to see if parent has ul or ol
-        listHTML = node.parent().find('ul, ol');
+            if (listHTML.length) {
+                return resolve(listHTML);
+            }
+            node = node.parent();
+            currentLevel += 1;
+        }
+        return resolve(false);
+    });
+};
 
-        if (listHTML.length) return resolve(listHTML);
+const findElements = async (node, $) => {
+    console.log('in find function');
+    return new Promise(async (resolve, reject) => {
+        let listHTML;
+        const MAX_LEVELS = 7;
+        let currentLevel = 0;
+        let numElements;
+
+        while (currentLevel < MAX_LEVELS) {
+            console.log('loop');
+            listHTML = node.find('p');
+
+            if (listHTML.parent().length >= 2) {
+                console.log('FOUND ELEMENT: ' + listHTML.parent());
+                return resolve(listHTML.parent());
+            }
+            node = node.parent();
+            currentLevel += 1;
+        }
         return resolve(false);
     });
 };
