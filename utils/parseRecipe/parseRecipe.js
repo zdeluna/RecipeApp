@@ -15,7 +15,7 @@ exports.getStepsFromWebPage = async $ => {
             // Find the heading that contains instruction
             let headingHTML = await findHeading($, 'steps');
             console.log('HEADING: ' + headingHTML);
-            stepsHTML = await findList(headingHTML);
+            stepsHTML = await findList(headingHTML, $);
             stepsHTML = await cleanList(stepsHTML);
             console.log('STEPS: ' + stepsHTML);
 
@@ -60,7 +60,7 @@ exports.getIngredientsFromWebPage = async $ => {
             let ingredientsHTML;
             let ingredientsType = '';
             let headingHTML = await findHeading($, 'ingredients');
-            ingredientsHTML = await findList2(headingHTML, $);
+            ingredientsHTML = await findList(headingHTML, $);
 
             if (ingredientsHTML.length) {
                 ingredientsHTML = await cleanList(ingredientsHTML);
@@ -94,12 +94,15 @@ exports.getIngredientsFromWebPage = async $ => {
     });
 };
 
-/* Search through DOM starting at node in order to find <ul> or <ol> element*/
+/**
+ * Search through DOM for an unordered or orderlist list but investigating current node and traversing down the DOM tree if not found
+ * @Return {Promise}
+ */
 
-const findList2 = async (node, $) => {
+const findList = async (node, $) => {
     return new Promise(async (resolve, reject) => {
         let listHTML;
-        const MAX_LEVELS = 3;
+        const MAX_LEVELS = 5;
         let currentLevel = 0;
 
         while (currentLevel < MAX_LEVELS) {
@@ -119,15 +122,14 @@ const findElements = async (node, $) => {
     console.log('in find function');
     return new Promise(async (resolve, reject) => {
         let listHTML;
-        const MAX_LEVELS = 7;
+        const MAX_LEVELS = 5;
         let currentLevel = 0;
         let numElements;
 
         while (currentLevel < MAX_LEVELS) {
-            console.log('loop');
             listHTML = node.find('p');
 
-            if (listHTML.parent().length >= 2) {
+            if (listHTML.length >= 3) {
                 console.log('FOUND ELEMENT: ' + listHTML.parent());
                 return resolve(listHTML.parent());
             }
@@ -135,64 +137,6 @@ const findElements = async (node, $) => {
             currentLevel += 1;
         }
         return resolve(false);
-    });
-};
-
-/**
- * Search through DOM for an unordered or orderlist list but investigating current node and traversing down the DOM tree if not found
- * @Return {Promise}
- */
-
-const findList = async headingNode => {
-    console.log('call find list');
-    return new Promise(async (resolve, reject) => {
-        let listElements = '';
-        let listHTML = '';
-
-        // First check the children of the heading node for text
-        listElements = headingNode
-            .children()
-            .text()
-            .trim();
-
-        if (listElements != '') {
-            console.log('Text in child node');
-            return resolve(headingNode);
-        }
-
-        // First check the next sibling of heading node for text
-        listElements = headingNode
-            .next()
-            .text()
-            .trim();
-
-        if (listElements != '') {
-            console.log('Text in sibling node');
-            return resolve(headingNode.next());
-        }
-
-        listElements = headingNode
-            .parent()
-            .next()
-            .text();
-
-        if (listElements != '') {
-            resolve(headingNode.parent().next());
-        }
-
-        // Otherwise start from the parent of the heading node and traverse up to find an ordered or unordered list
-        let searchHTML = headingNode;
-        console.log('SEARCHING THROUGH TRAVERSING TREE');
-        while (listElements == '') {
-            searchHTML = searchHTML.parent();
-            listElements = searchHTML.find('ul, ol');
-
-            //If we make it to the top level without finding it, send back a reject
-            if (searchHTML.initialize) {
-                reject();
-            }
-        }
-        resolve(listElements);
     });
 };
 

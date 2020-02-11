@@ -42,7 +42,7 @@ beforeAll(async () => {
         console.log(error);
     }
 });
-/*
+
 test('get steps from a serious eats recipe', async () => {
     const steps = await getStepsFromWebPage(seriousEatsHTML);
     expect(steps.length).toBe(2);
@@ -103,7 +103,18 @@ test('get ingredients from a damn delicious recipe', async () => {
     expect(ingredients[0].value).toEqual('1/4 cup brown sugar, packed');
     expect(ingredients[18].value).toEqual('1/4 teaspoon sesame seeds');
 });
-*/
+
+test('get steps from a food network recipe', async () => {
+    const steps = await getStepsFromWebPage(foodNetworkHTML);
+    expect(steps.length).toBe(2);
+    expect(steps[0].value).toEqual(
+        'For the chipotle salt: Combine the chipotle powder and salt and store in an airtight container.',
+    );
+    expect(steps[1].value).toEqual(
+        'For the corn: Heat a grill or grill pan over high heat until hot, and then add the corn and char on all sides, turning occasionally, until blackened in parts, 12 to 15 minutes. When cool enough to handle, cut the kernels off the cobs. Heat the oil in a saucepan over medium heat and saute the onions until translucent, about 5 minutes. Add the charred corn kernels and cook until warmed. Stir in 1/2 cup of the cheese, the mayonnaise, cilantro and lime zest. Season with 1/4 to 1/2 teaspoon of the chipotle salt. Sprinkle with the remaining 1/4 cup cotija cheese and more chipotle salt.',
+    );
+});
+
 test('get ingredients from a food network recipe', async () => {
     const ingredients = await getIngredientsFromWebPage(foodNetworkHTML);
     expect(ingredients.length).toBe(9);
