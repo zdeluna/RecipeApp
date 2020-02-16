@@ -14,10 +14,8 @@ exports.getStepsFromWebPage = async $ => {
             let stepsArray = [];
             // Find the heading that contains instruction
             let headingHTML = await findHeading($, 'steps');
-            console.log('HEADING: ' + headingHTML);
             stepsHTML = await findList(headingHTML, $);
             stepsHTML = await cleanList(stepsHTML);
-            console.log('STEPS: ' + stepsHTML);
 
             stepsHTML
                 .children('li') // Find the children of the list
@@ -118,8 +116,14 @@ const findList = async (node, $) => {
     });
 };
 
+/**
+ * Parse through a web page and find <p> elements. Used in case <ul> and <ol> are not found.
+ * @param {String} node - The starting node to begin traversing
+ * @param {String} $ - Represents the html contents of a page
+ * @Return {Promise containing parent node}
+ */
+
 const findElements = async (node, $) => {
-    console.log('in find function');
     return new Promise(async (resolve, reject) => {
         let listHTML;
         const MAX_LEVELS = 5;
@@ -130,7 +134,6 @@ const findElements = async (node, $) => {
             listHTML = node.find('p');
 
             if (listHTML.length >= 3) {
-                console.log('FOUND ELEMENT: ' + listHTML.parent());
                 return resolve(listHTML.parent());
             }
             node = node.parent();
@@ -254,10 +257,22 @@ const removeNumberLabel = text => {
     return newText;
 };
 
+/**
+ * Remove long white space that comes before or after a string.
+ * @param {String} text - The text that contains the extra whitespace
+ * @Return {String}
+ */
+
 const removeLongWhiteSpace = text => {
     let newString = text.replace(/\s\s+/g, ' ');
     return newString;
 };
+
+/**
+ * Remove the word advertisement from text.
+ * @param {String} text - The text that contains the word 'advertisement'
+ * @Return {String}
+ */
 
 const removeAdvertisement = text => {
     return text.replace(/Advertisement/, '').trim();

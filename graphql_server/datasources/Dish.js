@@ -4,7 +4,12 @@ const {RESTDataSource} = require('apollo-datasource-rest');
 class DishAPI extends RESTDataSource {
     constructor() {
         super();
-        this.baseURL = 'https://recipescheduler-227221.appspot.com/api/';
+
+        if (process.env.GRAPH_ENV == 'test') {
+            this.baseURL = 'http://localhost:5000/api/';
+        } else {
+            this.baseURL = 'https://recipescheduler-227221.appspot.com/api/';
+        }
     }
 
     dishReducer(dish, dishId) {
@@ -29,12 +34,10 @@ class DishAPI extends RESTDataSource {
         let newDish;
 
         Object.keys(dishes).forEach((key, index) => {
-            console.log(dishes[key]);
             newDish = this.dishReducer(dishes[key], key);
             dishArray.push(newDish);
         });
 
-        console.log(dishArray.length);
         return dishArray;
     }
 

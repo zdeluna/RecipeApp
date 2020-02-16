@@ -2,7 +2,6 @@ const typeDefs = require('./schema/schema.js');
 const resolvers = require('./resolvers');
 
 const DishAPI = require('./datasources/Dish');
-console.log('IN INDEX: ' + process.env.GRAPH_ENV);
 if (process.env.GRAPH_ENV == 'test') {
     const {ApolloServer} = require('apollo-server');
     const server = new ApolloServer({
@@ -14,7 +13,7 @@ if (process.env.GRAPH_ENV == 'test') {
     });
 
     server.listen().then(({url}) => {
-        console.log(`GraphQL Server ready at ${url}`);
+        console.log(`GraphQL Development Server ready at ${url}`);
     });
 } else {
     const {ApolloServer} = require('apollo-server-cloud-functions');

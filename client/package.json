@@ -34,6 +34,7 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test --env=jsdom --browser --testEnvironment=node --verbose=false",
+        "dev": "react-scripts start",
         "eject": "react-scripts eject"
     },
     "devDependencies": {

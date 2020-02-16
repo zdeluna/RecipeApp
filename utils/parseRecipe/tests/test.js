@@ -12,6 +12,7 @@ let seriousEatsHTML;
 let allRecipesHTML;
 let damnDeliciousHTML;
 let foodNetworkHTML;
+let epicuriousHTML;
 
 let seriousEatsPath = path.join(
     __dirname,
@@ -24,6 +25,7 @@ let damnDeliciousPath = path.join(
     '/websites/DamnDeliciousRecipe.html',
 );
 let foodNetworkPath = path.join(__dirname, '/websites/FoodNetworkRecipe.html');
+let epicuriousPath = path.join(__dirname, '/websites/EpicuriousRecipe.html');
 
 beforeAll(async () => {
     try {
@@ -38,6 +40,9 @@ beforeAll(async () => {
 
         content = await readFile(foodNetworkPath, 'utf8');
         foodNetworkHTML = await cheerio.load(content);
+
+        content = await readFile(epicuriousPath, 'utf8');
+        epicuriousHTML = await cheerio.load(content);
     } catch (error) {
         console.log(error);
     }
@@ -120,4 +125,22 @@ test('get ingredients from a food network recipe', async () => {
     expect(ingredients.length).toBe(9);
     expect(ingredients[0].value).toEqual('5 tablespoons chipotle powder');
     expect(ingredients[8].value).toEqual('Zest of 2 limes');
+});
+
+test('get ingredients from an epicurious recipe', async () => {
+    const ingredients = await getIngredientsFromWebPage(epicuriousHTML);
+    expect(ingredients.length).toBe(16);
+    expect(ingredients[0].value).toEqual('1 pound green beans, trimmed');
+    expect(ingredients[15].value).toEqual('Cooked rice (for serving)');
+});
+
+test('get steps from an epicurious recipe', async () => {
+    const steps = await getStepsFromWebPage(epicuriousHTML);
+    expect(steps.length).toBe(5);
+    expect(steps[0].value).toEqual(
+        'Preheat oven to 425°F. Toss green beans with 1 Tbsp. oil, 1/2 tsp. salt, and 1/4 tsp. pepper on a rimmed baking sheet. Roast, tossing once halfway through, until crisp-tender and blackened in spots, 12-15 minutes.',
+    );
+    expect(steps[4].value).toEqual(
+        'Divide chicken and green beans among plates. Top with scallions. Serve with rice alongside.',
+    );
 });
