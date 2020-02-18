@@ -1,6 +1,6 @@
 const firebase = require('../models/firebase.js');
 const userModel = require('../models/user.js');
-
+const dishSQL = require('../models/sql/dishes.js');
 /**
  * Check to see if the dish Id exists in the database
  * @param {String} dishId
@@ -55,6 +55,8 @@ exports.saveDish = async (userId, dishId, updatedDishFields) => {
 
 exports.getAllDishesOfUser = async userId => {
     try {
+        dishSQL.getAllDishes();
+        //console.log('DISHES SQL: ' + dishes);
         return firebase.database
             .child('/dishes/' + userId)
             .once('value')
