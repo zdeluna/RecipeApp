@@ -7,6 +7,7 @@ const {
     getStepsFromWebPage,
     getIngredientsFromWebPage,
 } = require('../utils/parseRecipe/parseRecipe.js');
+const dishModel2 = require('../models/sql/database.js');
 
 /**
  * Make a http request to the url and store the steps and ingredients in an object
@@ -194,6 +195,7 @@ exports.createDish = async (req, res) => {
 
         let responseObject = {id: dishId};
         const dish = await dishModel.addDish(userId, dishId, newDish);
+        await dishModel2.addDish(userId, dishName, category);
 
         let dishUrl =
             req.protocol +

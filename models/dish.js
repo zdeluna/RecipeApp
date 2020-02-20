@@ -55,8 +55,6 @@ exports.saveDish = async (userId, dishId, updatedDishFields) => {
 
 exports.getAllDishesOfUser = async userId => {
     try {
-        dishSQL.getAllDishes();
-        //console.log('DISHES SQL: ' + dishes);
         return firebase.database
             .child('/dishes/' + userId)
             .once('value')
