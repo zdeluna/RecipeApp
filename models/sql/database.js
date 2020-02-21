@@ -66,7 +66,7 @@ const init = async () => {
         console.log(pool);
         //await createUser('abcd', 'zachdeluna@gmail.com');
         //addDish('abcd', 'Fajitas', '1');
-
+        updateDish(1, {name: 'Tacos'});
         //const dishes = await pool.query('SELECT * FROM dishes');
         const dish = await getDish('1');
         //console.log('DISHES FROM: ' + dishes);
@@ -110,4 +110,19 @@ getDish = async dishId => {
         );
         return dishQuery[0];
     } catch (error) {}
+};
+
+updateDish = async (dishId, updatedDishFields) => {
+    try {
+        // Get the dish object then assign new properties based on properties in updatedDishFields
+        const dish = await getDish(dishId);
+        for (let key in updatedDishFields) {
+            dish[key] = updatedDishFields[key];
+        }
+
+        const sql = 'UPDATE dishes SET name=?, category=? WHERE dishId=?';
+        await pool.query(sql, [dish.name, dish.category, dishId]);
+    } catch (error) {
+        console.log(error);
+    }
 };
