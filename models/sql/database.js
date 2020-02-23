@@ -52,23 +52,42 @@ const ensureSchema = async () => {
         dishId INT NOT NULL AUTO_INCREMENT, 
         name VARCHAR(255), 
         category VARCHAR(255),
+        cookingTime VARCHAR(255),
+        lastMade VARCHAR(255),
         userId INT,
+        notes VARCHAR(255),
+        url VARCHAR(255),
         PRIMARY KEY (dishId),
         FOREIGN KEY (userId) REFERENCES users(id));`,
     );
+
+    await pool.query(`CREATE TABLE IF NOT EXISTS history (
+        id INT NOT NULL AUTO_INCREMENT, 
+        date DATE,
+        dishId INT,
+        PRIMARY KEY (id), 
+        FOREIGN KEY (dishId) REFERENCES dishes(dishId));`);
+    /*
+    await pool.query(`CREATE TABLE IF NOT EXISTS dish_history (
+        id INT NOT NULL AUTO_INCREMENT, 
+        historyId INT,
+        dishId INT,
+        PRIMARY KEY (id),
+        FOREIGN KEY (historyId) REFERENCES history(id),
+FOREIGN KEY (dishId) REFERENCES dishes(dishId));`);*/
 };
 
 const init = async () => {
     try {
         pool = await createPool();
-        await ensureSchema();
+        //await ensureSchema();
 
-        console.log(pool);
+        await getDish('1');
         //await createUser('abcd', 'zachdeluna@gmail.com');
         //addDish('abcd', 'Fajitas', '1');
-        updateDish(1, {name: 'Tacos'});
+        //updateDish(1, {name: 'Tacos'});
         //const dishes = await pool.query('SELECT * FROM dishes');
-        const dish = await getDish('1');
+        //const dish = await getDish('1');
         //console.log('DISHES FROM: ' + dishes);
     } catch (error) {
         console.log('ERR: ' + error);
@@ -105,10 +124,23 @@ addDish = async (googleId, name, category) => {
 getDish = async dishId => {
     try {
         const dishQuery = await pool.query(
-            'SELECT * FROM dishes WHERE dishId=dishId=?',
+            'SELECT * FROM dishes WHERE dishId=?',
             [dishId],
         );
-        return dishQuery[0];
+        const historyQuery = await pool.query(
+            'SELECT date FROM history WHERE dishId=? ORDER BY date',
+            [dishId],
+        );
+
+        let history = [];
+        for (let i = 0; i < historyQuery.length; i++) {
+            history[i] = historyQuery[i];
+        }
+
+        dish = dishQuery[0];
+        dish.history = history;
+        dish.lastMade = history[0];
+        return dish;
     } catch (error) {}
 };
 
@@ -120,8 +152,16 @@ updateDish = async (dishId, updatedDishFields) => {
             dish[key] = updatedDishFields[key];
         }
 
-        const sql = 'UPDATE dishes SET name=?, category=? WHERE dishId=?';
-        await pool.query(sql, [dish.name, dish.category, dishId]);
+        const sql =
+            'UPDATE dishes SET category=?, cookingTime=?, lastMade=?, name=?, notes=?, url=? WHERE dishId=?';
+        await pool.query(sql, [
+            dish.category,
+            dish.cookingTime,
+            dish.lastMade,
+            dish.name,
+            dish.notes,
+            dish.url,
+        ]);
     } catch (error) {
         console.log(error);
     }
