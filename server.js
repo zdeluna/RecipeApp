@@ -1,6 +1,8 @@
 const express = require('express');
 var request = require('request');
 var cors = require('cors');
+var mysql = require('./dbconfig.js');
+app.set('mysql', mysql);
 
 const restApp = express();
 const REST_PORT = process.env.PORT || 5000;

@@ -1,4 +1,5 @@
 const firebase = require('../models/firebase.js');
+const pool = require('../models/sql/database.js');
 
 /**
  * Create a new user in the database using the userId and email
@@ -6,11 +7,13 @@ const firebase = require('../models/firebase.js');
  * @param {String} email
  */
 
-exports.createNewUser = async (userId, email) => {
-    var updates = {};
-    updates['/users/' + userId] = {email: email};
-
-    return firebase.database.update(updates);
+exports.createUser = async (googleId, email) => {
+    try {
+        const sql = 'INSERT INTO users (googleId, email) VALUES (?, ?)';
+        await pool.query(sql, [googleId, email]);
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 /**

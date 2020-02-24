@@ -1,6 +1,6 @@
 const firebase = require('../models/firebase.js');
 const userModel = require('../models/user.js');
-const dishSQL = require('../models/sql/dishes.js');
+const dbModel = require('../models/sql/database.js');
 /**
  * Check to see if the dish Id exists in the database
  * @param {String} dishId
@@ -55,12 +55,8 @@ exports.saveDish = async (userId, dishId, updatedDishFields) => {
 
 exports.getAllDishesOfUser = async userId => {
     try {
-        return firebase.database
-            .child('/dishes/' + userId)
-            .once('value')
-            .then(function(snapshot) {
-                return snapshot.val();
-            });
+        console.log('get all dishes of user ' + userId);
+        return dbModel.getAllDishes(userId);
     } catch (error) {
         throw Error({statusCode: 422, msg: error.message});
     }

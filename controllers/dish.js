@@ -178,23 +178,13 @@ const getIngredientsInSteps = async (steps, ingredients) => {
 exports.createDish = async (req, res) => {
     try {
         const userId = req.params.userId;
-        await userModel.checkIfUserExists(userId);
+        //await userModel.checkIfUserExists(userId);
 
         const dishName = req.body.name;
         const category = req.body.category;
 
-        const dishId = dishModel.getNewDishKey();
-
-        let newDish = {
-            userId: userId,
-            name: dishName,
-            category: category,
-            history: [],
-            dishId: dishId,
-        };
-
-        let responseObject = {id: dishId};
-        const dish = await dishModel.addDish(userId, dishId, newDish);
+        //      let responseObject = {id: dishId};
+        // const dish = await dishModel.addDish(userId, dishId, newDish);
         await dishModel2.addDish(userId, dishName, category);
 
         let dishUrl =
@@ -253,8 +243,9 @@ exports.getDishesOfUser = async (req, res) => {
     const userId = req.params.userId;
 
     try {
-        await userModel.checkIfUserExists(userId);
-        const dishes = await dishModel.getAllDishesOfUser(userId);
+        //await userModel.checkIfUserExists(userId);
+        const id = userModel.checkIfUserExists(userId);
+        const dishes = await dishModel.getAllDishesOfUser(id);
         res.status(200).json(dishes);
     } catch (error) {
         sendErrorResponse(res, error);
