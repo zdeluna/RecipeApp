@@ -96,13 +96,21 @@ exports.getDishFromDatabase = async (userId, dishId) => {
  * @Return {Object}
  */
 
-exports.addDish = async (userId, dishId, newDish) => {
+exports.addDish = async (connection, googleId, name, category) => {
     try {
-        let updates = {};
-        updates['/dishes/' + userId + '/' + dishId] = newDish;
-
-        return await firebase.database.update(updates);
+        // Get the id associated with the googleId
+        const userQuery = await connection.query(
+            'SELECT id FROM users WHERE googleId=?',
+            [googleId],
+        );
+        const userId = userQuery[0].id;
+        const sql =
+            'INSERT INTO dishes (userId, name, category) VALUES (?, ?, ?)';
+        const response = await connection.query(sql, [userId, name, category]);
+        console.log('print response');
+        return response.insertId;
     } catch (error) {
+        console.log(error);
         throw Error({statusCode: 422, msg: error.message});
     }
 };

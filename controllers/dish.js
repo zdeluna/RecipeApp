@@ -178,6 +178,9 @@ const getIngredientsInSteps = async (steps, ingredients) => {
 
 exports.createDish = async (req, res) => {
     try {
+        const pool = await req.app.get('pool');
+        const connection = await getConnection(pool);
+
         const userId = req.params.userId;
         //await userModel.checkIfUserExists(userId);
 
@@ -185,8 +188,14 @@ exports.createDish = async (req, res) => {
         const category = req.body.category;
 
         //      let responseObject = {id: dishId};
-        // const dish = await dishModel.addDish(userId, dishId, newDish);
-        await dishModel2.addDish(userId, dishName, category);
+        const dishId = await dishModel.addDish(
+            connection,
+            userId,
+            dishName,
+            category,
+        );
+
+        let responseObject = {id: dishId};
 
         let dishUrl =
             req.protocol +
