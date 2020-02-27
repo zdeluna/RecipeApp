@@ -53,10 +53,16 @@ exports.saveDish = async (userId, dishId, updatedDishFields) => {
  * @Return {Object}
  */
 
-exports.getAllDishesOfUser = async userId => {
+exports.getAllDishesOfUser = async (connection, googleId) => {
     try {
-        console.log('get all dishes of user ' + userId);
-        return dbModel.getAllDishes(userId);
+        const userQuery = await connection.query(
+            'SELECT id FROM users WHERE googleId=?',
+            [googleId],
+        );
+        const userId = userQuery[0].id;
+        const sql = 'SELECT * FROM dishes WHERE userId=?';
+        const dishes = await connection.query(sql, [userId]);
+        return dishes;
     } catch (error) {
         throw Error({statusCode: 422, msg: error.message});
     }

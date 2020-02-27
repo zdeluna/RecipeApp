@@ -8,6 +8,7 @@ const {
     getIngredientsFromWebPage,
 } = require('../utils/parseRecipe/parseRecipe.js');
 const dishModel2 = require('../models/sql/database.js');
+const {getConnection} = require('../dbconfig.js');
 
 /**
  * Make a http request to the url and store the steps and ingredients in an object
@@ -244,8 +245,10 @@ exports.getDishesOfUser = async (req, res) => {
 
     try {
         //await userModel.checkIfUserExists(userId);
-        const id = userModel.checkIfUserExists(userId);
-        const dishes = await dishModel.getAllDishesOfUser(id);
+        const pool = await req.app.get('pool');
+        const connection = await getConnection(pool);
+
+        const dishes = await dishModel.getAllDishesOfUser(connection, userId);
         res.status(200).json(dishes);
     } catch (error) {
         sendErrorResponse(res, error);

@@ -1,9 +1,11 @@
 require('dotenv').config();
 const mysql = require('promise-mysql');
 
-var pool = async () => {
+let poolPromise;
+
+var createPool = async () => {
     console.log('CREATE POOL');
-    let pool = await mysql.createPool({
+    return await mysql.createPool({
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: process.env.DB_NAME,
@@ -32,9 +34,12 @@ var pool = async () => {
         // will queue at once before returning an error. If 0, there is no limit.
         queueLimit: 0, // Default: 0
     });
-    await ensureSchema(pool);
+};
+//await ensureSchema(pool);
 
-    return pool;
+const getConnection = async pool => {
+    const connection = await pool.getConnection();
+    return connection;
 };
 
 const ensureSchema = async pool => {
@@ -72,4 +77,4 @@ const ensureSchema = async pool => {
         FOREIGN KEY (dishId) REFERENCES dishes(dishId));`);
 };
 
-module.exports.pool = pool;
+module.exports = {getConnection, createPool};
