@@ -6,7 +6,7 @@ const dbModel = require('../models/sql/database.js');
  * @param {String} dishId
  */
 
-exports.checkIfDishExists = async (userId, dishId) => {
+const checkIfDishExists = async (userId, dishId) => {
     return new Promise(async (resolve, reject) => {
         const snapshot = await firebase.database
             .child('/dishes/' + userId)
@@ -25,7 +25,7 @@ exports.checkIfDishExists = async (userId, dishId) => {
  * @Return {String}
  */
 
-exports.getNewDishKey = () => {
+const getNewDishKey = () => {
     return firebase.database.child('dishes').push().key;
 };
 
@@ -37,12 +37,31 @@ exports.getNewDishKey = () => {
  * @Return {String}
  */
 
-exports.saveDish = async (userId, dishId, updatedDishFields) => {
+const saveDish = async (connection, dishId, updatedDishFields) => {
     try {
-        return firebase.database
-            .child('/dishes/' + userId + '/' + dishId)
-            .update(updatedDishFields);
+        // Get the dish object then assign new properties based on properties in updatedDishFields
+        const dish = await getDishFromDatabase(connection, dishId);
+        for (let key in updatedDishFields) {
+            dish[key] = updatedDishFields[key];
+        }
+        console.log('In save dish: ' + dish.steps);
+        console.log(dish.steps[0]);
+        const sql =
+            'UPDATE dishes SET category=?, cookingTime=?, ingredients=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE dishId=?';
+        await connection.query(sql, [
+            dish.category,
+            dish.cookingTime,
+            JSON.stringify(dish.ingredients),
+            dish.lastMade,
+            dish.name,
+            dish.notes,
+            JSON.stringify(dish.steps),
+            dish.url,
+            dish.dishId,
+        ]);
+        console.log('Finished saving dish' + dish);
     } catch (error) {
+        console.log(error);
         throw Error({statusCode: 422, msg: error.message});
     }
 };
@@ -53,7 +72,7 @@ exports.saveDish = async (userId, dishId, updatedDishFields) => {
  * @Return {Object}
  */
 
-exports.getAllDishesOfUser = async (connection, googleId) => {
+const getAllDishesOfUser = async (connection, googleId) => {
     try {
         const userQuery = await connection.query(
             'SELECT id FROM users WHERE googleId=?',
@@ -62,6 +81,14 @@ exports.getAllDishesOfUser = async (connection, googleId) => {
         const userId = userQuery[0].id;
         const sql = 'SELECT * FROM dishes WHERE userId=?';
         const dishes = await connection.query(sql, [userId]);
+
+        // Convert the JSON from the database to Javascript Object
+        for (let i = 0; i < dishes.length; i++) {
+            if (dishes[i].steps) dishes[i].steps = JSON.parse(dishes[i].steps);
+            if (dishes[i].ingredients)
+                dishes[i].ingredients = JSON.parse(dishes[i].ingredients);
+        }
+
         return dishes;
     } catch (error) {
         throw Error({statusCode: 422, msg: error.message});
@@ -70,21 +97,43 @@ exports.getAllDishesOfUser = async (connection, googleId) => {
 
 /**
  * Retrieves a specific dish for a user
- * @param {String} userId
+ * @param {String} googleId
  * @param {String} dishId
  * @Return {Object}
  */
 
-exports.getDishFromDatabase = async (userId, dishId) => {
+const getDishFromDatabase = async (connection, dishId) => {
     try {
-        return firebase.database
-            .child('/dishes/' + userId + '/' + dishId)
-            .once('value')
-            .then(function(snapshot) {
-                return snapshot.val();
-            });
+        console.log('GEt dish fucntion: ' + dishId);
+        const dishQuery = await connection.query(
+            'SELECT * FROM dishes WHERE dishId=?',
+            [dishId],
+        );
+        const historyQuery = await connection.query(
+            'SELECT date FROM history WHERE dishId=? ORDER BY date',
+            [dishId],
+        );
+
+        let history = [];
+        for (let i = 0; i < historyQuery.length; i++) {
+            history[i] = historyQuery[i].date;
+        }
+        dish = dishQuery[0];
+        if (historyQuery) {
+            dish.history = history;
+            dish.lastMade = history[0];
+        }
+
+        if (dish.steps) dish.steps = JSON.parse(dish.steps);
+        if (dish.ingredients) dish.ingredients = JSON.parse(dish.ingredients);
+        if (dish.ingredientsInSteps)
+            dish.ingredientsInSteps = JSON.parse(dish.ingredientsInSteps);
+
+        return dish;
     } catch (error) {
-        throw Error({statusCode: 422, msg: error.message});
+        console.log('error from get dish function');
+        console.log(error);
+        return Error({statusCode: 422, msg: error.message});
     }
 };
 
@@ -96,7 +145,7 @@ exports.getDishFromDatabase = async (userId, dishId) => {
  * @Return {Object}
  */
 
-exports.addDish = async (connection, googleId, name, category) => {
+const addDish = async (connection, googleId, name, category) => {
     try {
         // Get the id associated with the googleId
         const userQuery = await connection.query(
@@ -122,7 +171,7 @@ exports.addDish = async (connection, googleId, name, category) => {
  * @Return {Object}
  */
 
-exports.deleteDishFromDatabase = async (userId, dishId) => {
+const deleteDishFromDatabase = async (userId, dishId) => {
     try {
         let updates = {};
         updates['/dishes/' + userId + '/' + dishId] = null;
@@ -130,4 +179,14 @@ exports.deleteDishFromDatabase = async (userId, dishId) => {
     } catch (error) {
         throw Error({statusCode: 422, msg: error.message});
     }
+};
+
+module.exports = {
+    checkIfDishExists,
+    getNewDishKey,
+    saveDish,
+    getAllDishesOfUser,
+    getDishFromDatabase,
+    addDish,
+    deleteDishFromDatabase,
 };
