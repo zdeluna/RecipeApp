@@ -21,15 +21,6 @@ const checkIfDishExists = async (userId, dishId) => {
 };
 
 /**
- * Returns a new key that can be used to create a dish
- * @Return {String}
- */
-
-const getNewDishKey = () => {
-    return firebase.database.child('dishes').push().key;
-};
-
-/**
  * Saves a user's dish to the database using the updated dish fields
  * @param {String} userId
  * @param {String} dishId
@@ -44,8 +35,8 @@ const saveDish = async (connection, dishId, updatedDishFields) => {
         for (let key in updatedDishFields) {
             dish[key] = updatedDishFields[key];
         }
-        console.log('In save dish: ' + dish.steps);
-        console.log(dish.steps[0]);
+        connection.release();
+
         const sql =
             'UPDATE dishes SET category=?, cookingTime=?, ingredients=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE dishId=?';
         await connection.query(sql, [
@@ -59,9 +50,7 @@ const saveDish = async (connection, dishId, updatedDishFields) => {
             dish.url,
             dish.dishId,
         ]);
-        console.log('Finished saving dish' + dish);
     } catch (error) {
-        console.log(error);
         throw Error({statusCode: 422, msg: error.message});
     }
 };
@@ -81,6 +70,8 @@ const getAllDishesOfUser = async (connection, googleId) => {
         const userId = userQuery[0].id;
         const sql = 'SELECT * FROM dishes WHERE userId=?';
         const dishes = await connection.query(sql, [userId]);
+
+        connection.release();
 
         // Convert the JSON from the database to Javascript Object
         for (let i = 0; i < dishes.length; i++) {
@@ -113,6 +104,7 @@ const getDishFromDatabase = async (connection, dishId) => {
             'SELECT date FROM history WHERE dishId=? ORDER BY date',
             [dishId],
         );
+        connection.release();
 
         let history = [];
         for (let i = 0; i < historyQuery.length; i++) {
@@ -131,8 +123,6 @@ const getDishFromDatabase = async (connection, dishId) => {
 
         return dish;
     } catch (error) {
-        console.log('error from get dish function');
-        console.log(error);
         return Error({statusCode: 422, msg: error.message});
     }
 };
@@ -156,7 +146,7 @@ const addDish = async (connection, googleId, name, category) => {
         const sql =
             'INSERT INTO dishes (userId, name, category) VALUES (?, ?, ?)';
         const response = await connection.query(sql, [userId, name, category]);
-        console.log('print response');
+        connection.release();
         return response.insertId;
     } catch (error) {
         console.log(error);
@@ -171,11 +161,13 @@ const addDish = async (connection, googleId, name, category) => {
  * @Return {Object}
  */
 
-const deleteDishFromDatabase = async (userId, dishId) => {
+const deleteDishFromDatabase = async (connection, dishId) => {
     try {
-        let updates = {};
-        updates['/dishes/' + userId + '/' + dishId] = null;
-        return await firebase.database.update(updates);
+        const deleteQuery = await connection.query(
+            'DELETE FROM dishes WHERE dishId=?',
+            [dishId],
+        );
+        connection.release();
     } catch (error) {
         throw Error({statusCode: 422, msg: error.message});
     }

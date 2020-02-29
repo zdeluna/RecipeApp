@@ -295,13 +295,16 @@ exports.getDish = async (req, res) => {
 
 exports.deleteDish = async (req, res) => {
     try {
+        const pool = await req.app.get('pool');
+        const connection = await getConnection(pool);
+
         const userId = req.params.userId;
-        await userModel.checkIfUserExists(userId);
+        //await userModel.checkIfUserExists(userId);
 
         const dishId = req.params.dishId;
-        await dishModel.checkIfDishExists(userId, dishId);
+        //await dishModel.checkIfDishExists(userId, dishId);
 
-        await dishModel.deleteDishFromDatabase(userId, dishId);
+        await dishModel.deleteDishFromDatabase(connection, dishId);
         res.status(204).end();
     } catch (error) {
         sendErrorResponse(res, error);
