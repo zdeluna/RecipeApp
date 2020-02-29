@@ -2,7 +2,7 @@ const {sendErrorResponse} = require('./base.js');
 const userModel = require('../models/user.js');
 const {getConnection} = require('../dbconfig.js');
 
-exports.createUser = async (req, res) => {
+createUser = async (req, res) => {
     try {
         const pool = await req.app.get('pool');
         const connection = await getConnection(pool);
@@ -15,4 +15,4 @@ exports.createUser = async (req, res) => {
     }
 };
 
-exports.checkIfUserExists = async googleId => {};
+module.exports = {createUser};

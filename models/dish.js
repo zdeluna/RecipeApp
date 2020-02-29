@@ -1,17 +1,23 @@
 const firebase = require('../models/firebase.js');
 const userModel = require('../models/user.js');
 const dbModel = require('../models/sql/database.js');
+const {getConnection} = require('../dbconfig.js');
 /**
  * Check to see if the dish Id exists in the database
  * @param {String} dishId
  */
 
-const checkIfDishExists = async (userId, dishId) => {
+const checkIfDishExists = async (pool, dishId) => {
+    const connection = await getConnection(pool);
+
     return new Promise(async (resolve, reject) => {
-        const snapshot = await firebase.database
-            .child('/dishes/' + userId)
-            .once('value');
-        if (snapshot.hasChild(dishId)) return resolve();
+        const dishQuery = await connection.query(
+            'SELECT * FROM dishes WHERE dishId=?',
+            [dishId],
+        );
+        connection.release();
+
+        if (dishQuery.length) return resolve();
         else
             return reject({
                 statusCode: 404,
@@ -28,14 +34,15 @@ const checkIfDishExists = async (userId, dishId) => {
  * @Return {String}
  */
 
-const saveDish = async (connection, dishId, updatedDishFields) => {
+const saveDish = async (pool, dishId, updatedDishFields) => {
     try {
         // Get the dish object then assign new properties based on properties in updatedDishFields
-        const dish = await getDishFromDatabase(connection, dishId);
+        const dish = await getDishFromDatabase(pool, dishId);
         for (let key in updatedDishFields) {
             dish[key] = updatedDishFields[key];
         }
-        connection.release();
+
+        const connection = await getConnection(pool);
 
         const sql =
             'UPDATE dishes SET category=?, cookingTime=?, ingredients=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE dishId=?';
@@ -50,6 +57,7 @@ const saveDish = async (connection, dishId, updatedDishFields) => {
             dish.url,
             dish.dishId,
         ]);
+        connection.release();
     } catch (error) {
         throw Error({statusCode: 422, msg: error.message});
     }
@@ -61,8 +69,9 @@ const saveDish = async (connection, dishId, updatedDishFields) => {
  * @Return {Object}
  */
 
-const getAllDishesOfUser = async (connection, googleId) => {
+const getAllDishesOfUser = async (pool, googleId) => {
     try {
+        const connection = await getConnection(pool);
         const userQuery = await connection.query(
             'SELECT id FROM users WHERE googleId=?',
             [googleId],
@@ -93,9 +102,10 @@ const getAllDishesOfUser = async (connection, googleId) => {
  * @Return {Object}
  */
 
-const getDishFromDatabase = async (connection, dishId) => {
+const getDishFromDatabase = async (pool, dishId) => {
     try {
-        console.log('GEt dish fucntion: ' + dishId);
+        const connection = await getConnection(pool);
+
         const dishQuery = await connection.query(
             'SELECT * FROM dishes WHERE dishId=?',
             [dishId],
@@ -135,8 +145,10 @@ const getDishFromDatabase = async (connection, dishId) => {
  * @Return {Object}
  */
 
-const addDish = async (connection, googleId, name, category) => {
+const addDish = async (pool, googleId, name, category) => {
     try {
+        const connection = await getConnection(pool);
+
         // Get the id associated with the googleId
         const userQuery = await connection.query(
             'SELECT id FROM users WHERE googleId=?',
@@ -146,7 +158,9 @@ const addDish = async (connection, googleId, name, category) => {
         const sql =
             'INSERT INTO dishes (userId, name, category) VALUES (?, ?, ?)';
         const response = await connection.query(sql, [userId, name, category]);
+
         connection.release();
+
         return response.insertId;
     } catch (error) {
         console.log(error);
@@ -161,8 +175,10 @@ const addDish = async (connection, googleId, name, category) => {
  * @Return {Object}
  */
 
-const deleteDishFromDatabase = async (connection, dishId) => {
+const deleteDishFromDatabase = async (pool, dishId) => {
     try {
+        const connection = await getConnection(pool);
+
         const deleteQuery = await connection.query(
             'DELETE FROM dishes WHERE dishId=?',
             [dishId],
@@ -175,7 +191,6 @@ const deleteDishFromDatabase = async (connection, dishId) => {
 
 module.exports = {
     checkIfDishExists,
-    getNewDishKey,
     saveDish,
     getAllDishesOfUser,
     getDishFromDatabase,

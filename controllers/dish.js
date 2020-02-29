@@ -7,8 +7,6 @@ const {
     getStepsFromWebPage,
     getIngredientsFromWebPage,
 } = require('../utils/parseRecipe/parseRecipe.js');
-const dishModel2 = require('../models/sql/database.js');
-const {getConnection} = require('../dbconfig.js');
 
 /**
  * Make a http request to the url and store the steps and ingredients in an object
@@ -179,10 +177,9 @@ const getIngredientsInSteps = async (steps, ingredients) => {
 exports.createDish = async (req, res) => {
     try {
         const pool = await req.app.get('pool');
-        const connection = await getConnection(pool);
 
         const userId = req.params.userId;
-        //await userModel.checkIfUserExists(userId);
+        await userModel.checkIfUserExists(connection, userId);
 
         const dishName = req.body.name;
         const category = req.body.category;
@@ -213,7 +210,6 @@ exports.createDish = async (req, res) => {
 
 exports.updateDish = async (req, res) => {
     const pool = await req.app.get('pool');
-    const connection = await getConnection(pool);
 
     const updatedDishFields = req.body;
     const userId = req.params.userId;
@@ -235,24 +231,18 @@ exports.updateDish = async (req, res) => {
             updatedDishFields.ingredients = dishInfo.ingredients;
             updatedDishFields.ingredientsInSteps = dishInfo.ingredientsInSteps;
             console.log('B');
-            await dishModel.saveDish(connection, dishId, updatedDishFields);
+            await dishModel.saveDish(pool, dishId, updatedDishFields);
             console.log('C');
 
-            const dish = await dishModel.getDishFromDatabase(
-                connection,
-                dishId,
-            );
+            const dish = await dishModel.getDishFromDatabase(pool, dishId);
 
             res.status(200).send(dish);
         } else {
             if (updatedDishFields.history)
                 updatedDishFields.lastMade = updatedDishFields.history[0];
 
-            await dishModel.saveDish(connection, dishId, updatedDishFields);
-            const dish = await dishModel.getDishFromDatabase(
-                connection,
-                dishId,
-            );
+            await dishModel.saveDish(pool, dishId, updatedDishFields);
+            const dish = await dishModel.getDishFromDatabase(pool, dishId);
             res.status(200).send(dish);
         }
     } catch (error) {
@@ -265,11 +255,10 @@ exports.getDishesOfUser = async (req, res) => {
     const userId = req.params.userId;
 
     try {
-        //await userModel.checkIfUserExists(userId);
         const pool = await req.app.get('pool');
-        const connection = await getConnection(pool);
-
-        const dishes = await dishModel.getAllDishesOfUser(connection, userId);
+        //await userModel.checkIfUserExists(pool, userId);
+        console.log('call');
+        const dishes = await dishModel.getAllDishesOfUser(pool, userId);
         res.status(200).json(dishes);
     } catch (error) {
         sendErrorResponse(res, error);
@@ -279,13 +268,12 @@ exports.getDishesOfUser = async (req, res) => {
 exports.getDish = async (req, res) => {
     try {
         const pool = await req.app.get('pool');
-        const connection = await getConnection(pool);
 
         const userId = req.params.userId;
-        //await userModel.checkIfUserExists(userId);
+        await userModel.checkIfUserExists(pool, userId);
 
         const dishId = req.params.dishId;
-        const dish = await dishModel.getDishFromDatabase(connection, dishId);
+        const dish = await dishModel.getDishFromDatabase(pool, dishId);
 
         res.status(200).json(dish);
     } catch (error) {
@@ -296,15 +284,14 @@ exports.getDish = async (req, res) => {
 exports.deleteDish = async (req, res) => {
     try {
         const pool = await req.app.get('pool');
-        const connection = await getConnection(pool);
 
         const userId = req.params.userId;
-        //await userModel.checkIfUserExists(userId);
+        await userModel.checkIfUserExists(pool, userId);
 
         const dishId = req.params.dishId;
-        //await dishModel.checkIfDishExists(userId, dishId);
+        await dishModel.checkIfDishExists(pool, dishId);
 
-        await dishModel.deleteDishFromDatabase(connection, dishId);
+        await dishModel.deleteDishFromDatabase(pool, dishId);
         res.status(204).end();
     } catch (error) {
         sendErrorResponse(res, error);

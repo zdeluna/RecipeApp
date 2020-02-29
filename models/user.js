@@ -1,5 +1,6 @@
 const firebase = require('../models/firebase.js');
 const pool = require('../models/sql/database.js');
+const {getConnection} = require('../dbconfig.js');
 
 /**
  * Create a new user in the database using the userId and email
@@ -7,8 +8,10 @@ const pool = require('../models/sql/database.js');
  * @param {String} email
  */
 
-exports.createUser = async (connection, googleId, email) => {
+const createUser = async (pool, googleId, email) => {
     try {
+        const connection = await getConnection(pool);
+
         const sql = 'INSERT INTO users (googleId, email) VALUES (?, ?)';
         await connection.query(sql, [googleId, email]);
     } catch (error) {
@@ -16,15 +19,16 @@ exports.createUser = async (connection, googleId, email) => {
     }
 };
 
-/**
- * Check to see if the user Id exists in the database
- * @param {String} userId
- */
-
-exports.checkIfUserExists = async userId => {
+const checkIfUserExists = async (pool, googleId) => {
     return new Promise(async (resolve, reject) => {
-        const snapshot = await firebase.database.child('/users/').once('value');
-        if (snapshot.hasChild(userId)) return resolve();
+        const connection = await getConnection(pool);
+
+        const userQuery = await connection.query(
+            'SELECT * FROM users WHERE googleId=?',
+            [googleId],
+        );
+
+        if (userQuery.length) return resolve();
         else
             return reject({
                 statusCode: 404,
@@ -32,3 +36,5 @@ exports.checkIfUserExists = async userId => {
             });
     });
 };
+
+module.exports = {createUser, checkIfUserExists};
