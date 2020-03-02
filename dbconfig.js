@@ -16,7 +16,7 @@ var createPool = async () => {
 
         // 'connectionLimit' is the maximum number of connections the pool is allowed
         // to keep at once.
-        connectionLimit: 5,
+        connectionLimit: 1,
         // [END cloud_sql_mysql_mysql_limit]
 
         // [START cloud_sql_mysql_mysql_timeout]

@@ -179,13 +179,13 @@ exports.createDish = async (req, res) => {
         const pool = await req.app.get('pool');
 
         const userId = req.params.userId;
-        await userModel.checkIfUserExists(connection, userId);
+        await userModel.checkIfUserExists(pool, userId);
 
         const dishName = req.body.name;
         const category = req.body.category;
 
         const dishId = await dishModel.addDish(
-            connection,
+            pool,
             userId,
             dishName,
             category,

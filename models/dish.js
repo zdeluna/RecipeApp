@@ -4,6 +4,7 @@ const dbModel = require('../models/sql/database.js');
 const {getConnection} = require('../dbconfig.js');
 /**
  * Check to see if the dish Id exists in the database
+ * @param {Pool} pool
  * @param {String} dishId
  */
 
@@ -28,7 +29,7 @@ const checkIfDishExists = async (pool, dishId) => {
 
 /**
  * Saves a user's dish to the database using the updated dish fields
- * @param {String} userId
+ * @param {Pool} pool
  * @param {String} dishId
  * @param {Object} updatedDishFields
  * @Return {String}
@@ -65,7 +66,8 @@ const saveDish = async (pool, dishId, updatedDishFields) => {
 
 /**
  * Retrieves all of a user's dishes
- * @param {String} userId
+ * @param {Pool} pool
+ * @param {String} googleId
  * @Return {Object}
  */
 
@@ -97,7 +99,7 @@ const getAllDishesOfUser = async (pool, googleId) => {
 
 /**
  * Retrieves a specific dish for a user
- * @param {String} googleId
+ * @param {String} pool
  * @param {String} dishId
  * @Return {Object}
  */
@@ -139,21 +141,22 @@ const getDishFromDatabase = async (pool, dishId) => {
 
 /**
  * Add a new dish to the database
- * @param {String} userId
- * @param {String} dishId
- * @param {Object} newDish
+ * @param {Pool} pool
+ * @param {String} googleId
+ * @param {String} name
+ * @param {String} category
  * @Return {Object}
  */
 
 const addDish = async (pool, googleId, name, category) => {
     try {
         const connection = await getConnection(pool);
-
         // Get the id associated with the googleId
         const userQuery = await connection.query(
             'SELECT id FROM users WHERE googleId=?',
             [googleId],
         );
+        console.log('NAME: ' + name);
         const userId = userQuery[0].id;
         const sql =
             'INSERT INTO dishes (userId, name, category) VALUES (?, ?, ?)';
@@ -163,6 +166,7 @@ const addDish = async (pool, googleId, name, category) => {
 
         return response.insertId;
     } catch (error) {
+        console.log('ERROR');
         console.log(error);
         throw Error({statusCode: 422, msg: error.message});
     }
@@ -170,7 +174,7 @@ const addDish = async (pool, googleId, name, category) => {
 
 /**
  * Delete a dish from the database
- * @param {String} userId
+ * @param {Pool} pool
  * @param {String} dishId
  * @Return {Object}
  */
