@@ -1,6 +1,5 @@
 const firebase = require('../models/firebase.js');
 const userModel = require('../models/user.js');
-const dbModel = require('../models/sql/database.js');
 const {getConnection} = require('../dbconfig.js');
 /**
  * Check to see if the dish Id exists in the database
@@ -46,7 +45,7 @@ const saveDish = async (pool, dishId, updatedDishFields) => {
         const connection = await getConnection(pool);
 
         const sql =
-            'UPDATE dishes SET category=?, cookingTime=?, ingredients=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE dishId=?';
+            'UPDATE dishes SET category=?, cookingTime=?, ingredients=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE id=?';
         await connection.query(sql, [
             dish.category,
             dish.cookingTime,
@@ -56,10 +55,11 @@ const saveDish = async (pool, dishId, updatedDishFields) => {
             dish.notes,
             JSON.stringify(dish.steps),
             dish.url,
-            dish.dishId,
+            dish.id,
         ]);
         connection.release();
     } catch (error) {
+        connection.release();
         throw Error({statusCode: 422, msg: error.message});
     }
 };
@@ -93,6 +93,8 @@ const getAllDishesOfUser = async (pool, googleId) => {
 
         return dishes;
     } catch (error) {
+        connection.release();
+
         throw Error({statusCode: 422, msg: error.message});
     }
 };
@@ -135,6 +137,9 @@ const getDishFromDatabase = async (pool, dishId) => {
 
         return dish;
     } catch (error) {
+        console.log(error);
+        connection.release();
+
         return Error({statusCode: 422, msg: error.message});
     }
 };
@@ -160,14 +165,18 @@ const addDish = async (pool, googleId, name, category) => {
         const userId = userQuery[0].id;
         const sql =
             'INSERT INTO dishes (userId, name, category) VALUES (?, ?, ?)';
-        const response = await connection.query(sql, [userId, name, category]);
+        await connection.query(sql, [userId, name, category]);
+        let dishId = (await connection.query('SELECT LAST_INSERT_ID()'))[0][
+            'LAST_INSERT_ID()'
+        ];
 
         connection.release();
-
-        return response.insertId;
+        return dishId;
     } catch (error) {
         console.log('ERROR');
         console.log(error);
+        connection.release();
+
         throw Error({statusCode: 422, msg: error.message});
     }
 };
@@ -189,6 +198,8 @@ const deleteDishFromDatabase = async (pool, dishId) => {
         );
         connection.release();
     } catch (error) {
+        connection.release();
+
         throw Error({statusCode: 422, msg: error.message});
     }
 };

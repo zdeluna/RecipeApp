@@ -12,9 +12,9 @@ class DishAPI extends RESTDataSource {
         }
     }
 
-    dishReducer(dish, dishId) {
+    dishReducer(dish) {
         return {
-            id: dishId,
+            id: dish.dishId,
             name: dish.name,
             category: dish.category,
             userId: dish.userId,
@@ -31,12 +31,10 @@ class DishAPI extends RESTDataSource {
 
     dishesReducer(dishes) {
         let dishArray = [];
-        let newDish;
 
-        Object.keys(dishes).forEach((key, index) => {
-            newDish = this.dishReducer(dishes[key], key);
-            dishArray.push(newDish);
-        });
+        for (let i = 0; i < dishes.length; i++) {
+            dishArray.push(this.dishReducer(dishes[i]));
+        }
 
         return dishArray;
     }

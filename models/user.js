@@ -1,5 +1,4 @@
 const firebase = require('../models/firebase.js');
-const pool = require('../models/sql/database.js');
 const {getConnection} = require('../dbconfig.js');
 
 /**
@@ -18,6 +17,7 @@ const createUser = async (pool, googleId, email) => {
         connection.release();
     } catch (error) {
         console.log(error);
+        connection.release();
     }
 };
 
