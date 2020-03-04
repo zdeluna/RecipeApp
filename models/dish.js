@@ -45,7 +45,7 @@ const saveDish = async (pool, dishId, updatedDishFields) => {
         const connection = await getConnection(pool);
 
         const sql =
-            'UPDATE dishes SET category=?, cookingTime=?, ingredients=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE id=?';
+            'UPDATE dishes SET category=?, cookingTime=?, ingredients=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE dishId=?';
         await connection.query(sql, [
             dish.category,
             dish.cookingTime,
@@ -55,10 +55,11 @@ const saveDish = async (pool, dishId, updatedDishFields) => {
             dish.notes,
             JSON.stringify(dish.steps),
             dish.url,
-            dish.id,
+            dishId,
         ]);
         connection.release();
     } catch (error) {
+        console.log(error);
         connection.release();
         throw Error({statusCode: 422, msg: error.message});
     }
