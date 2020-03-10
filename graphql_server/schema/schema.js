@@ -19,6 +19,11 @@ const typeDefs = gql`
         dish: Dish
     }
 
+    type CreateUserResponse {
+        success: Boolean!
+        message: String
+    }
+
     type Step {
         id: Int
         value: String
@@ -60,9 +65,8 @@ const typeDefs = gql`
     }
 
     type User {
-        id: ID!
+        googleId: String
         email: String
-        dishes: [Dish]
     }
 
     type Query {
@@ -91,6 +95,7 @@ const typeDefs = gql`
             lastMade: String
         ): UpdateDishResponse
         deleteDish(userId: String!, dishId: String!): DeleteDishResponse
+        addUser(googleId: String!, email: String!): CreateUserResponse
     }
 `;
 

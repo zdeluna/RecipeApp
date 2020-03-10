@@ -22,7 +22,7 @@ const GET_DISH = gql`
         }
     }
 `;
-
+/*
 export default function withFetchDataHook(Component) {
     return function WrappedComponent(props) {
         const {loading, error, data} = useQuery(GET_DISH, {
@@ -36,4 +36,4 @@ export default function withFetchDataHook(Component) {
 
         return <Component {...props} dish={data.dish} />;
     };
-}
+            }*/

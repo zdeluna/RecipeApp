@@ -38,5 +38,12 @@ module.exports = {
                 message: 'The dish was successfully deleted',
             };
         },
+        addUser: async (_, {googleId, email}, {dataSources}) => {
+            dataSources.userAPI.createUser({googleId: googleId, email: email});
+            return {
+                success: true,
+                message: 'The user was created successfully',
+            };
+        },
     },
 };

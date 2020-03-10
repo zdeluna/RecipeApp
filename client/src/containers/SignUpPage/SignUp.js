@@ -3,7 +3,6 @@ import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
 import app from '../../base';
 import {Container, Form, Button, Input, FormGroup, Label} from 'reactstrap';
-import API from '../../utils/Api';
 
 class SignUp extends Component {
     constructor(props) {
