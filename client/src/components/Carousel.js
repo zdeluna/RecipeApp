@@ -15,7 +15,6 @@ class Carousel extends Component {
             currentStep: 0,
             loading: false,
         };
-        console.log(this.state.ingredientsInSteps);
     }
 
     showNextIngredient = () => {
@@ -81,7 +80,7 @@ class Carousel extends Component {
                         this.state.currentStep
                     ].ingredients.map((ingredient, index) => (
                         <h5 key={'ingredient' + index}>{ingredient.value}</h5>
-                    ))}
+                    ))}{' '}
                 </Container>
             </div>
         );

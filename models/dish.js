@@ -45,11 +45,17 @@ const saveDish = async (pool, dishId, updatedDishFields) => {
         const connection = await getConnection(pool);
 
         const sql =
-            'UPDATE dishes SET category=?, cookingTime=?, ingredients=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE dishId=?';
+            'UPDATE dishes SET category=?, cookingTime=?, ingredients=?, ingredientsInSteps=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE dishId=?';
         await connection.query(sql, [
             dish.category,
             dish.cookingTime,
             JSON.stringify(dish.ingredients),
+            JSON.stringify(dish.ingredientsInSteps, [
+                'step',
+                'ingredients',
+                'id',
+                'value',
+            ]),
             dish.lastMade,
             dish.name,
             dish.notes,
@@ -85,11 +91,15 @@ const getAllDishesOfUser = async (pool, googleId) => {
 
         connection.release();
 
-        // Convert the JSON from the database to Javascript Object
+        // Convert the JSON from the database to Javascript Objects
         for (let i = 0; i < dishes.length; i++) {
             if (dishes[i].steps) dishes[i].steps = JSON.parse(dishes[i].steps);
             if (dishes[i].ingredients)
                 dishes[i].ingredients = JSON.parse(dishes[i].ingredients);
+            if (dishes[i].ingredientsInSteps)
+                dishes[i].ingredientsInSteps = JSON.parse(
+                    dishes[i].ingredientsInSteps,
+                );
         }
 
         return dishes;
@@ -135,7 +145,6 @@ const getDishFromDatabase = async (pool, dishId) => {
         if (dish.ingredients) dish.ingredients = JSON.parse(dish.ingredients);
         if (dish.ingredientsInSteps)
             dish.ingredientsInSteps = JSON.parse(dish.ingredientsInSteps);
-
         return dish;
     } catch (error) {
         console.log(error);

@@ -37,6 +37,12 @@ export const UPDATE_DISH = gql`
                 history
                 cookingTime
                 notes
+                ingredientsInSteps {
+                    step
+                    ingredients {
+                        value
+                    }
+                }
             }
         }
     }

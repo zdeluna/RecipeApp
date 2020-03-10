@@ -76,6 +76,12 @@ const DishEntry = props => {
         if (dishData.dish.ingredients && dishData.dish.ingredients.length) {
             setIngredients(dishData.dish.ingredients);
         }
+        if (
+            dishData.dish.ingredientsInSteps &&
+            dishData.dish.ingredientsInSteps.length
+        ) {
+            setIngredientsInSteps(dishData.dish.ingredientsInSteps);
+        }
     };
 
     const deleteEntryFromDatabase = () => {

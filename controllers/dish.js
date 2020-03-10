@@ -37,7 +37,10 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
                     dishInfo.steps,
                     ingredients,
                 );
-                console.log('IN SERVER: ' + dishInfo.ingredientsInSteps);
+                console.log(
+                    'IN SERVER ingredients in steps: ' +
+                        dishInfo.ingredientsInSteps,
+                );
                 return resolve(dishInfo);
             } catch (error) {
                 return reject(error);
@@ -221,8 +224,6 @@ exports.updateDish = async (req, res) => {
     // If the user is updating the url, then the steps and ingredients will be changed
     try {
         if (updatedDishFields.url) {
-            console.log('A');
-
             dishInfo = await getRecipeStepsAndIngredientsFromWebPage(
                 updatedDishFields.url,
             );
@@ -230,9 +231,7 @@ exports.updateDish = async (req, res) => {
             updatedDishFields.steps = dishInfo.steps;
             updatedDishFields.ingredients = dishInfo.ingredients;
             updatedDishFields.ingredientsInSteps = dishInfo.ingredientsInSteps;
-            console.log('B');
             await dishModel.saveDish(pool, dishId, updatedDishFields);
-            console.log('C');
 
             const dish = await dishModel.getDishFromDatabase(pool, dishId);
 
@@ -256,8 +255,7 @@ exports.getDishesOfUser = async (req, res) => {
 
     try {
         const pool = await req.app.get('pool');
-        //await userModel.checkIfUserExists(pool, userId);
-        console.log('call');
+        await userModel.checkIfUserExists(pool, userId);
         const dishes = await dishModel.getAllDishesOfUser(pool, userId);
         res.status(200).json(dishes);
     } catch (error) {
@@ -270,6 +268,8 @@ exports.getDish = async (req, res) => {
         const pool = await req.app.get('pool');
 
         const userId = req.params.userId;
+        console.log('user id');
+        console.log(req.params.userId);
         await userModel.checkIfUserExists(pool, userId);
 
         const dishId = req.params.dishId;

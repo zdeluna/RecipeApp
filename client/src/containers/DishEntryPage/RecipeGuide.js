@@ -16,6 +16,8 @@ class RecipeGuide extends Component {
             ingredientsInSteps: this.props.location.state.ingredientsInSteps,
             dishUrl: '',
         };
+        console.log('in recipeguide');
+        console.log(this.state.ingredientsInSteps);
     }
     componentDidMount() {
         // Set the state variable to the dish entry url
