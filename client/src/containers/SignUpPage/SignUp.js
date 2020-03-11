@@ -22,13 +22,7 @@ class SignUp extends Component {
             await app
                 .auth()
                 .createUserWithEmailAndPassword(email, password)
-                .then(function(user) {
-                    const api = new API();
-                    let userField = {email: email, uid: user.user.uid};
-                    api.createUser(userField).then(response => {
-                        history.push('/');
-                    });
-                });
+                .then(function(user) {});
         } catch (error) {
             alert(error);
         }

@@ -11,7 +11,7 @@ const {getConnection} = require('../dbconfig.js');
 const createUser = async (pool, googleId, email) => {
     try {
         const connection = await getConnection(pool);
-
+        console.log('IN CREATE USER : ' + googleId);
         const sql = 'INSERT INTO users (googleId, email) VALUES (?, ?)';
         await connection.query(sql, [googleId, email]);
         connection.release();

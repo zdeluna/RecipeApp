@@ -2,6 +2,7 @@ const typeDefs = require('./schema/schema.js');
 const resolvers = require('./resolvers');
 
 const DishAPI = require('./datasources/Dish');
+const UserAPI = require('./datasources/User');
 if (process.env.GRAPH_ENV == 'test') {
     const {ApolloServer} = require('apollo-server');
     const server = new ApolloServer({
@@ -9,6 +10,7 @@ if (process.env.GRAPH_ENV == 'test') {
         resolvers,
         dataSources: () => ({
             dishAPI: new DishAPI(),
+            userAPI: new UserAPI(),
         }),
     });
 
@@ -22,6 +24,7 @@ if (process.env.GRAPH_ENV == 'test') {
         resolvers,
         dataSources: () => ({
             dishAPI: new DishAPI(),
+            userAPI: new UserAPI(),
         }),
         playground: true,
         introspection: true,
