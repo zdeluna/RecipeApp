@@ -1,4 +1,3 @@
-const firebase = require('../models/firebase.js');
 const userModel = require('../models/user.js');
 const {getConnection} = require('../dbconfig.js');
 /**

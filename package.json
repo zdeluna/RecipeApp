@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "client": "cd client && npm run start",
-        "restServer": "nodemon server.js",
+        "restServer": "REST_ENV=test nodemon server.js",
         "graphQLServer": "GRAPH_ENV=test nodemon graphql_server/index.js",
         "dev": "concurrently --kill-others-on-fail \"npm run restServer\"  \"npm run graphQLServer\" \"npm run client\"",
         "start": "node server.js",
