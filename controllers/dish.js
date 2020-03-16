@@ -1,3 +1,4 @@
+'use strict';
 const dishModel = require('../models/dish.js');
 const userModel = require('../models/user.js');
 const request = require('request');
@@ -26,24 +27,21 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
                 let $ = cheerio.load(html);
                 dishInfo.steps = await getStepsFromWebPage($);
                 dishInfo.ingredients = await getIngredientsFromWebPage($);
-
                 /* Copy ingredients array so that we can send it as a parameter when
 				 *  determine which ingredients are in each step in the function getIngredientsInSteps*/
                 let ingredients = dishInfo.ingredients.map(a =>
                     Object.assign({}, a),
                 );
-
                 dishInfo.ingredientsInSteps = await getIngredientsInSteps(
                     dishInfo.steps,
                     ingredients,
                 );
-                console.log(
-                    'IN SERVER ingredients in steps: ' +
-                        dishInfo.ingredientsInSteps,
-                );
                 return resolve(dishInfo);
             } catch (error) {
-                return reject(error);
+                return reject({
+                    statusCode: 422,
+                    msg: 'CANNOT_RETRIEVE_STEPS_OR_INGREDIENTS',
+                });
             }
         });
     });
@@ -60,7 +58,7 @@ function stepHasIngredient(step, ingredient) {
     let ingredientBrokenIntoWordsArray = ingredient.split(' ');
 
     for (var i = 0; i < ingredientBrokenIntoWordsArray.length; i++) {
-        ingredientWord = ingredientBrokenIntoWordsArray[i];
+        let ingredientWord = ingredientBrokenIntoWordsArray[i];
 
         /* Ignore all strings of length 1 */
         if (ingredientWord.length == 1) continue;
@@ -79,13 +77,17 @@ function stepHasIngredient(step, ingredient) {
  */
 
 function filterAllIngredients(ingredientsArray) {
-    let filteredIngredientsArray = [];
-    for (let i = 0; i < ingredientsArray.length; i++) {
-        let ingredientObject = ingredientsArray[i];
-        ingredientObject.value = filterIngredient(ingredientObject.value);
-        filteredIngredientsArray.push(ingredientObject);
+    try {
+        let filteredIngredientsArray = [];
+        for (let i = 0; i < ingredientsArray.length; i++) {
+            ingredientObject = ingredientsArray[i];
+            ingredientObject.value = filterIngredient(ingredientObject.value);
+            filteredIngredientsArray.push(ingredientObject);
+        }
+        return filteredIngredientsArray;
+    } catch (error) {
+        return error;
     }
-    return filteredIngredientsArray;
 }
 
 /**
@@ -144,34 +146,38 @@ function filterIngredient(ingredient) {
  */
 
 const getIngredientsInSteps = async (steps, ingredients) => {
-    let ingredientsInStepsArray = [];
-    /* We are going to copy ingredients array so that when we insert info the dishInfo field we will use the 
+    try {
+        let ingredientsInStepsArray = [];
+        /* We are going to copy ingredients array so that when we insert info the dishInfo field we will use the 
 	 * the orignal array instead of the one that is filtered */
-    ingredientsCopy = ingredients.map(a => Object.assign({}, a));
+        let ingredientsCopy = ingredients.map(a => Object.assign({}, a));
 
-    let filteredIngredients = filterAllIngredients(ingredientsCopy);
+        let filteredIngredients = filterAllIngredients(ingredientsCopy);
 
-    for (let stepNumber = 0; stepNumber < steps.length; stepNumber++) {
-        let ingredientsStepObject = {};
-        ingredientsStepObject.step = stepNumber;
+        for (let stepNumber = 0; stepNumber < steps.length; stepNumber++) {
+            let ingredientsStepObject = {};
+            ingredientsStepObject.step = stepNumber;
 
-        let ingredientsInEachStep = [];
-        let stepDescription = steps[stepNumber].value.toLowerCase();
+            let ingredientsInEachStep = [];
+            let stepDescription = steps[stepNumber].value.toLowerCase();
 
-        for (
-            let ingredientNumber = 0;
-            ingredientNumber < filteredIngredients.length;
-            ingredientNumber++
-        ) {
-            let ingredientDescription =
-                filteredIngredients[ingredientNumber].value;
+            for (
+                let ingredientNumber = 0;
+                ingredientNumber < filteredIngredients.length;
+                ingredientNumber++
+            ) {
+                let ingredientDescription =
+                    filteredIngredients[ingredientNumber].value;
 
-            if (stepHasIngredient(stepDescription, ingredientDescription)) {
-                ingredientsInEachStep.push(ingredients[ingredientNumber]);
+                if (stepHasIngredient(stepDescription, ingredientDescription)) {
+                    ingredientsInEachStep.push(ingredients[ingredientNumber]);
+                }
             }
+            ingredientsStepObject.ingredients = ingredientsInEachStep;
+            ingredientsInStepsArray.push(ingredientsStepObject);
         }
-        ingredientsStepObject.ingredients = ingredientsInEachStep;
-        ingredientsInStepsArray.push(ingredientsStepObject);
+    } catch (error) {
+        return error;
     }
 
     return ingredientsInStepsArray;
@@ -224,10 +230,12 @@ exports.updateDish = async (req, res) => {
     // If the user is updating the url, then the steps and ingredients will be changed
     try {
         if (updatedDishFields.url) {
+            console.log('UPDaDTAE');
+
             dishInfo = await getRecipeStepsAndIngredientsFromWebPage(
                 updatedDishFields.url,
             );
-
+            console.log('UPDDTAE');
             updatedDishFields.steps = dishInfo.steps;
             updatedDishFields.ingredients = dishInfo.ingredients;
             updatedDishFields.ingredientsInSteps = dishInfo.ingredientsInSteps;

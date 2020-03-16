@@ -1,4 +1,4 @@
-const firebase = require('../models/firebase.js');
+'use strict';
 const {getConnection} = require('../dbconfig.js');
 
 /**

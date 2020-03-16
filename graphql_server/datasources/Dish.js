@@ -1,3 +1,4 @@
+'use strict';
 const {RESTDataSource} = require('apollo-datasource-rest');
 //const {RESTDataSource} = require('apollo-server-cloud-functions');
 

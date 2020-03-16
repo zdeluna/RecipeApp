@@ -1,3 +1,4 @@
+'use strict';
 const userModel = require('../models/user.js');
 const {getConnection} = require('../dbconfig.js');
 /**
@@ -134,7 +135,7 @@ const getDishFromDatabase = async (pool, dishId) => {
         for (let i = 0; i < historyQuery.length; i++) {
             history[i] = historyQuery[i].date;
         }
-        dish = dishQuery[0];
+        let dish = dishQuery[0];
         if (historyQuery) {
             dish.history = history;
             dish.lastMade = history[0];

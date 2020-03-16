@@ -1,3 +1,4 @@
+'use strict';
 const typeDefs = require('./schema/schema.js');
 const resolvers = require('./resolvers');
 

@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express');
 var request = require('request');
 var cors = require('cors');
