@@ -56,7 +56,7 @@ npm run dev
 ## Built With
 
 -   [React](https://reactjs.org/)
--   [Firebase](https://firebase.google.com/)
+-   [Google Cloud SQL](https://cloud.google.com/sql)
 -   [GraphQL](https://graphql.org/)
 -   [Apollo](https://www.apollographql.com/)
 -   [Reactstrap](https://reactstrap.github.io/)
