@@ -6,14 +6,14 @@
 	},
 	"item": [
 		{
-			"name": "Get all of a user's dishes",
+			"name": "Get all of a user's dishes when user hasn't created any dishes",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
 						"id": "873cf39a-d719-4aa2-a582-8e79b543c875",
 						"exec": [
-							"pm.environment.set(\"userID1\", \"XOqoUyqbCMWg7HUjURF6alTSXSP2\");"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -145,7 +145,7 @@
 					"script": {
 						"id": "873cf39a-d719-4aa2-a582-8e79b543c875",
 						"exec": [
-							"pm.environment.set(\"userID1\", \"XOqoUyqbCMWg7HUjURF6alTSXSP2\");"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -155,13 +155,13 @@
 					"script": {
 						"id": "5fa046c2-fea0-4d40-bcd9-60ded6161f38",
 						"exec": [
-							"pm.test(\"Check to make the number of dishes increased by 1\", function() {",
+							"pm.test(\"Get all of user's dishes after a new dish has been added\", function() {",
 							"   ",
 							"    var response = pm.response.json();",
 							"    ",
 							"    var expectedDishes = pm.environment.get(\"numberofDishes\") + 1;",
 							"    ",
-							"    pm.expect(Object.keys(response).length).to.eql(expectedDishes);",
+							"    pm.expect(response.length).to.eql(expectedDishes);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -205,7 +205,7 @@
 					"script": {
 						"id": "e047ac52-a851-4d37-8ba2-8d7179f371a9",
 						"exec": [
-							"pm.test(\"Check to make sure name and category are correct\", function() {",
+							"pm.test(\"Get a user's dish and check if name and category are correct\", function() {",
 							"   ",
 							"    var response = pm.response.json();",
 							"    pm.expect(response.category).to.equal(1);",
@@ -255,9 +255,9 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e047ac52-a851-4d37-8ba2-8d7179f371a9",
+						"id": "8181372f-d8a0-4415-8a0b-37228dfcf33a",
 						"exec": [
-							"pm.test(\"Check to make sure response status code is 200\", function() {",
+							"pm.test(\"Check to make sure response status code is 200 after steps have been added\", function() {",
 							"   ",
 							"     pm.response.to.have.status(200);",
 							"});"
@@ -369,7 +369,7 @@
 					"script": {
 						"id": "e047ac52-a851-4d37-8ba2-8d7179f371a9",
 						"exec": [
-							"pm.test(\"Check to make sure response status code is 200 after ingredients have been added\", function() {",
+							"pm.test(\"Add ingredients to a dish\", function() {",
 							"   ",
 							"     pm.response.to.have.status(200);",
 							"});"
@@ -426,7 +426,7 @@
 					"script": {
 						"id": "e047ac52-a851-4d37-8ba2-8d7179f371a9",
 						"exec": [
-							"pm.test(\"Check to make sure steps are added\", function() {",
+							"pm.test(\"Get a user's dish and check if ingredients are added\", function() {",
 							"   ",
 							"    var response = pm.response.json();",
 							"    pm.expect(response.ingredients[0].id).to.equal(0);",
@@ -562,7 +562,7 @@
 						},
 						{
 							"key": "dishId",
-							"value": "343234343"
+							"value": "123321"
 						}
 					]
 				}
@@ -577,7 +577,7 @@
 					"script": {
 						"id": "29de8088-f789-4e9d-9fcf-1591c4996beb",
 						"exec": [
-							"pm.test(\"Check to make response status code is 204 when deleting a dish\", function() {",
+							"pm.test(\"Delete a user's dish\", function() {",
 							"    ",
 							"    pm.response.to.have.status(204);",
 							"});"
