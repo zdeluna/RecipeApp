@@ -6,7 +6,6 @@ import {ADD_DISH} from '../api/mutations/dish/createDish';
 
 const AddDishForm = props => {
     let input = {value: ''};
-    const [category] = useState(props.category);
     const [addDish] = useMutation(ADD_DISH, {
         onCompleted({addDish}) {
             props.onClick(addDish.dishId);

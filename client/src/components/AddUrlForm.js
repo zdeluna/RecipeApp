@@ -16,10 +16,13 @@ const AddUrlForm = props => {
     const [url, setUrl] = useState('');
     const [userId] = useState(props.userId);
     const [dishId] = useState(props.dishId);
-    const [showAlert] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
     const [updateDish] = useMutation(UPDATE_DISH, {
         onCompleted(updateDishResponse) {
             props.onClick();
+        },
+        onError(error) {
+            setShowAlert(true);
         },
     });
 
@@ -46,7 +49,7 @@ const AddUrlForm = props => {
         });
     };
     const RenderAlert = props => {
-        if ({showAlert} === true) {
+        if (showAlert === true) {
             return (
                 <Alert id="url_alert" color="primary">
                     Could not find ingredients/steps in Url.

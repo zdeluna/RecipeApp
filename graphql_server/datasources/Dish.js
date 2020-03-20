@@ -70,6 +70,8 @@ class DishAPI extends RESTDataSource {
             `/users/${userId}/dish/${dishId}`,
             dishObject,
         );
+        console.log('RES');
+        console.log(res);
         return this.dishReducer(res, dishId);
     }
 }

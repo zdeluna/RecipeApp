@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {useMutation} from '@apollo/react-hooks';
 
-import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
 import app from '../../base';
 import {Container, Form, Button, Input, FormGroup, Label} from 'reactstrap';

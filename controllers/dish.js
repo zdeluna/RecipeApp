@@ -151,13 +151,11 @@ const getIngredientsInSteps = async (steps, ingredients) => {
         /* We are going to copy ingredients array so that when we insert info the dishInfo field we will use the 
 	 * the orignal array instead of the one that is filtered */
         let ingredientsCopy = ingredients.map(a => Object.assign({}, a));
-
         let filteredIngredients = filterAllIngredients(ingredientsCopy);
-
         for (let stepNumber = 0; stepNumber < steps.length; stepNumber++) {
             let ingredientsStepObject = {};
             ingredientsStepObject.step = stepNumber;
-
+            console.log('G-');
             let ingredientsInEachStep = [];
             let stepDescription = steps[stepNumber].value.toLowerCase();
 
@@ -168,7 +166,7 @@ const getIngredientsInSteps = async (steps, ingredients) => {
             ) {
                 let ingredientDescription =
                     filteredIngredients[ingredientNumber].value;
-
+                console.log('G');
                 if (stepHasIngredient(stepDescription, ingredientDescription)) {
                     ingredientsInEachStep.push(ingredients[ingredientNumber]);
                 }
@@ -176,11 +174,12 @@ const getIngredientsInSteps = async (steps, ingredients) => {
             ingredientsStepObject.ingredients = ingredientsInEachStep;
             ingredientsInStepsArray.push(ingredientsStepObject);
         }
+        return ingredientsInStepsArray;
     } catch (error) {
+        console.log('ERROR');
+        console.log(error.msg);
         return error;
     }
-
-    return ingredientsInStepsArray;
 };
 
 exports.createDish = async (req, res) => {
@@ -230,12 +229,9 @@ exports.updateDish = async (req, res) => {
     // If the user is updating the url, then the steps and ingredients will be changed
     try {
         if (updatedDishFields.url) {
-            console.log('UPDaDTAE');
-
             dishInfo = await getRecipeStepsAndIngredientsFromWebPage(
                 updatedDishFields.url,
             );
-            console.log('UPDDTAE');
             updatedDishFields.steps = dishInfo.steps;
             updatedDishFields.ingredients = dishInfo.ingredients;
             updatedDishFields.ingredientsInSteps = dishInfo.ingredientsInSteps;

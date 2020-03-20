@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import DishEntryStepsTable from '../../components/DishEntryStepsTable';
 import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
 import Calendar from '../../components/Calendar';
@@ -28,7 +28,6 @@ const DishEntry = props => {
     const [ingredientsInSteps, setIngredientsInSteps] = useState([]);
     const [history, setHistory] = useState([]);
     const [makeDishMode, setMakeDishMode] = useState(false);
-    const [deleteDishState, setDeleteDishState] = useState(false);
 
     const client = useApolloClient();
 
@@ -85,7 +84,6 @@ const DishEntry = props => {
     };
 
     const deleteEntryFromDatabase = () => {
-        setDeleteDishState(true);
         deleteDish({variables: {userId: userId, dishId: dishId}});
     };
 

@@ -27,7 +27,7 @@ if (process.env.GRAPH_ENV == 'test') {
             dishAPI: new DishAPI(),
             userAPI: new UserAPI(),
         }),
-        playground: true,
+        playground: false,
         introspection: true,
         context: ({req, res}) => ({
             headers: req.headers,

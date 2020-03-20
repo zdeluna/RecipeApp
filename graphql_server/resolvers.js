@@ -19,12 +19,11 @@ module.exports = {
             };
         },
         updateDish: async (_, dishObject, {dataSources}) => {
-            let result = await dataSources.dishAPI.updateDish(
+            const result = await dataSources.dishAPI.updateDish(
                 dishObject.userId,
                 dishObject.dishId,
                 dishObject,
             );
-
             return {
                 success: true,
                 message: 'The dish was successfully updated',

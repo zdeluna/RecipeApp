@@ -12,7 +12,7 @@ import {ApolloProvider} from '@apollo/react-hooks';
 
 let GRAPHQL_URI =
     'https://us-central1-recipescheduler-227221.cloudfunctions.net/handler';
-if (process.env.NODE_ENV == 'development') {
+if (process.env.NODE_ENV === 'development') {
     GRAPHQL_URI = 'http://localhost:4000';
 }
 console.log(process.env.NODE_ENV);

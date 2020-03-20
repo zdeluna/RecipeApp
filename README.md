@@ -53,6 +53,10 @@ To run the client, REST, and GraphQL server concurrently
 npm run dev
 ```
 
+## Architecture
+
+![Screenshot 3](/client/src/static/images/Architecture.png?raw=true 'Screenshot 3')
+
 ## Built With
 
 -   [React](https://reactjs.org/)
