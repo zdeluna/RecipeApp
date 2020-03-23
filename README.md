@@ -55,7 +55,7 @@ npm run dev
 
 ## Architecture
 
-This application uses React as the front-end client and uses the Apollo library to communicate with the GRAPHQL server. The GraphQL server makes API requests to the RESTFUL server. The RESTFUL server process those requests using data stored in Gooogle's SQL Cloud and Firebase Authentication databases.
+This application uses React as the front-end client and uses the Apollo library to communicate with the GRAPHQL server. The GraphQL server makes API requests to the RESTFUL server. The RESTFUL server process those requests using data stored in Google's SQL Cloud and Firebase Authentication databases.
 
 ![Screenshot 3](/client/src/static/images/Architecture.png?raw=true "Screenshot 3")
 
