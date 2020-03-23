@@ -2,9 +2,9 @@
 
 This project allows users to save food recipes to a database. Users can store the dates of when they made the recipes and create notes.
 
-![Screenshot 1](/client/src/static/images/landingPageImage1.png?raw=true 'Screenshot 1')
+![Screenshot 1](/client/src/static/images/landingPageImage1.png?raw=true "Screenshot 1")
 
-![Screenshot 2](/client/src/static/images/landingPageImage3.png?raw=true 'Screenshot 2')
+![Screenshot 2](/client/src/static/images/landingPageImage3.png?raw=true "Screenshot 2")
 
 ## Getting Started
 
@@ -55,7 +55,9 @@ npm run dev
 
 ## Architecture
 
-![Screenshot 3](/client/src/static/images/Architecture.png?raw=true 'Screenshot 3')
+This application uses React as the front-end client and uses the Apollo library to communicate with the GRAPHQL server. The GraphQL server makes API requests to the RESTFUL server. The RESTFUL server process those requests using data stored in Gooogle's SQL Cloud and Firebase Authentication databases.
+
+![Screenshot 3](/client/src/static/images/Architecture.png?raw=true "Screenshot 3")
 
 ## Built With
 
