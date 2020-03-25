@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router';
-import {Link} from 'react-router-dom';
-import app from '../../base';
-import {Container, Form, Button, Input, FormGroup, Label} from 'reactstrap';
+import React, { Component } from "react";
+import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
+import app from "../../base";
+import { Container, Form, Button, Input, FormGroup, Label } from "reactstrap";
 
 class LogIn extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
-            password: '',
+            email: "",
+            password: ""
         };
     }
 
@@ -19,8 +19,15 @@ class LogIn extends Component {
         const password = this.state.password;
         const history = this.props.history;
         try {
-            await app.auth().signInWithEmailAndPassword(email, password);
-            history.push('/users/category');
+            const result = await app
+                .auth()
+                .signInWithEmailAndPassword(email, password);
+
+            const token = await user.getIdToken(user.user.uid);
+            console.log("TOKEN");
+            console.log(token);
+
+            //history.push("/users/category");
         } catch (error) {
             alert(error);
         }
@@ -29,13 +36,13 @@ class LogIn extends Component {
     handleEmailChange = event => {
         event.preventDefault();
 
-        this.setState({email: event.target.value});
+        this.setState({ email: event.target.value });
     };
 
     handlePasswordChange = event => {
         event.preventDefault();
 
-        this.setState({password: event.target.value});
+        this.setState({ password: event.target.value });
     };
 
     render() {

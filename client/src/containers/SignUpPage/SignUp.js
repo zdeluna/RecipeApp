@@ -1,35 +1,33 @@
-import React, {useState} from 'react';
-import {useMutation} from '@apollo/react-hooks';
+import React, { useState } from "react";
+import { useMutation } from "@apollo/react-hooks";
 
-import {Link} from 'react-router-dom';
-import app from '../../base';
-import {Container, Form, Button, Input, FormGroup, Label} from 'reactstrap';
-import {ADD_USER} from '../../api/mutations/user/createUser';
+import { Link } from "react-router-dom";
+import app from "../../base";
+import { Container, Form, Button, Input, FormGroup, Label } from "reactstrap";
+import { ADD_USER } from "../../api/mutations/user/createUser";
 
 const SignUp = props => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const [addUser] = useMutation(ADD_USER, {
-        onCompleted({addUser}) {
-            props.history.push('/');
-        },
+        onCompleted({ addUser }) {
+            props.history.push("/");
+        }
     });
 
     const handleSignUp = async event => {
         event.preventDefault();
         try {
-            await app
+            const user = await app
                 .auth()
-                .createUserWithEmailAndPassword(email, password)
-                .then(function(user) {
-                    addUser({
-                        variables: {
-                            googleId: user.user.uid,
-                            email: email,
-                        },
-                    });
-                });
+                .createUserWithEmailAndPassword(email, password);
+            addUser({
+                variables: {
+                    googleId: user.user.uid,
+                    email: email
+                }
+            });
         } catch (error) {
             alert(error);
         }
