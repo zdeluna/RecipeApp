@@ -1,22 +1,22 @@
-import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
-import AddDishForm from '../../components/AddDishForm';
-import {Table, Container, Row} from 'reactstrap';
-import './DishListTable.css';
-import Loading from '../../components/Loading';
-import {useQuery} from '@apollo/react-hooks';
-import {GET_DISHES} from '../../api/queries/dish/getAllDishes';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import AddDishForm from "../../components/AddDishForm";
+import { Table, Container, Row } from "reactstrap";
+import "./DishListTable.css";
+import Loading from "../../components/Loading";
+import { useQuery } from "@apollo/react-hooks";
+import { GET_DISHES } from "../../api/queries/dish/getAllDishes";
+import app from "../../base";
 
 const DishListTable = props => {
     const [userId] = useState(props.userId);
     const [category] = useState(props.match.params.category);
     const [dishes, setDishes] = useState([]);
-
-    const {loading, error} = useQuery(GET_DISHES, {
-        variables: {userId: userId},
-        onCompleted({dishes}) {
+    const { loading, error } = useQuery(GET_DISHES, {
+        variables: { userId: userId, token: app.token },
+        onCompleted({ dishes }) {
             if (dishes) setDishes(dishes);
-        },
+        }
     });
 
     if (loading) return <Loading />;
@@ -28,17 +28,18 @@ const DishListTable = props => {
 
     const ShowTableRows = () => {
         return dishes.map(dish => (
-            <tr className="dishRow" key={dish.id + 'r'}>
-                <td key={dish.id + 'name'}>
+            <tr className="dishRow" key={dish.id + "r"}>
+                <td key={dish.id + "name"}>
                     <Link
                         className="dishLink"
-                        key={dish.id + 'link'}
-                        to={`/users/category/${dish.category}/dish/${dish.id}`}>
+                        key={dish.id + "link"}
+                        to={`/users/category/${dish.category}/dish/${dish.id}`}
+                    >
                         {dish.name}
                     </Link>
                 </td>
-                <td key={dish.id + 'time'}>{dish.cookingTime}</td>
-                <td key={dish.id + 'date'}>{dish.lastMade}</td>
+                <td key={dish.id + "time"}>{dish.cookingTime}</td>
+                <td key={dish.id + "date"}>{dish.lastMade}</td>
             </tr>
         ));
     };
@@ -65,7 +66,7 @@ const DishListTable = props => {
     return (
         <Container>
             <Row>
-                {' '}
+                {" "}
                 <Link to={`/`} id="goBackLink">
                     Go Back To Categories
                 </Link>

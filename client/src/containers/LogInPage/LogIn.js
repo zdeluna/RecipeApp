@@ -23,11 +23,18 @@ class LogIn extends Component {
                 .auth()
                 .signInWithEmailAndPassword(email, password);
 
-            const token = await user.getIdToken(user.user.uid);
-            console.log("TOKEN");
-            console.log(token);
+            /* Get the JWT token of the user */
+            app.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    user.getIdToken().then(function(idToken) {
+                        console.log("Token");
+                        console.log(idToken);
+                        localStorage.setItem("token", idToken);
+                    });
+                }
+            });
 
-            //history.push("/users/category");
+            history.push("/users/category");
         } catch (error) {
             alert(error);
         }

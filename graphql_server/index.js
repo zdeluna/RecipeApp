@@ -22,13 +22,14 @@ if (process.env.GRAPH_ENV == "test") {
         dataSources: dataSources,
         context: ({ req }) => {
             const token = req.headers.authorization || "";
-
+            console.log("IN GRAPHQL Server");
+            console.log(token);
             //const user =
             //const user = getUser(token);
 
-            if (!user) throw new AuthenticationError("you must be logged in");
+            //if (!user) throw new AuthenticationError("you must be logged in");
 
-            return { user };
+            //return { user };
         }
     });
 
