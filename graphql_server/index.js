@@ -12,6 +12,10 @@ const dataSources = () => ({
 
 const context = async ({ req }) => {
     const auth = (req.headers && req.headers.authorization) || "";
+
+    if (!auth) throw new AuthenticationError("you must be logged in");
+
+    const token = auth.replace("Bearer ", "");
 };
 
 if (process.env.GRAPH_ENV == "test") {
@@ -20,17 +24,7 @@ if (process.env.GRAPH_ENV == "test") {
         typeDefs,
         resolvers,
         dataSources: dataSources,
-        context: ({ req }) => {
-            const token = req.headers.authorization || "";
-            console.log("IN GRAPHQL Server");
-            console.log(token);
-            //const user =
-            //const user = getUser(token);
-
-            //if (!user) throw new AuthenticationError("you must be logged in");
-
-            //return { user };
-        }
+        context: context
     });
 
     server.listen().then(({ url }) => {

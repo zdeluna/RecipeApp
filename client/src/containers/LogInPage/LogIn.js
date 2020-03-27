@@ -27,8 +27,6 @@ class LogIn extends Component {
             app.auth().onAuthStateChanged(function(user) {
                 if (user) {
                     user.getIdToken().then(function(idToken) {
-                        console.log("Token");
-                        console.log(idToken);
                         localStorage.setItem("token", idToken);
                     });
                 }
