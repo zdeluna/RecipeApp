@@ -11,6 +11,12 @@ import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import { ApolloProvider } from "@apollo/react-hooks";
 
+let GRAPHQL_URI =
+    "https://us-central1-recipescheduler-227221.cloudfunctions.net/handler";
+if (process.env.NODE_ENV === "development") {
+    GRAPHQL_URI = "http://localhost:4000";
+}
+
 const httpLink = createHttpLink({
     uri: GRAPHQL_URI,
     headers: {
@@ -30,11 +36,6 @@ const authLink = setContext((_, { headers }) => {
     };
 });
 
-let GRAPHQL_URI =
-    "https://us-central1-recipescheduler-227221.cloudfunctions.net/handler";
-if (process.env.NODE_ENV === "development") {
-    GRAPHQL_URI = "http://localhost:4000";
-}
 const cache = new InMemoryCache({ dataIdFromObject: object => object.id });
 const client = new ApolloClient({
     cache,
