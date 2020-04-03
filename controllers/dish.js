@@ -1,13 +1,14 @@
-'use strict';
-const dishModel = require('../models/dish.js');
-const userModel = require('../models/user.js');
-const request = require('request');
-const cheerio = require('cheerio');
-const {sendErrorResponse} = require('./base.js');
+"use strict";
+const dishModel = require("../models/dish.js");
+const userModel = require("../models/user.js");
+const request = require("request");
+const cheerio = require("cheerio");
+const firebase = require("firebase-admin");
+const { sendErrorResponse } = require("./base.js");
 const {
     getStepsFromWebPage,
-    getIngredientsFromWebPage,
-} = require('../utils/parseRecipe/parseRecipe.js');
+    getIngredientsFromWebPage
+} = require("../utils/parseRecipe/parseRecipe.js");
 
 /**
  * Make a http request to the url and store the steps and ingredients in an object
@@ -30,17 +31,17 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
                 /* Copy ingredients array so that we can send it as a parameter when
 				 *  determine which ingredients are in each step in the function getIngredientsInSteps*/
                 let ingredients = dishInfo.ingredients.map(a =>
-                    Object.assign({}, a),
+                    Object.assign({}, a)
                 );
                 dishInfo.ingredientsInSteps = await getIngredientsInSteps(
                     dishInfo.steps,
-                    ingredients,
+                    ingredients
                 );
                 return resolve(dishInfo);
             } catch (error) {
                 return reject({
                     statusCode: 422,
-                    msg: 'CANNOT_RETRIEVE_STEPS_OR_INGREDIENTS',
+                    msg: "CANNOT_RETRIEVE_STEPS_OR_INGREDIENTS"
                 });
             }
         });
@@ -55,7 +56,7 @@ const getRecipeStepsAndIngredientsFromWebPage = async url => {
  */
 
 function stepHasIngredient(step, ingredient) {
-    let ingredientBrokenIntoWordsArray = ingredient.split(' ');
+    let ingredientBrokenIntoWordsArray = ingredient.split(" ");
 
     for (var i = 0; i < ingredientBrokenIntoWordsArray.length; i++) {
         let ingredientWord = ingredientBrokenIntoWordsArray[i];
@@ -101,33 +102,33 @@ function filterIngredient(ingredient) {
     // Remove the quantity measurement from ingredient
     ingredient = ingredient.replace(
         /cup|tablespoon|teaspoon|gram|pounds| g | c | ml | oz |ounce|ml/gi,
-        '',
+        ""
     );
 
     // Remove the numbers from ingredient
-    ingredient = ingredient.replace(/[0-9]/g, '');
+    ingredient = ingredient.replace(/[0-9]/g, "");
 
     // Remove '() and / 'from ingredient
     ingredient = ingredient
-        .replace(/"/g, '')
-        .replace(/'/g, '')
-        .replace(/\(|\)/g, '')
-        .replace(/\//g, '');
+        .replace(/"/g, "")
+        .replace(/'/g, "")
+        .replace(/\(|\)/g, "")
+        .replace(/\//g, "");
 
     // Remove some common words
-    ingredient = ingredient.replace(/\band\b/gi, '');
-    ingredient = ingredient.replace(/\bor\b/gi, '');
-    ingredient = ingredient.replace(/\bfor\b/gi, '');
-    ingredient = ingredient.replace(/\bthe\b/gi, '');
+    ingredient = ingredient.replace(/\band\b/gi, "");
+    ingredient = ingredient.replace(/\bor\b/gi, "");
+    ingredient = ingredient.replace(/\bfor\b/gi, "");
+    ingredient = ingredient.replace(/\bthe\b/gi, "");
 
     // Remove all text after a comma
-    ingredient = ingredient.replace(/\,.*/, '');
+    ingredient = ingredient.replace(/\,.*/, "");
 
     // Remove all text after a semicolon
-    ingredient = ingredient.replace(/\;.*/, '');
+    ingredient = ingredient.replace(/\;.*/, "");
 
     // Replace all double spaces with single spaces
-    ingredient = ingredient.replace(/  /g, ' ');
+    ingredient = ingredient.replace(/  /g, " ");
 
     // Change all letters to lowercase
     ingredient = ingredient.toLowerCase();
@@ -155,7 +156,7 @@ const getIngredientsInSteps = async (steps, ingredients) => {
         for (let stepNumber = 0; stepNumber < steps.length; stepNumber++) {
             let ingredientsStepObject = {};
             ingredientsStepObject.step = stepNumber;
-            console.log('G-');
+            console.log("G-");
             let ingredientsInEachStep = [];
             let stepDescription = steps[stepNumber].value.toLowerCase();
 
@@ -166,7 +167,7 @@ const getIngredientsInSteps = async (steps, ingredients) => {
             ) {
                 let ingredientDescription =
                     filteredIngredients[ingredientNumber].value;
-                console.log('G');
+                console.log("G");
                 if (stepHasIngredient(stepDescription, ingredientDescription)) {
                     ingredientsInEachStep.push(ingredients[ingredientNumber]);
                 }
@@ -176,7 +177,7 @@ const getIngredientsInSteps = async (steps, ingredients) => {
         }
         return ingredientsInStepsArray;
     } catch (error) {
-        console.log('ERROR');
+        console.log("ERROR");
         console.log(error.msg);
         return error;
     }
@@ -184,7 +185,7 @@ const getIngredientsInSteps = async (steps, ingredients) => {
 
 exports.createDish = async (req, res) => {
     try {
-        const pool = await req.app.get('pool');
+        const pool = await req.app.get("pool");
 
         const userId = req.params.userId;
         await userModel.checkIfUserExists(pool, userId);
@@ -196,18 +197,18 @@ exports.createDish = async (req, res) => {
             pool,
             userId,
             dishName,
-            category,
+            category
         );
 
-        let responseObject = {id: dishId};
+        let responseObject = { id: dishId };
 
         let dishUrl =
             req.protocol +
-            '://' +
-            req.get('host') +
-            '/api/users/' +
+            "://" +
+            req.get("host") +
+            "/api/users/" +
             userId +
-            '/dish/' +
+            "/dish/" +
             dishId;
         res.location(dishUrl);
         res.status(201).send(responseObject);
@@ -217,7 +218,7 @@ exports.createDish = async (req, res) => {
 };
 
 exports.updateDish = async (req, res) => {
-    const pool = await req.app.get('pool');
+    const pool = await req.app.get("pool");
 
     const updatedDishFields = req.body;
     const userId = req.params.userId;
@@ -230,7 +231,7 @@ exports.updateDish = async (req, res) => {
     try {
         if (updatedDishFields.url) {
             dishInfo = await getRecipeStepsAndIngredientsFromWebPage(
-                updatedDishFields.url,
+                updatedDishFields.url
             );
             updatedDishFields.steps = dishInfo.steps;
             updatedDishFields.ingredients = dishInfo.ingredients;
@@ -249,16 +250,41 @@ exports.updateDish = async (req, res) => {
             res.status(200).send(dish);
         }
     } catch (error) {
-        console.log('SEND ERROR RESPONSE: ' + error.msg);
+        console.log("SEND ERROR RESPONSE: " + error.msg);
         sendErrorResponse(res, error);
     }
 };
 
-exports.getDishesOfUser = async (req, res) => {
-    const userId = req.params.userId;
+/*
+ * Iterate through steps and determine which ingredient is used in each step
+ * @param {String} token - Signed JWT token from client
+ * @Return {Promise} 
+ */
 
+const authenticateUser = async token => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            firebase
+                .auth()
+                .verifyIdToken(token)
+                .then(function(decodedToken) {
+                    const userId = decodedToken.uid;
+                    return resolve(userId);
+                });
+        } catch (error) {
+            reject({
+                statusCode: 401,
+                msg: "CANNOT_AUTHENTICATE_USER"
+            });
+        }
+    });
+};
+
+exports.getDishesOfUser = async (req, res) => {
     try {
-        const pool = await req.app.get('pool');
+        const token = req.headers.authorization.replace("Bearer ", "");
+        const userId = await authenticateUser(token);
+        const pool = await req.app.get("pool");
         await userModel.checkIfUserExists(pool, userId);
         const dishes = await dishModel.getAllDishesOfUser(pool, userId);
         res.status(200).json(dishes);
@@ -269,11 +295,9 @@ exports.getDishesOfUser = async (req, res) => {
 
 exports.getDish = async (req, res) => {
     try {
-        const pool = await req.app.get('pool');
+        const pool = await req.app.get("pool");
 
         const userId = req.params.userId;
-        console.log('user id');
-        console.log(req.params.userId);
         await userModel.checkIfUserExists(pool, userId);
 
         const dishId = req.params.dishId;
@@ -287,7 +311,7 @@ exports.getDish = async (req, res) => {
 
 exports.deleteDish = async (req, res) => {
     try {
-        const pool = await req.app.get('pool');
+        const pool = await req.app.get("pool");
 
         const userId = req.params.userId;
         await userModel.checkIfUserExists(pool, userId);

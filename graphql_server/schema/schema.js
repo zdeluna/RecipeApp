@@ -1,5 +1,5 @@
 //const {gql} = require('apollo-server');
-const {gql} = require('apollo-server-cloud-functions');
+const { gql } = require("apollo-server-cloud-functions");
 
 const typeDefs = gql`
     type AddDishResponse {

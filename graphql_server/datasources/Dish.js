@@ -1,15 +1,15 @@
-'use strict';
-const {RESTDataSource} = require('apollo-datasource-rest');
+"use strict";
+const { RESTDataSource } = require("apollo-datasource-rest");
 //const {RESTDataSource} = require('apollo-server-cloud-functions');
 
 class DishAPI extends RESTDataSource {
     constructor() {
         super();
 
-        if (process.env.GRAPH_ENV == 'test') {
-            this.baseURL = 'http://localhost:5000/api/';
+        if (process.env.GRAPH_ENV == "test") {
+            this.baseURL = "http://localhost:5000/api/";
         } else {
-            this.baseURL = 'https://recipescheduler-227221.appspot.com/api/';
+            this.baseURL = "https://recipescheduler-227221.appspot.com/api/";
         }
     }
 
@@ -26,7 +26,7 @@ class DishAPI extends RESTDataSource {
             cookingTime: dish.cookingTime,
             notes: dish.notes,
             ingredientsInSteps: dish.ingredientsInSteps,
-            lastMade: dish.lastMade,
+            lastMade: dish.lastMade
         };
     }
 
@@ -36,31 +36,34 @@ class DishAPI extends RESTDataSource {
         for (let i = 0; i < dishes.length; i++) {
             dishArray.push(this.dishReducer(dishes[i]));
         }
-
+        console.log(dishArray);
         return dishArray;
     }
 
-    async getDishById({userId, dishId}) {
+    async getDishById({ userId, dishId }) {
         const res = await this.get(`/users/${userId}/dish/${dishId}`);
         return this.dishReducer(res, dishId);
     }
 
-    async getAllDishes({userId}) {
-        const res = await this.get(`/users/${userId}/dish`);
+    async getAllDishes({ userId }) {
+        const res = await this.get(`/users/dish`, undefined, {
+            headers: { Authorization: this.context.token }
+        });
+
         if (!res) return null;
         else return this.dishesReducer(res);
     }
 
-    async createDish({userId, name, category}) {
+    async createDish({ userId, name, category }) {
         const res = await this.post(`/users/${userId}/dish`, {
             userId: userId,
             name: name,
-            category: category,
+            category: category
         });
         return res;
     }
 
-    async deleteDish({userId, dishId}) {
+    async deleteDish({ userId, dishId }) {
         const res = await this.delete(`/users/${userId}/dish/${dishId}`);
         return res;
     }
@@ -68,10 +71,8 @@ class DishAPI extends RESTDataSource {
     async updateDish(userId, dishId, dishObject) {
         const res = await this.put(
             `/users/${userId}/dish/${dishId}`,
-            dishObject,
+            dishObject
         );
-        console.log('RES');
-        console.log(res);
         return this.dishReducer(res, dishId);
     }
 }

@@ -2,13 +2,14 @@
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname + "/.env") });
 
-const firebase = require("firebase");
+const firebase = require("firebase-admin");
 
 const typeDefs = require("./schema/schema.js");
 const resolvers = require("./resolvers");
 
 const DishAPI = require("./datasources/Dish");
 const UserAPI = require("./datasources/User");
+const { AuthenticationError } = require("apollo-server");
 
 const dataSources = () => ({
     dishAPI: new DishAPI(),
@@ -26,18 +27,9 @@ const app = firebase.initializeApp({
 
 const context = async ({ req }) => {
     const auth = (req.headers && req.headers.authorization) || "";
-
     if (!auth) throw new AuthenticationError("you must be logged in");
 
-    const token = auth.replace("Bearer ", "");
-
-    try {
-        const decodedToken = await app.auth().verifyIdToken(token);
-        const uid = decodedToken.uid;
-        console.log("UID: " + uid);
-    } catch (error) {
-        console.log(error);
-    }
+    return { token: auth };
 };
 
 if (process.env.GRAPH_ENV == "test") {

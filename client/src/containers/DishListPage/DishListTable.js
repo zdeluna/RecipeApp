@@ -13,7 +13,7 @@ const DishListTable = props => {
     const [category] = useState(props.match.params.category);
     const [dishes, setDishes] = useState([]);
     const { loading, error } = useQuery(GET_DISHES, {
-        variables: { userId: userId, token: app.token },
+        variables: { userId: userId },
         onCompleted({ dishes }) {
             if (dishes) setDishes(dishes);
         }
