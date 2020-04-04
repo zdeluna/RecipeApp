@@ -10,6 +10,7 @@ const { sendErrorResponse } = require("../controllers/base.js");
 const authenticateUser = (req, res, next) => {
     try {
         const token = req.headers.authorization.replace("Bearer ", "");
+        console.log(token);
         firebase
             .auth()
             .verifyIdToken(token)
@@ -18,7 +19,6 @@ const authenticateUser = (req, res, next) => {
                 next();
             });
     } catch (error) {
-        console.log(error);
         sendErrorResponse(res, {
             statusCode: 401,
             msg: "CANNOT_AUTHENTICATE_USER"
@@ -26,4 +26,15 @@ const authenticateUser = (req, res, next) => {
     }
 };
 
-module.exports = { authenticateUser };
+const checkIfAuthorized = (dishId, userId) => {
+    return new Promise((resolve, reject) => {
+        if (dishId !== userId)
+            return reject({
+                statusCode: 403,
+                msg: "NOT_AUTHORIZED"
+            });
+        resolve();
+    });
+};
+
+module.exports = { authenticateUser, checkIfAuthorized };

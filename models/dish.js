@@ -1,6 +1,6 @@
-'use strict';
-const userModel = require('../models/user.js');
-const {getConnection} = require('../dbconfig.js');
+"use strict";
+const userModel = require("../models/user.js");
+const { getConnection } = require("../dbconfig.js");
 /**
  * Check to see if the dish Id exists in the database
  * @param {Pool} pool
@@ -12,8 +12,8 @@ const checkIfDishExists = async (pool, dishId) => {
 
     return new Promise(async (resolve, reject) => {
         const dishQuery = await connection.query(
-            'SELECT * FROM dishes WHERE dishId=?',
-            [dishId],
+            "SELECT * FROM dishes WHERE dishId=?",
+            [dishId]
         );
         connection.release();
 
@@ -21,7 +21,7 @@ const checkIfDishExists = async (pool, dishId) => {
         else
             return reject({
                 statusCode: 404,
-                msg: 'DISH_DOES_NOT_EXIST',
+                msg: "DISH_DOES_NOT_EXIST"
             });
     });
 };
@@ -45,29 +45,29 @@ const saveDish = async (pool, dishId, updatedDishFields) => {
         const connection = await getConnection(pool);
 
         const sql =
-            'UPDATE dishes SET category=?, cookingTime=?, ingredients=?, ingredientsInSteps=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE dishId=?';
+            "UPDATE dishes SET category=?, cookingTime=?, ingredients=?, ingredientsInSteps=?, lastMade=?, name=?, notes=?, steps=?, url=? WHERE dishId=?";
         await connection.query(sql, [
             dish.category,
             dish.cookingTime,
             JSON.stringify(dish.ingredients),
             JSON.stringify(dish.ingredientsInSteps, [
-                'step',
-                'ingredients',
-                'id',
-                'value',
+                "step",
+                "ingredients",
+                "id",
+                "value"
             ]),
             dish.lastMade,
             dish.name,
             dish.notes,
             JSON.stringify(dish.steps),
             dish.url,
-            dishId,
+            dishId
         ]);
         connection.release();
     } catch (error) {
         console.log(error);
         connection.release();
-        throw Error({statusCode: 422, msg: error.message});
+        throw Error({ statusCode: 422, msg: error.message });
     }
 };
 
@@ -82,11 +82,11 @@ const getAllDishesOfUser = async (pool, googleId) => {
     try {
         const connection = await getConnection(pool);
         const userQuery = await connection.query(
-            'SELECT id FROM users WHERE googleId=?',
-            [googleId],
+            "SELECT id FROM users WHERE googleId=?",
+            [googleId]
         );
         const userId = userQuery[0].id;
-        const sql = 'SELECT * FROM dishes WHERE userId=?';
+        const sql = "SELECT * FROM dishes WHERE userId=?";
         const dishes = await connection.query(sql, [userId]);
 
         connection.release();
@@ -98,7 +98,7 @@ const getAllDishesOfUser = async (pool, googleId) => {
                 dishes[i].ingredients = JSON.parse(dishes[i].ingredients);
             if (dishes[i].ingredientsInSteps)
                 dishes[i].ingredientsInSteps = JSON.parse(
-                    dishes[i].ingredientsInSteps,
+                    dishes[i].ingredientsInSteps
                 );
         }
 
@@ -106,7 +106,7 @@ const getAllDishesOfUser = async (pool, googleId) => {
     } catch (error) {
         connection.release();
 
-        throw Error({statusCode: 422, msg: error.message});
+        throw Error({ statusCode: 422, msg: error.message });
     }
 };
 
@@ -122,12 +122,12 @@ const getDishFromDatabase = async (pool, dishId) => {
         const connection = await getConnection(pool);
 
         const dishQuery = await connection.query(
-            'SELECT * FROM dishes WHERE dishId=?',
-            [dishId],
+            "SELECT * FROM dishes WHERE dishId=?",
+            [dishId]
         );
         const historyQuery = await connection.query(
-            'SELECT date FROM history WHERE dishId=? ORDER BY date',
-            [dishId],
+            "SELECT date FROM history WHERE dishId=? ORDER BY date",
+            [dishId]
         );
         connection.release();
 
@@ -147,10 +147,9 @@ const getDishFromDatabase = async (pool, dishId) => {
             dish.ingredientsInSteps = JSON.parse(dish.ingredientsInSteps);
         return dish;
     } catch (error) {
-        console.log(error);
         connection.release();
 
-        return Error({statusCode: 422, msg: error.message});
+        return Error({ statusCode: 422, msg: error.message });
     }
 };
 
@@ -168,26 +167,26 @@ const addDish = async (pool, googleId, name, category) => {
         const connection = await getConnection(pool);
         // Get the id associated with the googleId
         const userQuery = await connection.query(
-            'SELECT id FROM users WHERE googleId=?',
-            [googleId],
+            "SELECT id FROM users WHERE googleId=?",
+            [googleId]
         );
-        console.log('NAME: ' + name);
+        console.log("NAME: " + name);
         const userId = userQuery[0].id;
         const sql =
-            'INSERT INTO dishes (userId, name, category) VALUES (?, ?, ?)';
+            "INSERT INTO dishes (userId, name, category) VALUES (?, ?, ?)";
         await connection.query(sql, [userId, name, category]);
-        let dishId = (await connection.query('SELECT LAST_INSERT_ID()'))[0][
-            'LAST_INSERT_ID()'
+        let dishId = (await connection.query("SELECT LAST_INSERT_ID()"))[0][
+            "LAST_INSERT_ID()"
         ];
 
         connection.release();
         return dishId;
     } catch (error) {
-        console.log('ERROR');
+        console.log("ERROR");
         console.log(error);
         connection.release();
 
-        throw Error({statusCode: 422, msg: error.message});
+        throw Error({ statusCode: 422, msg: error.message });
     }
 };
 
@@ -203,14 +202,14 @@ const deleteDishFromDatabase = async (pool, dishId) => {
         const connection = await getConnection(pool);
 
         const deleteQuery = await connection.query(
-            'DELETE FROM dishes WHERE dishId=?',
-            [dishId],
+            "DELETE FROM dishes WHERE dishId=?",
+            [dishId]
         );
         connection.release();
     } catch (error) {
         connection.release();
 
-        throw Error({statusCode: 422, msg: error.message});
+        throw Error({ statusCode: 422, msg: error.message });
     }
 };
 
@@ -220,5 +219,5 @@ module.exports = {
     getAllDishesOfUser,
     getDishFromDatabase,
     addDish,
-    deleteDishFromDatabase,
+    deleteDishFromDatabase
 };

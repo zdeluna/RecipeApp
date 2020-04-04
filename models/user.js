@@ -1,5 +1,5 @@
-'use strict';
-const {getConnection} = require('../dbconfig.js');
+"use strict";
+const { getConnection } = require("../dbconfig.js");
 
 /**
  *  Create a new user in the database using the userId and email
@@ -11,8 +11,8 @@ const {getConnection} = require('../dbconfig.js');
 const createUser = async (pool, googleId, email) => {
     try {
         const connection = await getConnection(pool);
-        console.log('IN CREATE USER : ' + googleId);
-        const sql = 'INSERT INTO users (googleId, email) VALUES (?, ?)';
+        console.log("IN CREATE USER : " + googleId);
+        const sql = "INSERT INTO users (googleId, email) VALUES (?, ?)";
         await connection.query(sql, [googleId, email]);
         connection.release();
     } catch (error) {
@@ -32,17 +32,17 @@ const checkIfUserExists = async (pool, googleId) => {
         const connection = await getConnection(pool);
 
         const userQuery = await connection.query(
-            'SELECT * FROM users WHERE googleId=?',
-            [googleId],
+            "SELECT * FROM users WHERE googleId=?",
+            [googleId]
         );
         connection.release();
-        if (userQuery.length) return resolve();
+        if (userQuery.length) return resolve(userQuery[0]);
         else
             return reject({
                 statusCode: 404,
-                msg: 'USER_DOES_NOT_EXIST',
+                msg: "USER_DOES_NOT_EXIST"
             });
     });
 };
 
-module.exports = {createUser, checkIfUserExists};
+module.exports = { createUser, checkIfUserExists };

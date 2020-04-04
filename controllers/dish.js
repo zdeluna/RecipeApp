@@ -1,6 +1,7 @@
 "use strict";
 const dishModel = require("../models/dish.js");
 const userModel = require("../models/user.js");
+const { checkIfAuthorized } = require("../auth/auth.js");
 const request = require("request");
 const cheerio = require("cheerio");
 const { sendErrorResponse } = require("./base.js");
@@ -266,10 +267,13 @@ exports.getDishesOfUser = async (req, res) => {
 exports.getDish = async (req, res) => {
     try {
         const pool = await req.app.get("pool");
-        await userModel.checkIfUserExists(pool, req.googleId);
+        const userId = (await userModel.checkIfUserExists(pool, req.googleId))
+            .id;
 
         const dishId = req.params.dishId;
         const dish = await dishModel.getDishFromDatabase(pool, dishId);
+
+        await checkIfAuthorized(dish.userId, userId);
 
         res.status(200).json(dish);
     } catch (error) {
