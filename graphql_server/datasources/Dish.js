@@ -36,12 +36,13 @@ class DishAPI extends RESTDataSource {
         for (let i = 0; i < dishes.length; i++) {
             dishArray.push(this.dishReducer(dishes[i]));
         }
-        console.log(dishArray);
         return dishArray;
     }
 
-    async getDishById({ userId, dishId }) {
-        const res = await this.get(`/users/${userId}/dish/${dishId}`);
+    async getDishById({ dishId }) {
+        const res = await this.get(`/users/dish/${dishId}`, undefined, {
+            headers: { Authorization: this.context.token }
+        });
         return this.dishReducer(res, dishId);
     }
 
@@ -55,24 +56,29 @@ class DishAPI extends RESTDataSource {
     }
 
     async createDish({ userId, name, category }) {
-        const res = await this.post(`/users/${userId}/dish`, {
-            userId: userId,
-            name: name,
-            category: category
-        });
+        const res = await this.post(
+            `/users/dish`,
+            {
+                userId: userId,
+                name: name,
+                category: category
+            },
+            { headers: { Authorization: this.context.token } }
+        );
         return res;
     }
 
     async deleteDish({ userId, dishId }) {
-        const res = await this.delete(`/users/${userId}/dish/${dishId}`);
+        const res = await this.delete(`/users/dish/${dishId}`, undefined, {
+            headers: { Authorization: this.context.token }
+        });
         return res;
     }
 
     async updateDish(userId, dishId, dishObject) {
-        const res = await this.put(
-            `/users/${userId}/dish/${dishId}`,
-            dishObject
-        );
+        const res = await this.put(`/users/dish/${dishId}`, dishObject, {
+            headers: { Authorization: this.context.token }
+        });
         return this.dishReducer(res, dishId);
     }
 }

@@ -1,16 +1,21 @@
+const { authenticateUser } = require("../auth/auth.js");
 const express = require("express");
 const router = express.Router();
 
 const controller = require("../controllers/dish");
 
-router.post("/users/:userId/dish", controller.createDish);
+router.post("/users/dish", authenticateUser, controller.createDish);
 
-router.put("/users/:userId/dish/:dishId", controller.updateDish);
+router.put(
+    "/users/:userId/dish/:dishId",
+    authenticateUser,
+    controller.updateDish
+);
 
-router.get("/users/:userId/dish/:dishId", controller.getDish);
+router.get("/users/dish/:dishId", authenticateUser, controller.getDish);
 
-router.delete("/users/:userId/dish/:dishId", controller.deleteDish);
+router.delete("/users/dish/:dishId", authenticateUser, controller.deleteDish);
 
-router.get("/users/dish", controller.getDishesOfUser);
+router.get("/users/dish", authenticateUser, controller.getDishesOfUser);
 
 module.exports = router;

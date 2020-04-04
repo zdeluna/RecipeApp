@@ -3,7 +3,6 @@ const dishModel = require("../models/dish.js");
 const userModel = require("../models/user.js");
 const request = require("request");
 const cheerio = require("cheerio");
-const firebase = require("firebase-admin");
 const { sendErrorResponse } = require("./base.js");
 const {
     getStepsFromWebPage,
@@ -187,15 +186,14 @@ exports.createDish = async (req, res) => {
     try {
         const pool = await req.app.get("pool");
 
-        const userId = req.params.userId;
-        await userModel.checkIfUserExists(pool, userId);
+        await userModel.checkIfUserExists(pool, req.googleId);
 
         const dishName = req.body.name;
         const category = req.body.category;
 
         const dishId = await dishModel.addDish(
             pool,
-            userId,
+            req.googleId,
             dishName,
             category
         );
@@ -207,7 +205,6 @@ exports.createDish = async (req, res) => {
             "://" +
             req.get("host") +
             "/api/users/" +
-            userId +
             "/dish/" +
             dishId;
         res.location(dishUrl);
@@ -221,7 +218,6 @@ exports.updateDish = async (req, res) => {
     const pool = await req.app.get("pool");
 
     const updatedDishFields = req.body;
-    const userId = req.params.userId;
     //await userModel.checkIfUserExists(userId);
 
     const dishId = req.params.dishId;
@@ -255,38 +251,12 @@ exports.updateDish = async (req, res) => {
     }
 };
 
-/*
- * Iterate through steps and determine which ingredient is used in each step
- * @param {String} token - Signed JWT token from client
- * @Return {Promise} 
- */
-
-const authenticateUser = async token => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            firebase
-                .auth()
-                .verifyIdToken(token)
-                .then(function(decodedToken) {
-                    const userId = decodedToken.uid;
-                    return resolve(userId);
-                });
-        } catch (error) {
-            reject({
-                statusCode: 401,
-                msg: "CANNOT_AUTHENTICATE_USER"
-            });
-        }
-    });
-};
-
 exports.getDishesOfUser = async (req, res) => {
     try {
-        const token = req.headers.authorization.replace("Bearer ", "");
-        const userId = await authenticateUser(token);
         const pool = await req.app.get("pool");
-        await userModel.checkIfUserExists(pool, userId);
-        const dishes = await dishModel.getAllDishesOfUser(pool, userId);
+        await userModel.checkIfUserExists(pool, req.googleId);
+
+        const dishes = await dishModel.getAllDishesOfUser(pool, req.googleId);
         res.status(200).json(dishes);
     } catch (error) {
         sendErrorResponse(res, error);
@@ -296,9 +266,7 @@ exports.getDishesOfUser = async (req, res) => {
 exports.getDish = async (req, res) => {
     try {
         const pool = await req.app.get("pool");
-
-        const userId = req.params.userId;
-        await userModel.checkIfUserExists(pool, userId);
+        await userModel.checkIfUserExists(pool, req.googleId);
 
         const dishId = req.params.dishId;
         const dish = await dishModel.getDishFromDatabase(pool, dishId);
@@ -313,8 +281,7 @@ exports.deleteDish = async (req, res) => {
     try {
         const pool = await req.app.get("pool");
 
-        const userId = req.params.userId;
-        await userModel.checkIfUserExists(pool, userId);
+        await userModel.checkIfUserExists(pool, req.googleId);
 
         const dishId = req.params.dishId;
         await dishModel.checkIfDishExists(pool, dishId);
