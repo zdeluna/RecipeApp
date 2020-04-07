@@ -167,7 +167,6 @@ const getIngredientsInSteps = async (steps, ingredients) => {
             ) {
                 let ingredientDescription =
                     filteredIngredients[ingredientNumber].value;
-                console.log("G");
                 if (stepHasIngredient(stepDescription, ingredientDescription)) {
                     ingredientsInEachStep.push(ingredients[ingredientNumber]);
                 }

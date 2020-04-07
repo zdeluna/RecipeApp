@@ -28,6 +28,10 @@ class LogIn extends Component {
                 if (user) {
                     user.getIdToken().then(function(idToken) {
                         localStorage.setItem("token", idToken);
+                        /*localStorage.setItem(
+                            "token",
+                            "eyJhbGciOiJSUzI1NiIsImtpZCI6IjgzYTczOGUyMWI5MWNlMjRmNDM0ODBmZTZmZWU0MjU4Yzg0ZGI0YzUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vcmVjaXBlYXBwLTRiZDhkIiwiYXVkIjoicmVjaXBlYXBwLTRiZDhkIiwiYXV0aF90aW1lIjoxNTg2MDM0MTA2LCJ1c2VyX2lkIjoiMmRHQXB3ZVlTR1g4RWpUNWtDU2VMM25ndGtlMiIsInN1YiI6IjJkR0Fwd2VZU0dYOEVqVDVrQ1NlTDNuZ3RrZTIiLCJpYXQiOjE1ODYwMzQxMDYsImV4cCI6MTU4NjAzNzcwNiwiZW1haWwiOiJ6ZGVsdW5hMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiemRlbHVuYTJAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.cKEs2kq699Xbw4kzqPhXOhfpPlEaa5LGE_VYy7jL5qCrbSX7Gz_HjSSYmgcqFawoDaOYBFHIP28mwszkL7BXS8jaJNjZ2Dt1Vr0R7FU7OqeH-Z5ysErkpESBUj43BX2ab0julJdKZO6CETs9pHm95NncwSoR25NrdMK0l_avmcUnnpCd4f5XfvsrsjSJ5R08qsA5WuUlMAQriJpx-HCcLRw1T0iT7RKL1Xk1oHorVtuavfDtKyhvAP80C6VGwwrYc90oxlQNIK0GNvqM-V_qktoqd6Ke5L7BjSdGdxkI4pkp5xYN-dGyGNxAmZ2EXPRH68TVmHoNuKkRzew0gWufYg"
+                        );*/
                     });
                 }
             });

@@ -1,25 +1,25 @@
-import React, {Component} from 'react';
-import {Route, Switch} from 'react-router';
-import {BrowserRouter as Router} from 'react-router-dom';
-import PrivateRoute from './PrivateRoute';
-import app from './base';
+import React, { Component } from "react";
+import { Route, Switch } from "react-router";
+import { BrowserRouter as Router } from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
+import app from "./base";
 
-import Category from './containers/CategoriesPage/Category';
-import LogIn from './containers/LogInPage/LogIn';
-import Home from './containers/HomePage/Home';
-import SignUp from './containers/SignUpPage/SignUp';
-import DishListTable from './containers/DishListPage/DishListTable';
-import DishEntry from './containers/DishEntryPage/DishEntry';
-import RecipeGuide from './containers/DishEntryPage/RecipeGuide';
-import ItemForm from './components/ItemForm';
-import './App.css';
+import Category from "./containers/CategoriesPage/Category";
+import LogIn from "./containers/LogInPage/LogIn";
+import Home from "./containers/HomePage/Home";
+import SignUp from "./containers/SignUpPage/SignUp";
+import DishListTable from "./containers/DishListPage/DishListTable";
+import DishEntry from "./containers/DishEntryPage/DishEntry";
+import RecipeGuide from "./containers/DishEntryPage/RecipeGuide";
+import ItemForm from "./components/ItemForm";
+import "./App.css";
 
 class App extends Component {
     state = {
-        currentUser: '',
+        currentUser: "",
         loading: true,
         authenticated: false,
-        user: {uid: ''},
+        user: { uid: "" }
     };
 
     componentDidMount() {
@@ -28,20 +28,20 @@ class App extends Component {
                 this.setState({
                     authenticated: true,
                     currentUser: user,
-                    loading: false,
+                    loading: false
                 });
             } else {
                 this.setState({
                     authenticated: false,
-                    currentUser: {uid: ''},
-                    loading: false,
+                    currentUser: { uid: "" },
+                    loading: false
                 });
             }
         });
     }
 
     render() {
-        const {authenticated, loading} = this.state;
+        let { authenticated, loading } = this.state;
 
         if (loading) {
             return <p>Loading..</p>;
@@ -76,7 +76,7 @@ class App extends Component {
                             authenticated={authenticated}
                             userId={this.state.currentUser.uid}
                             update={true}
-                            type={'ingredients'}
+                            type={"ingredients"}
                         />
                         )} />
                         <PrivateRoute
@@ -86,7 +86,7 @@ class App extends Component {
                             authenticated={authenticated}
                             userId={this.state.currentUser.uid}
                             update={true}
-                            type={'steps'}
+                            type={"steps"}
                         />
                         )} />
                         <PrivateRoute

@@ -2,33 +2,42 @@ const firebase = require("firebase-admin");
 const { sendErrorResponse } = require("../controllers/base.js");
 
 /*
- * Iterate through steps and determine which ingredient is used in each step
- * @param {String} token - Signed JWT token from client
+ * Determine if the user has included a valid signed JWT in the request
+ * @param {Object} req - request object
+ * @param {Object} res - response object
+ * @param {Object} next - next middleware function
  * @Return {Promise} 
  */
 
 const authenticateUser = (req, res, next) => {
-    try {
-        const token = req.headers.authorization.replace("Bearer ", "");
-        console.log(token);
-        firebase
-            .auth()
-            .verifyIdToken(token)
-            .then(function(decodedToken) {
-                req.googleId = decodedToken.uid;
-                next();
+    const token = req.headers.authorization.replace("Bearer ", "");
+    console.log("IN SERVER");
+    console.log(token);
+    firebase
+        .auth()
+        .verifyIdToken(token)
+        .then(function(decodedToken) {
+            req.googleId = decodedToken.uid;
+            next();
+        })
+        .catch(function(error) {
+            sendErrorResponse(res, {
+                statusCode: 401,
+                msg: "CANNOT_AUTHENTICATE_USER"
             });
-    } catch (error) {
-        sendErrorResponse(res, {
-            statusCode: 401,
-            msg: "CANNOT_AUTHENTICATE_USER"
         });
-    }
 };
 
-const checkIfAuthorized = (dishId, userId) => {
+/*
+ * Check and see if the userId of the dish matches the user id of the token
+ * @param {String} dish_userId - user id from the dish
+ * @param {String{ userId - user id from the token
+ * @Return {Promise} 
+ */
+
+const checkIfAuthorized = (dish_userId, userId) => {
     return new Promise((resolve, reject) => {
-        if (dishId !== userId)
+        if (dish_userId !== userId)
             return reject({
                 statusCode: 403,
                 msg: "NOT_AUTHORIZED"
