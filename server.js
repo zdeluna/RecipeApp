@@ -4,7 +4,8 @@ var request = require("request");
 var cors = require("cors");
 var mysql = require("./dbconfig.js");
 
-const firebase = require("firebase-admin");
+const firebaseAdmin = require("firebase-admin");
+
 const restApp = express();
 const REST_PORT = process.env.PORT || 5000;
 const bodyParser = require("body-parser");
@@ -13,15 +14,12 @@ restApp.use(bodyParser.json());
 restApp.enable("trust proxy");
 restApp.use(cors());
 
-const app = firebase.initializeApp({
-    apiKey: process.env.FIREBASE_KEY,
-    authDomain: process.env.FIREBASE_DOMAIN,
-    databaseURL: process.env.FIREBASE_DATABASE,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_SENDER_ID
-});
+var serviceAccount = require("./recipeapp-4bd8d-firebase-adminsdk-o5fx6-6479659220.json");
 
+firebaseAdmin.initializeApp({
+    credential: firebaseAdmin.credential.cert(serviceAccount),
+    databaseURL: "https://recipeapp-4bd8d.firebaseio.com"
+});
 let pool = mysql.createPool();
 
 restApp.set("pool", pool);
