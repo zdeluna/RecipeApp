@@ -32,20 +32,26 @@ module.exports = {
             };
         },
         deleteDish: async (_, { userId, dishId }, { dataSources }) => {
-            dataSources.dishAPI.deleteDish({ userId: userId, dishId: dishId });
+            await dataSources.dishAPI.deleteDish({
+                userId: userId,
+                dishId: dishId
+            });
             return {
                 success: true,
                 message: "The dish was successfully deleted"
             };
         },
-        addUser: async (_, { googleId, email }, { dataSources }) => {
-            dataSources.userAPI.createUser({
-                googleId: googleId,
-                email: email
+        addUser: async (_, { password, email }, { dataSources }) => {
+            console.log(email);
+            const results = await dataSources.userAPI.createUser({
+                email: email,
+                password: password
             });
+            console.log(results);
             return {
                 success: true,
-                message: "The user was created successfully"
+                message: "The user was created successfully",
+                token: results.token
             };
         }
     }

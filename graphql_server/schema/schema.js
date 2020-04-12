@@ -22,6 +22,7 @@ const typeDefs = gql`
     type CreateUserResponse {
         success: Boolean!
         message: String
+        token: String
     }
 
     type Step {
@@ -95,7 +96,7 @@ const typeDefs = gql`
             lastMade: String
         ): UpdateDishResponse
         deleteDish(userId: String!, dishId: String!): DeleteDishResponse
-        addUser(googleId: String!, email: String!): CreateUserResponse
+        addUser(email: String!, password: String!): CreateUserResponse
     }
 `;
 
