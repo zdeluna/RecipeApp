@@ -72,7 +72,7 @@ const typeDefs = gql`
 
     type Query {
         dish(userId: String!, dishId: String!): Dish
-        dishes(userId: String!): [Dish]
+        dishes: [Dish]
     }
 
     type Mutation {

@@ -46,7 +46,7 @@ class DishAPI extends RESTDataSource {
         return this.dishReducer(res, dishId);
     }
 
-    async getAllDishes({ userId }) {
+    async getAllDishes() {
         const res = await this.get(`/users/dish`, undefined, {
             headers: { Authorization: this.context.token }
         });

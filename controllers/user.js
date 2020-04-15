@@ -15,7 +15,7 @@ const createUser = async (req, res) => {
             .createUser({ email: email, password: password });
 
         let token = await firebase.auth().createCustomToken(user.uid);
-
+        console.log(token);
         await userModel.createUser(pool, user.uid, email);
 
         res.status(200).json({ token: token });

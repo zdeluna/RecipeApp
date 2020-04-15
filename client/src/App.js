@@ -16,28 +16,16 @@ import "./App.css";
 
 class App extends Component {
     state = {
-        currentUser: "",
         loading: true,
-        authenticated: false,
-        user: { uid: "" }
+        authenticated: false
     };
 
     componentDidMount() {
-        app.auth().onAuthStateChanged(user => {
-            if (user) {
-                this.setState({
-                    authenticated: true,
-                    currentUser: user,
-                    loading: false
-                });
-            } else {
-                this.setState({
-                    authenticated: false,
-                    currentUser: { uid: "" },
-                    loading: false
-                });
-            }
-        });
+        if (localStorage.getItem("token") != null) {
+            this.setState({ authenticated: true, loading: false });
+        } else {
+            this.setState({ authenticated: false, loading: false });
+        }
     }
 
     render() {
@@ -65,7 +53,6 @@ class App extends Component {
                             path="/users/category/:category/dish/:dishId/makeMode"
                             component={RecipeGuide}
                             authenticated={authenticated}
-                            userID={this.state.currentUser.uid}
                             loading={true}
                         />
                         )} />
@@ -74,7 +61,6 @@ class App extends Component {
                             path="/users/category/:category/dish/:dishId/ingredients"
                             component={ItemForm}
                             authenticated={authenticated}
-                            userId={this.state.currentUser.uid}
                             update={true}
                             type={"ingredients"}
                         />
@@ -84,7 +70,6 @@ class App extends Component {
                             path="/users/category/:category/dish/:dishId/steps"
                             component={ItemForm}
                             authenticated={authenticated}
-                            userId={this.state.currentUser.uid}
                             update={true}
                             type={"steps"}
                         />
@@ -94,7 +79,6 @@ class App extends Component {
                             path="/users/category/:category/dish/:dishId"
                             component={DishEntry}
                             authenticated={authenticated}
-                            userId={this.state.currentUser.uid}
                         />
                         )} />
                         <PrivateRoute
@@ -102,7 +86,6 @@ class App extends Component {
                             path="/users/category/:category"
                             component={DishListTable}
                             authenticated={authenticated}
-                            userId={this.state.currentUser.uid}
                             loading={true}
                         />
                         )} />

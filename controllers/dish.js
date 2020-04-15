@@ -254,8 +254,8 @@ exports.updateDish = async (req, res) => {
 exports.getDishesOfUser = async (req, res) => {
     try {
         const pool = await req.app.get("pool");
-        await userModel.checkIfUserExists(pool, req.googleId);
-
+        //await userModel.checkIfUserExists(pool, req.googleId);
+        console.log("GET DISHES OF USER");
         const dishes = await dishModel.getAllDishesOfUser(pool, req.googleId);
         res.status(200).json(dishes);
     } catch (error) {

@@ -2,8 +2,8 @@ module.exports = {
     Query: {
         dish: (_, { userId, dishId }, { dataSources }) =>
             dataSources.dishAPI.getDishById({ userId: userId, dishId: dishId }),
-        dishes: (_, { userId }, { dataSources }) => {
-            return dataSources.dishAPI.getAllDishes({ userId: userId });
+        dishes: (_, undefined, { dataSources }) => {
+            return dataSources.dishAPI.getAllDishes();
         }
     },
     Mutation: {
