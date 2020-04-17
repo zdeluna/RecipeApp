@@ -12,7 +12,6 @@ const SignUp = props => {
 
     const [addUser] = useMutation(ADD_USER, {
         onCompleted({ addUser }) {
-            localStorage.setItem("token", addUser.token);
             props.history.push("/users/category");
         }
     });
@@ -20,17 +19,19 @@ const SignUp = props => {
     const handleSignUp = async event => {
         event.preventDefault();
         try {
+            const user = await app
+                .auth()
+                .createUserWithEmailAndPassword(email, password);
             addUser({
                 variables: {
-                    email: email,
-                    password: password
+                    googleId: user.user.uid,
+                    email: email
                 }
             });
         } catch (error) {
             alert(error);
         }
     };
-
     const handleEmailChange = event => {
         event.preventDefault();
 

@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export const GET_DISH = gql`
-    query getDish($userId: String!, $dishId: String!) {
-        dish(userId: $userId, dishId: $dishId) {
+    query getDish($dishId: String!) {
+        dish(dishId: $dishId) {
             __typename
             id
             name

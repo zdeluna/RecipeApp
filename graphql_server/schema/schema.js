@@ -71,7 +71,7 @@ const typeDefs = gql`
     }
 
     type Query {
-        dish(userId: String!, dishId: String!): Dish
+        dish(dishId: String!): Dish
         dishes: [Dish]
     }
 
@@ -96,7 +96,7 @@ const typeDefs = gql`
             lastMade: String
         ): UpdateDishResponse
         deleteDish(userId: String!, dishId: String!): DeleteDishResponse
-        addUser(email: String!, password: String!): CreateUserResponse
+        addUser(googleId: String!, email: String!): CreateUserResponse
     }
 `;
 

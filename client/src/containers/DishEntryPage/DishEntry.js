@@ -1,27 +1,27 @@
-import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
-import DishEntryStepsTable from '../../components/DishEntryStepsTable';
-import DishEntryIngredientsTable from '../../components/DishEntryIngredientsTable';
-import Calendar from '../../components/Calendar';
-import Loading from '../../components/Loading';
-import Notes from '../../components/Notes';
-import CookingTime from '../../components/CookingTime';
-import NewDishForm from '../../components/NewDishForm';
-import {Container, Row, Col} from 'reactstrap';
-import './DishEntry.css';
-import {Button} from 'reactstrap';
-import {useApolloClient} from '@apollo/react-hooks';
-import {GET_DISH} from '../../api/queries/dish/getDish';
-import {DELETE_DISH} from '../../api/mutations/dish/deleteDish';
-import {useMutation, useQuery} from '@apollo/react-hooks';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import DishEntryStepsTable from "../../components/DishEntryStepsTable";
+import DishEntryIngredientsTable from "../../components/DishEntryIngredientsTable";
+import Calendar from "../../components/Calendar";
+import Loading from "../../components/Loading";
+import Notes from "../../components/Notes";
+import CookingTime from "../../components/CookingTime";
+import NewDishForm from "../../components/NewDishForm";
+import { Container, Row, Col } from "reactstrap";
+import "./DishEntry.css";
+import { Button } from "reactstrap";
+import { useApolloClient } from "@apollo/react-hooks";
+import { GET_DISH } from "../../api/queries/dish/getDish";
+import { DELETE_DISH } from "../../api/mutations/dish/deleteDish";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 
 const DishEntry = props => {
     const [userId] = useState(props.userId);
     const [dishId] = useState(props.match.params.dishId);
-    const [name, setName] = useState('');
-    const [url, setUrl] = useState('');
-    const [cookingTime, setCookingTime] = useState('');
-    const [notes, setNotes] = useState('');
+    const [name, setName] = useState("");
+    const [url, setUrl] = useState("");
+    const [cookingTime, setCookingTime] = useState("");
+    const [notes, setNotes] = useState("");
     const [category] = useState(props.match.params.category);
     const [steps, setSteps] = useState([]);
     const [ingredients, setIngredients] = useState([]);
@@ -34,15 +34,14 @@ const DishEntry = props => {
     const [deleteDish] = useMutation(DELETE_DISH, {
         onCompleted(updateDishResponse) {
             props.history.push(`/users/category/${category}`);
-        },
+        }
     });
 
-    const {loading} = useQuery(GET_DISH, {
+    const { loading } = useQuery(GET_DISH, {
         variables: {
-            userId: userId,
-            dishId: dishId,
+            dishId: dishId
         },
-        onCompleted({dish}) {
+        onCompleted({ dish }) {
             if (dish.steps && dish.steps.length) {
                 setSteps(dish.steps);
             }
@@ -56,7 +55,7 @@ const DishEntry = props => {
             if (dish.ingredientsInSteps) {
                 setIngredientsInSteps(dish.ingredientsInSteps);
             }
-        },
+        }
     });
 
     const makeDishModeButton = event => {
@@ -67,7 +66,7 @@ const DishEntry = props => {
         //Handle after user has submitted steps
         const dishData = client.readQuery({
             query: GET_DISH,
-            variables: {userId: userId, dishId: dishId},
+            variables: { userId: userId, dishId: dishId }
         });
         if (dishData.dish.steps && dishData.dish.steps.length) {
             setSteps(dishData.dish.steps);
@@ -84,23 +83,23 @@ const DishEntry = props => {
     };
 
     const deleteEntryFromDatabase = () => {
-        deleteDish({variables: {userId: userId, dishId: dishId}});
+        deleteDish({ variables: { userId: userId, dishId: dishId } });
     };
 
     const RenderNewDishForm = () => {
         if (makeDishMode) {
             let redirect_url =
-                '/users/category/' +
+                "/users/category/" +
                 category +
-                '/dish/' +
+                "/dish/" +
                 dishId +
-                '/' +
-                'makeMode';
+                "/" +
+                "makeMode";
 
             props.history.push(redirect_url, {
                 steps: steps,
                 ingredients: ingredients,
-                ingredientsInSteps: ingredientsInSteps,
+                ingredientsInSteps: ingredientsInSteps
             });
         }
 
@@ -166,19 +165,21 @@ const DishEntry = props => {
             <div id="dishEntryContainer">
                 <Row>
                     <Col>
-                        {' '}
+                        {" "}
                         <Link
                             to={`/users/category/${category}`}
-                            id="goBackLink">
+                            id="goBackLink"
+                        >
                             Go Back
                         </Link>
                     </Col>
-                    <Col sm="2" md={{size: 2, offset: 3}}>
+                    <Col sm="2" md={{ size: 2, offset: 3 }}>
                         <Button
                             id="makeDishModeButton"
                             color="success"
                             size="sm"
-                            onClick={makeDishModeButton}>
+                            onClick={makeDishModeButton}
+                        >
                             Make Dish Mode
                         </Button>
                     </Col>
@@ -198,12 +199,13 @@ const DishEntry = props => {
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm="2" md={{size: 2, offset: 0}}>
+                    <Col sm="2" md={{ size: 2, offset: 0 }}>
                         <Button
                             id="deleteDishButton"
                             color="danger"
                             size="sm"
-                            onClick={deleteEntryFromDatabase}>
+                            onClick={deleteEntryFromDatabase}
+                        >
                             Delete Entry
                         </Button>
                     </Col>

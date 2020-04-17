@@ -13,10 +13,10 @@ class UserAPI extends RESTDataSource {
         }
     }
 
-    async createUser({ email, password }) {
+    async createUser({ googleId, email }) {
         const res = await this.post(`/users`, {
-            email: email,
-            password: password
+            googleId: googleId,
+            email: email
         });
         return res;
     }
