@@ -76,11 +76,7 @@ const typeDefs = gql`
     }
 
     type Mutation {
-        addDish(
-            userId: String!
-            name: String!
-            category: String!
-        ): AddDishResponse!
+        addDish(name: String!, category: String!): AddDishResponse!
         updateDish(
             userId: String!
             dishId: String!

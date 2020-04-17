@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
-import {Form, Button, FormGroup, Label, Input, Container} from 'reactstrap';
-import './AddDishForm.css';
-import {useMutation} from '@apollo/react-hooks';
-import {ADD_DISH} from '../api/mutations/dish/createDish';
+import React, { useState } from "react";
+import { Form, Button, FormGroup, Label, Input, Container } from "reactstrap";
+import "./AddDishForm.css";
+import { useMutation } from "@apollo/react-hooks";
+import { ADD_DISH } from "../api/mutations/dish/createDish";
 
 const AddDishForm = props => {
-    let input = {value: ''};
+    let input = { value: "" };
     const [addDish] = useMutation(ADD_DISH, {
-        onCompleted({addDish}) {
+        onCompleted({ addDish }) {
             props.onClick(addDish.dishId);
-        },
+        }
     });
 
     return (
@@ -20,14 +20,14 @@ const AddDishForm = props => {
                     e.preventDefault();
                     addDish({
                         variables: {
-                            userId: props.userId,
                             name: input.value,
-                            category: props.category,
-                        },
+                            category: props.category
+                        }
                     });
 
-                    input.value = '';
-                }}>
+                    input.value = "";
+                }}
+            >
                 <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                     <Label for="newDishInput">New Dish Name: </Label>
                     <Input

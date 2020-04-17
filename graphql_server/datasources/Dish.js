@@ -59,7 +59,6 @@ class DishAPI extends RESTDataSource {
         const res = await this.post(
             `/users/dish`,
             {
-                userId: userId,
                 name: name,
                 category: category
             },

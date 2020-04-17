@@ -7,9 +7,8 @@ module.exports = {
         }
     },
     Mutation: {
-        addDish: async (_, { userId, name, category }, { dataSources }) => {
+        addDish: async (_, { name, category }, { dataSources }) => {
             const results = await dataSources.dishAPI.createDish({
-                userId: userId,
                 name: name,
                 category: category
             });
