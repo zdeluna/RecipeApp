@@ -1,9 +1,9 @@
-import React, {useState, useRef} from 'react';
-import {Button, Input} from 'reactstrap';
-import './Notes.css';
-import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
-import {GET_DISH} from '../api/queries/dish/getDish';
-import {useMutation, useQuery} from '@apollo/react-hooks';
+import React, { useState, useRef } from "react";
+import { Button, Input } from "reactstrap";
+import "./Notes.css";
+import { UPDATE_DISH } from "../api/mutations/dish/updateDish";
+import { GET_DISH } from "../api/queries/dish/getDish";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 
 const CookingTime = props => {
     const [userId] = useState(props.userId);
@@ -18,15 +18,14 @@ const CookingTime = props => {
 
     useQuery(GET_DISH, {
         variables: {
-            userId: userId,
-            dishId: dishId,
+            dishId: dishId
         },
-        onCompleted({dish}) {
+        onCompleted({ dish }) {
             if (dish.cookingTime) {
                 setCookingTime(dish.cookingTime);
                 setFieldCreated(true);
             }
-        },
+        }
     });
 
     const [updateDish] = useMutation(UPDATE_DISH);
@@ -48,10 +47,9 @@ const CookingTime = props => {
 
         updateDish({
             variables: {
-                userId: userId,
                 dishId: dishId,
-                cookingTime: cookingTime,
-            },
+                cookingTime: cookingTime
+            }
         });
     };
 
@@ -81,11 +79,12 @@ const CookingTime = props => {
                         ref={inputEl}
                         type="text"
                         autoFocus
-                    />{' '}
+                    />{" "}
                     <Button
                         color="primary"
                         size="md"
-                        onClick={addCookingTimeToDatabase}>
+                        onClick={addCookingTimeToDatabase}
+                    >
                         Save Cooking Time
                     </Button>
                 </div>

@@ -1,8 +1,7 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export const UPDATE_DISH = gql`
     mutation updateDish(
-        $userId: String!
         $dishId: String!
         $url: String
         $steps: [StepInput]
@@ -12,7 +11,6 @@ export const UPDATE_DISH = gql`
         $notes: String
     ) {
         updateDish(
-            userId: $userId
             dishId: $dishId
             url: $url
             steps: $steps
@@ -49,12 +47,8 @@ export const UPDATE_DISH = gql`
 `;
 
 export const UPDATE_DISH_HISTORY = gql`
-    mutation updateDish(
-        $userId: String!
-        $dishId: String!
-        $history: [String]
-    ) {
-        updateDish(userId: $userId, dishId: $dishId, history: $history) {
+    mutation updateDish($dishId: String!, $history: [String]) {
+        updateDish(dishId: $dishId, history: $history) {
             success
             message
         }

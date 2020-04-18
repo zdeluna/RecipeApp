@@ -6,11 +6,7 @@ const controller = require("../controllers/dish");
 
 router.post("/users/dish", authenticateUser, controller.createDish);
 
-router.put(
-    "/users/:userId/dish/:dishId",
-    authenticateUser,
-    controller.updateDish
-);
+router.put("/users/dish/:dishId", authenticateUser, controller.updateDish);
 
 router.get("/users/dish/:dishId", authenticateUser, controller.getDish);
 

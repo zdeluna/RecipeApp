@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export const DELETE_DISH = gql`
-    mutation deleteDish($userId: String!, $dishId: String!) {
-        deleteDish(userId: $userId, dishId: $dishId) {
+    mutation deleteDish($dishId: String!) {
+        deleteDish(dishId: $dishId) {
             success
             message
         }

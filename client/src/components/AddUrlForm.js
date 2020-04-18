@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
     Alert,
     Form,
@@ -6,14 +6,14 @@ import {
     FormGroup,
     Label,
     Input,
-    Container,
-} from 'reactstrap';
-import './AddUrlForm.css';
-import {useMutation} from '@apollo/react-hooks';
-import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
+    Container
+} from "reactstrap";
+import "./AddUrlForm.css";
+import { useMutation } from "@apollo/react-hooks";
+import { UPDATE_DISH } from "../api/mutations/dish/updateDish";
 
 const AddUrlForm = props => {
-    const [url, setUrl] = useState('');
+    const [url, setUrl] = useState("");
     const [userId] = useState(props.userId);
     const [dishId] = useState(props.dishId);
     const [showAlert, setShowAlert] = useState(false);
@@ -23,7 +23,7 @@ const AddUrlForm = props => {
         },
         onError(error) {
             setShowAlert(true);
-        },
+        }
     });
 
     const handleSubmit = event => {
@@ -38,11 +38,10 @@ const AddUrlForm = props => {
 
     // Make a call to the api to handle parsing the recipe from the url
     const addRecipeLink = async () => {
-        console.log('UPDATE DISH');
+        console.log("UPDATE DISH");
         // prettier-ignore
         updateDish({
             variables: {
-                userId: userId,
                 dishId: dishId,
                 url: url,
             },

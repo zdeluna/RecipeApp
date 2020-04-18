@@ -1,9 +1,9 @@
-import React, {useState, useRef} from 'react';
-import {Button, Input} from 'reactstrap';
-import './Notes.css';
-import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
-import {GET_DISH} from '../api/queries/dish/getDish';
-import {useMutation, useQuery} from '@apollo/react-hooks';
+import React, { useState, useRef } from "react";
+import { Button, Input } from "reactstrap";
+import "./Notes.css";
+import { UPDATE_DISH } from "../api/mutations/dish/updateDish";
+import { GET_DISH } from "../api/queries/dish/getDish";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 
 const Notes = props => {
     const [userId] = useState(props.userId);
@@ -18,15 +18,14 @@ const Notes = props => {
 
     useQuery(GET_DISH, {
         variables: {
-            userId: userId,
-            dishId: dishId,
+            dishId: dishId
         },
-        onCompleted({dish}) {
+        onCompleted({ dish }) {
             if (dish.notes) {
                 setNotes(dish.notes);
                 setFieldCreated(true);
             }
-        },
+        }
     });
 
     const [updateDish] = useMutation(UPDATE_DISH);
@@ -47,10 +46,9 @@ const Notes = props => {
 
         updateDish({
             variables: {
-                userId: userId,
                 dishId: dishId,
-                notes: notes,
-            },
+                notes: notes
+            }
         });
     };
 
@@ -80,11 +78,12 @@ const Notes = props => {
                         ref={inputEl}
                         type="text"
                         autoFocus
-                    />{' '}
+                    />{" "}
                     <Button
                         color="primary"
                         size="md"
-                        onClick={addNotesToDatabase}>
+                        onClick={addNotesToDatabase}
+                    >
                         Save Notes
                     </Button>
                 </div>

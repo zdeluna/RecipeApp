@@ -83,7 +83,7 @@ const DishEntry = props => {
     };
 
     const deleteEntryFromDatabase = () => {
-        deleteDish({ variables: { userId: userId, dishId: dishId } });
+        deleteDish({ variables: { dishId: dishId } });
     };
 
     const RenderNewDishForm = () => {

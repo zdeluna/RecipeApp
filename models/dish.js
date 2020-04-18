@@ -16,8 +16,7 @@ const checkIfDishExists = async (pool, dishId) => {
             [dishId]
         );
         connection.release();
-
-        if (dishQuery.length) return resolve();
+        if (dishQuery.length) return resolve(dishQuery[0]);
         else
             return reject({
                 statusCode: 404,
@@ -147,7 +146,7 @@ const getDishFromDatabase = async (pool, dishId) => {
             dish.ingredientsInSteps = JSON.parse(dish.ingredientsInSteps);
         return dish;
     } catch (error) {
-        connection.release();
+        if (connection) connection.release();
 
         return Error({ statusCode: 422, msg: error.message });
     }

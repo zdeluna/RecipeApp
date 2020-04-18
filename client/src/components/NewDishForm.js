@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
-import AddUrlForm from '../components/AddUrlForm';
-import ItemForm from '../components/ItemForm';
-import {Button, Row, Col, Container} from 'reactstrap';
-import './NewDishForm.css';
-import {UPDATE_DISH} from '../api/mutations/dish/updateDish';
-import {useMutation} from '@apollo/react-hooks';
+import React, { useState } from "react";
+import AddUrlForm from "../components/AddUrlForm";
+import ItemForm from "../components/ItemForm";
+import { Button, Row, Col, Container } from "reactstrap";
+import "./NewDishForm.css";
+import { UPDATE_DISH } from "../api/mutations/dish/updateDish";
+import { useMutation } from "@apollo/react-hooks";
 
 const NewDishForm = props => {
     const [userId] = useState(props.userId);
@@ -22,7 +22,7 @@ const NewDishForm = props => {
     const [updateDish] = useMutation(UPDATE_DISH, {
         onCompleted(updateDishResponse) {
             props.onClick();
-        },
+        }
     });
 
     const addSteps = steps => {
@@ -34,11 +34,10 @@ const NewDishForm = props => {
         setIngredients(ingredients);
         updateDish({
             variables: {
-                userId: userId,
                 dishId: dishId,
                 steps: steps,
-                ingredients: ingredients,
-            },
+                ingredients: ingredients
+            }
         });
     };
 
@@ -60,21 +59,21 @@ const NewDishForm = props => {
         } else if (progressNumber === 2) {
             return (
                 <ItemForm
-                    key={dishId + 'steps'}
+                    key={dishId + "steps"}
                     userId={userId}
                     dishId={dishId}
                     onClick={addSteps}
-                    type={'steps'}
+                    type={"steps"}
                 />
             );
         } else if (progressNumber === 3) {
             return (
                 <ItemForm
-                    key={dishId + 'ingredients'}
+                    key={dishId + "ingredients"}
                     userId={userId}
                     dishId={dishId}
                     onClick={addIngredients}
-                    type={'ingredients'}
+                    type={"ingredients"}
                 />
             );
         }
@@ -84,7 +83,7 @@ const NewDishForm = props => {
         <div>
             <Container>
                 <Row>
-                    <Col sm="12" md={{size: 6, offset: 3}}>
+                    <Col sm="12" md={{ size: 6, offset: 3 }}>
                         <h3>{props.name}</h3>
                     </Col>
                 </Row>
@@ -95,7 +94,8 @@ const NewDishForm = props => {
                             color="primary"
                             size="lg"
                             value="0"
-                            onClick={e => handleClick(e, 1)}>
+                            onClick={e => handleClick(e, 1)}
+                        >
                             Add Url of Recipe
                         </Button>
                     </Col>
@@ -105,7 +105,8 @@ const NewDishForm = props => {
                             color="primary"
                             size="lg"
                             value="1"
-                            onClick={e => handleClick(e, 2)}>
+                            onClick={e => handleClick(e, 2)}
+                        >
                             Add Steps Manually
                         </Button>
                     </Col>

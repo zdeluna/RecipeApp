@@ -11,8 +11,6 @@ const { sendErrorResponse } = require("../controllers/base.js");
 
 const authenticateUser = (req, res, next) => {
     const token = req.headers.authorization.replace("Bearer ", "");
-    console.log("IN SERVER");
-    console.log(token);
     firebase
         .auth()
         .verifyIdToken(token)

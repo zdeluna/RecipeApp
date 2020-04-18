@@ -20,7 +20,6 @@ module.exports = {
         },
         updateDish: async (_, dishObject, { dataSources }) => {
             const result = await dataSources.dishAPI.updateDish(
-                dishObject.userId,
                 dishObject.dishId,
                 dishObject
             );
@@ -30,9 +29,8 @@ module.exports = {
                 dish: result
             };
         },
-        deleteDish: async (_, { userId, dishId }, { dataSources }) => {
+        deleteDish: async (_, { dishId }, { dataSources }) => {
             await dataSources.dishAPI.deleteDish({
-                userId: userId,
                 dishId: dishId
             });
             return {

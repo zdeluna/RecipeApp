@@ -78,7 +78,6 @@ const typeDefs = gql`
     type Mutation {
         addDish(name: String!, category: String!): AddDishResponse!
         updateDish(
-            userId: String!
             dishId: String!
             name: String
             category: String
@@ -91,7 +90,7 @@ const typeDefs = gql`
             notes: String
             lastMade: String
         ): UpdateDishResponse
-        deleteDish(userId: String!, dishId: String!): DeleteDishResponse
+        deleteDish(dishId: String!): DeleteDishResponse
         addUser(googleId: String!, email: String!): CreateUserResponse
     }
 `;

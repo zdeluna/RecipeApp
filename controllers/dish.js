@@ -218,8 +218,7 @@ exports.updateDish = async (req, res) => {
     const pool = await req.app.get("pool");
 
     const updatedDishFields = req.body;
-    //await userModel.checkIfUserExists(userId);
-
+    const userId = (await userModel.checkIfUserExists(pool, req.googleId)).id;
     const dishId = req.params.dishId;
     let dishInfo = {};
 
@@ -235,7 +234,8 @@ exports.updateDish = async (req, res) => {
             await dishModel.saveDish(pool, dishId, updatedDishFields);
 
             const dish = await dishModel.getDishFromDatabase(pool, dishId);
-
+            await checkIfAuthorized(dish.userId, userId);
+            console.log("UPdate dish");
             res.status(200).send(dish);
         } else {
             if (updatedDishFields.history)
@@ -243,10 +243,11 @@ exports.updateDish = async (req, res) => {
 
             await dishModel.saveDish(pool, dishId, updatedDishFields);
             const dish = await dishModel.getDishFromDatabase(pool, dishId);
+            await checkIfAuthorized(dish.userId, userId);
+
             res.status(200).send(dish);
         }
     } catch (error) {
-        console.log("SEND ERROR RESPONSE: " + error.msg);
         sendErrorResponse(res, error);
     }
 };
@@ -254,9 +255,12 @@ exports.updateDish = async (req, res) => {
 exports.getDishesOfUser = async (req, res) => {
     try {
         const pool = await req.app.get("pool");
-        //await userModel.checkIfUserExists(pool, req.googleId);
-        console.log("GET DISHES OF USER");
+        const userId = (await userModel.checkIfUserExists(pool, req.googleId))
+            .id;
+
         const dishes = await dishModel.getAllDishesOfUser(pool, req.googleId);
+        if (dishes.length) await checkIfAuthorized(dishes[0].userId, userId);
+
         res.status(200).json(dishes);
     } catch (error) {
         sendErrorResponse(res, error);
@@ -284,11 +288,13 @@ exports.deleteDish = async (req, res) => {
     try {
         const pool = await req.app.get("pool");
 
-        await userModel.checkIfUserExists(pool, req.googleId);
+        const userId = (await userModel.checkIfUserExists(pool, req.googleId))
+            .id;
 
         const dishId = req.params.dishId;
-        await dishModel.checkIfDishExists(pool, dishId);
+        const dish = await dishModel.checkIfDishExists(pool, dishId);
 
+        await checkIfAuthorized(dish.userId, userId);
         await dishModel.deleteDishFromDatabase(pool, dishId);
         res.status(204).end();
     } catch (error) {
