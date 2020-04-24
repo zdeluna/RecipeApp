@@ -66,7 +66,7 @@ const DishListTable = props => {
         <Container>
             <Row>
                 {" "}
-                <Link to={`/`} id="goBackLink">
+                <Link to={`/users/category`} id="goBackLink">
                     Go Back To Categories
                 </Link>
             </Row>

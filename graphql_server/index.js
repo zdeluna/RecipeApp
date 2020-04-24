@@ -2,8 +2,6 @@
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname + "/.env") });
 
-const firebase = require("firebase-admin");
-
 const typeDefs = require("./schema/schema.js");
 const resolvers = require("./resolvers");
 
@@ -14,15 +12,6 @@ const { AuthenticationError } = require("apollo-server");
 const dataSources = () => ({
     dishAPI: new DishAPI(),
     userAPI: new UserAPI()
-});
-
-const app = firebase.initializeApp({
-    apiKey: process.env.FIREBASE_KEY,
-    authDomain: process.env.FIREBASE_DOMAIN,
-    databaseURL: process.env.FIREBASE_DATABASE,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_SENDER_ID
 });
 
 const context = async ({ req }) => {
@@ -52,11 +41,7 @@ if (process.env.GRAPH_ENV == "test") {
         dataSources: dataSources,
         playground: false,
         introspection: true,
-        context: ({ req, res }) => ({
-            headers: req.headers,
-            req,
-            res
-        })
+        context: context
     });
 
     exports.handler = server.createHandler({
