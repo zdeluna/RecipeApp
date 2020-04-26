@@ -5,10 +5,12 @@ import { Link } from "react-router-dom";
 import app from "../../base";
 import { Container, Form, Button, Input, FormGroup, Label } from "reactstrap";
 import { ADD_USER } from "../../api/mutations/user/createUser";
+import { useApolloClient } from "@apollo/react-hooks";
 
 const SignUp = props => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const client = useApolloClient();
 
     const [addUser] = useMutation(ADD_USER, {
         onCompleted({ addUser }) {
@@ -18,6 +20,7 @@ const SignUp = props => {
 
     const handleSignUp = async event => {
         event.preventDefault();
+        client.resetStore();
         try {
             const user = await app
                 .auth()
@@ -26,6 +29,17 @@ const SignUp = props => {
                 variables: {
                     googleId: user.user.uid,
                     email: email
+                }
+            });
+            /* Get the JWT token of the user */
+            app.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    /* Clear the cache of a previously logged in user */
+                    client.resetStore();
+
+                    user.getIdToken().then(function(idToken) {
+                        localStorage.setItem("token", idToken);
+                    });
                 }
             });
         } catch (error) {
