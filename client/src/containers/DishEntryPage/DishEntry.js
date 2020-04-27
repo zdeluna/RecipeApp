@@ -14,6 +14,7 @@ import { useApolloClient } from "@apollo/react-hooks";
 import { GET_DISH } from "../../api/queries/dish/getDish";
 import { DELETE_DISH } from "../../api/mutations/dish/deleteDish";
 import { useMutation, useQuery } from "@apollo/react-hooks";
+import { GET_DISHES } from "../../api/queries/dish/getAllDishes";
 
 const DishEntry = props => {
     const [userId] = useState(props.userId);
@@ -33,6 +34,13 @@ const DishEntry = props => {
 
     const [deleteDish] = useMutation(DELETE_DISH, {
         onCompleted(updateDishResponse) {
+            const { dishes } = client.readQuery({ query: GET_DISHES });
+            // Remove the recently deleted dish from the apollo cache.
+            client.writeQuery({
+                query: GET_DISHES,
+                data: { dishes: dishes.filter(e => e.id != dishId) }
+            });
+
             props.history.push(`/users/category/${category}`);
         }
     });
