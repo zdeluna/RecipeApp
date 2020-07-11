@@ -47,7 +47,9 @@ if (process.env.GRAPH_ENV == "test") {
     exports.handler = server.createHandler({
         cors: {
             origin: "*",
-            credentials: true
+            credentials: true,
+            allowedHeaders:
+                "Origin, X-Requested-With, Content-Type, Accept, Authorization"
         }
     });
 }
