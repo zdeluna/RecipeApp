@@ -1,14 +1,17 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Controllers/TodoItemsController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Controllers/DishController.cs">
     <Files>
       <File FileName="RecipeAPI/Properties/launchSettings.json" Line="23" Column="34" />
       <File FileName="RecipeAPI/Models/TodoItem.cs" />
       <File FileName="RecipeAPI/Models/TodoContext.cs" />
-      <File FileName="RecipeAPI/Startup.cs" />
+      <File FileName="RecipeAPI/Startup.cs" Line="31" Column="46" />
       <File FileName="RecipeAPI/Controllers/WeatherForecastController.cs" />
       <File FileName="RecipeAPI/Program.cs" />
       <File FileName="RecipeAPI/Controllers/TodoItemsController.cs" Line="7" Column="23" />
+      <File FileName="RecipeAPI/Models/Dish.cs" Line="7" Column="39" />
+      <File FileName="RecipeAPI/Models/DishContext.cs" Line="11" Column="46" />
+      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -17,7 +20,7 @@
             <Node name="RecipeAPI" expanded="True">
               <Node name="Dependencies" expanded="True" />
               <Node name="Controllers" expanded="True">
-                <Node name="TodoItemsController.cs" selected="True" />
+                <Node name="DishController.cs" selected="True" />
               </Node>
               <Node name="Models" expanded="True" />
             </Node>
