@@ -17,7 +17,8 @@ const dataSources = () => ({
 const context = async ({ req }) => {
     const auth = (req.headers && req.headers.authorization) || "";
     if (!auth) throw new AuthenticationError("you must be logged in");
-
+    console.log("Print context token");
+    console.log(auth);
     return { token: auth };
 };
 
@@ -29,7 +30,6 @@ if (process.env.GRAPH_ENV == "test") {
         dataSources: dataSources,
         context: context
     });
-
     server.listen().then(({ url }) => {
         console.log(`GraphQL Development Server ready at ${url}`);
     });

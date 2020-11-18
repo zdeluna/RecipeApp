@@ -50,6 +50,7 @@ class DishAPI extends RESTDataSource {
         const res = await this.get(`/users/dish`, undefined, {
             headers: { Authorization: this.context.token }
         });
+        console.log("after response");
 
         if (!res) return null;
         else return this.dishesReducer(res);
