@@ -1,6 +1,6 @@
-'use strict';
-require('dotenv').config();
-const mysql = require('promise-mysql');
+"use strict";
+require("dotenv").config();
+const mysql = require("promise-mysql");
 
 let poolPromise;
 
@@ -27,11 +27,11 @@ let poolConfig = {
     waitForConnections: true, // Default: true
     // 'queueLimit' is the maximum number of requests for connections the pool
     // will queue at once before returning an error. If 0, there is no limit.
-    queueLimit: 0, // Default: 0
+    queueLimit: 0 // Default: 0
 };
 
-if (process.env.REST_ENV == 'test') {
-    poolConfig.host = 'localhost';
+if (process.env.REST_ENV == "test") {
+    poolConfig.host = "localhost";
     poolConfig.port = 3306;
 } else {
     poolConfig.socketPath = `/cloudsql/${
@@ -40,7 +40,7 @@ if (process.env.REST_ENV == 'test') {
 }
 
 var createPool = async () => {
-    console.log('CREATE POOL');
+    console.log("CREATE POOL");
 
     return await mysql.createPool(poolConfig);
 };
@@ -75,7 +75,7 @@ const ensureSchema = async pool => {
         url VARCHAR(255),
         userId INT,
         PRIMARY KEY (dishId),
-        FOREIGN KEY (userId) REFERENCES users(id));`,
+        FOREIGN KEY (userId) REFERENCES users(id));`
     );
 
     await pool.query(`CREATE TABLE IF NOT EXISTS history (
@@ -86,4 +86,4 @@ const ensureSchema = async pool => {
         FOREIGN KEY (dishId) REFERENCES dishes(dishId));`);
 };
 
-module.exports = {getConnection, createPool};
+module.exports = { getConnection, createPool };
