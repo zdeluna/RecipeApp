@@ -1,4 +1,8 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
+
 namespace RecipeAPI.Models
 {
     public class Dish
@@ -10,7 +14,10 @@ namespace RecipeAPI.Models
         public string LastMade { get; set; }
         public string Notes { get; set; }
         public string Url { get; set; }
-        public string UserId { get; set; }
-        public string[] History { get; set; }
+
+        [ForeignKey("User")]
+        public long UserId { get; set; }
+
+        //public virtual ICollection<String> History { get; set; }
     }
 }
