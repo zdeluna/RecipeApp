@@ -29,6 +29,7 @@ namespace RecipeAPI
         {
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
             services.AddDbContext<DishContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
+            services.AddDbContext<UserContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
             services.AddControllers();
         }
 
