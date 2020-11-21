@@ -1,12 +1,16 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Startup.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Controllers/TodoItemsController.cs">
     <Files>
-      <File FileName="RecipeAPI/Models/User.cs" Line="7" Column="17" />
-      <File FileName="RecipeAPI/Models/Dish.cs" Line="9" Column="6" />
-      <File FileName="RecipeAPI/Models/UserContext.cs" Line="7" Column="6" />
-      <File FileName="RecipeAPI/Models/DishContext.cs" Line="11" Column="48" />
-      <File FileName="RecipeAPI/Startup.cs" Line="32" Column="93" />
+      <File FileName="RecipeAPI/Models/User.cs" Line="9" Column="45" />
+      <File FileName="RecipeAPI/Models/Dish.cs" />
+      <File FileName="RecipeAPI/Models/UserContext.cs" Line="6" Column="41" />
+      <File FileName="RecipeAPI/Models/DishContext.cs" />
+      <File FileName="RecipeAPI/Startup.cs" Line="75" Column="15" />
+      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/appsettings.json" Line="8" Column="5" />
+      <File FileName="RecipeAPI/Controllers/LoginController.cs" Line="11" Column="1" />
+      <File FileName="RecipeAPI/Controllers/TodoItemsController.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -14,9 +18,11 @@
           <Node name="RecipeAPI" expanded="True">
             <Node name="RecipeAPI" expanded="True">
               <Node name="Dependencies" expanded="True" />
-              <Node name="Controllers" expanded="True" />
+              <Node name="Controllers" expanded="True">
+                <Node name="TodoItemsController.cs" selected="True" />
+              </Node>
               <Node name="Models" expanded="True" />
-              <Node name="Startup.cs" selected="True" />
+              <Node name="Properties" expanded="True" />
             </Node>
           </Node>
         </State>
