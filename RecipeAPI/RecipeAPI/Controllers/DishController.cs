@@ -12,7 +12,7 @@ namespace RecipeAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DishController : ControllerBase
+    public class DishController : BaseController
     {
         private readonly DishContext _context;
 
@@ -26,6 +26,8 @@ namespace RecipeAPI.Controllers
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<IEnumerable<Dish>>> GetDishes()
         {
+            Console.WriteLine("Print user id");
+            Console.WriteLine(GetUserId());
             return await _context.Dishes.ToListAsync();
         }
 
