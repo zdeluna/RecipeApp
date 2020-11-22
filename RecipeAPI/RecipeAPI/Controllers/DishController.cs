@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using RecipeAPI.Models;
 
 namespace RecipeAPI.Controllers
@@ -22,6 +23,7 @@ namespace RecipeAPI.Controllers
 
         // GET: api/Dish
         [HttpGet]
+        [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<IEnumerable<Dish>>> GetDishes()
         {
             return await _context.Dishes.ToListAsync();
