@@ -266,3 +266,12 @@
 /Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/obj/Debug/netcoreapp3.1/RecipeAPI.dll
 /Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/obj/Debug/netcoreapp3.1/RecipeAPI.pdb
 /Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/obj/Debug/netcoreapp3.1/RecipeAPI.genruntimeconfig.cache
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/FirebaseAdmin.dll
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/Google.Api.Gax.dll
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/Google.Api.Gax.Rest.dll
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/Google.Apis.dll
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/Google.Apis.Auth.PlatformServices.dll
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/Google.Apis.Auth.dll
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/Google.Apis.Core.dll
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/Microsoft.Bcl.AsyncInterfaces.dll
