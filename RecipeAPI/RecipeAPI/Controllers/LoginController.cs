@@ -22,7 +22,7 @@ namespace RecipeAPI.Controllers
         private readonly IConfiguration _config;
         private List<User> appUsers = new List<User>
         {
-            new User { UserName = "testuser", Password = "1234" }
+            new User { UserName = "testuser", Password = "1234", UserRole = "User"}
         };
 
 
@@ -63,7 +63,8 @@ namespace RecipeAPI.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim("role", user.UserRole),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("UserId", user.Id.ToString())
             };
 
 
