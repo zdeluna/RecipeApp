@@ -33,13 +33,20 @@ namespace RecipeAPI.Controllers
 
         // GET: api/Dish/5
         [HttpGet("{id}")]
+        [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<Dish>> GetDish(long id)
         {
             var dish = await _context.Dishes.FindAsync(id);
+            int userId = GetUserId();
 
             if (dish == null)
             {
                 return NotFound();
+            }
+
+            if (dish.UserId != userId)
+            {
+                return Unauthorized();
             }
 
             return dish;
@@ -49,11 +56,20 @@ namespace RecipeAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDish(long id, Dish dish)
+        [Authorize(Policy = Policies.User)]
+        public async Task<IActionResult> PutDish(long id)
         {
+            /*
             if (id != dish.Id)
             {
                 return BadRequest();
+            }*/
+            var dish = await _context.Dishes.FindAsync(id);
+            int userId = GetUserId();
+
+            if (dish.UserId != userId)
+            {
+                return Unauthorized();
             }
 
             _context.Entry(dish).State = EntityState.Modified;
@@ -81,8 +97,11 @@ namespace RecipeAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<Dish>> PostDish(Dish dish)
         {
+            //Add the userId from the token as a field
+            dish.UserId = GetUserId();
             _context.Dishes.Add(dish);
             await _context.SaveChangesAsync();
 
@@ -91,12 +110,20 @@ namespace RecipeAPI.Controllers
 
         // DELETE: api/Dish/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<Dish>> DeleteDish(long id)
         {
             var dish = await _context.Dishes.FindAsync(id);
             if (dish == null)
             {
                 return NotFound();
+            }
+
+            int userId = GetUserId();
+
+            if (dish.UserId != userId)
+            {
+                return Unauthorized();
             }
 
             _context.Dishes.Remove(dish);
@@ -109,5 +136,6 @@ namespace RecipeAPI.Controllers
         {
             return _context.Dishes.Any(e => e.Id == id);
         }
+
     }
 }
