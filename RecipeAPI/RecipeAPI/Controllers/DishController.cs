@@ -25,10 +25,10 @@ namespace RecipeAPI.Controllers
         [HttpGet]
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<IEnumerable<Dish>>> GetDishes()
-        {
-            Console.WriteLine("Print user id");
-            Console.WriteLine(GetUserId());
-            return await _context.Dishes.ToListAsync();
+        { 
+            int userId = GetUserId();
+
+            return await _context.Dishes.Where(x => x.UserId == userId).ToListAsync();
         }
 
         // GET: api/Dish/5

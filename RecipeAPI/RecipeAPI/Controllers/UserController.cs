@@ -79,6 +79,7 @@ namespace RecipeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            Console.WriteLine("Create user");
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
