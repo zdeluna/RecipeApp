@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using Microsoft.AspNetCore.JsonPatch;
 using RecipeAPI.Models;
 
 namespace RecipeAPI.Controllers
@@ -38,7 +40,7 @@ namespace RecipeAPI.Controllers
         {
             var dish = await _context.Dishes.FindAsync(id);
             int userId = GetUserId();
-
+            System.Diagnostics.Debugger.Break();
             if (dish == null)
             {
                 return NotFound();
@@ -57,40 +59,39 @@ namespace RecipeAPI.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         [Authorize(Policy = Policies.User)]
-        public async Task<IActionResult> PutDish(long id)
+        public async Task<ActionResult<Dish>> PutDish(long id, [FromBody] JsonPatchDocument<Dish> patchDish)
         {
-            /*
-            if (id != dish.Id)
+            if (patchDish != null)
             {
-                return BadRequest();
-            }*/
-            var dish = await _context.Dishes.FindAsync(id);
-            int userId = GetUserId();
+                var dish = await _context.Dishes.FindAsync(id);
 
-            if (dish.UserId != userId)
-            {
-                return Unauthorized();
-            }
-
-            _context.Entry(dish).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DishExists(id))
+                if (dish == null)
                 {
                     return NotFound();
                 }
-                else
+                int userId = GetUserId();
+
+                if (dish.UserId != userId)
                 {
-                    throw;
+                    return Unauthorized();
                 }
+
+                patchDish.ApplyTo(dish, ModelState);
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                return new ObjectResult(dish);
+
+            }
+            else
+            {
+                return BadRequest(ModelState);
             }
 
-            return NoContent();
+           
         }
 
         // POST: api/Dish

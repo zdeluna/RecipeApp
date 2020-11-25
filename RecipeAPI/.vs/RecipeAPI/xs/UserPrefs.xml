@@ -1,30 +1,30 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Controllers/BaseController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/RecipeAPI.csproj">
     <Files>
-      <File FileName="RecipeAPI/Models/User.cs" Line="12" Column="2" />
-      <File FileName="RecipeAPI/Models/Dish.cs" Line="1" Column="1" />
-      <File FileName="RecipeAPI/Models/UserContext.cs" Line="6" Column="41" />
+      <File FileName="RecipeAPI/Models/User.cs" Line="11" Column="6" />
+      <File FileName="RecipeAPI/Models/Dish.cs" />
+      <File FileName="RecipeAPI/Models/UserContext.cs" />
       <File FileName="RecipeAPI/Models/DishContext.cs" />
-      <File FileName="RecipeAPI/Startup.cs" Line="77" Column="13" />
-      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="28" Column="1" />
-      <File FileName="RecipeAPI/appsettings.json" Line="8" Column="5" />
-      <File FileName="RecipeAPI/Controllers/LoginController.cs" Line="58" Column="10" />
-      <File FileName="RecipeAPI/Controllers/TodoItemsController.cs" Line="6" Column="32" />
-      <File FileName="RecipeAPI/Controllers/UserController.cs" Line="14" Column="49" />
-      <File FileName="RecipeAPI/Program.cs" Line="1" Column="1" />
-      <File FileName="RecipeAPI/Models/Policies.cs" Line="16" Column="1" />
-      <File FileName="RecipeAPI/Controllers/BaseController.cs" Line="4" Column="21" />
+      <File FileName="RecipeAPI/Startup.cs" />
+      <File FileName="RecipeAPI/Controllers/DishController.cs" />
+      <File FileName="RecipeAPI/appsettings.json" />
+      <File FileName="RecipeAPI/Controllers/LoginController.cs" />
+      <File FileName="RecipeAPI/Controllers/TodoItemsController.cs" />
+      <File FileName="RecipeAPI/Controllers/UserController.cs" />
+      <File FileName="RecipeAPI/Program.cs" />
+      <File FileName="RecipeAPI/Models/Policies.cs" />
+      <File FileName="RecipeAPI/Controllers/BaseController.cs" />
+      <File FileName="RecipeAPI/Properties/launchSettings.json" />
+      <File FileName="RecipeAPI/RecipeAPI.csproj" Line="9" Column="18" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="RecipeAPI" expanded="True">
+          <Node name="RecipeAPI" expanded="True" selected="True">
             <Node name="RecipeAPI" expanded="True">
               <Node name="Dependencies" expanded="True" />
-              <Node name="Controllers" expanded="True">
-                <Node name="BaseController.cs" selected="True" />
-              </Node>
+              <Node name="Controllers" expanded="True" />
               <Node name="Models" expanded="True" />
               <Node name="Properties" expanded="True" />
             </Node>
@@ -38,8 +38,14 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <Debugger.DebugSourceFolders />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/Controllers/DishController.cs" relfile="RecipeAPI/Controllers/DishController.cs" line="82" column="17" />
+      <Breakpoint file="/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/Controllers/DishController.cs" relfile="RecipeAPI/Controllers/DishController.cs" line="91" column="17" />
+      <Breakpoint file="/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/Controllers/DishController.cs" relfile="RecipeAPI/Controllers/DishController.cs" line="64" column="13" />
+      <Breakpoint file="/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/Controllers/DishController.cs" relfile="RecipeAPI/Controllers/DishController.cs" line="42" column="13" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>
