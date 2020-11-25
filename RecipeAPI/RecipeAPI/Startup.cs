@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using RecipeAPI.Models;
 
 namespace RecipeAPI
@@ -33,7 +34,7 @@ namespace RecipeAPI
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
             services.AddDbContext<DishContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
             services.AddDbContext<UserContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -58,6 +59,7 @@ namespace RecipeAPI
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
 
             });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
