@@ -17,10 +17,12 @@ namespace RecipeAPI.Controllers
     public class DishController : BaseController
     {
         private readonly DishContext _context;
+        private readonly HistoryContext _historyContext;
 
-        public DishController(DishContext context)
+        public DishController(DishContext context, HistoryContext historyContext)
         {
             _context = context;
+            _historyContext = historyContext;
         }
 
         // GET: api/Dish
