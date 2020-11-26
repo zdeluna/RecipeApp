@@ -7,7 +7,7 @@ namespace RecipeAPI.Models
 {
     public class Dish
     {
-        public long Id { get; set; }
+        public long ID { get; set; }
         public string Name { get; set; }
         public long Category { get; set; }
         public string CookingTime { get; set; }
@@ -18,6 +18,7 @@ namespace RecipeAPI.Models
         [ForeignKey("User")]
         public long UserId { get; set; }
 
-        //public virtual ICollection<String> History { get; set; }
+        public ICollection<History> History { get; set; }
+        //public virtual ICollection<string> Ingredients { get; set; }
     }
 }
