@@ -16,7 +16,7 @@ namespace RecipeAPI.Models
         public string Url { get; set; }
 
         [ForeignKey("User")]
-        public long UserId { get; set; }
+        public long UserID { get; set; }
 
         public ICollection<History> History { get; set; }
         //public virtual ICollection<string> Ingredients { get; set; }

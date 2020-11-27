@@ -32,7 +32,7 @@ namespace RecipeAPI.Controllers
         { 
             int userId = GetUserId();
 
-            return await _context.Dishes.Where(x => x.UserId == userId).ToListAsync();
+            return await _context.Dishes.Where(x => x.UserID == userId).ToListAsync();
         }
 
         // GET: api/Dish/5
@@ -40,18 +40,22 @@ namespace RecipeAPI.Controllers
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<Dish>> GetDish(long id)
         {
-            var dish = await _context.Dishes.FindAsync(id);
-            int userId = GetUserId();
+            var dish = await _context.Dishes
+                .Include(s => s.History)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
+           
             System.Diagnostics.Debugger.Break();
             if (dish == null)
             {
                 return NotFound();
             }
 
-            if (dish.UserId != userId)
+            if (dish.UserID != GetUserId())
             {
                 return Unauthorized();
             }
+
 
             return dish;
         }
@@ -73,7 +77,7 @@ namespace RecipeAPI.Controllers
                 }
                 int userId = GetUserId();
 
-                if (dish.UserId != userId)
+                if (dish.UserID != userId)
                 {
                     return Unauthorized();
                 }
@@ -104,11 +108,21 @@ namespace RecipeAPI.Controllers
         public async Task<ActionResult<Dish>> PostDish(Dish dish)
         {
             //Add the userId from the token as a field
-            dish.UserId = GetUserId();
+            dish.UserID = GetUserId();
             _context.Dishes.Add(dish);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDish", new { id = dish.Id }, dish);
+            
+            var history = new History[]
+            {
+                new History{DishID=dish.ID, Date="Saturday December 2nd"},
+                new History{DishID=dish.ID, Date="Sunday December 3rd"}
+            };
+
+            _context.History.AddRange(history);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetDish", new { id = dish.ID }, dish);
         }
 
         // DELETE: api/Dish/5
@@ -124,7 +138,7 @@ namespace RecipeAPI.Controllers
 
             int userId = GetUserId();
 
-            if (dish.UserId != userId)
+            if (dish.UserID != userId)
             {
                 return Unauthorized();
             }
@@ -137,7 +151,7 @@ namespace RecipeAPI.Controllers
 
         private bool DishExists(long id)
         {
-            return _context.Dishes.Any(e => e.Id == id);
+            return _context.Dishes.Any(e => e.ID == id);
         }
 
     }
