@@ -61,7 +61,7 @@ namespace RecipeAPI.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim("role", user.UserRole),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("UserId", user.Id.ToString())
+                new Claim("UserID", user.ID.ToString())
             };
 
 

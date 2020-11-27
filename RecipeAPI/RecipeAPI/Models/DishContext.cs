@@ -9,5 +9,6 @@ namespace RecipeAPI.Models
         {
         }
         public DbSet<Dish> Dishes { get; set; }
+        public DbSet<History> History { get; set; }
     }
 }
