@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.AspNetCore.JsonPatch;
 using RecipeAPI.Models;
+using AutoMapper;
 
 namespace RecipeAPI.Controllers
 {
@@ -17,10 +18,12 @@ namespace RecipeAPI.Controllers
     public class DishController : BaseController
     {
         private readonly DatabaseContext _context;
-        
-        public DishController(DatabaseContext context)
+        private readonly IMapper _mapper;
+
+        public DishController(DatabaseContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
            
         }
 
@@ -41,7 +44,7 @@ namespace RecipeAPI.Controllers
         // GET: api/Dish/5
         [HttpGet("{id}")]
         [Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<Dish>> GetDish(long id)
+        public async Task<ActionResult<DishResponse>> GetDish(long id)
         {
             var dish = await _context.Dishes
                 .Include(s => s.History)
@@ -60,7 +63,7 @@ namespace RecipeAPI.Controllers
             }
 
 
-            return dish;
+            return _mapper.Map<DishResponse>(dish);
         }
 
         // PUT: api/Dish/5

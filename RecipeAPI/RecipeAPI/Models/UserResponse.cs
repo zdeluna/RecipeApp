@@ -1,7 +1,7 @@
 ﻿using System;
 namespace RecipeAPI.Models
 {
-    public class UserDTO
+    public class UserResponse
     {
         public long ID { get; set; }
 
