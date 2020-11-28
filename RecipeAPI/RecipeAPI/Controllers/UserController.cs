@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeAPI.Models;
+using AutoMapper;
 
 namespace RecipeAPI.Controllers
 {
@@ -14,10 +15,12 @@ namespace RecipeAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly DatabaseContext _context;
+        private readonly IMapper _mapper;
 
-        public UserController(DatabaseContext context)
+        public UserController(DatabaseContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/User
@@ -83,7 +86,7 @@ namespace RecipeAPI.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.ID }, user);
+            return CreatedAtAction("GetUser", new { id = user.ID }, _mapper.Map<UserDTO>(user));
         }
 
         // DELETE: api/User/5
