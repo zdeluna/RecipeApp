@@ -20,12 +20,12 @@ namespace RecipeAPI.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IConfiguration _config;
-        private readonly UserContext _userContext;
+        private readonly DatabaseContext _context;
 
-        public LoginController(IConfiguration config, UserContext userContext)
+        public LoginController(IConfiguration config, DatabaseContext context)
         {
             _config = config;
-            _userContext = userContext;
+            _context = context;
         }
 
         [HttpPost]
@@ -47,7 +47,7 @@ namespace RecipeAPI.Controllers
 
         User AuthenticateUser(User loginCredentials)
         {
-            User user = _userContext.Users.SingleOrDefault(x => x.UserName == loginCredentials.UserName && x.Password == loginCredentials.Password);
+            User user = _context.Users.SingleOrDefault(x => x.UserName == loginCredentials.UserName && x.Password == loginCredentials.Password);
             return user;
         }
 

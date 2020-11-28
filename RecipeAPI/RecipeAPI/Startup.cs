@@ -31,10 +31,7 @@ namespace RecipeAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
-            services.AddDbContext<DishContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
-            services.AddDbContext<UserContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
-            services.AddDbContext<HistoryContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
+            services.AddDbContext<DatabaseContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
             services.AddControllers().AddNewtonsoftJson();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

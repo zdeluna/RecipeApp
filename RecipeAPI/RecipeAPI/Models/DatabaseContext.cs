@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RecipeAPI.Models
 {
-    public class DishContext : DbContext
+    public class DatabaseContext : DbContext
     {
-        public DishContext(DbContextOptions<DishContext> options) : base(options)
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
         }
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<History> History { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
