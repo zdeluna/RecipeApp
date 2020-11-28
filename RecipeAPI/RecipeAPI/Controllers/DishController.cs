@@ -31,7 +31,11 @@ namespace RecipeAPI.Controllers
         { 
             int userId = GetUserId();
 
-            return await _context.Dishes.Where(x => x.UserID == userId).ToListAsync();
+            return await _context.Dishes
+                .Include(s => s.History)
+                .AsNoTracking()
+                .Where(x => x.UserID == userId)
+                .ToListAsync();
         }
 
         // GET: api/Dish/5
