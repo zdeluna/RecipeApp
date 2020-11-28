@@ -86,7 +86,7 @@ namespace RecipeAPI.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.ID }, _mapper.Map<UserDTO>(user));
+            return CreatedAtAction("GetUser", new { id = user.ID }, _mapper.Map<UserResponse>(user));
         }
 
         // DELETE: api/User/5
