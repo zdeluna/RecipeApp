@@ -16,6 +16,6 @@ namespace RecipeAPI.Models
 
    
 
-        public ICollection<HistoryResponse> History { get; set; }
+        public List<string> History { get; set; }
     }
 }

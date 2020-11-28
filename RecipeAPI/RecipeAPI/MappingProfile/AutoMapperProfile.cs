@@ -13,10 +13,7 @@ namespace RecipeAPI.MappingProfile
             CreateMap<User, UserResponse>();
             CreateMap<Dish, DishResponse>()
                 .ForMember(dest => dest.History, opt =>
-                    opt.MapFrom(src => src.History.Select(x => new HistoryResponse { Date = x.Date })));
-
-           
-
+                    opt.MapFrom(src => src.History.Select(x => x.Date).ToList()));
 
 
 
