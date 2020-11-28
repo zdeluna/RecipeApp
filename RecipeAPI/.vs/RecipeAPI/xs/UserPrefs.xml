@@ -1,25 +1,22 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Controllers/DishController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Models/DatabaseContext.cs">
     <Files>
-      <File FileName="RecipeAPI/Models/User.cs" Line="7" Column="8" />
-      <File FileName="RecipeAPI/Models/Dish.cs" Line="10" Column="37" />
-      <File FileName="RecipeAPI/Models/UserContext.cs" Line="1" Column="1" />
-      <File FileName="RecipeAPI/Models/DishContext.cs" Line="2" Column="37" />
-      <File FileName="RecipeAPI/Startup.cs" Line="39" Column="1" />
-      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="60" Column="1" />
-      <File FileName="RecipeAPI/appsettings.json" />
+      <File FileName="RecipeAPI/Models/User.cs" Line="11" Column="6" />
+      <File FileName="RecipeAPI/Models/Dish.cs" />
+      <File FileName="RecipeAPI/Startup.cs" Line="40" Column="48" />
+      <File FileName="RecipeAPI/Controllers/DishController.cs" />
+      <File FileName="RecipeAPI/appsettings.json" Line="1" Column="1" />
       <File FileName="RecipeAPI/Controllers/LoginController.cs" />
-      <File FileName="RecipeAPI/Controllers/TodoItemsController.cs" />
       <File FileName="RecipeAPI/Controllers/UserController.cs" />
-      <File FileName="RecipeAPI/Program.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Program.cs" Line="16" Column="1" />
       <File FileName="RecipeAPI/Models/Policies.cs" />
       <File FileName="RecipeAPI/Controllers/BaseController.cs" />
-      <File FileName="RecipeAPI/Properties/launchSettings.json" />
+      <File FileName="RecipeAPI/Properties/launchSettings.json" Line="1" Column="1" />
       <File FileName="RecipeAPI/RecipeAPI.csproj" />
-      <File FileName="RecipeAPI/Models/History.cs" Line="10" Column="1" />
-      <File FileName="RecipeAPI/Models/HistoryContext.cs" Line="12" Column="2" />
-      <File FileName="RecipeAPI/Models/TodoItem.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Models/History.cs" />
+      <File FileName="RecipeAPI/.RecipeAPI.csproj.swp" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Models/DatabaseContext.cs" Line="8" Column="50" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -27,10 +24,10 @@
           <Node name="RecipeAPI" expanded="True">
             <Node name="RecipeAPI" expanded="True">
               <Node name="Dependencies" expanded="True" />
-              <Node name="Controllers" expanded="True">
-                <Node name="DishController.cs" selected="True" />
+              <Node name="Controllers" expanded="True" />
+              <Node name="Models" expanded="True">
+                <Node name="DatabaseContext.cs" selected="True" />
               </Node>
-              <Node name="Models" expanded="True" />
               <Node name="Properties" expanded="True" />
             </Node>
           </Node>
