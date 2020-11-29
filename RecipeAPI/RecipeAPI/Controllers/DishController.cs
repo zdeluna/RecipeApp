@@ -123,14 +123,14 @@ namespace RecipeAPI.Controllers
             _context.Dishes.Add(dish);
             await _context.SaveChangesAsync();
 
-            
+            /*
             var history = new History[]
             {
                 new History{DishID=dish.ID, Date="Saturday December 2nd"},
                 new History{DishID=dish.ID, Date="Sunday December 3rd"}
             };
 
-            _context.History.AddRange(history);
+            _context.History.AddRange(history);*/
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetDish", new { id = dish.ID }, dish);
