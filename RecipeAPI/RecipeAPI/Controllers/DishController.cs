@@ -66,12 +66,12 @@ namespace RecipeAPI.Controllers
             return _mapper.Map<DishResponse>(dish);
         }
 
-        // PUT: api/Dish/5
+        // PATCH: api/Dish/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         [Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<Dish>> PutDish(long id, [FromBody] JsonPatchDocument<Dish> patchDish)
+        public async Task<ActionResult<UpdateDishRequest>> PatchDish(long id, [FromBody] JsonPatchDocument<UpdateDishRequest> patchDish)
         {
             if (patchDish != null)
             {
@@ -88,14 +88,19 @@ namespace RecipeAPI.Controllers
                     return Unauthorized();
                 }
 
-                patchDish.ApplyTo(dish, ModelState);
+                var updateDishRequest = _mapper.Map<UpdateDishRequest>(dish);
+                patchDish.ApplyTo(updateDishRequest, ModelState);
 
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
-                return new ObjectResult(dish);
+                _mapper.Map(updateDishRequest, dish);
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+
 
             }
             else

@@ -1,9 +1,9 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Models/History.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Models/Dish.cs">
     <Files>
       <File FileName="RecipeAPI/Models/User.cs" Line="13" Column="1" />
-      <File FileName="RecipeAPI/Models/Dish.cs" Line="21" Column="36" />
+      <File FileName="RecipeAPI/Models/Dish.cs" Line="16" Column="40" />
       <File FileName="RecipeAPI/Startup.cs" Line="18" Column="18" />
       <File FileName="RecipeAPI/Controllers/DishController.cs" Line="55" Column="30" />
       <File FileName="RecipeAPI/appsettings.json" Line="1" Column="1" />
@@ -18,9 +18,10 @@
       <File FileName="RecipeAPI/.RecipeAPI.csproj.swp" Line="1" Column="1" />
       <File FileName="RecipeAPI/Models/DatabaseContext.cs" Line="9" Column="10" />
       <File FileName="RecipeAPI/Models/UserDTO.cs" Line="4" Column="30" />
-      <File FileName="RecipeAPI/MappingProfile/AutoMapperProfile.cs" Line="17" Column="10" />
-      <File FileName="RecipeAPI/Models/DishResponse.cs" Line="18" Column="1" />
-      <File FileName="RecipeAPI/Models/HistoryResponse.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/MappingProfile/AutoMapperProfile.cs" Line="11" Column="13" />
+      <File FileName="RecipeAPI/Models/DishResponse.cs" Line="17" Column="4" />
+      <File FileName="RecipeAPI/Models/HistoryResponse.cs" Line="9" Column="1" />
+      <File FileName="RecipeAPI/Models/UpdateDishRequest.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -30,7 +31,7 @@
               <Node name="Controllers" expanded="True" />
               <Node name="MappingProfile" expanded="True" />
               <Node name="Models" expanded="True">
-                <Node name="History.cs" selected="True" />
+                <Node name="Dish.cs" selected="True" />
               </Node>
             </Node>
           </Node>
