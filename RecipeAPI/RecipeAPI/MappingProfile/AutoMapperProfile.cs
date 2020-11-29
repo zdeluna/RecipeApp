@@ -16,8 +16,13 @@ namespace RecipeAPI.MappingProfile
             CreateMap<Dish, DishResponse>()
                 .ForMember(dest => dest.History, opt =>
                     opt.MapFrom(src => src.History.Select(x => x.Date).ToList()));
-            CreateMap<UpdateDishRequest, Dish>();
+            
+
+            CreateMap<string, History>().ForMember(dest => dest.Date, m => m.MapFrom(src => src));
+            CreateMap<UpdateDishRequest, Dish>().ForMember(dest => dest.History, m => m.MapFrom(src => src.History));
             CreateMap<Dish, UpdateDishRequest>();
+
+
             //CreateMap<JsonPatchDocument<Dish>, JsonPatchDocument<UpdateDishRequest>>();
             //CreateMap<Operation<Dish>, Operation<UpdateDishRequest>>();
 
