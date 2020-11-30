@@ -19,6 +19,6 @@ namespace RecipeAPI.Models
         public long UserID { get; set; }
 
         public ICollection<History> History { get; set; }
-        //public virtual ICollection<string> Ingredients { get; set; }
+        public virtual ICollection<Ingredient> Ingredients { get; set; }
     }
 }
