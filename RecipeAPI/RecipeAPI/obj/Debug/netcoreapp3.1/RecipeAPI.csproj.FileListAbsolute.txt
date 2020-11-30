@@ -280,3 +280,4 @@
 /Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/obj/Debug/netcoreapp3.1/RecipeAPI.csprojAssemblyReference.cache
 /Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/AutoMapper.dll
 /Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/settings.json

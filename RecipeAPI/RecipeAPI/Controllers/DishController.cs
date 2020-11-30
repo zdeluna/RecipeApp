@@ -108,8 +108,42 @@ namespace RecipeAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-           
+
         }
+
+        // PUT: api/Dish/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutTodoItem(long id, Dish dish)
+        {
+            if (id != dish.ID)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(dish).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DishExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+
 
         // POST: api/Dish
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for

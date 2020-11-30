@@ -1,27 +1,27 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Models/Dish.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Models/Ingredient.cs">
     <Files>
       <File FileName="RecipeAPI/Models/User.cs" Line="13" Column="1" />
-      <File FileName="RecipeAPI/Models/Dish.cs" Line="16" Column="40" />
-      <File FileName="RecipeAPI/Startup.cs" Line="18" Column="18" />
-      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="55" Column="30" />
-      <File FileName="RecipeAPI/appsettings.json" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Models/Dish.cs" Line="21" Column="58" />
+      <File FileName="RecipeAPI/Startup.cs" />
+      <File FileName="RecipeAPI/Controllers/DishController.cs" />
+      <File FileName="RecipeAPI/appsettings.json" Line="10" Column="1" />
       <File FileName="RecipeAPI/Controllers/LoginController.cs" />
-      <File FileName="RecipeAPI/Controllers/UserController.cs" Line="18" Column="42" />
-      <File FileName="RecipeAPI/Program.cs" Line="16" Column="1" />
+      <File FileName="RecipeAPI/Controllers/UserController.cs" />
+      <File FileName="RecipeAPI/Program.cs" />
       <File FileName="RecipeAPI/Models/Policies.cs" />
       <File FileName="RecipeAPI/Controllers/BaseController.cs" />
-      <File FileName="RecipeAPI/Properties/launchSettings.json" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Properties/launchSettings.json" />
       <File FileName="RecipeAPI/RecipeAPI.csproj" />
-      <File FileName="RecipeAPI/Models/History.cs" Line="11" Column="9" />
-      <File FileName="RecipeAPI/.RecipeAPI.csproj.swp" Line="1" Column="1" />
-      <File FileName="RecipeAPI/Models/DatabaseContext.cs" Line="9" Column="10" />
-      <File FileName="RecipeAPI/Models/UserDTO.cs" Line="4" Column="30" />
-      <File FileName="RecipeAPI/MappingProfile/AutoMapperProfile.cs" Line="11" Column="13" />
-      <File FileName="RecipeAPI/Models/DishResponse.cs" Line="17" Column="4" />
-      <File FileName="RecipeAPI/Models/HistoryResponse.cs" Line="9" Column="1" />
-      <File FileName="RecipeAPI/Models/UpdateDishRequest.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Models/History.cs" />
+      <File FileName="RecipeAPI/.RecipeAPI.csproj.swp" />
+      <File FileName="RecipeAPI/Models/DatabaseContext.cs" />
+      <File FileName="RecipeAPI/MappingProfile/AutoMapperProfile.cs" />
+      <File FileName="RecipeAPI/Models/DishResponse.cs" />
+      <File FileName="RecipeAPI/Models/HistoryResponse.cs" />
+      <File FileName="RecipeAPI/Models/UpdateDishRequest.cs" />
+      <File FileName="RecipeAPI/Models/Ingredient.cs" Line="6" Column="9" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -31,7 +31,7 @@
               <Node name="Controllers" expanded="True" />
               <Node name="MappingProfile" expanded="True" />
               <Node name="Models" expanded="True">
-                <Node name="Dish.cs" selected="True" />
+                <Node name="Ingredient.cs" selected="True" />
               </Node>
             </Node>
           </Node>
