@@ -12,5 +12,6 @@ namespace RecipeAPI.Models
         public string Url { get; set; }
 
         public List<string> History { get; set; }
+        public virtual ICollection<Ingredient> Ingredients { get; set; }
     }
 }

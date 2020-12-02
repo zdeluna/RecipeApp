@@ -6,7 +6,7 @@
     "vim.hlsearch": true,
     "vim.insertModeKeyBindings": [
         {
-            "before": ["jj", "j"],
+            "before": ["j", "j"],
             "after": ["<Esc>"]
         }
     ],
@@ -25,4 +25,5 @@
         "<C-a>": false,
         "<C-f>": false
     }
+
 }

@@ -47,6 +47,16 @@ module.exports = {
                 success: true,
                 message: "The user was created successfully"
             };
+        },
+        signInUser: async (_, { username, password }, { dataSources }) => {
+            let response = await dataSources.userAPI.signInUser({
+                username,
+                password
+            });
+            return {
+                success: true,
+                token: response.token
+            };
         }
     }
 };

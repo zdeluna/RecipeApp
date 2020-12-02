@@ -7,7 +7,7 @@ class UserAPI extends RESTDataSource {
         super();
 
         if (process.env.GRAPH_ENV == "test") {
-            this.baseURL = "http://localhost:5000/api/";
+            this.baseURL = "https://localhost:5001/api/";
         } else {
             this.baseURL = "https://recipescheduler-227221.appspot.com/api/";
         }
@@ -17,6 +17,14 @@ class UserAPI extends RESTDataSource {
         const res = await this.post(`/users`, {
             googleId: googleId,
             email: email
+        });
+        return res;
+    }
+
+    async signInUser({ username, password }) {
+        const res = await this.post(`/Login`, {
+            UserName: username,
+            Password: password
         });
         return res;
     }

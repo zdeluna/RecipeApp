@@ -115,18 +115,19 @@ namespace RecipeAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(long id, Dish dish)
+        public async Task<IActionResult> PutTodoItem(long id, [FromBody] UpdateDishRequest updateDishRequest)
         {
-            if (id != dish.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(dish).State = EntityState.Modified;
-
             try
             {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var dish = await _context.Dishes.FindAsync(id);
+                if (dish == null) return NotFound();
+
+                _mapper.Map(updateDishRequest, dish);
+
                 await _context.SaveChangesAsync();
+
+                return Ok(_mapper.Map<Dish, DishResponse>(dish));
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -136,11 +137,10 @@ namespace RecipeAPI.Controllers
                 }
                 else
                 {
-                    throw;
+                    return BadRequest("Error updating dish");
                 }
             }
 
-            return NoContent();
         }
 
 

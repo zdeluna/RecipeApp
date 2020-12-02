@@ -75,6 +75,10 @@ const typeDefs = gql`
         dishes: [Dish]
     }
 
+    type Token {
+        token: String!
+    }
+
     type Mutation {
         addDish(name: String!, category: String!): AddDishResponse!
         updateDish(
@@ -92,6 +96,7 @@ const typeDefs = gql`
         ): UpdateDishResponse
         deleteDish(dishId: String!): DeleteDishResponse
         addUser(googleId: String!, email: String!): CreateUserResponse
+        signInUser(username: String!, password: String!): Token!
     }
 `;
 

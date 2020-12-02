@@ -1,15 +1,14 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Models/Ingredient.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/keybindings.json">
     <Files>
       <File FileName="RecipeAPI/Models/User.cs" Line="13" Column="1" />
-      <File FileName="RecipeAPI/Models/Dish.cs" Line="21" Column="58" />
+      <File FileName="RecipeAPI/Models/Dish.cs" />
       <File FileName="RecipeAPI/Startup.cs" />
       <File FileName="RecipeAPI/Controllers/DishController.cs" />
-      <File FileName="RecipeAPI/appsettings.json" Line="10" Column="1" />
+      <File FileName="RecipeAPI/appsettings.json" />
       <File FileName="RecipeAPI/Controllers/LoginController.cs" />
       <File FileName="RecipeAPI/Controllers/UserController.cs" />
-      <File FileName="RecipeAPI/Program.cs" />
       <File FileName="RecipeAPI/Models/Policies.cs" />
       <File FileName="RecipeAPI/Controllers/BaseController.cs" />
       <File FileName="RecipeAPI/Properties/launchSettings.json" />
@@ -21,7 +20,10 @@
       <File FileName="RecipeAPI/Models/DishResponse.cs" />
       <File FileName="RecipeAPI/Models/HistoryResponse.cs" />
       <File FileName="RecipeAPI/Models/UpdateDishRequest.cs" />
-      <File FileName="RecipeAPI/Models/Ingredient.cs" Line="6" Column="9" />
+      <File FileName="RecipeAPI/Models/Ingredient.cs" />
+      <File FileName="RecipeAPI/settings.json" />
+      <File FileName="RecipeAPI/Program.cs" />
+      <File FileName="RecipeAPI/keybindings.json" Line="13" Column="21" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -30,9 +32,8 @@
             <Node name="RecipeAPI" expanded="True">
               <Node name="Controllers" expanded="True" />
               <Node name="MappingProfile" expanded="True" />
-              <Node name="Models" expanded="True">
-                <Node name="Ingredient.cs" selected="True" />
-              </Node>
+              <Node name="Models" expanded="True" />
+              <Node name="keybindings.json" selected="True" />
             </Node>
           </Node>
         </State>

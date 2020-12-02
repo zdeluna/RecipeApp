@@ -5,7 +5,7 @@
         "client": "cd client && npm run start",
         "restServer": "REST_ENV=test nodemon server.js",
         "graphQLServer": "GRAPH_ENV=test nodemon graphql_server/index.js",
-        "dev": "concurrently --kill-others-on-fail \"npm run restServer\"  \"npm run graphQLServer\" \"npm run client\"",
+        "dev": "concurrently --kill-others-on-fail \"npm run graphQLServer\" \"npm run client\"",
         "start": "node server.js",
         "test": "jest"
     },

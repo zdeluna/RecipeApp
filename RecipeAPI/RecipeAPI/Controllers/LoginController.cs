@@ -32,6 +32,7 @@ namespace RecipeAPI.Controllers
         [AllowAnonymous]
         public IActionResult Login([FromBody]User login)
         {
+            Console.WriteLine("In login");
             IActionResult response = Unauthorized();
             User user = AuthenticateUser(login);
             if (user != null)
@@ -47,6 +48,8 @@ namespace RecipeAPI.Controllers
 
         User AuthenticateUser(User loginCredentials)
         {
+            Console.WriteLine(loginCredentials.UserName);
+            Console.WriteLine(loginCredentials.Password);
             User user = _context.Users.SingleOrDefault(x => x.UserName == loginCredentials.UserName && x.Password == loginCredentials.Password);
             return user;
         }
