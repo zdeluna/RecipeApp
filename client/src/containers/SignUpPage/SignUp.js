@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import app from "../../base";
 import { Container, Form, Button, Input, FormGroup, Label } from "reactstrap";
 import { ADD_USER } from "../../api/mutations/user/createUser";
+import { LOG_IN_USER } from "../../api/mutations/user/signInUser";
 import { useApolloClient } from "@apollo/react-hooks";
 
 const SignUp = props => {
@@ -12,9 +13,21 @@ const SignUp = props => {
     const [password, setPassword] = useState("");
     const client = useApolloClient();
 
+    const [signInUser] = useMutation(LOG_IN_USER, {
+        errorPolicy: "all",
+        async onCompleted({ signInUser }) {
+            client.resetStore();
+
+            localStorage.setItem("token", signInUser.token);
+            props.history.push("/users/category");
+        }
+    });
+
     const [addUser] = useMutation(ADD_USER, {
         onCompleted({ addUser }) {
-            props.history.push("/users/category");
+            /* Clear the cache of a previously logged in user */
+            client.resetStore();
+            signInUser({ variables: { username: email, password } });
         }
     });
 
@@ -22,24 +35,10 @@ const SignUp = props => {
         event.preventDefault();
         client.resetStore();
         try {
-            const user = await app
-                .auth()
-                .createUserWithEmailAndPassword(email, password);
             addUser({
                 variables: {
-                    googleId: user.user.uid,
-                    email: email
-                }
-            });
-            /* Get the JWT token of the user */
-            app.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    /* Clear the cache of a previously logged in user */
-                    client.resetStore();
-
-                    user.getIdToken().then(function(idToken) {
-                        localStorage.setItem("token", idToken);
-                    });
+                    username: email,
+                    password: password
                 }
             });
         } catch (error) {

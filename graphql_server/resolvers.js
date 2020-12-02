@@ -38,10 +38,10 @@ module.exports = {
                 message: "The dish was successfully deleted"
             };
         },
-        addUser: async (_, { googleId, email }, { dataSources }) => {
+        addUser: async (_, { username, password }, { dataSources }) => {
             dataSources.userAPI.createUser({
-                googleId: googleId,
-                email: email
+                username,
+                password
             });
             return {
                 success: true,

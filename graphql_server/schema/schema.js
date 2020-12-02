@@ -95,7 +95,7 @@ const typeDefs = gql`
             lastMade: String
         ): UpdateDishResponse
         deleteDish(dishId: String!): DeleteDishResponse
-        addUser(googleId: String!, email: String!): CreateUserResponse
+        addUser(username: String!, password: String!): CreateUserResponse
         signInUser(username: String!, password: String!): Token!
     }
 `;
