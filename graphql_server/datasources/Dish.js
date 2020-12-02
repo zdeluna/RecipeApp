@@ -7,7 +7,7 @@ class DishAPI extends RESTDataSource {
         super();
 
         if (process.env.GRAPH_ENV == "test") {
-            this.baseURL = "http://localhost:5000/api/";
+            this.baseURL = "http://localhost:5000/api/Dish";
         } else {
             this.baseURL = "https://recipescheduler-227221.appspot.com/api/";
         }
@@ -47,7 +47,7 @@ class DishAPI extends RESTDataSource {
     }
 
     async getAllDishes() {
-        const res = await this.get(`/users/dish`, undefined, {
+        const res = await this.get(`/`, undefined, {
             headers: { Authorization: this.context.token }
         });
         console.log("after response");

@@ -63,7 +63,7 @@ namespace RecipeAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!UserExistsWithID(id))
                 {
                     return NotFound();
                 }
@@ -83,6 +83,12 @@ namespace RecipeAPI.Controllers
         public async Task<ActionResult<User>> PostUser(User user)
         {
             Console.WriteLine("Create user");
+
+            if (UserExistsWithUserName(user.UserName) == true)
+            {
+                return BadRequest("User already exists.");
+            }
+            
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -105,9 +111,15 @@ namespace RecipeAPI.Controllers
             return user;
         }
 
-        private bool UserExists(long id)
+        private bool UserExistsWithID(long id)
         {
             return _context.Users.Any(e => e.ID == id);
         }
+        private bool UserExistsWithUserName(string username)
+        {
+            return _context.Users.Any(e => e.UserName == username);
+        }
     }
+
+    
 }
