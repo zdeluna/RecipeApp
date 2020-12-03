@@ -56,9 +56,9 @@ class DishAPI extends RESTDataSource {
         else return this.dishesReducer(res);
     }
 
-    async createDish({ userId, name, category }) {
+    async createDish({ name, category }) {
         const res = await this.post(
-            `/users/dish`,
+            `/`,
             {
                 name: name,
                 category: category
