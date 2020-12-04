@@ -12,5 +12,6 @@ namespace RecipeAPI.Models
         public DbSet<History> History { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Ingredient> Steps { get; set; }
     }
 }

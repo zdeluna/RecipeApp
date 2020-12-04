@@ -20,5 +20,6 @@ namespace RecipeAPI.Models
 
         public ICollection<History> History { get; set; }
         public virtual ICollection<Ingredient> Ingredients { get; set; }
+        public virtual ICollection<Step> Steps{ get; set; }
     }
 }

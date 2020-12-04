@@ -48,6 +48,7 @@ namespace RecipeAPI.Controllers
         {
             var dish = await _context.Dishes
                 .Include(s => s.History)
+                .Include(s => s.Ingredients)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
            
@@ -87,7 +88,6 @@ namespace RecipeAPI.Controllers
                 {
                     return Unauthorized();
                 }
-
                 var updateDishRequest = _mapper.Map<UpdateDishRequest>(dish);
                 patchDish.ApplyTo(updateDishRequest, ModelState);
 
@@ -121,10 +121,31 @@ namespace RecipeAPI.Controllers
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
                 var dish = await _context.Dishes.FindAsync(id);
-                if (dish == null) return NotFound();
+                
+                // If the user is updating ingredients
+                if (updateDishRequest.Ingredients != null) {
+                    var ingredients = await _context.Ingredients
+                        .Where(i => i.DishID == id)
+                        .ToListAsync();
+                    foreach( var ingredient in ingredients) {
+                        _context.Ingredients.Remove(ingredient);
+                    }
+                };
+
+                // If the user is updating steps
+                if (updateDishRequest.Steps != null)
+                {
+                    var steps = await _context.Steps
+                        .Where(i => i.DishID == id)
+                        .ToListAsync();
+                    foreach (var step in steps)
+                    {
+                        _context.Steps.Remove(step);
+                    }
+                };
 
                 _mapper.Map(updateDishRequest, dish);
-
+                
                 await _context.SaveChangesAsync();
 
                 return Ok(_mapper.Map<Dish, DishResponse>(dish));

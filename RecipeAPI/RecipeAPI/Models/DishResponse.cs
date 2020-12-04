@@ -14,8 +14,9 @@ namespace RecipeAPI.Models
         public string Notes { get; set; }
         public string Url { get; set; }
 
-   
-
         public List<string> History { get; set; }
+        public List<string> Ingredients { get; set; }   
+        public List<string> Steps { get; set; }   
     }
+
 }

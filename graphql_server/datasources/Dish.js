@@ -15,7 +15,7 @@ class DishAPI extends RESTDataSource {
 
     dishReducer(dish) {
         return {
-            id: dish.dishId,
+            id: dish.id,
             name: dish.name,
             category: dish.category,
             userId: dish.userId,
@@ -76,7 +76,7 @@ class DishAPI extends RESTDataSource {
     }
 
     async updateDish(dishId, dishObject) {
-        const res = await this.put(`/users/dish/${dishId}`, dishObject, {
+        const res = await this.put(`/${dishId}`, dishObject, {
             headers: { Authorization: this.context.token }
         });
         return this.dishReducer(res, dishId);

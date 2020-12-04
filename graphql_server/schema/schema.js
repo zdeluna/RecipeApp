@@ -55,8 +55,8 @@ const typeDefs = gql`
         name: String
         category: String
         userId: String
-        steps: [Step]
-        ingredients: [Ingredient]
+        steps: [String]
+        ingredients: [String]
         url: String
         history: [String]
         cookingTime: String
@@ -86,8 +86,8 @@ const typeDefs = gql`
             name: String
             category: String
             userId: String
-            steps: [StepInput]
-            ingredients: [IngredientInput]
+            steps: [String]
+            ingredients: [String]
             url: String
             history: [String]
             cookingTime: String

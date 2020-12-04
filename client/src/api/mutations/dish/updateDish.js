@@ -4,11 +4,12 @@ export const UPDATE_DISH = gql`
     mutation updateDish(
         $dishId: String!
         $url: String
-        $steps: [StepInput]
-        $ingredients: [IngredientInput]
+        $steps: [String]
+        $ingredients: [String]
         $history: [String]
         $cookingTime: String
         $notes: String
+        $lastMade: String
     ) {
         updateDish(
             dishId: $dishId
@@ -18,6 +19,7 @@ export const UPDATE_DISH = gql`
             history: $history
             cookingTime: $cookingTime
             notes: $notes
+            lastMade: $lastMade
         ) {
             success
             message
@@ -26,21 +28,12 @@ export const UPDATE_DISH = gql`
                 id
                 name
                 url
-                ingredients {
-                    value
-                }
-                steps {
-                    value
-                }
+                ingredients
+                steps
                 history
                 cookingTime
                 notes
-                ingredientsInSteps {
-                    step
-                    ingredients {
-                        value
-                    }
-                }
+                lastMade
             }
         }
     }
