@@ -9,6 +9,7 @@ import { useInput } from "../hooks/useInput";
 const Notes = props => {
     const [dishId] = useState(props.dishId);
     const [isEditing, setEditing] = useState(false);
+    const [dish, setDish] = useState("");
 
     const [notes, setNotes, notesInput] = useInput({
         type: "text",
@@ -22,6 +23,7 @@ const Notes = props => {
             if (dish.notes) {
                 setNotes(dish.notes);
             }
+            setDish(dish);
         }
     });
 
@@ -33,6 +35,7 @@ const Notes = props => {
         updateDish({
             variables: {
                 dishId: dishId,
+                ...dish,
                 notes: notes
             }
         });

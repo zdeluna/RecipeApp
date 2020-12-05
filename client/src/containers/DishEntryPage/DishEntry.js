@@ -64,6 +64,7 @@ const DishEntry = props => {
                 setIngredientsInSteps(dish.ingredientsInSteps);
             }
             setDish(dish);
+            console.log("dish object loaded");
         }
     });
 
