@@ -9,7 +9,7 @@ import { useInput } from "../hooks/useInput";
 const CookingTime = props => {
     const [dishId] = useState(props.dishId);
     const [isEditing, setEditing] = useState(false);
-
+    const [dish, setDish] = useState("");
     const [cookingTime, setCookingTime, notesInput] = useInput({
         type: "text",
         initialValue: props.cookingTime
@@ -22,6 +22,7 @@ const CookingTime = props => {
             if (dish.cookingTime) {
                 setCookingTime(dish.cookingTime);
             }
+            setDish(dish);
         }
     });
 
@@ -33,6 +34,7 @@ const CookingTime = props => {
         updateDish({
             variables: {
                 dishId: dishId,
+                ...dish,
                 cookingTime: cookingTime
             }
         });
