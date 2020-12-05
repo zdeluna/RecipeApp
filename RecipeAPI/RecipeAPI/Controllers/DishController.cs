@@ -49,6 +49,7 @@ namespace RecipeAPI.Controllers
             var dish = await _context.Dishes
                 .Include(s => s.History)
                 .Include(s => s.Ingredients)
+                .Include(s => s.Steps)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
            

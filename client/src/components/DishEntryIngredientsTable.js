@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
-import app from '../base';
-import {Table, Container} from 'reactstrap';
-import './DishEntryIngredientsTable.css';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import app from "../base";
+import { Table, Container } from "reactstrap";
+import "./DishEntryIngredientsTable.css";
 
 class DishEntryIngredientsTable extends Component {
     constructor() {
@@ -10,22 +10,22 @@ class DishEntryIngredientsTable extends Component {
         this.state = {
             user: app.auth().currentUser,
             entries: [],
-            type: '',
-            striped: false,
+            type: "",
+            striped: false
         };
     }
 
     componentDidMount() {
         this.setState({
             entries: this.props.entries,
-            type: this.props.type,
+            type: this.props.type
         });
     }
 
     // Consulted https://stackoverflow.com/questions/41582197/state-not-updating-when-receiving-new-props-reactjs
     componentWillReceiveProps(newProps) {
         if (this.props !== newProps) {
-            this.setState({entries: this.props.entries});
+            this.setState({ entries: this.props.entries });
         }
     }
 
@@ -36,11 +36,12 @@ class DishEntryIngredientsTable extends Component {
                     <thead>
                         <tr>
                             <th>
-                                {this.props.type}{' '}
+                                {this.props.type}{" "}
                                 <Link
                                     to={`/users/category/${
                                         this.props.category
-                                    }/dish/${this.props.dishId}/ingredients`}>
+                                    }/dish/${this.props.dishId}/ingredients`}
+                                >
                                     Edit
                                 </Link>
                             </th>
@@ -48,8 +49,8 @@ class DishEntryIngredientsTable extends Component {
                     </thead>
                     <tbody>
                         {this.state.entries.map((entry, index) => (
-                            <tr key={'Trow' + index}>
-                                <td key={'Tdata' + index}>{entry.value}</td>
+                            <tr key={"Trow" + index}>
+                                <td key={"Tdata" + index}>{entry}</td>
                             </tr>
                         ))}
                     </tbody>

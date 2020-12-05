@@ -10,6 +10,8 @@ export const UPDATE_DISH = gql`
         $cookingTime: String
         $notes: String
         $lastMade: String
+        $name: String
+        $category: String
     ) {
         updateDish(
             dishId: $dishId
@@ -20,6 +22,8 @@ export const UPDATE_DISH = gql`
             cookingTime: $cookingTime
             notes: $notes
             lastMade: $lastMade
+            name: $name
+            category: $category
         ) {
             success
             message
@@ -34,6 +38,7 @@ export const UPDATE_DISH = gql`
                 cookingTime
                 notes
                 lastMade
+                category
             }
         }
     }

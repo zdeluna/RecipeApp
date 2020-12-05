@@ -40,7 +40,7 @@ class DishAPI extends RESTDataSource {
     }
 
     async getDishById({ dishId }) {
-        const res = await this.get(`/users/dish/${dishId}`, undefined, {
+        const res = await this.get(`/${dishId}`, undefined, {
             headers: { Authorization: this.context.token }
         });
         return this.dishReducer(res, dishId);
@@ -76,6 +76,8 @@ class DishAPI extends RESTDataSource {
     }
 
     async updateDish(dishId, dishObject) {
+        console.log("make update dish call to API");
+        console.log(dishObject);
         const res = await this.put(`/${dishId}`, dishObject, {
             headers: { Authorization: this.context.token }
         });

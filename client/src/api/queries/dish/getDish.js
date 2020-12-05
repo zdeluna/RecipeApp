@@ -11,12 +11,8 @@ export const GET_DISH = gql`
             url
             category
             history
-            steps {
-                value
-            }
-            ingredients {
-                value
-            }
+            steps
+            ingredients
             ingredientsInSteps {
                 step
                 ingredients {

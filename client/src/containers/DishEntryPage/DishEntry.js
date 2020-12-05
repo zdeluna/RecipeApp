@@ -29,7 +29,7 @@ const DishEntry = props => {
     const [ingredientsInSteps, setIngredientsInSteps] = useState([]);
     const [history, setHistory] = useState([]);
     const [makeDishMode, setMakeDishMode] = useState(false);
-
+    const [dish, setDish] = useState({});
     const client = useApolloClient();
 
     const [deleteDish] = useMutation(DELETE_DISH, {
@@ -63,6 +63,7 @@ const DishEntry = props => {
             if (dish.ingredientsInSteps) {
                 setIngredientsInSteps(dish.ingredientsInSteps);
             }
+            setDish(dish);
         }
     });
 
@@ -120,6 +121,7 @@ const DishEntry = props => {
                     onClick={handleStepsAndIngredientsSubmitted}
                     steps={steps}
                     ingredients={ingredients}
+                    dish={dish}
                 />
             );
         } else {

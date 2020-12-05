@@ -4,20 +4,28 @@ import ItemForm from "../components/ItemForm";
 import { Button, Row, Col, Container } from "reactstrap";
 import "./NewDishForm.css";
 import { UPDATE_DISH } from "../api/mutations/dish/updateDish";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+import { GET_DISH } from "../api/queries/dish/getDish";
 
 const NewDishForm = props => {
     const [userId] = useState(props.userId);
     const [dishId] = useState(props.dishId);
     const [progressNumber, setProgressNumber] = useState(0);
+    const [dish, setDish] = useState(props.dish);
     /*  Progress Number
         1: User wants to get steps/ingredients from url
         2: User is setting steps
         3: User is setting ingredients
     */
-
-    const [steps, setSteps] = useState([]);
-    const [ingredients, setIngredients] = useState([]);
+    /*
+    useQuery(GET_DISH, {
+        variables: {
+            dishId: dishId
+        },
+        onCompleted({ dish }) {
+            setDish(dish);
+        }
+    });*/
 
     const [updateDish] = useMutation(UPDATE_DISH, {
         onCompleted(updateDishResponse) {
@@ -26,17 +34,22 @@ const NewDishForm = props => {
     });
 
     const addSteps = steps => {
-        setSteps(steps);
+        console.log("Add steps");
+        setDish({ ...dish, steps: steps });
         setProgressNumber(3);
     };
 
     const addIngredients = ingredients => {
-        setIngredients(ingredients);
+        console.log("make call to update dish");
+        console.log(dish);
+
         updateDish({
             variables: {
                 dishId: dishId,
-                steps: steps,
-                ingredients: ingredients
+                ingredients: ingredients,
+                steps: dish.steps,
+                name: dish.name,
+                category: dish.category
             }
         });
     };

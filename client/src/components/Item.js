@@ -1,8 +1,8 @@
 //@format
-import React, {Component} from 'react';
-import {Button, Label, FormGroup, Input} from 'reactstrap';
-import './Item.css';
-import Textarea from 'react-textarea-autosize';
+import React, { Component } from "react";
+import { Button, Label, FormGroup, Input } from "reactstrap";
+import "./Item.css";
+import Textarea from "react-textarea-autosize";
 
 class Item extends Component {
     constructor(props) {
@@ -11,17 +11,16 @@ class Item extends Component {
         this.state = {
             value: props.value,
             type: props.type,
-            id: props.id,
+            id: props.id
         };
     }
 
     updateInput = newValue => {
-        this.setState({value: newValue});
+        this.setState({ value: newValue });
     };
 
     handleChange = event => {
-        console.log(event.target.value);
-        this.setState({value: event.target.value}, () => {
+        this.setState({ value: event.target.value }, () => {
             // Update the array contained in the steps form component
             // https://stackoverflow.com/questions/33088482/onchange-in-react-doesnt-capture-the-last-character-of-text
 
@@ -35,7 +34,7 @@ class Item extends Component {
     };
 
     render() {
-        if (this.state.type === 'steps') {
+        if (this.state.type === "steps") {
             return (
                 <div>
                     <FormGroup id="formGroup">
@@ -52,7 +51,8 @@ class Item extends Component {
                             <Button
                                 className="deleteButton"
                                 color="danger"
-                                onClick={this.handleDeleteStep}>
+                                onClick={this.handleDeleteStep}
+                            >
                                 Delete
                             </Button>
                         ) : null}
@@ -72,14 +72,15 @@ class Item extends Component {
                                 onBlur={() =>
                                     this.updateInput(this.state.value)
                                 }
-                                id={'newIngredientInput' + this.state.id}
+                                id={"newIngredientInput" + this.state.id}
                             />
                         </Label>
                         {this.props.deleteButton ? (
                             <Button
                                 className="deleteButton"
                                 color="danger"
-                                onClick={this.handleDeleteStep}>
+                                onClick={this.handleDeleteStep}
+                            >
                                 Delete
                             </Button>
                         ) : null}

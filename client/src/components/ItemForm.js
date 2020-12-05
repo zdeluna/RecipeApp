@@ -7,21 +7,8 @@ import "./ItemForm.css";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { UPDATE_DISH } from "../api/mutations/dish/updateDish";
-
-const GET_DISH = gql`
-    query getDish($userId: String!, $dishId: String!) {
-        dish(userId: $userId, dishId: $dishId) {
-            __typename
-            id
-            steps {
-                value
-            }
-            ingredients {
-                value
-            }
-        }
-    }
-`;
+import { useApolloClient } from "@apollo/react-hooks";
+import { GET_DISH } from "../api/queries/dish/getDish";
 
 const ItemForm = props => {
     const [userId] = useState(props.userId);
@@ -33,7 +20,8 @@ const ItemForm = props => {
 
     let dishCategory = update ? props.match.params.category : props.category;
     const [category] = useState(dishCategory);
-
+    const [dish, setDish] = useState({});
+    const client = useApolloClient();
     const [itemsArray, setItemsArray] = useState([
         { value: "", visible: false }
     ]);
@@ -71,17 +59,14 @@ const ItemForm = props => {
     });
 
     const addItemsToDatabase = () => {
-        console.log("USER: " + userId);
         // Only store the value fields from itemsArray.
-        let itemsData = itemsArray.map(function(item) {
-            return {
-                value: item.value
-            };
-        });
+        let itemsData = itemsArray.map(x => x.value);
 
         if (update) {
+            console.log("update steps and ingredients");
             updateDish({
                 variables: {
+                    ...dish,
                     dishId: dishId,
                     [type]: itemsData
                 }
@@ -105,13 +90,11 @@ const ItemForm = props => {
     };
 
     const handleSubmit = event => {
-        console.log("Submit form");
         event.preventDefault();
         addItemsToDatabase();
     };
 
     const handleDeleteItem = index => {
-        console.log("delete: " + index);
         let newItemsArray = removeItem(index);
         console.log(newItemsArray);
 
