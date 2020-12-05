@@ -210,6 +210,32 @@ namespace RecipeAPI.Controllers
                 return Unauthorized();
             }
 
+            // Delete ingredients of the dish
+            if (dish.Ingredients != null)
+            {
+                var ingredients = await _context.Ingredients
+                    .Where(i => i.DishID == id)
+                    .ToListAsync();
+                foreach (var ingredient in ingredients)
+                {
+                    _context.Ingredients.Remove(ingredient);
+                }
+            };
+
+            // Delete steps of the dish
+            if (dish.Steps != null)
+            {
+                var steps = await _context.Steps
+                    .Where(i => i.DishID == id)
+                    .ToListAsync();
+                foreach (var step in steps)
+                {
+                    _context.Steps.Remove(step);
+                }
+            };
+
+
+
             _context.Dishes.Remove(dish);
             await _context.SaveChangesAsync();
 

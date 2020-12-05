@@ -69,7 +69,7 @@ class DishAPI extends RESTDataSource {
     }
 
     async deleteDish({ dishId }) {
-        const res = await this.delete(`/users/dish/${dishId}`, undefined, {
+        const res = await this.delete(`/${dishId}`, undefined, {
             headers: { Authorization: this.context.token }
         });
         return res;
