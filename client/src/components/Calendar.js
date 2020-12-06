@@ -6,8 +6,9 @@ import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import PopOver from "./PopOver";
-import { UPDATE_DISH_HISTORY } from "../api/mutations/dish/updateDish";
-import { useMutation } from "@apollo/react-hooks";
+import { UPDATE_DISH } from "../api/mutations/dish/updateDish";
+import { GET_DISH } from "../api/queries/dish/getDish";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 
 const Calendar = props => {
     const [userId] = useState(props.userId);
@@ -17,8 +18,17 @@ const Calendar = props => {
     const [dateIsScheduled, setDateIsScheduled] = useState(false);
     const [updateDate, setUpdateDate] = useState(false);
     const [datePickerValue, setDatePickerValue] = useState(new Date());
+    const [dish, setDish] = useState("");
 
-    const [updateDish] = useMutation(UPDATE_DISH_HISTORY);
+    const [updateDish] = useMutation(UPDATE_DISH);
+    useQuery(GET_DISH, {
+        variables: {
+            dishId: dishId
+        },
+        onCompleted({ dish }) {
+            setDish(dish);
+        }
+    });
 
     Moment.locale("en");
     momentLocalizer();
@@ -43,7 +53,9 @@ const Calendar = props => {
         updateDish({
             variables: {
                 dishId: dishId,
-                history: history
+                ...dish,
+                history: history,
+                lastMade: history[0]
             }
         });
         setDateIsScheduled(true);

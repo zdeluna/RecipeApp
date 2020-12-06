@@ -145,6 +145,20 @@ namespace RecipeAPI.Controllers
                     }
                 };
 
+                // If the user is updating the history
+
+                if (updateDishRequest.History != null)
+                {
+                    var histories = await _context.History
+                        .Where(i => i.DishID == id)
+                        .ToListAsync();
+                    foreach (var history in histories)
+                    {
+                        _context.History.Remove(history);
+                    }
+                };
+
+
                 _mapper.Map(updateDishRequest, dish);
                 
                 await _context.SaveChangesAsync();
@@ -234,7 +248,18 @@ namespace RecipeAPI.Controllers
                 }
             };
 
+            // Delete the history of the dish
 
+            if (dish.History != null)
+            {
+                var histories = await _context.History
+                    .Where(i => i.DishID == id)
+                    .ToListAsync();
+                foreach (var history in histories)
+                {
+                    _context.History.Remove(history);
+                }
+            };
 
             _context.Dishes.Remove(dish);
             await _context.SaveChangesAsync();
