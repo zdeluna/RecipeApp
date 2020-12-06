@@ -5,7 +5,7 @@ const typeDefs = gql`
     type AddDishResponse {
         success: Boolean!
         message: String
-        dishId: String
+        id: ID
     }
 
     type DeleteDishResponse {
@@ -71,7 +71,7 @@ const typeDefs = gql`
     }
 
     type Query {
-        dish(dishId: String!): Dish
+        dish(id: ID!): Dish
         dishes: [Dish]
     }
 
@@ -82,7 +82,7 @@ const typeDefs = gql`
     type Mutation {
         addDish(name: String!, category: String!): AddDishResponse!
         updateDish(
-            dishId: String!
+            id: ID!
             name: String
             category: String
             userId: String
@@ -94,7 +94,7 @@ const typeDefs = gql`
             notes: String
             lastMade: String
         ): UpdateDishResponse
-        deleteDish(dishId: String!): DeleteDishResponse
+        deleteDish(id: ID!): DeleteDishResponse
         addUser(username: String!, password: String!): CreateUserResponse
         signInUser(username: String!, password: String!): Token!
     }

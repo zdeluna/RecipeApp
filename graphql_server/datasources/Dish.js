@@ -39,11 +39,11 @@ class DishAPI extends RESTDataSource {
         return dishArray;
     }
 
-    async getDishById({ dishId }) {
-        const res = await this.get(`/${dishId}`, undefined, {
+    async getDishById({ id }) {
+        const res = await this.get(`/${id}`, undefined, {
             headers: { Authorization: this.context.token }
         });
-        return this.dishReducer(res, dishId);
+        return this.dishReducer(res);
     }
 
     async getAllDishes() {
@@ -68,20 +68,18 @@ class DishAPI extends RESTDataSource {
         return res;
     }
 
-    async deleteDish({ dishId }) {
-        const res = await this.delete(`/${dishId}`, undefined, {
+    async deleteDish({ id }) {
+        const res = await this.delete(`/${id}`, undefined, {
             headers: { Authorization: this.context.token }
         });
         return res;
     }
 
-    async updateDish(dishId, dishObject) {
-        console.log("make update dish call to API");
-        console.log(dishObject);
-        const res = await this.put(`/${dishId}`, dishObject, {
+    async updateDish(id, dishObject) {
+        const res = await this.put(`/${id}`, dishObject, {
             headers: { Authorization: this.context.token }
         });
-        return this.dishReducer(res, dishId);
+        return this.dishReducer(res);
     }
 }
 

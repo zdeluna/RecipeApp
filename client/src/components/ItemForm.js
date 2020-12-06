@@ -28,7 +28,7 @@ const ItemForm = props => {
 
     useQuery(GET_DISH, {
         variables: {
-            dishId: dishId
+            id: dishId
         },
         onCompleted({ dish }) {
             if (update) {

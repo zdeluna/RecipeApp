@@ -34,12 +34,13 @@ const DishEntry = props => {
 
     const [deleteDish] = useMutation(DELETE_DISH, {
         onCompleted(updateDishResponse) {
+            /*
             const { dishes } = client.readQuery({ query: GET_DISHES });
             // Remove the recently deleted dish from the apollo cache.
             client.writeQuery({
                 query: GET_DISHES,
-                data: { dishes: dishes.filter(e => e.id != dishId) }
-            });
+                data: { dishes: dishes.filter(e => e.id != id) }
+            });*/
 
             props.history.push(`/users/category/${category}`);
         }
@@ -47,7 +48,7 @@ const DishEntry = props => {
 
     const { loading } = useQuery(GET_DISH, {
         variables: {
-            dishId: dishId
+            id: dishId
         },
         onCompleted({ dish }) {
             if (dish.steps && dish.steps.length) {
@@ -76,7 +77,7 @@ const DishEntry = props => {
         //Handle after user has submitted steps
         const dishData = client.readQuery({
             query: GET_DISH,
-            variables: { userId: userId, dishId: dishId }
+            variables: { userId: userId, id: dishId }
         });
         if (dishData.dish.steps && dishData.dish.steps.length) {
             setSteps(dishData.dish.steps);
@@ -93,7 +94,7 @@ const DishEntry = props => {
     };
 
     const deleteEntryFromDatabase = () => {
-        deleteDish({ variables: { dishId: dishId } });
+        deleteDish({ variables: { id: dishId } });
     };
 
     const RenderNewDishForm = () => {

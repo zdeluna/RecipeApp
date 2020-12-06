@@ -42,7 +42,7 @@ const AddUrlForm = props => {
         // prettier-ignore
         updateDish({
             variables: {
-                dishId: dishId,
+                id: dishId,
                 url: url,
             },
         });

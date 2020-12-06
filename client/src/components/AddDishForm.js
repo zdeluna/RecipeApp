@@ -8,7 +8,7 @@ const AddDishForm = props => {
     let input = { value: "" };
     const [addDish] = useMutation(ADD_DISH, {
         onCompleted({ addDish }) {
-            props.onClick(addDish.dishId);
+            props.onClick(addDish.id);
         }
     });
 

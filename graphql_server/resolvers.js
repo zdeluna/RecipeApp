@@ -1,7 +1,7 @@
 module.exports = {
     Query: {
-        dish: (_, { dishId }, { dataSources }) =>
-            dataSources.dishAPI.getDishById({ dishId: dishId }),
+        dish: (_, { id }, { dataSources }) =>
+            dataSources.dishAPI.getDishById({ id }),
         dishes: (_, undefined, { dataSources }) => {
             return dataSources.dishAPI.getAllDishes();
         }
@@ -13,14 +13,14 @@ module.exports = {
                 category: category
             });
             return {
-                dishId: results.id,
+                id: results.id,
                 success: true,
                 message: "The dish was created successfully"
             };
         },
         updateDish: async (_, dishObject, { dataSources }) => {
             const result = await dataSources.dishAPI.updateDish(
-                dishObject.dishId,
+                dishObject.id,
                 dishObject
             );
             return {
@@ -29,9 +29,9 @@ module.exports = {
                 dish: result
             };
         },
-        deleteDish: async (_, { dishId }, { dataSources }) => {
+        deleteDish: async (_, { id }, { dataSources }) => {
             await dataSources.dishAPI.deleteDish({
-                dishId: dishId
+                id
             });
             return {
                 success: true,

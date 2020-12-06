@@ -16,7 +16,7 @@ const CookingTime = props => {
     });
     useQuery(GET_DISH, {
         variables: {
-            dishId: dishId
+            id: dishId
         },
         onCompleted({ dish }) {
             if (dish.cookingTime) {
@@ -33,7 +33,7 @@ const CookingTime = props => {
 
         updateDish({
             variables: {
-                dishId: dishId,
+                id: dishId,
                 ...dish,
                 cookingTime: cookingTime
             }

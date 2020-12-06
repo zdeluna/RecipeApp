@@ -45,7 +45,7 @@ const NewDishForm = props => {
 
         updateDish({
             variables: {
-                dishId: dishId,
+                id: dish.id,
                 ingredients: ingredients,
                 steps: dish.steps,
                 name: dish.name,

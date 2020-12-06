@@ -5,7 +5,7 @@ export const ADD_DISH = gql`
         addDish(name: $name, category: $category) {
             success
             message
-            dishId
+            id
         }
     }
 `;

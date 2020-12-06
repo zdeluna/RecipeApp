@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 export const UPDATE_DISH = gql`
     mutation updateDish(
-        $dishId: String!
+        $id: ID!
         $url: String
         $steps: [String]
         $ingredients: [String]
@@ -14,7 +14,7 @@ export const UPDATE_DISH = gql`
         $category: String
     ) {
         updateDish(
-            dishId: $dishId
+            id: $id
             url: $url
             steps: $steps
             ingredients: $ingredients

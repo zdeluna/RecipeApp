@@ -17,7 +17,7 @@ const Notes = props => {
     });
     useQuery(GET_DISH, {
         variables: {
-            dishId: dishId
+            id: dishId
         },
         onCompleted({ dish }) {
             if (dish.notes) {
@@ -34,7 +34,7 @@ const Notes = props => {
 
         updateDish({
             variables: {
-                dishId: dishId,
+                id: dishId,
                 ...dish,
                 notes: notes
             }

@@ -126,7 +126,7 @@ namespace RecipeAPI.Controllers
                 // If the user is updating ingredients
                 if (updateDishRequest.Ingredients != null) {
                     var ingredients = await _context.Ingredients
-                        .Where(i => i.DishID == id)
+                        .Where(i => i.ID == id)
                         .ToListAsync();
                     foreach( var ingredient in ingredients) {
                         _context.Ingredients.Remove(ingredient);
@@ -137,7 +137,7 @@ namespace RecipeAPI.Controllers
                 if (updateDishRequest.Steps != null)
                 {
                     var steps = await _context.Steps
-                        .Where(i => i.DishID == id)
+                        .Where(i => i.ID == id)
                         .ToListAsync();
                     foreach (var step in steps)
                     {
@@ -150,7 +150,7 @@ namespace RecipeAPI.Controllers
                 if (updateDishRequest.History != null)
                 {
                     var histories = await _context.History
-                        .Where(i => i.DishID == id)
+                        .Where(i => i.ID == id)
                         .ToListAsync();
                     foreach (var history in histories)
                     {
@@ -196,8 +196,8 @@ namespace RecipeAPI.Controllers
             /*
             var history = new History[]
             {
-                new History{DishID=dish.ID, Date="Saturday December 2nd"},
-                new History{DishID=dish.ID, Date="Sunday December 3rd"}
+                new History{ID=dish.ID, Date="Saturday December 2nd"},
+                new History{ID=dish.ID, Date="Sunday December 3rd"}
             };
 
             _context.History.AddRange(history);*/
@@ -228,7 +228,7 @@ namespace RecipeAPI.Controllers
             if (dish.Ingredients != null)
             {
                 var ingredients = await _context.Ingredients
-                    .Where(i => i.DishID == id)
+                    .Where(i => i.ID == id)
                     .ToListAsync();
                 foreach (var ingredient in ingredients)
                 {
@@ -240,7 +240,7 @@ namespace RecipeAPI.Controllers
             if (dish.Steps != null)
             {
                 var steps = await _context.Steps
-                    .Where(i => i.DishID == id)
+                    .Where(i => i.ID == id)
                     .ToListAsync();
                 foreach (var step in steps)
                 {
@@ -253,7 +253,7 @@ namespace RecipeAPI.Controllers
             if (dish.History != null)
             {
                 var histories = await _context.History
-                    .Where(i => i.DishID == id)
+                    .Where(i => i.ID == id)
                     .ToListAsync();
                 foreach (var history in histories)
                 {

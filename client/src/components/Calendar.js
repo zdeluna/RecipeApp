@@ -23,7 +23,7 @@ const Calendar = props => {
     const [updateDish] = useMutation(UPDATE_DISH);
     useQuery(GET_DISH, {
         variables: {
-            dishId: dishId
+            id: dishId
         },
         onCompleted({ dish }) {
             setDish(dish);
@@ -52,7 +52,7 @@ const Calendar = props => {
 
         updateDish({
             variables: {
-                dishId: dishId,
+                id: dishId,
                 ...dish,
                 history: history,
                 lastMade: history[0]
