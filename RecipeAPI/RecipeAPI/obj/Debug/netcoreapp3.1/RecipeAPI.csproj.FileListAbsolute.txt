@@ -282,3 +282,4 @@
 /Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 /Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/settings.json
 /Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/keybindings.json
+/Users/zacharydeluna/Documents/RecipesApp/RecipeAPI/RecipeAPI/bin/Debug/netcoreapp3.1/Humanizer.dll
