@@ -34,11 +34,12 @@ namespace RecipeAPI
         {
             //services.AddDbContext<DatabaseContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
 
-            services.AddDbContext<DatabaseContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("GCloudDbContext")));
+            services.AddDbContext<DatabaseContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+            /*
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -61,7 +62,7 @@ namespace RecipeAPI
             {
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
 
-            });
+            });*/
             
         }
 
