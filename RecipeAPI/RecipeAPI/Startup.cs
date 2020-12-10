@@ -39,7 +39,9 @@ namespace RecipeAPI
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            /*
+            
+
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -62,7 +64,7 @@ namespace RecipeAPI
             {
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
 
-            });*/
+            });
             
         }
 
