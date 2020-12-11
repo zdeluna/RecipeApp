@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using AutoMapper;
 using RecipeAPI.Models;
+using Microsoft.Extensions.Logging.AzureAppServices;
 
 namespace RecipeAPI
 {
@@ -39,9 +40,10 @@ namespace RecipeAPI
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            
 
-            
+            services.Configure<AzureFileLoggerOptions>(Configuration.GetSection("AzureLogging"));
+
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
