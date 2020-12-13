@@ -35,11 +35,11 @@ namespace RecipeAPI
             //services.AddDbContext<DatabaseContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
 
             services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
+              options.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            /*
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -61,9 +61,7 @@ namespace RecipeAPI
             services.AddAuthorization(config =>
             {
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
-
-            });*/
-            
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,7 +72,7 @@ namespace RecipeAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
