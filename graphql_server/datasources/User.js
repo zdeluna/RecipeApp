@@ -7,9 +7,9 @@ class UserAPI extends RESTDataSource {
         super();
 
         if (process.env.GRAPH_ENV == "test") {
-            this.baseURL = "https://localhost:5001/api/";
+            this.baseURL = "https://recipescheduler.azurewebsites.net/api/";
         } else {
-            this.baseURL = "https://recipescheduler-227221.appspot.com/api/";
+            this.baseURL = "https://recipescheduler.azurewebsites.net/api/";
         }
     }
 
@@ -19,6 +19,9 @@ class UserAPI extends RESTDataSource {
             Password: password,
             UserRole: "User"
         });
+        console.log("Create user response");
+        console.log(res);
+
         return res;
     }
 
@@ -27,6 +30,8 @@ class UserAPI extends RESTDataSource {
             UserName: username,
             Password: password
         });
+        console.log("Sign in response");
+        console.log(res);
         return res;
     }
 }

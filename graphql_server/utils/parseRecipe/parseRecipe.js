@@ -1,6 +1,5 @@
-const request = require('request');
-const cheerio = require('cheerio');
-const {sendErrorResponse} = require('../../controllers/base.js');
+const request = require("request");
+const cheerio = require("cheerio");
 
 /**
  * Parse through a web page and store the steps of the recipe
@@ -13,12 +12,12 @@ exports.getStepsFromWebPage = async $ => {
         try {
             let stepsArray = [];
             // Find the heading that contains instruction
-            let headingHTML = await findHeading($, 'steps');
+            let headingHTML = await findHeading($, "steps");
             stepsHTML = await findList(headingHTML, $);
             stepsHTML = await cleanList(stepsHTML);
 
             stepsHTML
-                .children('li') // Find the children of the list
+                .children("li") // Find the children of the list
                 // Iterate through each child element and store the text of the element and add it to the array
                 .each(function(index, element) {
                     let stepDescription = $(this)
@@ -32,14 +31,13 @@ exports.getStepsFromWebPage = async $ => {
 
                     /* Allrecipes has the word 'advertisement' at the end of each step*/
                     stepDescription = removeAdvertisement(stepDescription);
-                    let step = {id: stepsArray.length, value: stepDescription};
-                    stepsArray.push(step);
+                    stepsArray.push(stepDescription);
                 });
             resolve(stepsArray);
         } catch (error) {
             reject({
                 statusCode: 422,
-                msg: 'CANNOT_RETRIEVE_STEPS',
+                msg: "CANNOT_RETRIEVE_STEPS"
             });
         }
     });
@@ -56,17 +54,17 @@ exports.getIngredientsFromWebPage = async $ => {
         try {
             let ingredientsArray = [];
             let ingredientsHTML;
-            let ingredientsType = '';
-            let headingHTML = await findHeading($, 'ingredients');
+            let ingredientsType = "";
+            let headingHTML = await findHeading($, "ingredients");
             ingredientsHTML = await findList(headingHTML, $);
 
             if (ingredientsHTML.length) {
                 ingredientsHTML = await cleanList(ingredientsHTML);
-                ingredientsType = 'li';
+                ingredientsType = "li";
             } else {
-                console.log('Did not find list');
+                console.log("Did not find list");
                 ingredientsHTML = await findElements(headingHTML, $);
-                ingredientsType = 'p';
+                ingredientsType = "p";
             }
 
             ingredientsHTML
@@ -76,17 +74,13 @@ exports.getIngredientsFromWebPage = async $ => {
                     let ingredientDescription = $(this)
                         .text()
                         .trim();
-                    let ingredient = {
-                        id: ingredientsArray.length,
-                        value: ingredientDescription,
-                    };
-                    ingredientsArray.push(ingredient);
+                    ingredientsArray.push(ingredientDescription);
                 });
             resolve(ingredientsArray);
         } catch (error) {
             reject({
                 statusCode: 422,
-                msg: 'CANNOT_RETRIEVE_INGREDIENTS',
+                msg: "CANNOT_RETRIEVE_INGREDIENTS"
             });
         }
     });
@@ -104,7 +98,7 @@ const findList = async (node, $) => {
         let currentLevel = 0;
 
         while (currentLevel < MAX_LEVELS) {
-            listHTML = node.find('ul, ol');
+            listHTML = node.find("ul, ol");
 
             if (listHTML.length) {
                 return resolve(listHTML);
@@ -131,7 +125,7 @@ const findElements = async (node, $) => {
         let numElements;
 
         while (currentLevel < MAX_LEVELS) {
-            listHTML = node.find('p');
+            listHTML = node.find("p");
 
             if (listHTML.length >= 3) {
                 return resolve(listHTML.parent());
@@ -152,26 +146,26 @@ const findElements = async (node, $) => {
 
 const findHeading = async ($, heading) => {
     return new Promise(async (resolve, reject) => {
-        let html = $('h1, h2, h3, h4, h5').filter(function() {
-            if (heading == 'ingredients') {
+        let html = $("h1, h2, h3, h4, h5").filter(function() {
+            if (heading == "ingredients") {
                 return checkForIngredientsHeading(
                     $(this)
                         .text()
                         .trim()
-                        .toLowerCase(),
+                        .toLowerCase()
                 );
             } else {
                 return checkForStepsHeading(
                     $(this)
                         .text()
                         .trim()
-                        .toLowerCase(),
+                        .toLowerCase()
                 );
             }
         });
 
-        if (html == '') {
-            console.log('REJECT HEADING NOT FOUND');
+        if (html == "") {
+            console.log("REJECT HEADING NOT FOUND");
             reject();
         }
 
@@ -190,8 +184,8 @@ const cleanList = async listHTML => {
         /* Check to make sure we are searching through most nested ordered list or unordered list.
 		 * If we are not, then return the nested ordered or unordered list */
 
-        if (listHTML.find('ol, ul').children().length > 0) {
-            listHTML = listHTML.find('ol, ul');
+        if (listHTML.find("ol, ul").children().length > 0) {
+            listHTML = listHTML.find("ol, ul");
         }
         resolve(listHTML);
     });
@@ -205,11 +199,11 @@ const cleanList = async listHTML => {
 
 const checkForStepsHeading = text => {
     // Remove semicolon
-    text = text.replace(/:/gi, '');
+    text = text.replace(/:/gi, "");
     const acceptableStepsHeading = [
-        'instructions',
-        'directions',
-        'preparation',
+        "instructions",
+        "directions",
+        "preparation"
     ];
 
     if (acceptableStepsHeading.indexOf(text) > -1) {
@@ -227,9 +221,9 @@ const checkForStepsHeading = text => {
 
 const checkForIngredientsHeading = text => {
     // Remove semicolon
-    text = text.replace(/:/gi, '');
+    text = text.replace(/:/gi, "");
 
-    const acceptableIngredientsHeading = ['ingredients', 'ingredients:'];
+    const acceptableIngredientsHeading = ["ingredients", "ingredients:"];
 
     if (acceptableIngredientsHeading.indexOf(text) > -1) {
         return true;
@@ -245,14 +239,14 @@ const checkForIngredientsHeading = text => {
 const removeNumberLabel = text => {
     // Remove the "Step" label if the step description begins with Step #.
     let newText = text;
-    if (newText.substring(0, 4) == 'Step')
-        newText = text.replace(/Step [0-9]/, '').trim();
+    if (newText.substring(0, 4) == "Step")
+        newText = text.replace(/Step [0-9]/, "").trim();
 
     // Remove the number label in the format "1."
-    newText = newText.replace(/^\d+\.\s*/, '');
+    newText = newText.replace(/^\d+\.\s*/, "");
 
     // Remove the number label in the format "1)"
-    newText = newText.replace(/^\d+\)\s*/, '');
+    newText = newText.replace(/^\d+\)\s*/, "");
 
     return newText;
 };
@@ -264,7 +258,7 @@ const removeNumberLabel = text => {
  */
 
 const removeLongWhiteSpace = text => {
-    let newString = text.replace(/\s\s+/g, ' ');
+    let newString = text.replace(/\s\s+/g, " ");
     return newString;
 };
 
@@ -275,5 +269,5 @@ const removeLongWhiteSpace = text => {
  */
 
 const removeAdvertisement = text => {
-    return text.replace(/Advertisement/, '').trim();
+    return text.replace(/Advertisement/, "").trim();
 };
