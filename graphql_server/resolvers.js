@@ -48,6 +48,13 @@ module.exports = {
                 message: "The user was created successfully"
             };
         },
+        addDishUrl: async (_, { id, url }, { dataSources }) => {
+            dataSources.dishAPI.addDishUrl({ id, url });
+            return {
+                success: true,
+                message: "the dish was updated successfully"
+            };
+        },
         signInUser: async (_, { username, password }, { dataSources }) => {
             let response = await dataSources.userAPI.signInUser({
                 username,

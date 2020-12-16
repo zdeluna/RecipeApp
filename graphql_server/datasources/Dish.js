@@ -1,15 +1,21 @@
 "use strict";
 const { RESTDataSource } = require("apollo-datasource-rest");
 //const {RESTDataSource} = require('apollo-server-cloud-functions');
+const request = require("request");
+const cheerio = require("cheerio");
+const {
+    getStepsFromWebPage,
+    getIngredientsFromWebPage
+} = require("../utils/parseRecipe/parseRecipe.js");
 
 class DishAPI extends RESTDataSource {
     constructor() {
         super();
 
         if (process.env.GRAPH_ENV == "test") {
-            this.baseURL = "http://localhost:5000/api/Dish";
+            this.baseURL = "https://localhost:5001/api/Dish";
         } else {
-            this.baseURL = "https://recipescheduler-227221.appspot.com/api/";
+            this.baseURL = "https://recipescheduler.azurewebsites.net/api/Dish";
         }
     }
 
@@ -80,6 +86,60 @@ class DishAPI extends RESTDataSource {
             headers: { Authorization: this.context.token }
         });
         return this.dishReducer(res);
+    }
+
+    async addDishUrl({ id, url }) {
+        console.log("add url");
+        console.log(id);
+        console.log(url);
+        let steps = [];
+        let ingredients = [];
+
+        request(url, async function(error, response, html) {
+            try {
+                if (error) return error;
+                let $ = cheerio.load(html);
+                steps = await getStepsFromWebPage($);
+                ingredients = await getIngredientsFromWebPage($);
+                /* Copy ingredients array so that we can send it as a parameter when
+				 *  determine which ingredients are in each step in the function getIngredientsInSteps*/
+                /*
+                let ingredients = dishInfo.ingredients.map(a =>
+                    Object.assign({}, a)
+                );
+                
+                dishInfo.ingredientsInSteps = await getIngredientsInSteps(
+                    dishInfo.steps,
+                    ingredients
+                );*/
+
+                let patchArray = [];
+                if (steps) {
+                    patchArray.push({
+                        op: "add",
+                        path: "/steps",
+                        value: steps
+                    });
+                }
+
+                if (ingredients) {
+                    patchArray.push({
+                        op: "add",
+                        path: "/ingredients",
+                        value: ingredients
+                    });
+                }
+                const res = await this.patch(`/${id}`, patchArray, {
+                    headers: { Authorization: this.context.token }
+                });
+
+                return res;
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        return null;
     }
 }
 

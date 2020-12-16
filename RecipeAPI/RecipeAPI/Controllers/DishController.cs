@@ -123,6 +123,12 @@ namespace RecipeAPI.Controllers
                 if (!ModelState.IsValid) return BadRequest(ModelState);
                 var dish = await _context.Dishes.FindAsync(id);
                 
+                if (updateDishRequest.Url != null) {
+                    Console.WriteLine("update url");
+                }
+
+
+
                 // If the user is updating ingredients
                 if (updateDishRequest.Ingredients != null) {
                     var ingredients = await _context.Ingredients

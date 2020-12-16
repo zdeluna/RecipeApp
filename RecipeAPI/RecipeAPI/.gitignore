@@ -28,8 +28,6 @@ yarn.lock
 yarn-error.log
 package-lock.json
 *.env
-RecipeAPI/RecipeAPI/obj
-*appsettings.json
 client/src/static/images/Architecture.afdesign
 cloud_sql_proxy
 .gcloudignore
