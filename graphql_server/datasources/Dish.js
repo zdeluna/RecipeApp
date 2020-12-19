@@ -94,6 +94,7 @@ class DishAPI extends RESTDataSource {
         console.log(url);
         let steps = [];
         let ingredients = [];
+        let token = this.context.token;
 
         request(url, async function(error, response, html) {
             try {
@@ -112,7 +113,8 @@ class DishAPI extends RESTDataSource {
                     dishInfo.steps,
                     ingredients
                 );*/
-
+                console.log(steps);
+                console.log(ingredients);
                 let patchArray = [];
                 if (steps) {
                     patchArray.push({
@@ -130,7 +132,7 @@ class DishAPI extends RESTDataSource {
                     });
                 }
                 const res = await this.patch(`/${id}`, patchArray, {
-                    headers: { Authorization: this.context.token }
+                    headers: { Authorization: token }
                 });
 
                 return res;

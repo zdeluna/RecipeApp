@@ -10,14 +10,14 @@ import {
 } from "reactstrap";
 import "./AddUrlForm.css";
 import { useMutation } from "@apollo/react-hooks";
-import { UPDATE_DISH } from "../api/mutations/dish/updateDish";
+import { ADD_DISH_URL } from "../api/mutations/dish/addDishUrl";
 
 const AddUrlForm = props => {
     const [url, setUrl] = useState("");
     const [userId] = useState(props.userId);
     const [dishId] = useState(props.dishId);
     const [showAlert, setShowAlert] = useState(false);
-    const [updateDish] = useMutation(UPDATE_DISH, {
+    const [updateDish] = useMutation(ADD_DISH_URL, {
         onCompleted(updateDishResponse) {
             props.onClick();
         },

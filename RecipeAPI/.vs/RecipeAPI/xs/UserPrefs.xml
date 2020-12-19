@@ -4,12 +4,12 @@
     <Files>
       <File FileName="RecipeAPI/Models/User.cs" Line="13" Column="1" />
       <File FileName="RecipeAPI/Models/Dish.cs" />
-      <File FileName="RecipeAPI/Startup.cs" Line="90" Column="36" />
-      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="194" Column="8" />
+      <File FileName="RecipeAPI/Startup.cs" />
+      <File FileName="RecipeAPI/Controllers/DishController.cs" />
       <File FileName="RecipeAPI/Controllers/LoginController.cs" />
       <File FileName="RecipeAPI/Controllers/UserController.cs" />
       <File FileName="RecipeAPI/Models/Policies.cs" />
-      <File FileName="RecipeAPI/Controllers/BaseController.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Controllers/BaseController.cs" />
       <File FileName="RecipeAPI/Properties/launchSettings.json" />
       <File FileName="RecipeAPI/RecipeAPI.csproj" />
       <File FileName="RecipeAPI/Models/History.cs" />
@@ -19,8 +19,8 @@
       <File FileName="RecipeAPI/Models/HistoryResponse.cs" />
       <File FileName="RecipeAPI/Models/UpdateDishRequest.cs" />
       <File FileName="RecipeAPI/Models/Ingredient.cs" />
-      <File FileName="RecipeAPI/settings.json" Line="12" Column="7" />
-      <File FileName="RecipeAPI/Program.cs" Line="18" Column="1" />
+      <File FileName="RecipeAPI/settings.json" />
+      <File FileName="RecipeAPI/Program.cs" />
       <File FileName="RecipeAPI/keybindings.json" />
       <File FileName="RecipeAPI/Models/Step.cs" />
       <File FileName="RecipeAPI/Migrations/20201209010646_InitialCreate.cs" />
