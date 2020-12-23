@@ -88,23 +88,27 @@ class DishAPI extends RESTDataSource {
         return this.dishReducer(res);
     }
 
-    async addDishUrl({ id, url }) {
-        console.log("add url");
-        console.log(id);
-        console.log(url);
+    async patchDish(id, dishObject) {
+        const res = await this.patch(`/${id}`, dishObject, {
+            headers: { Authorization: this.context.token }
+        });
+        return this.dishReducer(res);
+    }
+
+    async getStepsAndIngredients({ id, url }) {
         let steps = [];
         let ingredients = [];
-        let token = this.context.token;
-
-        request(url, async function(error, response, html) {
-            try {
-                if (error) return error;
-                let $ = cheerio.load(html);
-                steps = await getStepsFromWebPage($);
-                ingredients = await getIngredientsFromWebPage($);
-                /* Copy ingredients array so that we can send it as a parameter when
+        let patchArray = [];
+        return new Promise(function(resolve, reject) {
+            request(url, async function(error, response, html) {
+                try {
+                    if (error) return error;
+                    let $ = cheerio.load(html);
+                    steps = await getStepsFromWebPage($);
+                    ingredients = await getIngredientsFromWebPage($);
+                    /* Copy ingredients array so that we can send it as a parameter when
 				 *  determine which ingredients are in each step in the function getIngredientsInSteps*/
-                /*
+                    /*
                 let ingredients = dishInfo.ingredients.map(a =>
                     Object.assign({}, a)
                 );
@@ -113,35 +117,41 @@ class DishAPI extends RESTDataSource {
                     dishInfo.steps,
                     ingredients
                 );*/
-                console.log(steps);
-                console.log(ingredients);
-                let patchArray = [];
-                if (steps) {
-                    patchArray.push({
-                        op: "add",
-                        path: "/steps",
-                        value: steps
-                    });
-                }
+                    if (steps.length) {
+                        console.log("add steps");
+                        patchArray.push({
+                            op: "add",
+                            path: "/steps",
+                            value: steps
+                        });
+                    }
 
-                if (ingredients) {
-                    patchArray.push({
-                        op: "add",
-                        path: "/ingredients",
-                        value: ingredients
-                    });
+                    if (ingredients.length) {
+                        console.log("add ingredients");
+                        patchArray.push({
+                            op: "add",
+                            path: "/ingredients",
+                            value: ingredients
+                        });
+                    }
+                    resolve(patchArray);
+                } catch (error) {
+                    console.log(error);
                 }
-                const res = await this.patch(`/${id}`, patchArray, {
-                    headers: { Authorization: token }
-                });
-
-                return res;
-            } catch (error) {
-                console.log(error);
-            }
+            });
         });
+    }
 
-        return null;
+    async addDishUrl({ id, url }) {
+        let steps = [];
+        let ingredients = [];
+        let token = this.context.token;
+
+        let patchArray = await this.getStepsAndIngredients({ id, url });
+        const res = await this.patch(`/${id}`, patchArray, {
+            headers: { Authorization: this.context.token }
+        });
+        return this.dishReducer(res);
     }
 }
 
