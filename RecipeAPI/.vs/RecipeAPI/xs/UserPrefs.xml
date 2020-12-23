@@ -1,11 +1,11 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/appsettings.json">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Controllers/DishController.cs">
     <Files>
       <File FileName="RecipeAPI/Models/User.cs" Line="13" Column="1" />
       <File FileName="RecipeAPI/Models/Dish.cs" />
       <File FileName="RecipeAPI/Startup.cs" />
-      <File FileName="RecipeAPI/Controllers/DishController.cs" />
+      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="194" Column="8" />
       <File FileName="RecipeAPI/Controllers/LoginController.cs" />
       <File FileName="RecipeAPI/Controllers/UserController.cs" />
       <File FileName="RecipeAPI/Models/Policies.cs" />
@@ -25,7 +25,7 @@
       <File FileName="RecipeAPI/Models/Step.cs" />
       <File FileName="RecipeAPI/Migrations/20201209010646_InitialCreate.cs" />
       <File FileName="RecipeAPI/.gitignore" />
-      <File FileName="RecipeAPI/appsettings.json" Line="14" Column="23" />
+      <File FileName="RecipeAPI/appsettings.json" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -33,11 +33,12 @@
           <Node name="RecipeAPI" expanded="True">
             <Node name="RecipeAPI" expanded="True">
               <Node name="Dependencies" expanded="True" />
-              <Node name="Controllers" expanded="True" />
+              <Node name="Controllers" expanded="True">
+                <Node name="DishController.cs" selected="True" />
+              </Node>
               <Node name="MappingProfile" expanded="True" />
               <Node name="Migrations" expanded="True" />
               <Node name="Models" expanded="True" />
-              <Node name="appsettings.json" selected="True" />
             </Node>
           </Node>
         </State>
