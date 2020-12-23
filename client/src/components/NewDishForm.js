@@ -34,15 +34,11 @@ const NewDishForm = props => {
     });
 
     const addSteps = steps => {
-        console.log("Add steps");
         setDish({ ...dish, steps: steps });
         setProgressNumber(3);
     };
 
     const addIngredients = ingredients => {
-        console.log("make call to update dish");
-        console.log(dish);
-
         updateDish({
             variables: {
                 id: dish.id,

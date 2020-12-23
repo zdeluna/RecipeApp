@@ -88,13 +88,6 @@ class DishAPI extends RESTDataSource {
         return this.dishReducer(res);
     }
 
-    async patchDish(id, dishObject) {
-        const res = await this.patch(`/${id}`, dishObject, {
-            headers: { Authorization: this.context.token }
-        });
-        return this.dishReducer(res);
-    }
-
     async getStepsAndIngredients({ id, url }) {
         let steps = [];
         let ingredients = [];
@@ -148,10 +141,13 @@ class DishAPI extends RESTDataSource {
         let token = this.context.token;
 
         let patchArray = await this.getStepsAndIngredients({ id, url });
-        const res = await this.patch(`/${id}`, patchArray, {
+        await this.patch(`/${id}`, patchArray, {
             headers: { Authorization: this.context.token }
         });
-        return this.dishReducer(res);
+
+        let dish = await this.getDishById({ id });
+
+        return this.dishReducer(dish);
     }
 }
 

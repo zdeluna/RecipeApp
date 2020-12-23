@@ -49,10 +49,11 @@ module.exports = {
             };
         },
         addDishUrl: async (_, { id, url }, { dataSources }) => {
-            dataSources.dishAPI.addDishUrl({ id, url });
+            const result = dataSources.dishAPI.addDishUrl({ id, url });
             return {
                 success: true,
-                message: "the dish was updated successfully"
+                message: "the dish was updated successfully",
+                dish: result
             };
         },
         signInUser: async (_, { username, password }, { dataSources }) => {

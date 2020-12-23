@@ -75,6 +75,7 @@ const DishEntry = props => {
 
     const handleStepsAndIngredientsSubmitted = dish => {
         //Handle after user has submitted steps
+
         const dishData = client.readQuery({
             query: GET_DISH,
             variables: { userId: userId, id: dishId }
