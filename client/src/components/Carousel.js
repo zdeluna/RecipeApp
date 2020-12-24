@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Button, Row, Col, Container} from 'reactstrap';
-import './Carousel.css';
+import React, { Component } from "react";
+import { Button, Row, Col, Container } from "reactstrap";
+import "./Carousel.css";
 
 class Carousel extends Component {
     constructor(props) {
@@ -13,7 +13,7 @@ class Carousel extends Component {
             ingredients: this.props.ingredients,
             ingredientsInSteps: this.props.ingredientsInSteps,
             currentStep: 0,
-            loading: false,
+            loading: false
         };
     }
 
@@ -23,7 +23,7 @@ class Carousel extends Component {
         /* If the last step is showing, show the first step */
         if (stepNumber === this.state.steps.length) stepNumber = 0;
 
-        this.setState({currentStep: stepNumber});
+        this.setState({ currentStep: stepNumber });
     };
 
     showPreviousIngredient = () => {
@@ -32,7 +32,7 @@ class Carousel extends Component {
         /* If the first step is showing, show the last step*/
         if (stepNumber < 1) stepNumber = this.state.steps.length - 1;
 
-        this.setState({currentStep: stepNumber});
+        this.setState({ currentStep: stepNumber });
     };
 
     exit = () => {};
@@ -46,7 +46,8 @@ class Carousel extends Component {
                             <Button
                                 color="primary"
                                 size="lg"
-                                onClick={() => this.showPreviousIngredient()}>
+                                onClick={() => this.showPreviousIngredient()}
+                            >
                                 Previous
                             </Button>
                         </Col>
@@ -60,7 +61,8 @@ class Carousel extends Component {
                             <Button
                                 color="primary"
                                 size="lg"
-                                onClick={() => this.showNextIngredient()}>
+                                onClick={() => this.showNextIngredient()}
+                            >
                                 Next
                             </Button>
                         </Col>
@@ -70,17 +72,17 @@ class Carousel extends Component {
                         <h1>
                             {this.state.currentStep + 1}
                             ).
-                            {this.state.steps[this.state.currentStep].value}
+                            {this.state.steps[this.state.currentStep]}
                         </h1>
                     </Row>
                 </Container>
                 <Container>
                     <h5 id="ingredientsHeading">Ingredients</h5>
-                    {this.state.ingredientsInSteps[
-                        this.state.currentStep
-                    ].ingredients.map((ingredient, index) => (
-                        <h5 key={'ingredient' + index}>{ingredient.value}</h5>
-                    ))}{' '}
+                    {this.state.ingredientsInSteps[this.state.currentStep].map(
+                        (ingredient, index) => (
+                            <h5 key={"ingredient" + index}>{ingredient}</h5>
+                        )
+                    )}{" "}
                 </Container>
             </div>
         );

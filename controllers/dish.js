@@ -139,49 +139,6 @@ function filterIngredient(ingredient) {
     return ingredient;
 }
 
-/*
- * Iterate through steps and determine which ingredient is used in each step
- * @param {Array} steps - Steps of dish
- * @param {Array} ingredients - Ingredients of dish
- * @Return {Promise}
- */
-
-const getIngredientsInSteps = async (steps, ingredients) => {
-    try {
-        let ingredientsInStepsArray = [];
-        /* We are going to copy ingredients array so that when we insert info the dishInfo field we will use the 
-	 * the orignal array instead of the one that is filtered */
-        let ingredientsCopy = ingredients.map(a => Object.assign({}, a));
-        let filteredIngredients = filterAllIngredients(ingredientsCopy);
-        for (let stepNumber = 0; stepNumber < steps.length; stepNumber++) {
-            let ingredientsStepObject = {};
-            ingredientsStepObject.step = stepNumber;
-            console.log("G-");
-            let ingredientsInEachStep = [];
-            let stepDescription = steps[stepNumber].value.toLowerCase();
-
-            for (
-                let ingredientNumber = 0;
-                ingredientNumber < filteredIngredients.length;
-                ingredientNumber++
-            ) {
-                let ingredientDescription =
-                    filteredIngredients[ingredientNumber].value;
-                if (stepHasIngredient(stepDescription, ingredientDescription)) {
-                    ingredientsInEachStep.push(ingredients[ingredientNumber]);
-                }
-            }
-            ingredientsStepObject.ingredients = ingredientsInEachStep;
-            ingredientsInStepsArray.push(ingredientsStepObject);
-        }
-        return ingredientsInStepsArray;
-    } catch (error) {
-        console.log("ERROR");
-        console.log(error.msg);
-        return error;
-    }
-};
-
 exports.createDish = async (req, res) => {
     try {
         const pool = await req.app.get("pool");

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DishEntryStepsTable from "../../components/DishEntryStepsTable";
 import DishEntryIngredientsTable from "../../components/DishEntryIngredientsTable";
@@ -15,6 +15,7 @@ import { GET_DISH } from "../../api/queries/dish/getDish";
 import { DELETE_DISH } from "../../api/mutations/dish/deleteDish";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { GET_DISHES } from "../../api/queries/dish/getAllDishes";
+import { getIngredientsInSteps } from "../../utils/utils";
 
 const DishEntry = props => {
     const [userId] = useState(props.userId);
@@ -26,11 +27,12 @@ const DishEntry = props => {
     const [category] = useState(props.match.params.category);
     const [steps, setSteps] = useState([]);
     const [ingredients, setIngredients] = useState([]);
-    const [ingredientsInSteps, setIngredientsInSteps] = useState([]);
     const [history, setHistory] = useState([]);
     const [makeDishMode, setMakeDishMode] = useState(false);
     const [dish, setDish] = useState({});
     const client = useApolloClient();
+
+    const [ingredientsInSteps, setIngredientsInSteps] = useState([]);
 
     const [deleteDish] = useMutation(DELETE_DISH, {
         onCompleted(updateDishResponse) {
@@ -50,7 +52,7 @@ const DishEntry = props => {
         variables: {
             id: dishId
         },
-        onCompleted({ dish }) {
+        async onCompleted({ dish }) {
             if (dish.steps && dish.steps.length) {
                 setSteps(dish.steps);
             }
@@ -61,11 +63,16 @@ const DishEntry = props => {
             if (dish.name) setName(dish.name);
             if (dish.cookingTime) setCookingTime(dish.cookingTime);
             if (dish.notes) setNotes(dish.notes);
-            if (dish.ingredientsInSteps) {
-                setIngredientsInSteps(dish.ingredientsInSteps);
-            }
             setDish(dish);
             console.log("dish object loaded");
+            if (dish.steps && dish.ingredients) {
+                setIngredientsInSteps(
+                    await getIngredientsInSteps(dish.steps, dish.ingredients)
+                );
+
+                console.log("ingredients in steps");
+                console.log(ingredientsInSteps);
+            }
         }
     });
 
@@ -85,12 +92,6 @@ const DishEntry = props => {
         }
         if (dishData.dish.ingredients && dishData.dish.ingredients.length) {
             setIngredients(dishData.dish.ingredients);
-        }
-        if (
-            dishData.dish.ingredientsInSteps &&
-            dishData.dish.ingredientsInSteps.length
-        ) {
-            setIngredientsInSteps(dishData.dish.ingredientsInSteps);
         }
     };
 
