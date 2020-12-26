@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeAPI.Models;
 using AutoMapper;
+using BCrypt;
 
 namespace RecipeAPI.Controllers
 {
@@ -82,12 +83,12 @@ namespace RecipeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            Console.WriteLine("Create user");
-
             if (UserExistsWithUserName(user.UserName) == true)
             {
                 return BadRequest("User already exists.");
             }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
