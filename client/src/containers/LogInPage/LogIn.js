@@ -5,11 +5,14 @@ import { Container, Form, Button, Input, FormGroup, Label } from "reactstrap";
 import { useApolloClient } from "@apollo/react-hooks";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { LOG_IN_USER } from "../../api/mutations/user/signInUser";
+import AlertBanner from "../../components/AlertBanner";
 
 const LogIn = props => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const client = useApolloClient();
+
+    const [showAlert, setShowAlert] = useState("");
 
     const [signInUser] = useMutation(LOG_IN_USER, {
         errorPolicy: "all",
@@ -28,7 +31,7 @@ const LogIn = props => {
                     alert("No user was not found.");
                     break;
                 default:
-                    alert("Error in request.");
+                    setShowAlert("Error in request.");
                     break;
             }
         }
@@ -49,6 +52,11 @@ const LogIn = props => {
     const handlePasswordChange = event => {
         event.preventDefault();
         setPassword(event.target.value);
+    };
+
+    const ShowAlert = () => {
+        if (showAlert) return <AlertBanner message={showAlert} />;
+        else return null;
     };
 
     return (
@@ -83,6 +91,7 @@ const LogIn = props => {
                         <Link to={`/signup`}>Don't have an account</Link>
                     </p>
                 </Form>
+                <ShowAlert />
             </Container>
         </div>
     );
