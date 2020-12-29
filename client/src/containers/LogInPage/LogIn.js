@@ -31,7 +31,7 @@ const LogIn = props => {
                     alert("No user was not found.");
                     break;
                 default:
-                    setShowAlert("Error in request.");
+                    setShowAlert("Username or password is incorrect.");
                     break;
             }
         }

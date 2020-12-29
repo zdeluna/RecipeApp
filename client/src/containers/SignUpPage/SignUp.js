@@ -7,27 +7,41 @@ import { Container, Form, Button, Input, FormGroup, Label } from "reactstrap";
 import { ADD_USER } from "../../api/mutations/user/createUser";
 import { LOG_IN_USER } from "../../api/mutations/user/signInUser";
 import { useApolloClient } from "@apollo/react-hooks";
+import AlertBanner from "../../components/AlertBanner";
 
 const SignUp = props => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const client = useApolloClient();
 
+    const [showAlert, setShowAlert] = useState("");
     const [signInUser] = useMutation(LOG_IN_USER, {
         errorPolicy: "all",
         async onCompleted({ signInUser }) {
-            client.resetStore();
-
+            console.log(signInUser);
             localStorage.setItem("token", signInUser.token);
             props.history.push("/users/category");
         }
     });
 
     const [addUser] = useMutation(ADD_USER, {
-        onCompleted({ addUser }) {
+        async onCompleted({ addUser }) {
             /* Clear the cache of a previously logged in user */
-            client.resetStore();
-            signInUser({ variables: { username: email, password } });
+            //client.resetStore();
+            //await signInUser({ variables: { username: email, password } });
+        },
+        async onError(error) {
+            switch (error.message) {
+                case "GraphQL error: Password is not valid.":
+                    alert("Password is not valid.");
+                    break;
+                case "GraphQL error: No user was found.":
+                    alert("No user was not found.");
+                    break;
+                default:
+                    setShowAlert("User already exists.");
+                    break;
+            }
         }
     });
 
@@ -35,12 +49,13 @@ const SignUp = props => {
         event.preventDefault();
         client.resetStore();
         try {
-            addUser({
+            await addUser({
                 variables: {
                     username: email,
                     password: password
                 }
             });
+            await signInUser({ variables: { username: email, password } });
         } catch (error) {
             alert(error);
         }
@@ -55,6 +70,11 @@ const SignUp = props => {
         event.preventDefault();
 
         setPassword(event.target.value);
+    };
+
+    const ShowAlert = () => {
+        if (showAlert) return <AlertBanner message={showAlert} />;
+        else return null;
     };
 
     return (
@@ -89,6 +109,7 @@ const SignUp = props => {
                         <Link to={`/login`}>Already have an account</Link>
                     </p>
                 </Form>
+                <ShowAlert />
             </Container>
         </div>
     );

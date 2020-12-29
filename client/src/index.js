@@ -33,9 +33,9 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         graphQLErrors.map(({ message, locations, path }) => {
             // If the user is not authenticated, remove the token in local storage which will proceed the user to the login screen
             if (message === "401: Unauthorized") {
-                localStorage.setItem("token", null);
-                client.cache.reset();
-                app.auth().signOut();
+                //localStorage.setItem("token", null);
+                //client.cache.reset();
+                //app.auth().signOut();
             }
             console.log(
                 `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`

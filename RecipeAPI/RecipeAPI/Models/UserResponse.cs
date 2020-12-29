@@ -6,6 +6,8 @@ namespace RecipeAPI.Models
         public long ID { get; set; }
 
         public string UserName { get; set; }
-      
+
+        public string Token { get; set; }
+
     }
 }
