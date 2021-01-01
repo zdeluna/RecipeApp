@@ -39,13 +39,14 @@ module.exports = {
             };
         },
         addUser: async (_, { username, password }, { dataSources }) => {
-            dataSources.userAPI.createUser({
+            const result = await dataSources.userAPI.createUser({
                 username,
                 password
             });
             return {
                 success: true,
-                message: "The user was created successfully"
+                message: "The user was created successfully",
+                token: result.token
             };
         },
         addDishUrl: async (_, { id, url }, { dataSources }) => {

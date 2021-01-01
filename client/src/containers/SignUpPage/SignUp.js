@@ -15,20 +15,12 @@ const SignUp = props => {
     const client = useApolloClient();
 
     const [showAlert, setShowAlert] = useState("");
-    const [signInUser] = useMutation(LOG_IN_USER, {
-        errorPolicy: "all",
-        async onCompleted({ signInUser }) {
-            console.log(signInUser);
-            localStorage.setItem("token", signInUser.token);
-            props.history.push("/users/category");
-        }
-    });
 
     const [addUser] = useMutation(ADD_USER, {
         async onCompleted({ addUser }) {
-            /* Clear the cache of a previously logged in user */
-            //client.resetStore();
-            //await signInUser({ variables: { username: email, password } });
+            localStorage.setItem("token", addUser.token);
+
+            props.history.push("/users/category");
         },
         async onError(error) {
             switch (error.message) {
@@ -55,7 +47,6 @@ const SignUp = props => {
                     password: password
                 }
             });
-            await signInUser({ variables: { username: email, password } });
         } catch (error) {
             alert(error);
         }
