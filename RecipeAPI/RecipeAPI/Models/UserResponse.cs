@@ -9,5 +9,7 @@ namespace RecipeAPI.Models
 
         public string Token { get; set; }
 
+        public DateTime LastLoggedIn { get; set; }
+
     }
 }

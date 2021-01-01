@@ -31,12 +31,16 @@ namespace RecipeAPI.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Login([FromBody]User login)
+        public async Task<IActionResult> Login([FromBody]User login)
         {
             IActionResult response = Unauthorized();
             User user = AuthenticateUser(login);
             if (user != null)
             {
+
+                user.LastLoggedIn = DateTime.Now;
+                await _context.SaveChangesAsync();
+
                 var tokenString = GenerateJWTToken(user);
                 response = Ok(new
                 {
