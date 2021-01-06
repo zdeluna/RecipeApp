@@ -17,12 +17,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using AutoMapper;
 using RecipeAPI.Models;
+using RecipeAPI.Services;
 using Microsoft.Extensions.Logging.AzureAppServices;
 
 namespace RecipeAPI
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -69,6 +71,8 @@ namespace RecipeAPI
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
 
             });
+
+            services.AddScoped<IUserService, UserService>();
 
         }
         

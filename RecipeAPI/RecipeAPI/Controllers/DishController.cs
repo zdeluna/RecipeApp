@@ -69,8 +69,6 @@ namespace RecipeAPI.Controllers
         }
 
         // PATCH: api/Dish/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPatch("{id}")]
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<UpdateDishRequest>> PatchDish(long id, [FromBody] JsonPatchDocument<UpdateDishRequest> patchDish)
@@ -113,8 +111,6 @@ namespace RecipeAPI.Controllers
         }
 
         // PUT: api/Dish/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTodoItem(long id, [FromBody] UpdateDishRequest updateDishRequest)
         {
@@ -188,11 +184,7 @@ namespace RecipeAPI.Controllers
 
         }
 
-
-
         // POST: api/Dish
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<Dish>> PostDish(Dish dish)

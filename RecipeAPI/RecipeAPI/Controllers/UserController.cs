@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
+using RecipeAPI.Services;
 
 namespace RecipeAPI.Controllers
 {
@@ -24,12 +25,14 @@ namespace RecipeAPI.Controllers
         private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
+        private readonly IUserService _userService;
 
-        public UserController(IConfiguration config, DatabaseContext context, IMapper mapper)
+        public UserController(IConfiguration config, DatabaseContext context, IMapper mapper, IUserService userService)
         {
             _context = context;
             _mapper = mapper;
             _config = config;
+            _userService = userService;
         }
 
         // GET: api/User
