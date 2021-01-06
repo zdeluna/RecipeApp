@@ -94,7 +94,7 @@ namespace RecipeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            if (UserExistsWithUserName(user.UserName) == true)
+            if (_userService.UserExistsWithUserName(user.UserName) == true)
             {
                 return BadRequest("User already exists.");
             }
@@ -134,10 +134,7 @@ namespace RecipeAPI.Controllers
         {
             return _context.Users.Any(e => e.ID == id);
         }
-        private bool UserExistsWithUserName(string username)
-        {
-            return _context.Users.Any(e => e.UserName == username);
-        }
+        
 
 
         string GenerateJWTToken(User user)

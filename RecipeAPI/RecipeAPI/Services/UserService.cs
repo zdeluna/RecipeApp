@@ -1,21 +1,29 @@
 ﻿using System;
+using RecipeAPI.Models;
+using System.Linq;
+
 namespace RecipeAPI.Services
 {
     public interface IUserService
     {
-        bool IsAnExistingUser(string userName);
+        bool UserExistsWithUserName(string userName);
+
     }
 
 
     public class UserService : IUserService
     {
-        public UserService()
+        private readonly DatabaseContext _context;
+
+        public UserService(DatabaseContext context)
         {
+            _context = context;
             
         }
 
-        public bool IsAnExistingUser(string userName) {
-            return true;
+        public bool UserExistsWithUserName(string username)
+        {
+            return _context.Users.Any(e => e.UserName == username);
         }
     }
 }
