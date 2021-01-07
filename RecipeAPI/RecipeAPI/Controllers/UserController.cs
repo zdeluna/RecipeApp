@@ -57,8 +57,6 @@ namespace RecipeAPI.Controllers
         }
 
         // PUT: api/User/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(long id, User user)
         {
@@ -75,7 +73,7 @@ namespace RecipeAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExistsWithID(id))
+                if (!_userService.UserExistsWithID(id))
                 {
                     return NotFound();
                 }
@@ -89,8 +87,6 @@ namespace RecipeAPI.Controllers
         }
 
         // POST: api/User
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
@@ -99,11 +95,11 @@ namespace RecipeAPI.Controllers
                 return BadRequest("User already exists.");
             }
 
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.Password = _userService.HashPassword(user.Password);
 
             _context.Users.Add(user);
 
-            var tokenString = GenerateJWTToken(user);
+            var tokenString = _userService.GenerateJWTToken(user);
            
 
             await _context.SaveChangesAsync();
@@ -128,39 +124,6 @@ namespace RecipeAPI.Controllers
             await _context.SaveChangesAsync();
 
             return user;
-        }
-
-        private bool UserExistsWithID(long id)
-        {
-            return _context.Users.Any(e => e.ID == id);
-        }
-        
-
-
-        string GenerateJWTToken(User user)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim("role", user.UserRole),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("UserID", user.ID.ToString())
-            };
-
-
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
-                signingCredentials: credentials
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-
         }
     }
 
