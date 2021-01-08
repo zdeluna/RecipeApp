@@ -7,7 +7,11 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using BCrypt;
+
 
 namespace RecipeAPI.Services
 {
@@ -17,7 +21,8 @@ namespace RecipeAPI.Services
         bool UserExistsWithID(long id);
         public string GenerateJWTToken(User user);
         public string HashPassword(string password);
-
+        public Task<IEnumerable<User>> GetAll();
+        public Task<User> GetById(long id);
     }
 
     public class UserService : IUserService
@@ -28,8 +33,15 @@ namespace RecipeAPI.Services
         public UserService(DatabaseContext context, IConfiguration config)
         {
             _context = context;
-            _config = config;
-            
+            _config = config;  
+        }
+
+        public async Task<IEnumerable<User>> GetAll() {
+            return await _context.Users.ToListAsync();
+        }
+
+        public async Task<User> GetById(long id) {
+            return await _context.Users.FindAsync(id);
         }
 
         public bool UserExistsWithUserName(string username)
