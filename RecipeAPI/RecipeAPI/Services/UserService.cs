@@ -23,6 +23,8 @@ namespace RecipeAPI.Services
         public string HashPassword(string password);
         public Task<IEnumerable<User>> GetAll();
         public Task<User> GetById(long id);
+        public Task<User> Add(User user);
+
     }
 
     public class UserService : IUserService
@@ -42,6 +44,16 @@ namespace RecipeAPI.Services
 
         public async Task<User> GetById(long id) {
             return await _context.Users.FindAsync(id);
+        }
+
+        public async Task<User> Add(User user) {
+            user.Password = HashPassword(user.Password);
+            _context.Users.Add(user);
+
+            
+            await _context.SaveChangesAsync();
+
+            return await _context.Users.FindAsync(user.ID);
         }
 
         public bool UserExistsWithUserName(string username)

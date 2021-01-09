@@ -96,14 +96,9 @@ namespace RecipeAPI.Controllers
                 return BadRequest("User already exists.");
             }
 
-            user.Password = _userService.HashPassword(user.Password);
-
-            _context.Users.Add(user);
+            await _userService.Add(user);
 
             var tokenString = _userService.GenerateJWTToken(user);
-           
-
-            await _context.SaveChangesAsync();
 
             var response = _mapper.Map<UserResponse>(user);
             response.Token = tokenString;
