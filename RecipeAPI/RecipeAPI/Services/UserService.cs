@@ -19,11 +19,12 @@ namespace RecipeAPI.Services
     {
         bool UserExistsWithUserName(string userName);
         bool UserExistsWithID(long id);
-        public string GenerateJWTToken(User user);
-        public string HashPassword(string password);
-        public Task<IEnumerable<User>> GetAll();
-        public Task<User> GetById(long id);
-        public Task<User> Add(User user);
+        string GenerateJWTToken(User user);
+        string HashPassword(string password);
+        Task<IEnumerable<User>> GetAll();
+        Task<User> GetById(long id);
+        Task<User> Add(User user);
+        Task<User> Remove(long id); 
 
     }
 
@@ -31,15 +32,18 @@ namespace RecipeAPI.Services
     {
         private readonly DatabaseContext _context;
         private readonly IConfiguration _config;
+        private readonly IUserRepository _repo;
 
-        public UserService(DatabaseContext context, IConfiguration config)
+        public UserService(DatabaseContext context, IConfiguration config, IUserRepository repo)
         {
             _context = context;
-            _config = config;  
+            _config = config;
+            _repo = repo;
+              
         }
 
         public async Task<IEnumerable<User>> GetAll() {
-            return await _context.Users.ToListAsync();
+            return await _repo.GetAllUsers();
         }
 
         public async Task<User> GetById(long id) {
@@ -54,6 +58,20 @@ namespace RecipeAPI.Services
             await _context.SaveChangesAsync();
 
             return await _context.Users.FindAsync(user.ID);
+        }
+
+        public async Task<User> Remove(long id) {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return null;
+            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return user;
+
         }
 
         public bool UserExistsWithUserName(string username)

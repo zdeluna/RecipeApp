@@ -73,7 +73,8 @@ namespace RecipeAPI
             });
 
             services.AddScoped<IUserService, UserService>();
-
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IUserRepository, UserRepository>();
         }
         
 

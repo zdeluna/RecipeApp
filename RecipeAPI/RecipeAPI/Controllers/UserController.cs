@@ -110,16 +110,13 @@ namespace RecipeAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(long id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var deletedUser = await _userService.Remove(id);
+            if (deletedUser == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return user;
+            return deletedUser;
         }
     }
 
