@@ -47,31 +47,17 @@ namespace RecipeAPI.Services
         }
 
         public async Task<User> GetById(long id) {
-            return await _context.Users.FindAsync(id);
+            return await _repo.GetUserById(id);
         }
 
         public async Task<User> Add(User user) {
             user.Password = HashPassword(user.Password);
-            _context.Users.Add(user);
-
-            
-            await _context.SaveChangesAsync();
-
-            return await _context.Users.FindAsync(user.ID);
+         
+            return await _repo.AddUser(user);
         }
 
         public async Task<User> Remove(long id) {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return null;
-            }
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return user;
-
+            return await _repo.RemoveUser(id);
         }
 
         public bool UserExistsWithUserName(string username)

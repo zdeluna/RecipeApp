@@ -8,6 +8,9 @@ namespace RecipeAPI.Services
 
     public interface IUserRepository {
         Task<IEnumerable<User>> GetAllUsers();
+        Task<User> GetUserById(long id);
+        Task<User> AddUser(User user);
+        Task<User> RemoveUser(long id);
     }
 
     public class UserRepository : Repository<User>, IUserRepository
@@ -18,6 +21,21 @@ namespace RecipeAPI.Services
 
         public async Task<IEnumerable<User>> GetAllUsers() {
             return await GetAll();
+        }
+
+        public async Task<User> GetUserById(long id)
+        {
+            return await GetById(id);
+        }
+
+        public async Task<User> AddUser(User user)
+        {
+            return await Add(user);
+        }
+
+        public async Task<User> RemoveUser(long id)
+        {
+            return await Remove(id);
         }
     }
 }
