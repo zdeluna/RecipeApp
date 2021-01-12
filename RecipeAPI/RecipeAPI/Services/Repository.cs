@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace RecipeAPI.Services
 {
     public interface IRepository<TEntity>{
-        Task<IEnumerable<TEntity>> GetAll();
+        public IQueryable<TEntity> GetAll();
         Task<TEntity> GetById(long id);
         Task<TEntity> Add(TEntity entity);
         Task<TEntity> Remove(long id);
@@ -17,7 +17,7 @@ namespace RecipeAPI.Services
     }
 
 
-    public class Repository<TEntity>: IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity>: IRepository<TEntity> where TEntity : class, new()
     {
         DbSet<TEntity> _dbSet;
         private readonly DatabaseContext _context;
@@ -28,9 +28,9 @@ namespace RecipeAPI.Services
             _dbSet = _context.Set<TEntity>();
         }
         
-        public async Task<IEnumerable<TEntity>> GetAll()
+        public IQueryable<TEntity> GetAll()
         {
-            return await _dbSet.ToListAsync();
+            return _context.Set<TEntity>();
         }
 
         public async Task<TEntity> GetById(long id)

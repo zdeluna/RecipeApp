@@ -2,6 +2,7 @@
 using RecipeAPI.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace RecipeAPI.Services
 {
@@ -20,12 +21,12 @@ namespace RecipeAPI.Services
         }
 
         public async Task<IEnumerable<User>> GetAllUsers() {
-            return await GetAll();
+            return await GetAll().ToListAsync();
         }
 
         public async Task<User> GetUserById(long id)
         {
-            return await GetById(id);
+            return await GetAll().FirstOrDefaultAsync(x => x.ID == id);
         }
 
         public async Task<User> AddUser(User user)

@@ -2,13 +2,15 @@
 using RecipeAPI.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace RecipeAPI.Services
 {
 
     public interface IDishRepository
     {
-        Task<IEnumerable<Dish>> GetAllDishes();
+        Task<IEnumerable<Dish>> GetAllDishes(long userId);
         Task<Dish> GetDishById(long id);
         Task<Dish> AddDish(Dish dish);
         Task<Dish> RemoveDish(long id);
@@ -20,14 +22,17 @@ namespace RecipeAPI.Services
         {
         }
 
-        public async Task<IEnumerable<Dish>> GetAllDishes()
+        public async Task<IEnumerable<Dish>> GetAllDishes(long userId)
         {
-            return await GetAll();
+            return await GetAll().Include(s => s.History)
+                .AsNoTracking()
+                .Where(x => x.UserID == userId)
+                .ToListAsync();
         }
 
         public async Task<Dish> GetDishById(long id)
         {
-            return await GetById(id);
+            return await GetAll().FirstOrDefaultAsync(x => x.ID == id);
         }
 
         public async Task<Dish> AddDish(Dish dish)

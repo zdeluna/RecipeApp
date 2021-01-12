@@ -17,7 +17,7 @@ namespace RecipeAPI.Services
 {
     public interface IDishService
     {
-        Task<IEnumerable<Dish>> GetAll();
+        Task<IEnumerable<Dish>> GetAll(long userId);
         Task<Dish> GetById(long id);
         Task<Dish> Add(Dish dish);
         Task<Dish> Remove(long id);
@@ -38,9 +38,9 @@ namespace RecipeAPI.Services
 
         }
 
-        public async Task<IEnumerable<Dish>> GetAll()
+        public async Task<IEnumerable<Dish>> GetAll(long userId)
         {
-            return await _repo.GetAllDishes();
+            return await _repo.GetAllDishes(userId);
         }
 
         public async Task<Dish> GetById(long id)
@@ -56,5 +56,6 @@ namespace RecipeAPI.Services
         public async Task<Dish> Remove(long id)
         {
             return await _repo.RemoveDish(id);
-        } 
+        }
+    }
 }
