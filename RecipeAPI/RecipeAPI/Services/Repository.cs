@@ -11,8 +11,9 @@ namespace RecipeAPI.Services
         public IQueryable<TEntity> GetAll();
         Task<TEntity> GetById(long id);
         Task<TEntity> Add(TEntity entity);
+        Task<TEntity> RemoveById(long id);
         Task<TEntity> Remove(long id);
-
+        Task<TEntity> Update(TEntity entity);
 
     }
 
@@ -47,7 +48,7 @@ namespace RecipeAPI.Services
             return entity;
         }
 
-        public async Task<TEntity> Remove(long id)
+        public async Task<TEntity> RemoveById(long id)
         {
             var entity  = await _dbSet.FindAsync(id);
             if (entity == null)
@@ -57,6 +58,15 @@ namespace RecipeAPI.Services
 
             _dbSet.Remove(entity);
             
+            await _context.SaveChangesAsync();
+
+            return entity;
+        }
+
+        public async Task<TEntity> Remove(TEntity entity)
+        {
+            _dbSet.Remove(entity);
+
             await _context.SaveChangesAsync();
 
             return entity;

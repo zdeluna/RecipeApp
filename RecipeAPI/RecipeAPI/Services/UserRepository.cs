@@ -36,7 +36,7 @@ namespace RecipeAPI.Services
 
         public async Task<User> RemoveUser(long id)
         {
-            return await Remove(id);
+            return await RemoveById(id);
         }
     }
 }
