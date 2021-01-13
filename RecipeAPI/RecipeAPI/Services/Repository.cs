@@ -40,7 +40,7 @@ namespace RecipeAPI.Services
 
         public async Task<TEntity> Add(TEntity entity)
         {
-            _dbSet.Add(entity);
+            await _dbSet.AddAsync(entity);
 
             await _context.SaveChangesAsync();
 

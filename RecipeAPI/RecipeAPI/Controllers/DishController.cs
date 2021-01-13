@@ -46,14 +46,8 @@ namespace RecipeAPI.Controllers
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<DishResponse>> GetDish(long id)
         {
-            var dish = await _context.Dishes
-                .Include(s => s.History)
-                .Include(s => s.Ingredients)
-                .Include(s => s.Steps)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.ID == id);
-           
-            System.Diagnostics.Debugger.Break();
+            var dish = await _dishService.GetById(id);
+
             if (dish == null)
             {
                 return NotFound();
@@ -191,20 +185,10 @@ namespace RecipeAPI.Controllers
         {
             //Add the userId from the token as a field
             dish.UserID = GetUserId();
-            _context.Dishes.Add(dish);
-            await _context.SaveChangesAsync();
+            var newDish = await _dishService.Add(dish);
+                       
 
-            /*
-            var history = new History[]
-            {
-                new History{ID=dish.ID, Date="Saturday December 2nd"},
-                new History{ID=dish.ID, Date="Sunday December 3rd"}
-            };
-
-            _context.History.AddRange(history);*/
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDish", new { id = dish.ID }, dish);
+            return CreatedAtAction("GetDish", new { id = dish.ID }, newDish);
         }
 
         // DELETE: api/Dish/5

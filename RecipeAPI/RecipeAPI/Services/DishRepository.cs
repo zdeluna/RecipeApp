@@ -32,7 +32,11 @@ namespace RecipeAPI.Services
 
         public async Task<Dish> GetDishById(long id)
         {
-            return await GetAll().FirstOrDefaultAsync(x => x.ID == id);
+            return await GetAll().Include(s => s.History)
+                .Include(s => s.Ingredients)
+                .Include(s => s.Steps)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
         }
 
         public async Task<Dish> AddDish(Dish dish)
