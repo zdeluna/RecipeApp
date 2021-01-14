@@ -77,6 +77,9 @@ namespace RecipeAPI
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IDishRepository, DishRepository>();
+            services.AddTransient<IIngredientRepository, IngredientRepository>();
+            services.AddTransient<IStepRepository, StepRepository>();
+            services.AddTransient<IHistoryRepository, HistoryRepository>();
         }
         
 

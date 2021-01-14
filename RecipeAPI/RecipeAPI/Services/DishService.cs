@@ -21,7 +21,10 @@ namespace RecipeAPI.Services
         Task<Dish> GetById(long id);
         Task<Dish> Add(Dish dish);
         Task<Dish> Remove(long id);
-        Task<Dish> UpdateEntireDish(Dish dish);
+      //  Task<Dish> UpdateEntireDish(Dish dish);
+        Task RemoveAllIngredients(long dishId);
+        Task RemoveAllSteps(long dishId);
+        Task RemoveAllHistories(long dishId);
 
     }
 
@@ -31,13 +34,18 @@ namespace RecipeAPI.Services
         private readonly IConfiguration _config;
         private readonly IDishRepository _dishRepo;
         private readonly IIngredientRepository _ingredientRepo;
+        private readonly IStepRepository _stepRepo;
+        private readonly IHistoryRepository _historyRepo;
+       
 
-        public DishService(DatabaseContext context, IConfiguration config, IDishRepository dishRepo, IIngredientRepository ingredientRepo)
+        public DishService(DatabaseContext context, IConfiguration config, IDishRepository dishRepo, IIngredientRepository ingredientRepo, IStepRepository stepRepo, IHistoryRepository historyRepo)
         {
             _context = context;
             _config = config;
             _dishRepo = dishRepo;
             _ingredientRepo = ingredientRepo;
+            _stepRepo = stepRepo;
+            _historyRepo = historyRepo;
 
         }
 
@@ -60,14 +68,24 @@ namespace RecipeAPI.Services
         {
             return await _dishRepo.RemoveDish(id);
         }
-
+/*
         public async Task<Dish> UpdateEntireDish(Dish dish) {
             return await _dishRepo.UpdateAll(dish);
-        }
+        }*/
 
         public async Task RemoveAllIngredients(long dishId)
         {
-            return await _ingredientRepo.RemoveAllIngredients(dishId);
+            await _ingredientRepo.RemoveAllIngredients(dishId);
+        }
+
+        public async Task RemoveAllSteps(long dishId)
+        {
+            await _stepRepo.RemoveAllSteps(dishId);
+        }
+
+        public async Task RemoveAllHistories(long dishId)
+        {
+            await _historyRepo.RemoveAllHistories(dishId);
         }
 
 

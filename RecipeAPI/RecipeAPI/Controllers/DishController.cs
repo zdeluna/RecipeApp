@@ -121,40 +121,20 @@ namespace RecipeAPI.Controllers
 
                 // If the user is updating ingredients
                 if (updateDishRequest.Ingredients != null) {
-                    var ingredients = await _context.Ingredients
-                        .Where(i => i.DishID == id)
-                        .ToListAsync();
-                    foreach( var ingredient in ingredients) {
-                        _context.Ingredients.Remove(ingredient);
-                    }
+                    await _dishService.RemoveAllIngredients(id);
                 };
 
                 // If the user is updating steps
                 if (updateDishRequest.Steps != null)
                 {
-                    Console.WriteLine("There are existing steps");
-
-                    var steps = await _context.Steps
-                        .Where(i => i.DishID == id)
-                        .ToListAsync();
-                    foreach (var step in steps)
-                    {
-                        _context.Steps.Remove(step);
-                        Console.WriteLine("Remove step");
-                    }
+                    await _dishService.RemoveAllSteps(id);
                 };
 
                 // If the user is updating the history
 
                 if (updateDishRequest.History != null)
                 {
-                    var histories = await _context.History
-                        .Where(i => i.DishID == id)
-                        .ToListAsync();
-                    foreach (var history in histories)
-                    {
-                        _context.History.Remove(history);
-                    }
+                    await _dishService.RemoveAllHistories(id);
                 };
 
 

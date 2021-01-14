@@ -14,6 +14,7 @@ namespace RecipeAPI.Services
         Task<Dish> GetDishById(long id);
         Task<Dish> AddDish(Dish dish);
         Task<Dish> RemoveDish(long id);
+        //Task<Dish> UpdateAll(Dish dish);
     }
 
     public class DishRepository : Repository<Dish>, IDishRepository
@@ -46,7 +47,12 @@ namespace RecipeAPI.Services
 
         public async Task<Dish> RemoveDish(long id)
         {
-            return await Remove(id);
+            return await RemoveById(id);
         }
+/*
+        public async Task<Dish> UpdateAll(Dish dish) {
+            return await null;            
+    
+        }*/
     }
 }
