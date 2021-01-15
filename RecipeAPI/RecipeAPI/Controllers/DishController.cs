@@ -111,36 +111,8 @@ namespace RecipeAPI.Controllers
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
-                var dish = await _context.Dishes.FindAsync(id);
-                
-                if (updateDishRequest.Url != null) {
-                    Console.WriteLine("update url");
-                }
 
-
-
-                // If the user is updating ingredients
-                if (updateDishRequest.Ingredients != null) {
-                    await _dishService.RemoveAllIngredients(id);
-                };
-
-                // If the user is updating steps
-                if (updateDishRequest.Steps != null)
-                {
-                    await _dishService.RemoveAllSteps(id);
-                };
-
-                // If the user is updating the history
-
-                if (updateDishRequest.History != null)
-                {
-                    await _dishService.RemoveAllHistories(id);
-                };
-
-
-                _mapper.Map(updateDishRequest, dish);
-                
-                await _context.SaveChangesAsync();
+                var dish = await _dishService.UpdateEntireDish(id,updateDishRequest);
 
                 return Ok(_mapper.Map<Dish, DishResponse>(dish));
             }
@@ -192,38 +164,20 @@ namespace RecipeAPI.Controllers
             // Delete ingredients of the dish
             if (dish.Ingredients != null)
             {
-                var ingredients = await _context.Ingredients
-                    .Where(i => i.DishID == id)
-                    .ToListAsync();
-                foreach (var ingredient in ingredients)
-                {
-                    _context.Ingredients.Remove(ingredient);
-                }
+                await _dishService.RemoveAllIngredients(id);
             };
 
             // Delete steps of the dish
             if (dish.Steps != null)
             {
-                var steps = await _context.Steps
-                    .Where(i => i.DishID == id)
-                    .ToListAsync();
-                foreach (var step in steps)
-                {
-                    _context.Steps.Remove(step);
-                }
+                await _dishService.RemoveAllSteps(id);
             };
 
             // Delete the history of the dish
 
             if (dish.History != null)
             {
-                var histories = await _context.History
-                    .Where(i => i.DishID == id)
-                    .ToListAsync();
-                foreach (var history in histories)
-                {
-                    _context.History.Remove(history);
-                }
+                await _dishService.RemoveAllHistories(id);
             };
 
             _context.Dishes.Remove(dish);

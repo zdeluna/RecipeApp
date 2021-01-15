@@ -12,8 +12,8 @@ namespace RecipeAPI.Services
         Task<TEntity> GetById(long id);
         Task<TEntity> Add(TEntity entity);
         Task<TEntity> RemoveById(long id);
-        //Task<TEntity> Update(TEntity entity);
         Task<TEntity> Remove(TEntity entity);
+        Task SaveUpdate();
     }
 
 
@@ -69,6 +69,10 @@ namespace RecipeAPI.Services
             await _context.SaveChangesAsync();
 
             return entity;
+        }
+
+        public async Task SaveUpdate() {
+            await _context.SaveChangesAsync();
         }
     }
 }

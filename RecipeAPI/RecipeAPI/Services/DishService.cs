@@ -21,7 +21,7 @@ namespace RecipeAPI.Services
         Task<Dish> GetById(long id);
         Task<Dish> Add(Dish dish);
         Task<Dish> Remove(long id);
-      //  Task<Dish> UpdateEntireDish(Dish dish);
+        Task<Dish> UpdateEntireDish(long dishId, UpdateDishRequest updatedDishRequest);
         Task RemoveAllIngredients(long dishId);
         Task RemoveAllSteps(long dishId);
         Task RemoveAllHistories(long dishId);
@@ -38,7 +38,8 @@ namespace RecipeAPI.Services
         private readonly IHistoryRepository _historyRepo;
        
 
-        public DishService(DatabaseContext context, IConfiguration config, IDishRepository dishRepo, IIngredientRepository ingredientRepo, IStepRepository stepRepo, IHistoryRepository historyRepo)
+
+        public DishService(DatabaseContext context, IConfiguration config, IDishRepository dishRepo, IIngredientRepository ingredientRepo, IStepRepository stepRepo, IHistoryRepository historyRepo) 
         {
             _context = context;
             _config = config;
@@ -46,8 +47,7 @@ namespace RecipeAPI.Services
             _ingredientRepo = ingredientRepo;
             _stepRepo = stepRepo;
             _historyRepo = historyRepo;
-
-        }
+    }
 
         public async Task<IEnumerable<Dish>> GetAll(long userId)
         {
@@ -68,10 +68,35 @@ namespace RecipeAPI.Services
         {
             return await _dishRepo.RemoveDish(id);
         }
-/*
-        public async Task<Dish> UpdateEntireDish(Dish dish) {
-            return await _dishRepo.UpdateAll(dish);
-        }*/
+
+        public async Task<Dish> UpdateEntireDish(long dishId, UpdateDishRequest updatedDishRequest) {
+           
+            // If the user is updating ingredients
+            if (updatedDishRequest.Ingredients != null)
+            {
+                await RemoveAllIngredients(dishId);
+            };
+
+            // If the user is updating steps
+            if (updatedDishRequest.Steps != null)
+            {
+                await RemoveAllSteps(dishId);
+            };
+
+            // If the user is updating the history
+
+            if (updatedDishRequest.History != null)
+            {
+                await RemoveAllHistories(dishId);
+            };
+
+            return await _dishRepo.UpdateAll(updatedDishRequest, dishId);
+
+            
+
+
+
+        }
 
         public async Task RemoveAllIngredients(long dishId)
         {

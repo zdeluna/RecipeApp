@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using AutoMapper;
 
 namespace RecipeAPI.Services
 {
@@ -14,13 +15,16 @@ namespace RecipeAPI.Services
         Task<Dish> GetDishById(long id);
         Task<Dish> AddDish(Dish dish);
         Task<Dish> RemoveDish(long id);
-        //Task<Dish> UpdateAll(Dish dish);
+        Task<Dish> UpdateAll(UpdateDishRequest dish, long id);
     }
 
     public class DishRepository : Repository<Dish>, IDishRepository
     {
-        public DishRepository(DatabaseContext context) : base(context)
+        private readonly IMapper _mapper;
+
+        public DishRepository(DatabaseContext context, IMapper mapper) : base(context)
         {
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Dish>> GetAllDishes(long userId)
@@ -49,10 +53,16 @@ namespace RecipeAPI.Services
         {
             return await RemoveById(id);
         }
-/*
-        public async Task<Dish> UpdateAll(Dish dish) {
-            return await null;            
-    
-        }*/
+
+        public async Task<Dish> UpdateAll(UpdateDishRequest updatedDish, long id) {
+
+            Console.WriteLine("test");
+            Console.WriteLine(id);
+            var dish = await GetDishById(id);
+            var mappedDish = _mapper.Map(updatedDish, dish);
+
+            
+            return mappedDish;
+        }
     }
 }
