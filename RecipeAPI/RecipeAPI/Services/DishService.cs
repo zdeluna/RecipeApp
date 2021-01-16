@@ -22,6 +22,7 @@ namespace RecipeAPI.Services
         Task<Dish> Add(Dish dish);
         Task<Dish> Remove(long id);
         Task<Dish> UpdateEntireDish(long dishId, UpdateDishRequest updatedDishRequest);
+        Task<Dish> UpdatePartOfDish(long dishId, UpdateDishRequest updatedDishRequest);
         Task RemoveAllIngredients(long dishId);
         Task RemoveAllSteps(long dishId);
         Task RemoveAllHistories(long dishId);
@@ -66,6 +67,10 @@ namespace RecipeAPI.Services
 
         public async Task<Dish> Remove(long id)
         {
+            await RemoveAllIngredients(id);
+            await RemoveAllSteps(id);
+            await RemoveAllHistories(id);
+
             return await _dishRepo.RemoveDish(id);
         }
 
@@ -91,11 +96,22 @@ namespace RecipeAPI.Services
             };
 
             return await _dishRepo.UpdateAll(updatedDishRequest, dishId);
+        }
 
-            
+        public async Task<Dish> UpdatePartOfDish(long dishId, UpdateDishRequest updatedDishRequest)
+        {
+            var updateDishRequest = _mapper.Map<UpdateDishRequest>(dish);
+            patchDish.ApplyTo(updateDishRequest, ModelState);
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            _mapper.Map(updateDishRequest, dish);
+            await _context.SaveChangesAsync();
 
+            return await _dishRepo.UpdateAll(updatedDishRequest, dishId);
         }
 
         public async Task RemoveAllIngredients(long dishId)
@@ -112,7 +128,6 @@ namespace RecipeAPI.Services
         {
             await _historyRepo.RemoveAllHistories(dishId);
         }
-
 
     }
 }

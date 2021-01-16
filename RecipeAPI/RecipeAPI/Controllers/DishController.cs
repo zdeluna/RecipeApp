@@ -161,27 +161,7 @@ namespace RecipeAPI.Controllers
                 return Unauthorized();
             }
 
-            // Delete ingredients of the dish
-            if (dish.Ingredients != null)
-            {
-                await _dishService.RemoveAllIngredients(id);
-            };
-
-            // Delete steps of the dish
-            if (dish.Steps != null)
-            {
-                await _dishService.RemoveAllSteps(id);
-            };
-
-            // Delete the history of the dish
-
-            if (dish.History != null)
-            {
-                await _dishService.RemoveAllHistories(id);
-            };
-
-            _context.Dishes.Remove(dish);
-            await _context.SaveChangesAsync();
+            await _dishService.Remove(id);
 
             return dish;
         }

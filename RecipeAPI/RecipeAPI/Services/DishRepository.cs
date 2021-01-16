@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RecipeAPI.Services
 {
@@ -16,6 +18,7 @@ namespace RecipeAPI.Services
         Task<Dish> AddDish(Dish dish);
         Task<Dish> RemoveDish(long id);
         Task<Dish> UpdateAll(UpdateDishRequest dish, long id);
+        Task<Dish> UpdatePartOfDish(UpdateDishRequest updatedDish, long id)
     }
 
     public class DishRepository : Repository<Dish>, IDishRepository
@@ -40,7 +43,6 @@ namespace RecipeAPI.Services
             return await GetAll().Include(s => s.History)
                 .Include(s => s.Ingredients)
                 .Include(s => s.Steps)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
         }
 
@@ -56,13 +58,31 @@ namespace RecipeAPI.Services
 
         public async Task<Dish> UpdateAll(UpdateDishRequest updatedDish, long id) {
 
-            Console.WriteLine("test");
-            Console.WriteLine(id);
             var dish = await GetDishById(id);
             var mappedDish = _mapper.Map(updatedDish, dish);
 
+            await SaveUpdate();
             
             return mappedDish;
+        }
+
+        public async Task<Dish> UpdatePartOfDish(UpdateDishRequest updatedDish, long id) {
+
+            var dish = await GetDishById(id);
+
+            patchDish.ApplyTo(updateDishRequest, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var updatedDish = _mapper.Map(updatedDish, dish);
+            await SaveUpdate();
+
+            return updatedDish;
+
+            
         }
     }
 }
