@@ -11,7 +11,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BCrypt;
-
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace RecipeAPI.Services
 {
@@ -22,7 +24,7 @@ namespace RecipeAPI.Services
         Task<Dish> Add(Dish dish);
         Task<Dish> Remove(long id);
         Task<Dish> UpdateEntireDish(long dishId, UpdateDishRequest updatedDishRequest);
-        Task<Dish> UpdatePartOfDish(long dishId, UpdateDishRequest updatedDishRequest);
+        Task<Dish> UpdatePartOfDish(long dishId, JsonPatchDocument<UpdateDishRequest> patchDish, ModelStateDictionary ModelState);
         Task RemoveAllIngredients(long dishId);
         Task RemoveAllSteps(long dishId);
         Task RemoveAllHistories(long dishId);
@@ -98,20 +100,10 @@ namespace RecipeAPI.Services
             return await _dishRepo.UpdateAll(updatedDishRequest, dishId);
         }
 
-        public async Task<Dish> UpdatePartOfDish(long dishId, UpdateDishRequest updatedDishRequest)
+        public async Task<Dish> UpdatePartOfDish(long dishId, JsonPatchDocument<UpdateDishRequest> patchDish, ModelStateDictionary ModelState)
         {
-            var updateDishRequest = _mapper.Map<UpdateDishRequest>(dish);
-            patchDish.ApplyTo(updateDishRequest, ModelState);
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            _mapper.Map(updateDishRequest, dish);
-            await _context.SaveChangesAsync();
-
-            return await _dishRepo.UpdateAll(updatedDishRequest, dishId);
+            return await _dishRepo.UpdatePartOfDish(patchDish, dishId, ModelState);
         }
 
         public async Task RemoveAllIngredients(long dishId)

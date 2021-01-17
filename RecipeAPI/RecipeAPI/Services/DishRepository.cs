@@ -7,6 +7,7 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace RecipeAPI.Services
 {
@@ -18,7 +19,7 @@ namespace RecipeAPI.Services
         Task<Dish> AddDish(Dish dish);
         Task<Dish> RemoveDish(long id);
         Task<Dish> UpdateAll(UpdateDishRequest dish, long id);
-        Task<Dish> UpdatePartOfDish(UpdateDishRequest updatedDish, long id)
+        Task<Dish> UpdatePartOfDish(JsonPatchDocument<UpdateDishRequest>updatedDish, long id, ModelStateDictionary ModelState);
     }
 
     public class DishRepository : Repository<Dish>, IDishRepository
@@ -33,7 +34,8 @@ namespace RecipeAPI.Services
         public async Task<IEnumerable<Dish>> GetAllDishes(long userId)
         {
             return await GetAll().Include(s => s.History)
-                .AsNoTracking()
+                .Include(s => s.Ingredients)
+                .Include(s => s.Steps)
                 .Where(x => x.UserID == userId)
                 .ToListAsync();
         }
@@ -66,18 +68,20 @@ namespace RecipeAPI.Services
             return mappedDish;
         }
 
-        public async Task<Dish> UpdatePartOfDish(UpdateDishRequest updatedDish, long id) {
+        public async Task<Dish> UpdatePartOfDish(JsonPatchDocument<UpdateDishRequest> patchDish, long id, ModelStateDictionary ModelState) {
 
             var dish = await GetDishById(id);
+            var updateDishRequest = _mapper.Map<UpdateDishRequest>(dish);
 
             patchDish.ApplyTo(updateDishRequest, ModelState);
-
+            
+            /*
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
+            }*/
 
-            var updatedDish = _mapper.Map(updatedDish, dish);
+            var updatedDish = _mapper.Map(updateDishRequest, dish);
             await SaveUpdate();
 
             return updatedDish;

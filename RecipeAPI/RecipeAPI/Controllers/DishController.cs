@@ -81,20 +81,10 @@ namespace RecipeAPI.Controllers
                 {
                     return Unauthorized();
                 }
-                var updateDishRequest = _mapper.Map<UpdateDishRequest>(dish);
-                patchDish.ApplyTo(updateDishRequest, ModelState);
 
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                _mapper.Map(updateDishRequest, dish);
-                await _context.SaveChangesAsync();
+                await _dishService.UpdatePartOfDish(id, patchDish, ModelState);
 
                 return NoContent();
-
-
             }
             else
             {
