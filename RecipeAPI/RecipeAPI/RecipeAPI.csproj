@@ -31,5 +31,7 @@
     <Folder Include="Models\" />
     <Folder Include="MappingProfile\" />
     <Folder Include="Services\" />
+    <Folder Include="Middleware\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 </Project>

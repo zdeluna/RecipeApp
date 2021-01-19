@@ -33,11 +33,18 @@ namespace RecipeAPI.Services
 
         public async Task<IEnumerable<Dish>> GetAllDishes(long userId)
         {
-            return await GetAll().Include(s => s.History)
-                .Include(s => s.Ingredients)
-                .Include(s => s.Steps)
-                .Where(x => x.UserID == userId)
-                .ToListAsync();
+            try
+            {
+                return await GetAll().Include(s => s.History)
+                    .Include(s => s.Ingredients)
+                    .Include(s => s.Steps)
+                    .Where(x => x.UserID == userId)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Couldn't retrieve dishes. {ex.Message}");
+            }
         }
 
         public async Task<Dish> GetDishById(long id)

@@ -14,6 +14,7 @@ using BCrypt;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using RecipeAPI.Exceptions;
 
 namespace RecipeAPI.Services
 {
@@ -59,7 +60,10 @@ namespace RecipeAPI.Services
 
         public async Task<Dish> GetById(long id)
         {
-            return await _dishRepo.GetDishById(id);
+            var dish = await _dishRepo.GetDishById(id);
+            if (dish == null)
+                throw new NotFoundException($"Dish with ID {id} not found");
+            return dish;
         }
 
         public async Task<Dish> Add(Dish dish)

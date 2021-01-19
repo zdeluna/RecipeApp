@@ -19,6 +19,7 @@ using AutoMapper;
 using RecipeAPI.Models;
 using RecipeAPI.Services;
 using Microsoft.Extensions.Logging.AzureAppServices;
+using RecipeAPI.Middleware;
 
 namespace RecipeAPI
 {
@@ -90,6 +91,8 @@ namespace RecipeAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseHttpsRedirection();
 

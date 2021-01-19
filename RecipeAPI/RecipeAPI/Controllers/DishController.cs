@@ -33,7 +33,7 @@ namespace RecipeAPI.Controllers
         [HttpGet]
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<IEnumerable<Dish>>> GetDishes()
-        { 
+        {
             long userId = GetUserId();
 
             var dishes = await _dishService.GetAll(userId);
