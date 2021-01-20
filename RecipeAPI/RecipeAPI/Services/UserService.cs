@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BCrypt;
+using RecipeAPI.Exceptions;
 
 
 namespace RecipeAPI.Services
@@ -47,7 +48,12 @@ namespace RecipeAPI.Services
         }
 
         public async Task<User> GetById(long id) {
-            return await _repo.GetUserById(id);
+            var user = await _repo.GetUserById(id);
+            if (user == null)
+                throw new NotFoundException($"User with ID {id} not found");
+            
+            return user;
+            
         }
 
         public async Task<User> Add(User user) {
@@ -57,6 +63,8 @@ namespace RecipeAPI.Services
         }
 
         public async Task<User> Remove(long id) {
+            await GetById(id);
+
             return await _repo.RemoveUser(id);
         }
 

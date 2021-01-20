@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 namespace RecipeAPI.Models
 {
@@ -9,6 +10,8 @@ namespace RecipeAPI.Models
         public string CookingTime { get; set; }
         public string LastMade { get; set; }
         public string Notes { get; set; }
+
+        [Url]
         public string Url { get; set; }
 
         public List<string> History { get; set; }

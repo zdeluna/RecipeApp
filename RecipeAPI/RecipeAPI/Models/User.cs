@@ -1,4 +1,7 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+
 namespace RecipeAPI.Models
 {
     public class User
