@@ -19,6 +19,8 @@ namespace RecipeAPI.Models
 
         [StringLength(20)]
         public string LastMade { get; set; }
+
+        [StringLength(1000)]
         public string Notes { get; set; }
 
         [Url]

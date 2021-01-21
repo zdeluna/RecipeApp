@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using RecipeAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using RecipeAPI.Exceptions;
 
 namespace RecipeAPI.Services
 {
@@ -42,7 +44,7 @@ namespace RecipeAPI.Services
         {
             await _dbSet.AddAsync(entity);
 
-            await _context.SaveChangesAsync();
+            await SaveUpdate();
 
             return entity;
         }
@@ -57,7 +59,7 @@ namespace RecipeAPI.Services
 
             _dbSet.Remove(entity);
             
-            await _context.SaveChangesAsync();
+            await SaveUpdate();
 
             return entity;
         }
@@ -66,13 +68,21 @@ namespace RecipeAPI.Services
         {
             _dbSet.Remove(entity);
 
-            await _context.SaveChangesAsync();
+            await SaveUpdate(); 
 
             return entity;
         }
 
         public async Task SaveUpdate() {
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw new DatabaseErrorException($"An error occured while sending updates to the database");
+            }
         }
     }
 }

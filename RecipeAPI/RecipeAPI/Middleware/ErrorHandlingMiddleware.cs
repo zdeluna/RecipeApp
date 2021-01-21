@@ -38,7 +38,6 @@ namespace RecipeAPI.Middleware
 
                 if (exceptionType == typeof(NotFoundException))
                 {
-                    Console.WriteLine("In not found exeption handling");
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                 }
 
