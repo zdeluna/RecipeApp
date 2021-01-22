@@ -41,6 +41,11 @@ namespace RecipeAPI.Middleware
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                 }
 
+                else if (exceptionType == typeof(UnauthorizedException))
+                {
+                    response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                }
+
                 else
                 {
 

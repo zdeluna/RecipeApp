@@ -29,6 +29,7 @@ namespace RecipeAPI.Services
         Task RemoveAllIngredients(long dishId);
         Task RemoveAllSteps(long dishId);
         Task RemoveAllHistories(long dishId);
+        bool VerifyUser(long userId, long dishId);
 
     }
 
@@ -125,5 +126,12 @@ namespace RecipeAPI.Services
             await _historyRepo.RemoveAllHistories(dishId);
         }
 
+        public bool VerifyUser(long userId, long dishId)
+        {
+            if (userId != dishId)
+                throw new UnauthorizedException("User does not have access to modify/access dish");
+
+            return true;
+        }
     }
 }

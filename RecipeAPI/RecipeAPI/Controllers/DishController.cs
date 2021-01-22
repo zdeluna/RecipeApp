@@ -48,16 +48,7 @@ namespace RecipeAPI.Controllers
         {
             var dish = await _dishService.GetById(id);
 
-            if (dish == null)
-            {
-                return NotFound();
-            }
-
-            if (dish.UserID != GetUserId())
-            {
-                return Unauthorized();
-            }
-
+            _dishService.VerifyUser(GetUserId(), dish.ID);
 
             return _mapper.Map<DishResponse>(dish);
         }
@@ -69,18 +60,9 @@ namespace RecipeAPI.Controllers
         {
             if (patchDish != null)
             {
-                var dish = await _context.Dishes.FindAsync(id);
+                var dish = await _dishService.GetById(id);
 
-                if (dish == null)
-                {
-                    return NotFound();
-                }
-                int userId = GetUserId();
-
-                if (dish.UserID != userId)
-                {
-                    return Unauthorized();
-                }
+                _dishService.VerifyUser(GetUserId(), dish.ID);
 
                 await _dishService.UpdatePartOfDish(id, patchDish, ModelState);
 
@@ -98,26 +80,14 @@ namespace RecipeAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTodoItem(long id, [FromBody] UpdateDishRequest updateDishRequest)
         {
-            try
-            {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-                var dish = await _dishService.UpdateEntireDish(id,updateDishRequest);
+            var dish = await _dishService.GetById(id);
+            _dishService.VerifyUser(GetUserId(), dish.ID);
 
-                return Ok(_mapper.Map<Dish, DishResponse>(dish));
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DishExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return BadRequest("Error updating dish");
-                }
-            }
+            dish = await _dishService.UpdateEntireDish(id,updateDishRequest);
 
+            return Ok(_mapper.Map<Dish, DishResponse>(dish));
         }
 
         // POST: api/Dish
@@ -138,18 +108,9 @@ namespace RecipeAPI.Controllers
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<Dish>> DeleteDish(long id)
         {
-            var dish = await _context.Dishes.FindAsync(id);
-            if (dish == null)
-            {
-                return NotFound();
-            }
+            var dish = await _dishService.GetById(id);
 
-            int userId = GetUserId();
-
-            if (dish.UserID != userId)
-            {
-                return Unauthorized();
-            }
+            _dishService.VerifyUser(GetUserId(), dish.ID);
 
             await _dishService.Remove(id);
 
