@@ -12,6 +12,7 @@ namespace RecipeAPI.Services
         Task<User> GetUserById(long id);
         Task<User> AddUser(User user);
         Task<User> RemoveUser(long id);
+        Task<User> GetByUsername(string userName);
     }
 
     public class UserRepository : Repository<User>, IUserRepository
@@ -37,6 +38,11 @@ namespace RecipeAPI.Services
         public async Task<User> RemoveUser(long id)
         {
             return await RemoveById(id);
+        }
+
+        public async Task<User> GetByUsername(string userName)
+        {
+            return await GetAll().SingleOrDefaultAsync(x => x.UserName == userName);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace RecipeAPI.Services
         bool UserExistsWithID(long id);
         string GenerateJWTToken(User user);
         string HashPassword(string password);
+        Task<User> AuthenticateUser(User loginCredentials);
         Task<IEnumerable<User>> GetAll();
         Task<User> GetById(long id);
         Task<User> Add(User user);
@@ -76,6 +77,19 @@ namespace RecipeAPI.Services
         public bool UserExistsWithID(long id)
         {
             return _context.Users.Any(e => e.ID == id);
+        }
+
+        public async Task<User> AuthenticateUser(User loginCredentials)
+        {
+            User user = await _repo.GetByUsername(loginCredentials.UserName);
+            if (user == null) return null;
+
+            if (BCrypt.Net.BCrypt.Verify(loginCredentials.Password, user.Password))
+            {
+                return user;
+            }
+
+            return null;
         }
 
         public string GenerateJWTToken(User user)

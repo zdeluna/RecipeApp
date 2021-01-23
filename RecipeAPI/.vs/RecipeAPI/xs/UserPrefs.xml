@@ -1,14 +1,32 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Services/HistoryRepository.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Models/UserResponse.cs">
     <Files>
-      <File FileName="RecipeAPI/Models/User.cs" Line="11" Column="40" />
-      <File FileName="RecipeAPI/Models/Dish.cs" Line="9" Column="6" />
-      <File FileName="RecipeAPI/Startup.cs" Line="82" Column="71" />
-      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="79" Column="1" />
-      <File FileName="RecipeAPI/Services/DishRepository.cs" Line="77" Column="13" />
-      <File FileName="RecipeAPI/Services/DishService.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Models/User.cs" Line="11" Column="9" />
+      <File FileName="RecipeAPI/Models/Dish.cs" Line="24" Column="8" />
+      <File FileName="RecipeAPI/Startup.cs" Line="38" Column="9" />
+      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="113" Column="22" />
+      <File FileName="RecipeAPI/Services/DishRepository.cs" Line="46" Column="79" />
+      <File FileName="RecipeAPI/Services/DishService.cs" Line="134" Column="1" />
       <File FileName="RecipeAPI/Services/HistoryRepository.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Services/Repository.cs" Line="49" Column="9" />
+      <File FileName="RecipeAPI/Middleware/ErrorHandlingMiddleware.cs" Line="44" Column="50" />
+      <File FileName="RecipeAPI/appsettings.json" />
+      <File FileName="RecipeAPI/appsettings.Development.json" />
+      <File FileName="RecipeAPI/settings.json" />
+      <File FileName="RecipeAPI/Exceptions/NotFoundException.cs" Line="4" Column="10" />
+      <File FileName="RecipeAPI/Program.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Services/UserService.cs" Line="57" Column="10" />
+      <File FileName="RecipeAPI/Controllers/LoginController.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Controllers/UserController.cs" Line="114" Column="1" />
+      <File FileName="RecipeAPI/Models/UpdateDishRequest.cs" Line="8" Column="9" />
+      <File FileName="RecipeAPI/Exceptions/BadRequestException.cs" Line="11" Column="1" />
+      <File FileName="RecipeAPI/Exceptions/DatabaseErrorException.cs" Line="8" Column="10" />
+      <File FileName="RecipeAPI/Controllers/BaseController.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Exceptions/UnauthorizedException.cs" Line="6" Column="36" />
+      <File FileName="RecipeAPI/Services/StepRepository.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Services/UserRepository.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Models/UserResponse.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -16,11 +34,12 @@
           <Node name="RecipeAPI" expanded="True">
             <Node name="RecipeAPI" expanded="True">
               <Node name="Controllers" expanded="True" />
-              <Node name="MappingProfile" expanded="True" />
-              <Node name="Models" expanded="True" />
-              <Node name="Services" expanded="True">
-                <Node name="HistoryRepository.cs" selected="True" />
+              <Node name="Exceptions" expanded="True" />
+              <Node name="Middleware" expanded="True" />
+              <Node name="Models" expanded="True">
+                <Node name="UserResponse.cs" selected="True" />
               </Node>
+              <Node name="Services" expanded="True" />
             </Node>
           </Node>
         </State>
