@@ -1,32 +1,38 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Models/UserResponse.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Services/IngredientRepository.cs">
     <Files>
-      <File FileName="RecipeAPI/Models/User.cs" Line="11" Column="9" />
-      <File FileName="RecipeAPI/Models/Dish.cs" Line="24" Column="8" />
+      <File FileName="RecipeAPI/Models/User.cs" Line="20" Column="1" />
+      <File FileName="RecipeAPI/Models/Dish.cs" Line="4" Column="33" />
       <File FileName="RecipeAPI/Startup.cs" Line="38" Column="9" />
-      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="113" Column="22" />
-      <File FileName="RecipeAPI/Services/DishRepository.cs" Line="46" Column="79" />
+      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="19" Column="4" />
+      <File FileName="RecipeAPI/Services/DishRepository.cs" Line="39" Column="48" />
       <File FileName="RecipeAPI/Services/DishService.cs" Line="134" Column="1" />
       <File FileName="RecipeAPI/Services/HistoryRepository.cs" Line="1" Column="1" />
-      <File FileName="RecipeAPI/Services/Repository.cs" Line="49" Column="9" />
+      <File FileName="RecipeAPI/Services/Repository.cs" Line="43" Column="8" />
       <File FileName="RecipeAPI/Middleware/ErrorHandlingMiddleware.cs" Line="44" Column="50" />
       <File FileName="RecipeAPI/appsettings.json" />
       <File FileName="RecipeAPI/appsettings.Development.json" />
       <File FileName="RecipeAPI/settings.json" />
       <File FileName="RecipeAPI/Exceptions/NotFoundException.cs" Line="4" Column="10" />
       <File FileName="RecipeAPI/Program.cs" Line="1" Column="1" />
-      <File FileName="RecipeAPI/Services/UserService.cs" Line="57" Column="10" />
-      <File FileName="RecipeAPI/Controllers/LoginController.cs" Line="1" Column="1" />
-      <File FileName="RecipeAPI/Controllers/UserController.cs" Line="114" Column="1" />
+      <File FileName="RecipeAPI/Services/UserService.cs" Line="73" Column="1" />
+      <File FileName="RecipeAPI/Controllers/LoginController.cs" Line="40" Column="40" />
+      <File FileName="RecipeAPI/Controllers/UserController.cs" Line="18" Column="1" />
       <File FileName="RecipeAPI/Models/UpdateDishRequest.cs" Line="8" Column="9" />
       <File FileName="RecipeAPI/Exceptions/BadRequestException.cs" Line="11" Column="1" />
       <File FileName="RecipeAPI/Exceptions/DatabaseErrorException.cs" Line="8" Column="10" />
       <File FileName="RecipeAPI/Controllers/BaseController.cs" Line="1" Column="1" />
       <File FileName="RecipeAPI/Exceptions/UnauthorizedException.cs" Line="6" Column="36" />
       <File FileName="RecipeAPI/Services/StepRepository.cs" Line="1" Column="1" />
-      <File FileName="RecipeAPI/Services/UserRepository.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Services/UserRepository.cs" Line="40" Column="9" />
       <File FileName="RecipeAPI/Models/UserResponse.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Models/Ingredient.cs" Line="9" Column="24" />
+      <File FileName="RecipeAPI/Models/Category.cs" Line="17" Column="1" />
+      <File FileName="RecipeAPI/Models/History.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Models/HistoryResponse.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Services/CategoryRepository.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Services/IngredientRepository.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -36,10 +42,10 @@
               <Node name="Controllers" expanded="True" />
               <Node name="Exceptions" expanded="True" />
               <Node name="Middleware" expanded="True" />
-              <Node name="Models" expanded="True">
-                <Node name="UserResponse.cs" selected="True" />
+              <Node name="Models" expanded="True" />
+              <Node name="Services" expanded="True">
+                <Node name="IngredientRepository.cs" selected="True" />
               </Node>
-              <Node name="Services" expanded="True" />
             </Node>
           </Node>
         </State>

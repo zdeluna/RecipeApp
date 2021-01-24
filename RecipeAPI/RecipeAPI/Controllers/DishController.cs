@@ -18,13 +18,11 @@ namespace RecipeAPI.Controllers
     [ApiController]
     public class DishController : BaseController
     {
-        private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
         private readonly IDishService _dishService;
 
-        public DishController(DatabaseContext context, IMapper mapper, IDishService dishService)
+        public DishController(IMapper mapper, IDishService dishService)
         {
-            _context = context;
             _mapper = mapper;
             _dishService = dishService;
         }
@@ -115,11 +113,6 @@ namespace RecipeAPI.Controllers
             await _dishService.Remove(id);
 
             return dish;
-        }
-
-        private bool DishExists(long id)
-        {
-            return _context.Dishes.Any(e => e.ID == id);
         }
 
     }

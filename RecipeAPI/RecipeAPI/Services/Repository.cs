@@ -51,6 +51,16 @@ namespace RecipeAPI.Services
             return entity;
         }
 
+        public async Task<IEnumerable<TEntity>> AddRange(IEnumerable<TEntity> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+
+            await SaveUpdate();
+
+            return entities;
+        }
+
+
         public async Task<TEntity> RemoveById(long id)
         {
             var entity  = await _dbSet.FindAsync(id);

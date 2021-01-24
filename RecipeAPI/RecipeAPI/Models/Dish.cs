@@ -12,6 +12,7 @@ namespace RecipeAPI.Models
         [StringLength(100)]
         public string Name { get; set; }
 
+        [ForeignKey("Category")]
         public long Category { get; set; }
 
         [StringLength(100)]

@@ -3,6 +3,7 @@ using RecipeAPI.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace RecipeAPI.Services
 {
@@ -17,12 +18,15 @@ namespace RecipeAPI.Services
 
     public class UserRepository : Repository<User>, IUserRepository
     {
-        public UserRepository(DatabaseContext context) : base(context)
+        private readonly IMapper _mapper;
+
+        public UserRepository(DatabaseContext context, IMapper mapper) : base(context)
         {
+            mapper = _mapper;
         }
 
         public async Task<IEnumerable<User>> GetAllUsers() {
-            return await GetAll().ToListAsync();
+            return await GetAll().Include(s => s.Categories).ToListAsync();
         }
 
         public async Task<User> GetUserById(long id)
@@ -34,6 +38,18 @@ namespace RecipeAPI.Services
         {
             return await Add(user);
         }
+
+        /*
+        public async Task<Dish> UpdateAll(UpdateUserRequest updatedUser, long id)
+        {
+
+            var dish = await GetUserById(id);
+            var mappedDish = _mapper.Map(updatedDish, dish);
+
+            await SaveUpdate();
+
+            return mappedDish;
+        }*/
 
         public async Task<User> RemoveUser(long id)
         {

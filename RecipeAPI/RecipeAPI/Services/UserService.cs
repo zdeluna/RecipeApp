@@ -34,22 +34,24 @@ namespace RecipeAPI.Services
     {
         private readonly DatabaseContext _context;
         private readonly IConfiguration _config;
-        private readonly IUserRepository _repo;
+        private readonly IUserRepository _userRepo;
+        private readonly ICategoryRepository _categoryRepo;
 
-        public UserService(DatabaseContext context, IConfiguration config, IUserRepository repo)
+        public UserService(DatabaseContext context, IConfiguration config, IUserRepository userRepo, ICategoryRepository categoryRepo)
         {
             _context = context;
             _config = config;
-            _repo = repo;
+            _userRepo = userRepo;
+            _categoryRepo = categoryRepo;
               
         }
 
         public async Task<IEnumerable<User>> GetAll() {
-            return await _repo.GetAllUsers();
+            return await _userRepo.GetAllUsers();
         }
 
         public async Task<User> GetById(long id) {
-            var user = await _repo.GetUserById(id);
+            var user = await _userRepo.GetUserById(id);
             if (user == null)
                 throw new NotFoundException($"User with ID {id} not found");
             
@@ -59,14 +61,24 @@ namespace RecipeAPI.Services
 
         public async Task<User> Add(User user) {
             user.Password = HashPassword(user.Password);
+
+            var categories = new Category[]
+            {
+                new Category{UserID=user.ID, Name="Dinner", Order=0},
+                new Category{UserID=user.ID, Name="Lunch", Order=1},
+                new Category{UserID=user.ID, Name="Fast Meals", Order=2},
+                new Category{UserID=user.ID, Name="Salads", Order=3},
+            };
+
+            user.Categories = categories;
          
-            return await _repo.AddUser(user);
+            return await _userRepo.AddUser(user);
         }
 
         public async Task<User> Remove(long id) {
             await GetById(id);
 
-            return await _repo.RemoveUser(id);
+            return await _userRepo.RemoveUser(id);
         }
 
         public bool UserExistsWithUserName(string username)
@@ -81,7 +93,7 @@ namespace RecipeAPI.Services
 
         public async Task<User> AuthenticateUser(User loginCredentials)
         {
-            User user = await _repo.GetByUsername(loginCredentials.UserName);
+            User user = await _userRepo.GetByUsername(loginCredentials.UserName);
             if (user == null) return null;
 
             if (BCrypt.Net.BCrypt.Verify(loginCredentials.Password, user.Password))
