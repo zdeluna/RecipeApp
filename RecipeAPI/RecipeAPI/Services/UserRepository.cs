@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace RecipeAPI.Services
 {
@@ -14,6 +18,7 @@ namespace RecipeAPI.Services
         Task<User> AddUser(User user);
         Task<User> RemoveUser(long id);
         Task<User> GetByUsername(string userName);
+        Task<User> Update(JsonPatchDocument<UpdateUserRequest> patchDish, long id, ModelStateDictionary ModelState);
     }
 
     public class UserRepository : Repository<User>, IUserRepository
@@ -31,7 +36,7 @@ namespace RecipeAPI.Services
 
         public async Task<User> GetUserById(long id)
         {
-            return await GetAll().FirstOrDefaultAsync(x => x.ID == id);
+            return await GetAll().Include(s => s.Categories).FirstOrDefaultAsync(x => x.ID == id);
         }
 
         public async Task<User> AddUser(User user)
@@ -39,17 +44,27 @@ namespace RecipeAPI.Services
             return await Add(user);
         }
 
-        /*
-        public async Task<Dish> UpdateAll(UpdateUserRequest updatedUser, long id)
+        public async Task<User> Update(JsonPatchDocument<UpdateUserRequest> patchUser, long id, ModelStateDictionary ModelState)
         {
 
-            var dish = await GetUserById(id);
-            var mappedDish = _mapper.Map(updatedDish, dish);
+            var user  = await GetUserById(id);
+            var updateUserRequest = _mapper.Map<UpdateUserRequest>(user);
 
+            patchUser.ApplyTo(updateUserRequest, ModelState);
+
+            /*
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }*/
+
+            var updatedUser = _mapper.Map(updateUserRequest, user);
             await SaveUpdate();
 
-            return mappedDish;
-        }*/
+            return updatedUser;
+
+
+        }
 
         public async Task<User> RemoveUser(long id)
         {

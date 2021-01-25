@@ -11,7 +11,6 @@ namespace RecipeAPI.MappingProfile
     {
         public AutoMapperProfile()
         {
-            
             CreateMap<User, UserResponse>();
             CreateMap<Dish, DishResponse>()
                 .ForMember(dest => dest.History, opt =>
@@ -30,10 +29,7 @@ namespace RecipeAPI.MappingProfile
                 .ForMember(dest => dest.Ingredients, m => m.MapFrom(src => src.Ingredients))
                 .ForMember(dest => dest.Steps, m => m.MapFrom(src => src.Steps));
             CreateMap<Dish, UpdateDishRequest>();
-
-
-            //CreateMap<JsonPatchDocument<Dish>, JsonPatchDocument<UpdateDishRequest>>();
-            //CreateMap<Operation<Dish>, Operation<UpdateDishRequest>>();
+            CreateMap<User, UpdateUserRequest>();
 
 
         }

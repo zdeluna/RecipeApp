@@ -15,6 +15,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using RecipeAPI.Services;
 using RecipeAPI.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace RecipeAPI.Controllers
 {
@@ -67,6 +68,29 @@ namespace RecipeAPI.Controllers
             response.Token = tokenString;
 
             return CreatedAtAction("GetUser", new { id = user.ID, token = tokenString }, response);
+        }
+
+        // PATCH: api/User/5
+        [HttpPatch("{id}")]
+        [Authorize(Policy = Policies.User)]
+        public async Task<ActionResult<UpdateUserRequest>> PatchUser(long id, [FromBody] JsonPatchDocument<UpdateUserRequest> patchDish)
+        {
+            if (patchDish != null)
+            {
+                var user = await _userService.GetById(id);
+
+                //_dishService.VerifyUser(GetUserId(), dish.ID);
+
+                await _userService.Update(id, patchUser, ModelState);
+
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+
+
         }
 
         // DELETE: api/User/5

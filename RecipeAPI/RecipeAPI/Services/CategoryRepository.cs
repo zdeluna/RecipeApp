@@ -10,6 +10,7 @@ namespace RecipeAPI.Services
 
     public interface ICategoryRepository
     {
+        Task<IEnumerable<Category>> AddCategories(IEnumerable<Category> categories);
         Task<bool> RemoveAllCategories(long userId);
 
     }
@@ -25,7 +26,10 @@ namespace RecipeAPI.Services
             return await GetAll().Where(x => x.UserID == userId).ToListAsync();
         }
 
-
+        public async Task<IEnumerable<Category>> AddCategories(IEnumerable<Category> categories)
+        {
+            return await AddRange(categories);
+        }
 
         public async Task<bool> RemoveAllCategories(long userId)
         {

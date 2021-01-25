@@ -62,17 +62,20 @@ namespace RecipeAPI.Services
         public async Task<User> Add(User user) {
             user.Password = HashPassword(user.Password);
 
+            var newUser = await _userRepo.AddUser(user);
+
             var categories = new Category[]
             {
-                new Category{UserID=user.ID, Name="Dinner", Order=0},
-                new Category{UserID=user.ID, Name="Lunch", Order=1},
-                new Category{UserID=user.ID, Name="Fast Meals", Order=2},
-                new Category{UserID=user.ID, Name="Salads", Order=3},
+                new Category{UserID=newUser.ID, Name="Dinner", Order=0},
+                new Category{UserID=newUser.ID, Name="Lunch", Order=1},
+                new Category{UserID=newUser.ID, Name="Fast Meals", Order=2},
+                new Category{UserID=newUser.ID, Name="Salads", Order=3},
             };
 
-            user.Categories = categories;
-         
-            return await _userRepo.AddUser(user);
+            await _categoryRepo.AddCategories(categories);
+
+            return newUser;
+
         }
 
         public async Task<User> Remove(long id) {

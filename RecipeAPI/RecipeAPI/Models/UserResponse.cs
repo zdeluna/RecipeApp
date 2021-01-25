@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace RecipeAPI.Models
 {
     public class UserResponse
@@ -10,6 +12,8 @@ namespace RecipeAPI.Models
         public string Token { get; set; }
 
         public DateTime LastLoggedIn { get; set; }
+        
+        public ICollection<Category> Categories { get; set; }
 
     }
 }
