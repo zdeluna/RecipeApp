@@ -3,11 +3,11 @@ using RecipeAPI.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace RecipeAPI.Services
 {
@@ -18,7 +18,7 @@ namespace RecipeAPI.Services
         Task<User> AddUser(User user);
         Task<User> RemoveUser(long id);
         Task<User> GetByUsername(string userName);
-        Task<User> Update(JsonPatchDocument<UpdateUserRequest> patchDish, long id, ModelStateDictionary ModelState);
+        Task<User> UpdateUser(JsonPatchDocument<UpdateUserRequest> patchUser, long id, ModelStateDictionary ModelState);
     }
 
     public class UserRepository : Repository<User>, IUserRepository
@@ -27,7 +27,7 @@ namespace RecipeAPI.Services
 
         public UserRepository(DatabaseContext context, IMapper mapper) : base(context)
         {
-            mapper = _mapper;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<User>> GetAllUsers() {
@@ -44,12 +44,13 @@ namespace RecipeAPI.Services
             return await Add(user);
         }
 
-        public async Task<User> Update(JsonPatchDocument<UpdateUserRequest> patchUser, long id, ModelStateDictionary ModelState)
+        public async Task<User> UpdateUser(JsonPatchDocument<UpdateUserRequest> patchUser, long id, ModelStateDictionary ModelState)
         {
 
             var user  = await GetUserById(id);
-            var updateUserRequest = _mapper.Map<UpdateUserRequest>(user);
 
+            var updateUserRequest = _mapper.Map<UpdateUserRequest>(user);
+            
             patchUser.ApplyTo(updateUserRequest, ModelState);
 
             /*
@@ -60,7 +61,6 @@ namespace RecipeAPI.Services
 
             var updatedUser = _mapper.Map(updateUserRequest, user);
             await SaveUpdate();
-
             return updatedUser;
 
 

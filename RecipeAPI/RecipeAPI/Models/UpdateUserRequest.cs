@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 namespace RecipeAPI.Models
 {
     public class UpdateUserRequest
     {
-        public ICollection<Category> Categories { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string UserRole { get; set; }
+        public DateTime LastLoggedIn { get; set; }
+
+        public IEnumerable<UpdateCategoryRequest> Categories { get; set; }
     }
 }

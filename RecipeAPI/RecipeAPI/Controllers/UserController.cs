@@ -73,15 +73,15 @@ namespace RecipeAPI.Controllers
         // PATCH: api/User/5
         [HttpPatch("{id}")]
         [Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<UpdateUserRequest>> PatchUser(long id, [FromBody] JsonPatchDocument<UpdateUserRequest> patchDish)
+        public async Task<ActionResult<UpdateUserRequest>> PatchUser(long id, [FromBody] JsonPatchDocument<UpdateUserRequest> patchUser)
         {
-            if (patchDish != null)
+            if (patchUser != null)
             {
                 var user = await _userService.GetById(id);
 
                 //_dishService.VerifyUser(GetUserId(), dish.ID);
 
-                await _userService.Update(id, patchUser, ModelState);
+                await _userService.Update(patchUser, id, ModelState);
 
                 return NoContent();
             }

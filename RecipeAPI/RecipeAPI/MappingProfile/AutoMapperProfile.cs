@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using RecipeAPI.Models;
 using System.Linq;
@@ -29,9 +30,13 @@ namespace RecipeAPI.MappingProfile
                 .ForMember(dest => dest.Ingredients, m => m.MapFrom(src => src.Ingredients))
                 .ForMember(dest => dest.Steps, m => m.MapFrom(src => src.Steps));
             CreateMap<Dish, UpdateDishRequest>();
-            CreateMap<User, UpdateUserRequest>();
 
+            CreateMap<UpdateUserRequest, User>();
+            CreateMap<User, UpdateUserRequest>();
+            CreateMap<Category, UpdateCategoryRequest>();
+            CreateMap<UpdateCategoryRequest, Category>();
 
         }
+    
     }
 }

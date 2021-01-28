@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BCrypt;
 using RecipeAPI.Exceptions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
 
 
 namespace RecipeAPI.Services
@@ -26,7 +29,8 @@ namespace RecipeAPI.Services
         Task<IEnumerable<User>> GetAll();
         Task<User> GetById(long id);
         Task<User> Add(User user);
-        Task<User> Remove(long id); 
+        Task<User> Remove(long id);
+        Task<User> Update(JsonPatchDocument<UpdateUserRequest> patchUser, long id, ModelStateDictionary ModelState);
 
     }
 
@@ -63,7 +67,7 @@ namespace RecipeAPI.Services
             user.Password = HashPassword(user.Password);
 
             var newUser = await _userRepo.AddUser(user);
-
+            
             var categories = new Category[]
             {
                 new Category{UserID=newUser.ID, Name="Dinner", Order=0},
@@ -77,6 +81,12 @@ namespace RecipeAPI.Services
             return newUser;
 
         }
+
+        public async Task<User> Update(JsonPatchDocument<UpdateUserRequest> patchUser, long id, ModelStateDictionary ModelState)
+        {
+            return await _userRepo.UpdateUser(patchUser, id, ModelState);
+        }
+
 
         public async Task<User> Remove(long id) {
             await GetById(id);
