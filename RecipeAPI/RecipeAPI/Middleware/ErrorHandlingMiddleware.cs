@@ -46,6 +46,11 @@ namespace RecipeAPI.Middleware
                     response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 }
 
+                else if (exceptionType == typeof(BadRequestException))
+                {
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
+                }
+
                 else
                 {
 

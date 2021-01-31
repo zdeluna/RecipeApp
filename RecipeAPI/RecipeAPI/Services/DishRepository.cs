@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using RecipeAPI.Exceptions;
 
 namespace RecipeAPI.Services
 {
@@ -81,12 +82,11 @@ namespace RecipeAPI.Services
             var updateDishRequest = _mapper.Map<UpdateDishRequest>(dish);
 
             patchDish.ApplyTo(updateDishRequest, ModelState);
-            
-            /*
+
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
-            }*/
+                throw new BadRequestException($"Bad Request. You attempted to update fields that do not exist for dish");
+            }
 
             var updatedDish = _mapper.Map(updateDishRequest, dish);
             await SaveUpdate();

@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using RecipeAPI.Exceptions;
 
 namespace RecipeAPI.Services
 {
@@ -53,17 +54,14 @@ namespace RecipeAPI.Services
           
             patchUser.ApplyTo(updateUserRequest, ModelState);
 
-            /*
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
-            }*/
+                throw new BadRequestException($"Bad Request. You attempted to update fields that do not exist for user");
+            }
 
             _mapper.Map(updateUserRequest, user);
             await Update(user);
             return user;
-
-
         }
 
         public async Task<User> RemoveUser(long id)
