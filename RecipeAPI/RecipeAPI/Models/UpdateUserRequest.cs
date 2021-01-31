@@ -11,6 +11,6 @@ namespace RecipeAPI.Models
         public string UserRole { get; set; }
         public DateTime LastLoggedIn { get; set; }
 
-        public IEnumerable<UpdateCategoryRequest> Categories { get; set; }
+        public List<UpdateCategoryRequest> Categories { get; set; }
     }
 }

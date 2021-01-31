@@ -31,12 +31,37 @@ namespace RecipeAPI.MappingProfile
                 .ForMember(dest => dest.Steps, m => m.MapFrom(src => src.Steps));
             CreateMap<Dish, UpdateDishRequest>();
 
-            CreateMap<UpdateUserRequest, User>();
+            CreateMap<Category, Category>();
+
+
             CreateMap<User, UpdateUserRequest>();
+            CreateMap<UpdateUserRequest, User>()
+                .ForMember(d => d.Categories, opt => opt.Ignore())
+                .AfterMap((src, dest, context) =>
+                {
+                    foreach (var categoriesDTO in src.Categories)
+                    {
+                        context.Mapper.Map(categoriesDTO, dest.Categories.SingleOrDefault(c => c.ID == categoriesDTO.ID));
+                    }
+                });
+
+
             CreateMap<Category, UpdateCategoryRequest>();
             CreateMap<UpdateCategoryRequest, Category>();
 
         }
-    
+
+        /*
+        private void AddOrUpdateCategories(UpdateUserRequest dto, User user)
+        {
+            foreach (var categoriesDTO in dto.Categories)
+            {
+                var category = user.Categories.SingleOrDefault(c => c.ID == categoriesDTO.ID);
+                var a = AutoMapper.Map(categoriesDTO, category);
+              
+            
+            }
+
+        }*/
     }
 }

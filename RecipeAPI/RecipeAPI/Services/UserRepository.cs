@@ -50,7 +50,7 @@ namespace RecipeAPI.Services
             var user  = await GetUserById(id);
 
             var updateUserRequest = _mapper.Map<UpdateUserRequest>(user);
-            
+          
             patchUser.ApplyTo(updateUserRequest, ModelState);
 
             /*
@@ -59,9 +59,9 @@ namespace RecipeAPI.Services
                 return BadRequest(ModelState);
             }*/
 
-            var updatedUser = _mapper.Map(updateUserRequest, user);
-            await SaveUpdate();
-            return updatedUser;
+            _mapper.Map(updateUserRequest, user);
+            await Update(user);
+            return user;
 
 
         }

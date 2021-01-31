@@ -15,6 +15,7 @@ namespace RecipeAPI.Services
         Task<TEntity> Add(TEntity entity);
         Task<TEntity> RemoveById(long id);
         Task<TEntity> Remove(TEntity entity);
+        Task<TEntity> Update(TEntity entity);
         Task SaveUpdate();
     }
 
@@ -60,6 +61,15 @@ namespace RecipeAPI.Services
             return entities;
         }
 
+        public async Task<TEntity> Update(TEntity entity)
+        {
+            _dbSet.Update(entity);
+
+            await SaveUpdate();
+
+            return entity;
+        }
+
 
         public async Task<TEntity> RemoveById(long id)
         {
@@ -91,8 +101,9 @@ namespace RecipeAPI.Services
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new DatabaseErrorException($"An error occured while sending updates to the database");
             }
         }
