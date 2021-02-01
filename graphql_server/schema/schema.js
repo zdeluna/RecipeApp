@@ -66,13 +66,21 @@ const typeDefs = gql`
     }
 
     type User {
-        googleId: String
-        email: String
+        userName: String
+        categories: [Category]
+    }
+
+    type Category {
+        id: ID
+        userID: ID
+        name: String
+        order: Int
     }
 
     type Query {
         dish(id: ID!): Dish
         dishes: [Dish]
+        user(id: ID!): User
     }
 
     type Token {

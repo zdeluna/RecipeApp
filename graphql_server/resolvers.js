@@ -4,7 +4,9 @@ module.exports = {
             dataSources.dishAPI.getDishById({ id }),
         dishes: (_, undefined, { dataSources }) => {
             return dataSources.dishAPI.getAllDishes();
-        }
+        },
+        user: (_, { id }, { dataSources }) =>
+            dataSources.userAPI.getUserById({ id })
     },
     Mutation: {
         addDish: async (_, { name, category }, { dataSources }) => {
