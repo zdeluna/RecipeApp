@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { ADD_USER } from "../../api/mutations/user/createUser";
 import { LOG_IN_USER } from "../../api/mutations/user/signInUser";
 import { useApolloClient } from "@apollo/react-hooks";
 import AlertBanner from "../../components/AlertBanner";
+import { AuthContext } from "../../AuthProvider";
 
 const SignUp = props => {
     const [email, setEmail] = useState("");
@@ -15,14 +16,16 @@ const SignUp = props => {
     const client = useApolloClient();
 
     const [showAlert, setShowAlert] = useState("");
+    const { signUp } = useContext(AuthContext);
 
-    const [addUser] = useMutation(ADD_USER, {
-        async onCompleted({ addUser }) {
-            localStorage.setItem("token", addUser.token);
+    const handleSignUp = async event => {
+        try {
+            event.preventDefault();
+            client.resetStore();
+            const response = await signUp(email, password);
 
             props.history.push("/users/category");
-        },
-        async onError(error) {
+        } catch (error) {
             switch (error.message) {
                 case "GraphQL error: Password is not valid.":
                     alert("Password is not valid.");
@@ -34,21 +37,6 @@ const SignUp = props => {
                     setShowAlert("User already exists.");
                     break;
             }
-        }
-    });
-
-    const handleSignUp = async event => {
-        event.preventDefault();
-        client.resetStore();
-        try {
-            await addUser({
-                variables: {
-                    username: email,
-                    password: password
-                }
-            });
-        } catch (error) {
-            alert(error);
         }
     };
     const handleEmailChange = event => {

@@ -1,24 +1,24 @@
-import React, {Component} from 'react';
-import CategoryButton from '../../components/CategoryButton';
-import {Redirect} from 'react-router-dom';
-import {Row, Col, Container} from 'reactstrap';
-import './Category.css';
+import React, { Component } from "react";
+import CategoryButton from "../../components/CategoryButton";
+import { Redirect } from "react-router-dom";
+import { Row, Col, Container } from "reactstrap";
+import "./Category.css";
 
 class Category extends Component {
     state = {
         categoryButtons: [
-            {id: 1, value: 'Dinner'},
-            {id: 2, value: 'Breakfast'},
-            {id: 3, value: 'Salads'},
-            {id: 4, value: 'Fast Meals'},
+            { id: 1, value: "Dinner" },
+            { id: 2, value: "Breakfast" },
+            { id: 3, value: "Salads" },
+            { id: 4, value: "Fast Meals" }
         ],
-
+        user: {},
         redirect: false,
-        category: 0,
+        category: 0
     };
 
     handleClick = (e, id) => {
-        this.setState({redirect: true, category: id});
+        this.setState({ redirect: true, category: id });
     };
 
     render() {
@@ -40,7 +40,7 @@ class Category extends Component {
                     <h3 className="col-centered">Categories</h3>
                 </Row>
                 {this.state.categoryButtons.map(categoryButton => (
-                    <Col key={categoryButton.id + 'Column'}>
+                    <Col key={categoryButton.id + "Column"}>
                         <CategoryButton
                             key={categoryButton.id}
                             onClick={e =>

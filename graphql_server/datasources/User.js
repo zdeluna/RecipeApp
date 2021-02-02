@@ -7,13 +7,13 @@ class UserAPI extends RESTDataSource {
         super();
 
         if (process.env.GRAPH_ENV == "test") {
-            this.baseURL = "https://localhost:5001/api/User";
+            this.baseURL = "https://localhost:5001/api/";
         } else {
             this.baseURL = "https://recipescheduler.azurewebsites.net/api/User";
         }
     }
     async getUserById({ id }) {
-        const res = await this.get(`/${id}`, undefined, {
+        const res = await this.get(`/User/${id}`, undefined, {
             headers: { Authorization: this.context.token }
         });
         return res;
