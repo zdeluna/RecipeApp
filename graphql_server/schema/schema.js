@@ -23,6 +23,7 @@ const typeDefs = gql`
         success: Boolean!
         message: String
         token: String
+        id: ID
     }
 
     type Step {

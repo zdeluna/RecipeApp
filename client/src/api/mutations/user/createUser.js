@@ -6,6 +6,7 @@ export const ADD_USER = gql`
             success
             message
             token
+            id
         }
     }
 `;

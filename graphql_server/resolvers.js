@@ -48,7 +48,8 @@ module.exports = {
             return {
                 success: true,
                 message: "The user was created successfully",
-                token: result.token
+                token: result.token,
+                id: result.id
             };
         },
         addDishUrl: async (_, { id, url }, { dataSources }) => {

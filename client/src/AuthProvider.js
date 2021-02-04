@@ -11,7 +11,11 @@ export const AuthProvider = ({ children }) => {
     const client = useApolloClient();
     const [user, setUser] = useState(null);
 
-    const [getUser, { called, loading, data }] = useLazyQuery(GET_USER);
+    const [getUser, { called, loading, data }] = useLazyQuery(GET_USER, {
+        async onCompleted({ user }) {
+            setUser(user);
+        }
+    });
 
     const [signInUser] = useMutation(LOG_IN_USER, {
         errorPolicy: "all",
@@ -19,6 +23,7 @@ export const AuthProvider = ({ children }) => {
             client.resetStore();
 
             localStorage.setItem("token", signInUser.token);
+            getUser({ variables: { id: addUser.id } });
         }
     });
 
@@ -26,9 +31,7 @@ export const AuthProvider = ({ children }) => {
         async onCompleted({ addUser }) {
             localStorage.setItem("token", addUser.token);
 
-            let response = await getUser({ variables: { id: addUser.id } });
-            console.log(response);
-            setUser(response);
+            getUser({ variables: { id: addUser.id } });
         }
     });
 
