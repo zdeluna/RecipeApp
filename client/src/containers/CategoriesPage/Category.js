@@ -27,6 +27,11 @@ const Category = props => {
         props.history.push(`/users/category/${id}`);
     };
 
+    const handleChange = event => {
+        console.log(event.target.value);
+        console.log(event);
+    };
+
     return (
         <Container>
             <Row>
@@ -40,9 +45,17 @@ const Category = props => {
                 </Button>
             </Row>
             {editMode
-                ? categoryButtons.map(categoryButton => (
+                ? categoryButtons.map((categoryButton, index) => (
                       <Col key={categoryButton.id + "Column"}>
-                          <Input type="text" value={""} />
+                          <Button color="primary" size="lg">
+                              <Input
+                                  id={index}
+                                  type="text"
+                                  value={categoryButton.name}
+                                  onChange={handleChange}
+                                  onBlur={handleChange}
+                              />
+                          </Button>
                       </Col>
                   ))
                 : categoryButtons.map(categoryButton => (

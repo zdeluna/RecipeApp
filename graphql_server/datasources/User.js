@@ -36,8 +36,6 @@ class UserAPI extends RESTDataSource {
             UserName: username,
             Password: password
         });
-        console.log("Sign in response");
-        console.log(res);
         return res;
     }
 }

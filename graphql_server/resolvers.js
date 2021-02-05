@@ -67,7 +67,8 @@ module.exports = {
             });
             return {
                 success: true,
-                token: response.token
+                token: response.token,
+                id: response.id
             };
         }
     }

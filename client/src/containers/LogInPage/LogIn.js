@@ -18,6 +18,8 @@ const LogIn = props => {
 
     const handleLogIn = async event => {
         try {
+            console.log(email);
+            console.log(password);
             const response = await login(email, password);
             props.history.push("/users/category");
         } catch (error) {

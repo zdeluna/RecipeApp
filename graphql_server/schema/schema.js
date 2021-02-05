@@ -26,6 +26,11 @@ const typeDefs = gql`
         id: ID
     }
 
+    type LoginUserResponse {
+        token: String!
+        id: ID!
+    }
+
     type Step {
         id: Int
         value: String
@@ -106,7 +111,7 @@ const typeDefs = gql`
         addDishUrl(id: ID!, url: String): UpdateDishResponse
         deleteDish(id: ID!): DeleteDishResponse
         addUser(username: String!, password: String!): CreateUserResponse
-        signInUser(username: String!, password: String!): Token!
+        signInUser(username: String!, password: String!): LoginUserResponse
     }
 `;
 

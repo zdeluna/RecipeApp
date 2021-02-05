@@ -14,16 +14,16 @@ export const AuthProvider = ({ children }) => {
     const [getUser, { called, loading, data }] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
             setUser(user);
+            console.log(user);
+            console.log(user.id);
         }
     });
 
     const [signInUser] = useMutation(LOG_IN_USER, {
         errorPolicy: "all",
         async onCompleted({ signInUser }) {
-            client.resetStore();
-
             localStorage.setItem("token", signInUser.token);
-            getUser({ variables: { id: addUser.id } });
+            getUser({ variables: { id: signInUser.id } });
         }
     });
 

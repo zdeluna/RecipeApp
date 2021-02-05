@@ -47,8 +47,9 @@ namespace RecipeAPI.Controllers
                 var tokenString = _userService.GenerateJWTToken(user);
                 response = Ok(new
                 {
-                    token = tokenString
-                });
+                    token = tokenString,
+                    id = user.ID
+                }); 
             }
             return response;
         }
