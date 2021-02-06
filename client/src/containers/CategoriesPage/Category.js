@@ -28,28 +28,48 @@ const Category = props => {
     };
 
     const handleChange = event => {
-        console.log(event.target.value);
-        console.log(event);
+        let newCategories = [...categoryButtons];
+        for (var i = 0; i < newCategories.length; i++) {
+            if (newCategories[i].id == event.target.id) {
+                newCategories[i].name = event.target.value;
+            }
+        }
+
+        setCategoryButtons(newCategories);
+    };
+
+    const saveData = () => {
+        setEditMode(false);
     };
 
     return (
         <Container>
             <Row>
                 <h3 className="col-centered">Categories</h3>
-                <Button
-                    color="primary"
-                    size="lg"
-                    onClick={() => setEditMode(true)}
-                >
-                    Edit
-                </Button>
+                {editMode ? (
+                    <Button
+                        color="primary"
+                        size="lg"
+                        onClick={() => saveData()}
+                    >
+                        Save
+                    </Button>
+                ) : (
+                    <Button
+                        color="primary"
+                        size="lg"
+                        onClick={() => setEditMode(true)}
+                    >
+                        Edit
+                    </Button>
+                )}
             </Row>
             {editMode
                 ? categoryButtons.map((categoryButton, index) => (
                       <Col key={categoryButton.id + "Column"}>
                           <Button color="primary" size="lg">
                               <Input
-                                  id={index}
+                                  id={categoryButton.id}
                                   type="text"
                                   value={categoryButton.name}
                                   onChange={handleChange}
