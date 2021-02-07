@@ -44,6 +44,7 @@ namespace RecipeAPI.Controllers
 
         // GET: api/User/5
         [HttpGet("{id}")]
+        [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<User>> GetUser(long id)
         {
             var user = await _userService.GetById(id);

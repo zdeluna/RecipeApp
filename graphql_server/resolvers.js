@@ -52,6 +52,18 @@ module.exports = {
                 id: result.id
             };
         },
+        updateUser: async (_, { id, categories }, { dataSources }) => {
+            const result = await dataSources.userAPI.updateUser({
+                id,
+                categories
+            });
+            return {
+                success: true,
+                message: "The user was successfully updated",
+                user: result
+            };
+        },
+
         addDishUrl: async (_, { id, url }, { dataSources }) => {
             const result = dataSources.dishAPI.addDishUrl({ id, url });
             return {

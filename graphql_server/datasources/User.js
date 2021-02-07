@@ -25,9 +25,22 @@ class UserAPI extends RESTDataSource {
             Password: password,
             UserRole: "User"
         });
-        console.log("Create user response");
-        console.log(res);
 
+        return res;
+    }
+
+    async updateUser({ id, categories }) {
+        let updatedCategories = [
+            {
+                op: "replace",
+                path: "/categories",
+                value: categories
+            }
+        ];
+
+        const res = await this.patch(`/User/${id}`, updatedCategories, {
+            headers: { Authorization: this.context.token }
+        });
         return res;
     }
 

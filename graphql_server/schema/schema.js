@@ -26,6 +26,12 @@ const typeDefs = gql`
         id: ID
     }
 
+    type UpdateUserResponse {
+        success: Boolean!
+        message: String
+        user: User
+    }
+
     type LoginUserResponse {
         token: String!
         id: ID!
@@ -83,6 +89,13 @@ const typeDefs = gql`
         order: Int
     }
 
+    input CategoryInput {
+        id: ID
+        userID: ID
+        name: String
+        order: Int
+    }
+
     type Query {
         dish(id: ID!): Dish
         dishes: [Dish]
@@ -111,6 +124,7 @@ const typeDefs = gql`
         addDishUrl(id: ID!, url: String): UpdateDishResponse
         deleteDish(id: ID!): DeleteDishResponse
         addUser(username: String!, password: String!): CreateUserResponse
+        updateUser(id: ID!, categories: [CategoryInput]): UpdateUserResponse
         signInUser(username: String!, password: String!): LoginUserResponse
     }
 `;
