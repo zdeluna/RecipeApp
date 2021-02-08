@@ -78,6 +78,7 @@ const typeDefs = gql`
     }
 
     type User {
+        id: ID
         userName: String
         categories: [Category]
     }

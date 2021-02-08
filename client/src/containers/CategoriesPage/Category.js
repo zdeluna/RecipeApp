@@ -4,14 +4,16 @@ import { Redirect } from "react-router-dom";
 import { Button, Row, Col, Container, Input } from "reactstrap";
 import "./Category.css";
 import { AuthContext } from "../../AuthProvider";
+import { UPDATE_USER } from "../../api/mutations/user/updateUser";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 
 const Category = props => {
+    const [updateUser] = useMutation(UPDATE_USER);
     const [categoryButtons, setCategoryButtons] = useState([]);
 
     const [category, setCategory] = useState(0);
     const [editMode, setEditMode] = useState(false);
     const { user } = useContext(AuthContext);
-    console.log(user);
 
     useEffect(
         () => {
@@ -40,6 +42,7 @@ const Category = props => {
 
     const saveData = () => {
         setEditMode(false);
+        updateUser({ variables: { id: user.id, categories: categoryButtons } });
     };
 
     return (
