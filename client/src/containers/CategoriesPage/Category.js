@@ -1,5 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import CategoryButton from "../../components/CategoryButton";
+import Center from "../../components/Center";
+import Right from "../../components/Right";
 import { Redirect } from "react-router-dom";
 import { Button, Row, Col, Container, Input } from "reactstrap";
 import "./Category.css";
@@ -48,47 +50,61 @@ const Category = props => {
     return (
         <Container>
             <Row>
-                <h3 className="col-centered">Categories</h3>
-                {editMode ? (
-                    <Button
-                        color="primary"
-                        size="lg"
-                        onClick={() => saveData()}
-                    >
-                        Save
-                    </Button>
-                ) : (
-                    <Button
-                        color="primary"
-                        size="lg"
-                        onClick={() => setEditMode(true)}
-                    >
-                        Edit
-                    </Button>
-                )}
+                <Center>
+                    <h3>Categories</h3>
+                </Center>
+                <Right>
+                    {editMode ? (
+                        <Button
+                            color="secondary"
+                            size="lg"
+                            onClick={() => saveData()}
+                        >
+                            Save
+                        </Button>
+                    ) : (
+                        <Button
+                            color="secondary"
+                            size="lg"
+                            onClick={() => setEditMode(true)}
+                        >
+                            Edit
+                        </Button>
+                    )}
+                </Right>
             </Row>
             {editMode
                 ? categoryButtons.map((categoryButton, index) => (
-                      <Col key={categoryButton.id + "Column"}>
-                          <Button color="primary" size="lg">
-                              <Input
-                                  id={categoryButton.id}
-                                  type="text"
-                                  value={categoryButton.name}
-                                  onChange={handleChange}
-                                  onBlur={handleChange}
-                              />
-                          </Button>
-                      </Col>
+                      <Center>
+                          <Row key={categoryButton.id + "Column"}>
+                              <Col>
+                                  <Button color="primary" size="lg">
+                                      <Input
+                                          id={categoryButton.id}
+                                          type="text"
+                                          value={categoryButton.name}
+                                          onChange={handleChange}
+                                          onBlur={handleChange}
+                                      />
+                                  </Button>
+                              </Col>
+                          </Row>
+                      </Center>
                   ))
                 : categoryButtons.map(categoryButton => (
-                      <Col key={categoryButton.id + "Column"}>
-                          <CategoryButton
-                              key={categoryButton.id}
-                              onClick={e => handleClick(e, categoryButton.id)}
-                              value={categoryButton.name}
-                          />
-                      </Col>
+                      <Center>
+                          <Row key={categoryButton.id + "Column"}>
+                              <Col>
+                                  <CategoryButton
+                                      key={categoryButton.id}
+                                      onClick={e =>
+                                          handleClick(e, categoryButton.id)
+                                      }
+                                      value={categoryButton.name}
+                                  />
+                              </Col>
+                          </Row>
+                      </Center>
                   ))}
         </Container>
     );
