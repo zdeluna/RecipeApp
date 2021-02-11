@@ -9,11 +9,22 @@ export const AuthContext = React.createContext({});
 
 export const AuthProvider = ({ children }) => {
     const client = useApolloClient();
-    const [user, setUser] = useState(null);
+    let userData = null;
+
+    try {
+        const { user } = client.readQuery({
+            query: GET_USER,
+            variables: { id: 1 }
+        });
+        console.log("No error");
+        userData = user;
+    } catch (error) {
+        console.log(error);
+    }
 
     const [getUser, { called, loading, data }] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
-            setUser(user);
+            userData = user;
             console.log(user);
             console.log(user.id);
         }
@@ -38,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider
             value={{
-                user,
+                user: userData,
                 login: async (username, password) => {
                     await signInUser({
                         variables: { username: username, password: password }

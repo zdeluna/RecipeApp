@@ -7,8 +7,8 @@ const Right = ({ children }) => {
 
 const style = {
     display: "flex",
-    "justify-content": "flex-end",
-    "align-items": "center"
+    justifyContent: "flex-end",
+    alignItems: "center"
 };
 
 export default Right;

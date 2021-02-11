@@ -8,6 +8,7 @@
         "apollo-boost": "^0.4.7",
         "apollo-link-context": "^1.0.19",
         "apollo-link-error": "^1.1.12",
+        "apollo3-cache-persist": "^0.9.1",
         "axios": "^0.18.1",
         "boostrap": "^2.0.0",
         "bootstrap": "^4.4.1",

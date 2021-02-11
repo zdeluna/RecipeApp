@@ -7,8 +7,8 @@ const Center = ({ children }) => {
 
 const style = {
     display: "flex",
-    "justify-content": "center",
-    "align-items": "center"
+    justifyContent: "center",
+    alignItems: "center"
 };
 
 export default Center;
