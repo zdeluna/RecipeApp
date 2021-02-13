@@ -60,11 +60,11 @@ const init = async () => {
     });
 
     const cache = new InMemoryCache({ dataIdFromObject: object => object.id });
-    /*
+
     await persistCache({
         cache,
         storage: new LocalStorageWrapper(window.localStorage)
-    });*/
+    });
 
     const client = new ApolloClient({
         cache,

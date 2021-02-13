@@ -15,8 +15,9 @@ const Category = props => {
 
     const [category, setCategory] = useState(0);
     const [editMode, setEditMode] = useState(false);
-    const { user } = useContext(AuthContext);
-
+    const { user, update } = useContext(AuthContext);
+    console.log("user");
+    console.log(user);
     useEffect(
         () => {
             if (user && user.categories) {
@@ -44,7 +45,7 @@ const Category = props => {
 
     const saveData = () => {
         setEditMode(false);
-        updateUser({ variables: { id: user.id, categories: categoryButtons } });
+        update({ variables: { id: user.id, categories: categoryButtons } });
     };
 
     return (
