@@ -8,6 +8,8 @@ import "./Category.css";
 import { AuthContext } from "../../AuthProvider";
 import { UPDATE_USER } from "../../api/mutations/user/updateUser";
 import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useApolloClient } from "@apollo/react-hooks";
+import { GET_USER } from "../../api/queries/user/getUser";
 
 const Category = props => {
     const [updateUser] = useMutation(UPDATE_USER);
@@ -16,8 +18,9 @@ const Category = props => {
     const [category, setCategory] = useState(0);
     const [editMode, setEditMode] = useState(false);
     const { user, update } = useContext(AuthContext);
-    console.log("user");
+    const client = useApolloClient();
     console.log(user);
+
     useEffect(
         () => {
             if (user && user.categories) {
@@ -46,6 +49,21 @@ const Category = props => {
     const saveData = () => {
         setEditMode(false);
         update({ variables: { id: user.id, categories: categoryButtons } });
+        const data = client.readQuery({
+            query: GET_USER,
+            variables: { id: user.id }
+        });
+
+        data.user.categories = categoryButtons;
+
+        console.log("Before write query");
+        console.log(data.user);
+
+        client.writeQuery({
+            query: GET_USER,
+            variables: { id: user.id },
+            data: { user: data.user }
+        });
     };
 
     return (

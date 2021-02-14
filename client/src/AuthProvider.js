@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
     const [userData, setUserData] = useState("");
 
     const [updateUser] = useMutation(UPDATE_USER);
-
     try {
         const { loading } = useQuery(GET_USER, {
             variables: { id: localStorage.getItem("userId") },
@@ -73,9 +72,6 @@ export const AuthProvider = ({ children }) => {
                 },
                 update: async updatedProperties => {
                     await updateUser(updatedProperties);
-                    getUser({
-                        variables: { id: localStorage.getItem("userId") }
-                    });
                 }
             }}
         >
