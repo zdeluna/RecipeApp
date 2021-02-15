@@ -46,7 +46,7 @@ namespace RecipeAPI.Controllers
         {
             var dish = await _dishService.GetById(id);
 
-            _dishService.VerifyUser(GetUserId(), dish.ID);
+            _dishService.VerifyUser(GetUserId(), dish.UserID);
 
             return _mapper.Map<DishResponse>(dish);
         }
@@ -60,7 +60,7 @@ namespace RecipeAPI.Controllers
             {
                 var dish = await _dishService.GetById(id);
 
-                _dishService.VerifyUser(GetUserId(), dish.ID);
+                _dishService.VerifyUser(GetUserId(), dish.UserID);
 
                 await _dishService.UpdatePartOfDish(id, patchDish, ModelState);
 
@@ -81,7 +81,7 @@ namespace RecipeAPI.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var dish = await _dishService.GetById(id);
-            _dishService.VerifyUser(GetUserId(), dish.ID);
+            _dishService.VerifyUser(GetUserId(), dish.UserID);
 
             dish = await _dishService.UpdateEntireDish(id,updateDishRequest);
 
@@ -108,7 +108,7 @@ namespace RecipeAPI.Controllers
         {
             var dish = await _dishService.GetById(id);
 
-            _dishService.VerifyUser(GetUserId(), dish.ID);
+            _dishService.VerifyUser(GetUserId(), dish.UserID);
 
             await _dishService.Remove(id);
 

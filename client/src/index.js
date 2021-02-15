@@ -59,7 +59,8 @@ const init = async () => {
         };
     });
 
-    const cache = new InMemoryCache({ dataIdFromObject: object => object.id });
+    //const cache = new InMemoryCache({ dataIdFromObject: object => object.id });
+    const cache = new InMemoryCache();
 
     await persistCache({
         cache,

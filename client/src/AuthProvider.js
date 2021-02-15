@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
 
     const [updateUser] = useMutation(UPDATE_USER);
     try {
-        const { loading } = useQuery(GET_USER, {
+        useQuery(GET_USER, {
             variables: { id: localStorage.getItem("userId") },
             async onCompleted({ user }) {
                 setUserData(user);
@@ -24,10 +24,9 @@ export const AuthProvider = ({ children }) => {
         console.log(error);
     }
 
-    const [getUser, { called, loading, data }] = useLazyQuery(GET_USER, {
+    const [getUser] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
             setUserData(user);
-            console.log(data);
         }
     });
 
@@ -56,13 +55,13 @@ export const AuthProvider = ({ children }) => {
             value={{
                 user: userData,
                 login: async (username, password) => {
-                    client.cache.reset();
+                    client.resetStore();
                     await signInUser({
                         variables: { username: username, password: password }
                     });
                 },
                 signUp: async (username, password) => {
-                    client.cache.reset();
+                    client.resetStore();
                     await addUser({
                         variables: {
                             username: username,

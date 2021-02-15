@@ -19,8 +19,8 @@ const Category = props => {
     const [editMode, setEditMode] = useState(false);
     const { user, update } = useContext(AuthContext);
     const client = useApolloClient();
-    console.log(user);
 
+    console.log(user);
     useEffect(
         () => {
             if (user && user.categories) {
@@ -94,11 +94,12 @@ const Category = props => {
             </Row>
             {editMode
                 ? categoryButtons.map((categoryButton, index) => (
-                      <Center>
-                          <Row key={categoryButton.id + "Column"}>
-                              <Col>
+                      <Center key={"center" + index}>
+                          <Row key={"Row" + index}>
+                              <Col key={"Col" + index}>
                                   <Button color="primary" size="lg">
                                       <Input
+                                          key={"categoryInput" + index}
                                           id={categoryButton.id}
                                           type="text"
                                           value={categoryButton.name}
@@ -110,12 +111,12 @@ const Category = props => {
                           </Row>
                       </Center>
                   ))
-                : categoryButtons.map(categoryButton => (
-                      <Center>
-                          <Row key={categoryButton.id + "Column"}>
-                              <Col>
+                : categoryButtons.map((categoryButton, index) => (
+                      <Center key={"center" + index}>
+                          <Row key={"Row" + index}>
+                              <Col key={"Col" + index}>
                                   <CategoryButton
-                                      key={categoryButton.id}
+                                      key={"categoryButton" + index}
                                       onClick={e =>
                                           handleClick(e, categoryButton.id)
                                       }

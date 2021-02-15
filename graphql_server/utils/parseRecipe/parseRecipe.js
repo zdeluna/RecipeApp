@@ -15,7 +15,6 @@ exports.getStepsFromWebPage = async $ => {
             let headingHTML = await findHeading($, "steps");
             stepsHTML = await findList(headingHTML, $);
             stepsHTML = await cleanList(stepsHTML);
-
             stepsHTML
                 .children("li") // Find the children of the list
                 // Iterate through each child element and store the text of the element and add it to the array

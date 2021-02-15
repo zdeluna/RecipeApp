@@ -98,6 +98,10 @@ class DishAPI extends RESTDataSource {
                     let $ = cheerio.load(html);
                     steps = await getStepsFromWebPage($);
                     ingredients = await getIngredientsFromWebPage($);
+                    console.log("steps");
+                    console.log(steps);
+                    console.log("ingredients");
+                    console.log(ingredients);
                     /* Copy ingredients array so that we can send it as a parameter when
 				 *  determine which ingredients are in each step in the function getIngredientsInSteps*/
                     /*
