@@ -2,6 +2,7 @@
 const { RESTDataSource } = require("apollo-datasource-rest");
 //const {RESTDataSource} = require('apollo-server-cloud-functions');
 const request = require("request");
+const axios = require("axios");
 const cheerio = require("cheerio");
 const {
     getStepsFromWebPage,
@@ -91,20 +92,25 @@ class DishAPI extends RESTDataSource {
         let steps = [];
         let ingredients = [];
         let patchArray = [];
-        return new Promise(function(resolve, reject) {
-            request(url, async function(error, response, html) {
-                try {
-                    if (error) return error;
-                    let $ = cheerio.load(html);
-                    steps = await getStepsFromWebPage($);
-                    ingredients = await getIngredientsFromWebPage($);
-                    console.log("steps");
-                    console.log(steps);
-                    console.log("ingredients");
-                    console.log(ingredients);
-                    /* Copy ingredients array so that we can send it as a parameter when
+        console.log("url");
+        console.log(url);
+        const requestOptions = {
+            uri: url,
+            encoding: "utf8"
+        };
+
+        return new Promise(async function(resolve, reject) {
+            //request(requestOptions, async function(error, response, html) {
+            try {
+                let { data } = await axios.get(url);
+                console.log("HTML");
+                console.log(data);
+                let $ = cheerio.load(data);
+                steps = await getStepsFromWebPage($);
+                ingredients = await getIngredientsFromWebPage($);
+                /* Copy ingredients array so that we can send it as a parameter when
 				 *  determine which ingredients are in each step in the function getIngredientsInSteps*/
-                    /*
+                /*
                 let ingredients = dishInfo.ingredients.map(a =>
                     Object.assign({}, a)
                 );
@@ -113,29 +119,27 @@ class DishAPI extends RESTDataSource {
                     dishInfo.steps,
                     ingredients
                 );*/
-                    if (steps.length) {
-                        console.log("add steps");
-                        patchArray.push({
-                            op: "add",
-                            path: "/steps",
-                            value: steps
-                        });
-                    }
-
-                    if (ingredients.length) {
-                        console.log("add ingredients");
-                        patchArray.push({
-                            op: "add",
-                            path: "/ingredients",
-                            value: ingredients
-                        });
-                    }
-                    resolve(patchArray);
-                } catch (error) {
-                    console.log(error);
+                if (steps.length) {
+                    patchArray.push({
+                        op: "add",
+                        path: "/steps",
+                        value: steps
+                    });
                 }
-            });
+
+                if (ingredients.length) {
+                    patchArray.push({
+                        op: "add",
+                        path: "/ingredients",
+                        value: ingredients
+                    });
+                }
+                resolve(patchArray);
+            } catch (error) {
+                console.log(error);
+            }
         });
+        // });
     }
 
     async addDishUrl({ id, url }) {

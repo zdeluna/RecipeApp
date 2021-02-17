@@ -164,7 +164,7 @@ const findHeading = async ($, heading) => {
         });
 
         if (html == "") {
-            console.log("REJECT HEADING NOT FOUND");
+            console.log("HEADING " + heading + " NOT FOUND");
             reject();
         }
 
