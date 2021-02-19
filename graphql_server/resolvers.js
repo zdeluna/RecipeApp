@@ -6,7 +6,13 @@ module.exports = {
             return dataSources.dishAPI.getAllDishes();
         },
         user: (_, { id }, { dataSources }) =>
-            dataSources.userAPI.getUserById({ id })
+            dataSources.userAPI.getUserById({ id }),
+        ingredientsInSteps: (_, { steps, ingredients }, { dataSources }) => {
+            return dataSources.dishAPI.getIngredientsWithSteps({
+                steps,
+                ingredients
+            });
+        }
     },
     Mutation: {
         addDish: async (_, { name, category }, { dataSources }) => {

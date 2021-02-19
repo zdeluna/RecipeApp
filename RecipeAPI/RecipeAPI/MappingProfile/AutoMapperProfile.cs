@@ -29,10 +29,9 @@ namespace RecipeAPI.MappingProfile
                 .ForMember(dest => dest.History, m => m.MapFrom(src => src.History))
                 .ForMember(dest => dest.Ingredients, m => m.MapFrom(src => src.Ingredients))
                 .ForMember(dest => dest.Steps, m => m.MapFrom(src => src.Steps));
+               
+
             CreateMap<Dish, UpdateDishRequest>();
-
-            CreateMap<Category, Category>();
-
 
             CreateMap<User, UpdateUserRequest>();
             CreateMap<UpdateUserRequest, User>()
@@ -51,17 +50,5 @@ namespace RecipeAPI.MappingProfile
 
         }
 
-        /*
-        private void AddOrUpdateCategories(UpdateUserRequest dto, User user)
-        {
-            foreach (var categoriesDTO in dto.Categories)
-            {
-                var category = user.Categories.SingleOrDefault(c => c.ID == categoriesDTO.ID);
-                var a = AutoMapper.Map(categoriesDTO, category);
-              
-            
-            }
-
-        }*/
     }
 }

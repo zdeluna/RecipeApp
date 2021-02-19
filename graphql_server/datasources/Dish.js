@@ -6,7 +6,8 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const {
     getStepsFromWebPage,
-    getIngredientsFromWebPage
+    getIngredientsFromWebPage,
+    getIngredientsInSteps
 } = require("../utils/parseRecipe/parseRecipe.js");
 
 class DishAPI extends RESTDataSource {
@@ -88,6 +89,10 @@ class DishAPI extends RESTDataSource {
         return this.dishReducer(res);
     }
 
+    async getIngredientsWithSteps({ steps, ingredients }) {
+        return getIngredientsInSteps(steps, ingredients);
+    }
+
     async getStepsAndIngredients({ id, url }) {
         let steps = [];
         let ingredients = [];
@@ -108,17 +113,7 @@ class DishAPI extends RESTDataSource {
                 let $ = cheerio.load(data);
                 steps = await getStepsFromWebPage($);
                 ingredients = await getIngredientsFromWebPage($);
-                /* Copy ingredients array so that we can send it as a parameter when
-				 *  determine which ingredients are in each step in the function getIngredientsInSteps*/
-                /*
-                let ingredients = dishInfo.ingredients.map(a =>
-                    Object.assign({}, a)
-                );
-                
-                dishInfo.ingredientsInSteps = await getIngredientsInSteps(
-                    dishInfo.steps,
-                    ingredients
-                );*/
+
                 if (steps.length) {
                     patchArray.push({
                         op: "add",

@@ -97,14 +97,18 @@ const typeDefs = gql`
         order: Int
     }
 
+    type Token {
+        token: String!
+    }
+
     type Query {
         dish(id: ID!): Dish
         dishes: [Dish]
         user(id: ID!): User
-    }
-
-    type Token {
-        token: String!
+        ingredientsInSteps(
+            steps: [String]
+            ingredients: [String]
+        ): [IngredientsInStep]
     }
 
     type Mutation {
