@@ -1,92 +1,90 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Row, Col, Container } from "reactstrap";
 import "./Carousel.css";
 
-class Carousel extends Component {
-    constructor(props) {
-        super(props);
+const Carousel = props => {
+    const [steps, setSteps] = useState([]);
+    const [ingredientsInSteps, setIngredientsInSteps] = useState([
+        {
+            step: 0,
+            ingredients: ["oil"]
+        }
+    ]);
 
-        this.state = {
-            userID: this.props.userID,
-            dishId: this.props.dishId,
-            steps: this.props.steps,
-            ingredients: this.props.ingredients,
-            ingredientsInSteps: this.props.ingredientsInSteps,
-            currentStep: 0,
-            loading: false
-        };
-    }
+    useEffect(() => {
+        setSteps(props.steps);
+        setIngredientsInSteps(props.ingredientsInSteps);
+    });
 
-    showNextIngredient = () => {
-        let stepNumber = this.state.currentStep + 1;
+    const [currentStep, setCurrentStep] = useState(0);
+
+    const showNextIngredient = () => {
+        let stepNumber = currentStep + 1;
 
         /* If the last step is showing, show the first step */
-        if (stepNumber === this.state.steps.length) stepNumber = 0;
+        if (stepNumber === steps.length) stepNumber = 0;
 
-        this.setState({ currentStep: stepNumber });
+        setCurrentStep(stepNumber);
     };
 
-    showPreviousIngredient = () => {
-        let stepNumber = this.state.currentStep - 1;
+    const showPreviousIngredient = () => {
+        let stepNumber = setCurrentStep(currentStep - 1);
 
         /* If the first step is showing, show the last step*/
-        if (stepNumber < 1) stepNumber = this.state.steps.length - 1;
+        if (stepNumber < 1) stepNumber = currentStep - 1;
 
-        this.setState({ currentStep: stepNumber });
+        setCurrentStep(stepNumber);
     };
 
-    exit = () => {};
+    const exit = () => {};
 
-    render() {
-        return (
-            <div>
-                <Container>
-                    <Row>
-                        <Col>
-                            <Button
-                                color="primary"
-                                size="lg"
-                                onClick={() => this.showPreviousIngredient()}
-                            >
-                                Previous
-                            </Button>
-                        </Col>
-                        <Col>
-                            <h3>
-                                {this.state.currentStep + 1}/
-                                {this.state.steps.length}
-                            </h3>
-                        </Col>
-                        <Col>
-                            <Button
-                                color="primary"
-                                size="lg"
-                                onClick={() => this.showNextIngredient()}
-                            >
-                                Next
-                            </Button>
-                        </Col>
-                    </Row>
+    return (
+        <div>
+            <Container>
+                <Row>
+                    <Col>
+                        <Button
+                            color="primary"
+                            size="lg"
+                            onClick={() => showPreviousIngredient()}
+                        >
+                            Previous
+                        </Button>
+                    </Col>
+                    <Col>
+                        <h3>
+                            {currentStep + 1}/{steps.length}
+                        </h3>
+                    </Col>
+                    <Col>
+                        <Button
+                            color="primary"
+                            size="lg"
+                            onClick={() => showNextIngredient()}
+                        >
+                            Next
+                        </Button>
+                    </Col>
+                </Row>
 
-                    <Row>
-                        <h1>
-                            {this.state.currentStep + 1}
-                            ).
-                            {this.state.steps[this.state.currentStep]}
-                        </h1>
-                    </Row>
-                </Container>
-                <Container>
-                    <h5 id="ingredientsHeading">Ingredients</h5>
-                    {this.state.ingredientsInSteps[this.state.currentStep].map(
-                        (ingredient, index) => (
-                            <h5 key={"ingredient" + index}>{ingredient}</h5>
-                        )
-                    )}{" "}
-                </Container>
-            </div>
-        );
-    }
-}
+                <Row>
+                    <h1>
+                        {currentStep + 1}
+                        ).
+                        {steps[currentStep]}
+                    </h1>
+                </Row>
+            </Container>
+            <Container>
+                <h5 id="ingredientsHeading">Ingredients</h5>
+                {ingredientsInSteps[currentStep].ingredients.map(
+                    (ingredient, index) => (
+                        <h5 key={"ingredient" + index}>{ingredient}</h5>
+                    )
+                )}{" "}
+            </Container>
+        </div>
+    );
+};
 
 export default Carousel;

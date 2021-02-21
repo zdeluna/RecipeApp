@@ -108,13 +108,12 @@ class DishAPI extends RESTDataSource {
             //request(requestOptions, async function(error, response, html) {
             try {
                 let { data } = await axios.get(url);
-                console.log("HTML");
-                console.log(data);
                 let $ = cheerio.load(data);
                 steps = await getStepsFromWebPage($);
                 ingredients = await getIngredientsFromWebPage($);
 
                 if (steps.length) {
+                    console.log(steps);
                     patchArray.push({
                         op: "add",
                         path: "/steps",
@@ -123,6 +122,7 @@ class DishAPI extends RESTDataSource {
                 }
 
                 if (ingredients.length) {
+                    console.log(ingredients);
                     patchArray.push({
                         op: "add",
                         path: "/ingredients",

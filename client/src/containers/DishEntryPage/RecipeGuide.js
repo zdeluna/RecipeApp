@@ -1,53 +1,69 @@
-import React, {Component} from 'react';
-import {Button, Col, Row} from 'reactstrap';
-import Carousel from '../../components/Carousel';
-import {Link} from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Button, Col, Row } from "reactstrap";
+import Carousel from "../../components/Carousel";
+import { Link } from "react-router-dom";
+import { GET_DISH } from "../../api/queries/dish/getDish";
+import { GET_INGREDIENTS_IN_STEPS } from "../../api/queries/dish/getIngredientsInSteps";
+import { useQuery } from "@apollo/react-hooks";
 
-class RecipeGuide extends Component {
-    constructor(props) {
-        super(props);
+const RecipeGuide = props => {
+    const [steps, setSteps] = useState(props.match.params.steps || []);
+    const [ingredients, setIngredients] = useState(
+        props.match.params.ingredients || []
+    );
+    const [ingredientsInSteps, setIngredientsInSteps] = useState([
+        {
+            step: 0,
+            ingredients: []
+        }
+    ]);
 
-        this.state = {
-            userID: this.props.userID,
-            dishId: this.props.match.params.dishId,
-            category: this.props.match.params.category,
-            steps: this.props.location.state.steps,
-            ingredients: this.props.location.state.ingredients,
-            ingredientsInSteps: this.props.location.state.ingredientsInSteps,
-            dishUrl: '',
-        };
-        console.log('in recipeguide');
-        console.log(this.state.ingredientsInSteps);
-    }
-    componentDidMount() {
-        // Set the state variable to the dish entry url
-        let dishUrl = window.location.pathname;
-        dishUrl = dishUrl.replace('/makeMode', '');
+    const [dishId, setDishId] = useState(props.match.params.dishId);
+    const [dishUrl, setDishUrl] = useState(
+        window.location.pathname.replace("/makeMode", "")
+    );
 
-        this.setState({dishUrl: dishUrl});
-    }
+    const dishQuery = useQuery(GET_DISH, {
+        variables: {
+            id: dishId
+        }
+    });
 
-    render() {
-        return (
-            <div>
-                <Row>
-                    <Col>
-                        <Link to={this.state.dishUrl}>
-                            <Button color="warning">Exit</Button>
-                        </Link>
-                    </Col>
-                </Row>
+    const ingredientsQuery = useQuery(GET_INGREDIENTS_IN_STEPS, {
+        variables: {
+            steps: steps,
+            ingredients: ingredients
+        }
+    });
 
-                <Carousel
-                    dishId={this.state.dishId}
-                    userID={this.state.userID}
-                    steps={this.state.steps}
-                    ingredients={this.state.ingredients}
-                    ingredientsInSteps={this.state.ingredientsInSteps}
-                />
-            </div>
-        );
-    }
-}
+    useEffect(() => {
+        if (dishQuery.data.dish.steps.length) {
+            setSteps(dishQuery.data.dish.steps);
+            setIngredients(dishQuery.data.dish.ingredients);
+        }
+
+        if (ingredientsQuery.data.ingredientsInSteps.length) {
+            setIngredientsInSteps(ingredientsQuery.data.ingredientsInSteps);
+        }
+    });
+
+    return (
+        <div>
+            <Row>
+                <Col>
+                    <Link to={dishUrl}>
+                        <Button color="warning">Exit</Button>
+                    </Link>
+                </Col>
+            </Row>
+
+            <Carousel
+                dishId={dishId}
+                steps={steps}
+                ingredientsInSteps={ingredientsInSteps}
+            />
+        </div>
+    );
+};
 
 export default RecipeGuide;

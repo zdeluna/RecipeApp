@@ -31,8 +31,7 @@ const DishEntry = props => {
     const [makeDishMode, setMakeDishMode] = useState(false);
     const [dish, setDish] = useState({});
     const client = useApolloClient();
-
-    const [ingredientsInSteps, setIngredientsInSteps] = useState([]);
+    const [steps2, setSteps2] = useState([]);
 
     const [deleteDish] = useMutation(DELETE_DISH, {
         onCompleted(updateDishResponse) {
@@ -53,7 +52,10 @@ const DishEntry = props => {
             id: dishId
         },
         async onCompleted({ dish }) {
+            console.log(dish);
             if (dish.steps && dish.steps.length) {
+                console.log("Made it");
+                console.log(dish.steps);
                 setSteps(dish.steps);
             }
             if (dish.ingredients && dish.ingredients.length)
@@ -65,14 +67,8 @@ const DishEntry = props => {
             if (dish.notes) setNotes(dish.notes);
             setDish(dish);
             console.log("dish object loaded");
-            if (dish.steps && dish.ingredients) {
-                setIngredientsInSteps(
-                    await getIngredientsInSteps(dish.steps, dish.ingredients)
-                );
-
-                console.log("ingredients in steps");
-                console.log(ingredientsInSteps);
-            }
+            console.log(steps);
+            console.log(ingredients);
         }
     });
 
@@ -111,8 +107,7 @@ const DishEntry = props => {
 
             props.history.push(redirect_url, {
                 steps: steps,
-                ingredients: ingredients,
-                ingredientsInSteps: ingredientsInSteps
+                ingredients: ingredients
             });
         }
 

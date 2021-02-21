@@ -14,12 +14,6 @@ export const GET_DISH = gql`
             lastMade
             steps
             ingredients
-            ingredientsInSteps {
-                step
-                ingredients {
-                    value
-                }
-            }
         }
     }
 `;

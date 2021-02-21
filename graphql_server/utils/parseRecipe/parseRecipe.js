@@ -60,7 +60,6 @@ exports.getIngredientsFromWebPage = async $ => {
                 ingredientsHTML = await cleanList(ingredientsHTML);
                 ingredientsType = "li";
             } else {
-                console.log("Did not find list");
                 ingredientsHTML = await findElements(headingHTML, $);
                 ingredientsType = "p";
             }
@@ -103,7 +102,6 @@ exports.getIngredientsInSteps = (steps, ingredients) => {
             ingredientsStepObject.step = stepNumber;
             let ingredientsInEachStep = [];
             let stepDescription = steps[stepNumber].toLowerCase();
-
             for (
                 let ingredientNumber = 0;
                 ingredientNumber < filteredIngredients.length;
@@ -118,6 +116,7 @@ exports.getIngredientsInSteps = (steps, ingredients) => {
             ingredientsStepObject.ingredients = ingredientsInEachStep;
             ingredientsInStepsArray.push(ingredientsStepObject);
         }
+        console.log(ingredientsInStepsArray);
         return ingredientsInStepsArray;
     } catch (error) {
         console.log("ERROR");

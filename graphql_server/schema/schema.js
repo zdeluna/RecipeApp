@@ -49,7 +49,7 @@ const typeDefs = gql`
 
     type IngredientsInStep {
         step: Int
-        ingredients: [Ingredient]
+        ingredients: [String]
     }
 
     input StepInput {
