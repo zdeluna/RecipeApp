@@ -83,6 +83,34 @@ class DishAPI extends RESTDataSource {
     }
 
     async updateDish(id, dishObject) {
+        if (dishObject.ingredients || dishObject.steps) {
+            console.log("Update dish graphql");
+            console.log(dishObject.ingredients);
+            console.log(dishObject.steps);
+            let patchArray = [];
+            if (dishObject.steps && dishObject.steps.length) {
+                patchArray.push({
+                    op: "add",
+                    path: "/steps",
+                    value: dishObject.steps
+                });
+            }
+
+            if (dishObject.ingredients && dishObject.ingredients.length) {
+                patchArray.push({
+                    op: "add",
+                    path: "/ingredients",
+                    value: dishObject.ingredients
+                });
+            }
+            console.log("print patch array");
+            console.log(patchArray);
+
+            return await this.patch(`/${dishObject.id}`, patchArray, {
+                headers: { Authorization: this.context.token }
+            });
+        }
+
         const res = await this.put(`/${id}`, dishObject, {
             headers: { Authorization: this.context.token }
         });
@@ -113,7 +141,6 @@ class DishAPI extends RESTDataSource {
                 ingredients = await getIngredientsFromWebPage($);
 
                 if (steps.length) {
-                    console.log(steps);
                     patchArray.push({
                         op: "add",
                         path: "/steps",
@@ -122,7 +149,6 @@ class DishAPI extends RESTDataSource {
                 }
 
                 if (ingredients.length) {
-                    console.log(ingredients);
                     patchArray.push({
                         op: "add",
                         path: "/ingredients",

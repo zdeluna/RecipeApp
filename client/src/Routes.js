@@ -31,17 +31,20 @@ const Routes = props => {
                     <Route
                         exact
                         path="/users/category/:category/dish/:dishId/ingredients"
-                        component={ItemForm}
-                        update={true}
-                        type={"ingredients"}
+                        render={props => (
+                            <ItemForm
+                                {...props}
+                                update={true}
+                                type={"ingredients"}
+                            />
+                        )}
                     />
-                    )} />
                     <Route
                         exact
                         path="/users/category/:category/dish/:dishId/steps"
-                        component={ItemForm}
-                        update={true}
-                        type={"steps"}
+                        render={props => (
+                            <ItemForm {...props} update={true} type={"steps"} />
+                        )}
                     />
                     )} />
                     <Route

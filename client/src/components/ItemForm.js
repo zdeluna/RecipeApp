@@ -26,6 +26,9 @@ const ItemForm = props => {
         { value: "", visible: false }
     ]);
 
+    console.log("UPDATE: " + props);
+    console.log(props);
+
     useQuery(GET_DISH, {
         variables: {
             id: dishId
@@ -59,19 +62,15 @@ const ItemForm = props => {
     });
 
     const addItemsToDatabase = () => {
-        // Only store the value fields from itemsArray.
-        let itemsData = itemsArray.map(x => x.value);
-
         if (update) {
             console.log("update steps and ingredients");
             updateDish({
                 variables: {
-                    ...dish,
-                    dishId: dishId,
-                    [type]: itemsData
+                    id: dishId,
+                    [type]: itemsArray
                 }
             });
-        } else props.onClick(itemsData);
+        } else props.onClick(itemsArray);
     };
 
     const addItem = event => {
@@ -85,7 +84,7 @@ const ItemForm = props => {
 
     const handleChange = (index, value) => {
         let newItemsArray = itemsArray;
-        newItemsArray[index].value = value;
+        newItemsArray[index] = value;
         setItemsArray(newItemsArray);
     };
 

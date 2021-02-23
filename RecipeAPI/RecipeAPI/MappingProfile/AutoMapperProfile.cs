@@ -24,14 +24,19 @@ namespace RecipeAPI.MappingProfile
 
             CreateMap<string, Ingredient>().ForMember(dest => dest.Name, m => m.MapFrom(src => src));
             CreateMap<string, Step>().ForMember(dest => dest.Name, m => m.MapFrom(src => src));
+            
+
             CreateMap<string, History>().ForMember(dest => dest.Date, m => m.MapFrom(src => src));
             CreateMap<UpdateDishRequest, Dish>()
                 .ForMember(dest => dest.History, m => m.MapFrom(src => src.History))
                 .ForMember(dest => dest.Ingredients, m => m.MapFrom(src => src.Ingredients))
                 .ForMember(dest => dest.Steps, m => m.MapFrom(src => src.Steps));
-               
 
-            CreateMap<Dish, UpdateDishRequest>();
+            //Add conversion from existing step to a string using name field
+            CreateMap<Dish, UpdateDishRequest>()
+              .ForMember(dest => dest.Steps, m => m.MapFrom(src => src.Steps.Select(x => x.Name).ToList()))
+              .ForMember(dest => dest.Ingredients, m => m.MapFrom(src => src.Ingredients.Select(x => x.Name).ToList()))
+              .ForMember(dest => dest.History, m => m.MapFrom(src => src.History.Select(x => x.Date).ToList()));
 
             CreateMap<User, UpdateUserRequest>();
             CreateMap<UpdateUserRequest, User>()

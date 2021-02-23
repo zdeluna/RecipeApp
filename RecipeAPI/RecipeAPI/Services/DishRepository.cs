@@ -80,7 +80,7 @@ namespace RecipeAPI.Services
 
             var dish = await GetDishById(id);
             var updateDishRequest = _mapper.Map<UpdateDishRequest>(dish);
-
+            Console.WriteLine(dish);
             patchDish.ApplyTo(updateDishRequest, ModelState);
 
             if (!ModelState.IsValid)
@@ -89,6 +89,7 @@ namespace RecipeAPI.Services
             }
 
             var updatedDish = _mapper.Map(updateDishRequest, dish);
+            Console.WriteLine(updatedDish);
             await SaveUpdate();
 
             return updatedDish;
