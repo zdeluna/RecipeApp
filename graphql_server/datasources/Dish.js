@@ -84,9 +84,6 @@ class DishAPI extends RESTDataSource {
 
     async updateDish(id, dishObject) {
         if (dishObject.ingredients || dishObject.steps) {
-            console.log("Update dish graphql");
-            console.log(dishObject.ingredients);
-            console.log(dishObject.steps);
             let patchArray = [];
             if (dishObject.steps && dishObject.steps.length) {
                 patchArray.push({
@@ -103,8 +100,6 @@ class DishAPI extends RESTDataSource {
                     value: dishObject.ingredients
                 });
             }
-            console.log("print patch array");
-            console.log(patchArray);
 
             return await this.patch(`/${dishObject.id}`, patchArray, {
                 headers: { Authorization: this.context.token }

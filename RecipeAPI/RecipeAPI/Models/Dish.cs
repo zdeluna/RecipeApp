@@ -30,9 +30,9 @@ namespace RecipeAPI.Models
         [ForeignKey("User")]
         public long UserID { get; set; }
 
-        public ICollection<History> History { get; set; }
-        public virtual ICollection<Ingredient> Ingredients { get; set; }
-        public virtual ICollection<Step> Steps{ get; set; }
+        public List<History> History { get; set; }
+        public List<Ingredient> Ingredients { get; set; }
+        public List<Step> Steps{ get; set; }
 
     }
 }

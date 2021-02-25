@@ -37,12 +37,15 @@ const RecipeGuide = props => {
     });
 
     useEffect(() => {
-        if (dishQuery.data.dish.steps.length) {
+        if (dishQuery.data && dishQuery.data.dish.steps.length) {
             setSteps(dishQuery.data.dish.steps);
             setIngredients(dishQuery.data.dish.ingredients);
         }
 
-        if (ingredientsQuery.data.ingredientsInSteps.length) {
+        if (
+            ingredientsQuery.data &&
+            ingredientsQuery.data.ingredientsInSteps.length
+        ) {
             setIngredientsInSteps(ingredientsQuery.data.ingredientsInSteps);
         }
     });
