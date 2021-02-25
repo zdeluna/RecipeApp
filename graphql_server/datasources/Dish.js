@@ -90,7 +90,7 @@ class DishAPI extends RESTDataSource {
             let patchArray = [];
             if (dishObject.steps && dishObject.steps.length) {
                 patchArray.push({
-                    op: "add",
+                    op: "replace",
                     path: "/steps",
                     value: dishObject.steps
                 });
@@ -98,7 +98,7 @@ class DishAPI extends RESTDataSource {
 
             if (dishObject.ingredients && dishObject.ingredients.length) {
                 patchArray.push({
-                    op: "add",
+                    op: "replace",
                     path: "/ingredients",
                     value: dishObject.ingredients
                 });
@@ -139,10 +139,13 @@ class DishAPI extends RESTDataSource {
                 let $ = cheerio.load(data);
                 steps = await getStepsFromWebPage($);
                 ingredients = await getIngredientsFromWebPage($);
+                console.log("FROM URL: ");
+                console.log(steps);
+                console.log(ingredients);
 
                 if (steps.length) {
                     patchArray.push({
-                        op: "add",
+                        op: "replace",
                         path: "/steps",
                         value: steps
                     });
@@ -150,7 +153,7 @@ class DishAPI extends RESTDataSource {
 
                 if (ingredients.length) {
                     patchArray.push({
-                        op: "add",
+                        op: "replace",
                         path: "/ingredients",
                         value: ingredients
                     });

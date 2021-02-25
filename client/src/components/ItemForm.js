@@ -26,9 +26,6 @@ const ItemForm = props => {
         { value: "", visible: false }
     ]);
 
-    console.log("UPDATE: " + props);
-    console.log(props);
-
     useQuery(GET_DISH, {
         variables: {
             id: dishId
@@ -114,7 +111,7 @@ const ItemForm = props => {
                                 <Item
                                     key={new Date().getTime() + index}
                                     id={index}
-                                    value={item.value}
+                                    value={item}
                                     onChange={handleChange}
                                     onClick={index => handleDeleteItem(index)}
                                     onBlur={handleChange}
