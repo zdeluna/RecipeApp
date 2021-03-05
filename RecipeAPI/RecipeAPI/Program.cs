@@ -21,7 +21,7 @@ namespace RecipeAPI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((context, config) =>
+                /*.ConfigureAppConfiguration((context, config) =>
                 {
                     if (context.HostingEnvironment.IsProduction())
                     {
@@ -29,10 +29,10 @@ namespace RecipeAPI
                         var secretClient = new SecretClient(new Uri($"https://{builtConfig["RecipeVault"]}.vault.azure.net/"),
                                                              new DefaultAzureCredential());
                         config.AddAzureKeyVault(secretClient, new KeyVaultSecretManager());
-
+                        
 
                     }
-                })
+                })*/
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
