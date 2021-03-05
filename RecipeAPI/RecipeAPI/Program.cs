@@ -21,7 +21,7 @@ namespace RecipeAPI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                /*.ConfigureAppConfiguration((context, config) =>
+                .ConfigureAppConfiguration((context, config) =>
                 {
                     if (context.HostingEnvironment.IsProduction())
                     {
@@ -32,7 +32,7 @@ namespace RecipeAPI
                         
 
                     }
-                })*/
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
