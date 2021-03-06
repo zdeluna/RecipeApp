@@ -26,7 +26,7 @@ namespace RecipeAPI
                     if (context.HostingEnvironment.IsProduction())
                     {
                         var builtConfig = config.Build();
-                        var secretClient = new SecretClient(new Uri($"https://{builtConfig["RecipeVault"]}.vault.azure.net/"),
+                        var secretClient = new SecretClient(new Uri("https://recipevault.vault.azure.net/"),
                                                              new DefaultAzureCredential());
                         config.AddAzureKeyVault(secretClient, new KeyVaultSecretManager());
                         
