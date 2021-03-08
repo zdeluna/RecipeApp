@@ -6,7 +6,6 @@ import "./DishListTable.css";
 import Loading from "../../components/Loading";
 import { useQuery } from "@apollo/react-hooks";
 import { GET_DISHES } from "../../api/queries/dish/getAllDishes";
-import app from "../../base";
 
 const DishListTable = props => {
     const [userId] = useState(props.userId);

@@ -126,6 +126,20 @@ const typeDefs = gql`
             notes: String
             lastMade: String
         ): UpdateDishResponse
+        updatePartialDish(
+            id: ID!
+            name: String
+            category: String
+            userId: String
+            steps: [String]
+            ingredients: [String]
+            url: String
+            history: [String]
+            cookingTime: String
+            notes: String
+            lastMade: String
+        ): UpdateDishResponse
+
         addDishUrl(id: ID!, url: String): UpdateDishResponse
         deleteDish(id: ID!): DeleteDishResponse
         addUser(username: String!, password: String!): CreateUserResponse

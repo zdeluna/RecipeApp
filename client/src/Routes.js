@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router";
 import { BrowserRouter as Router } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
-import app from "./base";
 
 import Category from "./containers/CategoriesPage/Category";
 import LogIn from "./containers/LogInPage/LogIn";

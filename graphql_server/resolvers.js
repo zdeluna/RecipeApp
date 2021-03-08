@@ -37,6 +37,17 @@ module.exports = {
                 dish: result
             };
         },
+        updatePartialDish: async (_, dishObject, { dataSources }) => {
+            const result = await dataSources.dishAPI.updatePartialDish(
+                dishObject.id,
+                dishObject
+            );
+            return {
+                success: true,
+                message: "The dish was successfully updated",
+                dish: result
+            };
+        },
         deleteDish: async (_, { id }, { dataSources }) => {
             await dataSources.dishAPI.deleteDish({
                 id

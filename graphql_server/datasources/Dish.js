@@ -82,30 +82,27 @@ class DishAPI extends RESTDataSource {
         return res;
     }
 
-    async updateDish(id, dishObject) {
-        if (dishObject.ingredients || dishObject.steps) {
-            let patchArray = [];
-            if (dishObject.steps && dishObject.steps.length) {
-                patchArray.push({
-                    op: "replace",
-                    path: "/steps",
-                    value: dishObject.steps
-                });
-            }
+    async updatePartialDish(id, dishFields) {
+        let patchArray = [];
 
-            if (dishObject.ingredients && dishObject.ingredients.length) {
-                patchArray.push({
-                    op: "replace",
-                    path: "/ingredients",
-                    value: dishObject.ingredients
-                });
-            }
+        for (let prop in dishFields) {
+            if (prop == "id") continue;
 
-            return await this.patch(`/${dishObject.id}`, patchArray, {
-                headers: { Authorization: this.context.token }
+            patchArray.push({
+                op: "replace",
+                path: "/" + prop,
+                value: dishFields[prop]
             });
         }
+        console.log("in partial dish function");
+        console.log(patchArray);
 
+        return await this.patch(`/${id}`, patchArray, {
+            headers: { Authorization: this.context.token }
+        });
+    }
+
+    async updateDish(id, dishObject) {
         const res = await this.put(`/${id}`, dishObject, {
             headers: { Authorization: this.context.token }
         });

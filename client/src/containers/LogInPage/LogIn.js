@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import app from "../../base";
 import { Container, Form, Button, Input, FormGroup, Label } from "reactstrap";
 import { useApolloClient } from "@apollo/react-hooks";
 import { useMutation, useQuery } from "@apollo/react-hooks";
@@ -18,8 +17,6 @@ const LogIn = props => {
 
     const handleLogIn = async event => {
         try {
-            console.log(email);
-            console.log(password);
             const response = await login(email, password);
             props.history.push("/users/category");
         } catch (error) {

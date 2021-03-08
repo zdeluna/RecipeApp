@@ -1,18 +1,18 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
-import {Col, Container, Row} from 'reactstrap';
-import './Home.css';
-import screenshot1 from '../../static/images/landingPageImage1.png';
-import screenshot2 from '../../static/images/landingPageImage2.png';
-import screenshot3 from '../../static/images/landingPageImage3.png';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { Col, Container, Row } from "reactstrap";
+import "./Home.css";
+import screenshot1 from "../../static/images/landingPageImage1.png";
+import screenshot2 from "../../static/images/landingPageImage2.png";
+import screenshot3 from "../../static/images/landingPageImage3.png";
 
 class Home extends Component {
     state = {
-        redirect: false,
+        redirect: false
     };
 
     handleClick = (e, id) => {
-        this.setState({redirect: true, category: id});
+        this.setState({ redirect: true, category: id });
     };
 
     render() {
@@ -50,7 +50,7 @@ class Home extends Component {
                 <Row>
                     <Col>
                         <p className="lead">
-                            Upload recipe from an webpage or enter manually.
+                            Upload recipe from a webpage or enter manually.
                         </p>
                         <img
                             className="screenshot"

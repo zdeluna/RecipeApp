@@ -20,7 +20,6 @@ const Category = props => {
     const { user, update } = useContext(AuthContext);
     const client = useApolloClient();
 
-    console.log(user);
     useEffect(
         () => {
             if (user && user.categories) {
@@ -55,9 +54,6 @@ const Category = props => {
         });
 
         data.user.categories = categoryButtons;
-
-        console.log("Before write query");
-        console.log(data.user);
 
         client.writeQuery({
             query: GET_USER,

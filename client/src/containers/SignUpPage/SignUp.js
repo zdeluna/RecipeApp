@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 
 import { Link } from "react-router-dom";
-import app from "../../base";
 import { Container, Form, Button, Input, FormGroup, Label } from "reactstrap";
 import { ADD_USER } from "../../api/mutations/user/createUser";
 import { LOG_IN_USER } from "../../api/mutations/user/signInUser";

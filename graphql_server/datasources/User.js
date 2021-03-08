@@ -9,7 +9,7 @@ class UserAPI extends RESTDataSource {
         if (process.env.GRAPH_ENV == "test") {
             this.baseURL = "https://localhost:5001/api/";
         } else {
-            this.baseURL = "https://recipescheduler.azurewebsites.net/api/User";
+            this.baseURL = "https://recipescheduler.azurewebsites.net/api/";
         }
     }
     async getUserById({ id }) {

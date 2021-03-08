@@ -14,7 +14,6 @@ import { setContext } from "apollo-link-context";
 import { onError } from "apollo-link-error";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { from } from "apollo-boost";
-import app from "./base";
 
 const init = async () => {
     let GRAPHQL_URI =
@@ -26,8 +25,8 @@ const init = async () => {
     const httpLink = createHttpLink({
         uri: GRAPHQL_URI,
         headers: {
-            "client-name": "Recipe Scheduler [web]",
-            "client-version": "1.0.0"
+            //"client-name": "Recipe Scheduler [web]",
+            //"client-version": "1.0.0"
         }
     });
 

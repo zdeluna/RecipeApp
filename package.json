@@ -33,7 +33,7 @@
         "util": "^0.12.1"
     },
     "devDependencies": {
-        "concurrently": "^3.5.0",
+        "concurrently": "^3.6.1",
         "fs": "0.0.1-security",
         "jest": "^25.1.0"
     }

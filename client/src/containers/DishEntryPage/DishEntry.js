@@ -52,10 +52,7 @@ const DishEntry = props => {
             id: dishId
         },
         async onCompleted({ dish }) {
-            console.log(dish);
             if (dish.steps && dish.steps.length) {
-                console.log("Made it");
-                console.log(dish.steps);
                 setSteps(dish.steps);
             }
             if (dish.ingredients && dish.ingredients.length)
@@ -66,9 +63,6 @@ const DishEntry = props => {
             if (dish.cookingTime) setCookingTime(dish.cookingTime);
             if (dish.notes) setNotes(dish.notes);
             setDish(dish);
-            console.log("dish object loaded");
-            console.log(steps);
-            console.log(ingredients);
         }
     });
 
@@ -171,7 +165,7 @@ const DishEntry = props => {
     if (loading) return <Loading />;
     else
         return (
-            <div id="dishEntryContainer">
+            <div>
                 <Row>
                     <Col>
                         {" "}

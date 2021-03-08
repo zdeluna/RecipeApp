@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import app from "../base";
 import { Table, Container } from "reactstrap";
 import "./DishEntryStepsTable.css";
 
@@ -8,7 +7,6 @@ class DishEntryStepsTable extends Component {
     constructor() {
         super();
         this.state = {
-            user: app.auth().currentUser,
             entries: [],
             type: "",
             striped: false
