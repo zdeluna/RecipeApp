@@ -32,6 +32,9 @@ const DishEntry = props => {
     const [dish, setDish] = useState({});
     const client = useApolloClient();
     const [steps2, setSteps2] = useState([]);
+    const [scheduled, setScheduled] = useState(false);
+
+    console.log("render dish entry");
 
     const [deleteDish] = useMutation(DELETE_DISH, {
         onCompleted(updateDishResponse) {
@@ -89,6 +92,10 @@ const DishEntry = props => {
         deleteDish({ variables: { id: dishId } });
     };
 
+    const scheduleDish = () => {
+        setScheduled(true);
+    };
+
     const RenderNewDishForm = () => {
         if (makeDishMode) {
             let redirect_url =
@@ -135,6 +142,8 @@ const DishEntry = props => {
                                 category={category}
                                 userId={userId}
                                 history={history}
+                                scheduled={scheduled}
+                                scheduleDish={scheduleDish}
                             />
                             <hr />
                             <Notes

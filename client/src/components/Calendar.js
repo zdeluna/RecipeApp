@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Button } from "reactstrap";
 import "./Calendar.css";
 import "react-widgets/dist/css/react-widgets.css";
@@ -15,20 +15,33 @@ const Calendar = props => {
     const [dishId] = useState(props.dishId);
     const [history, setHistory] = useState(props.history);
     const [newScheduleDate, setNewScheduleDate] = useState("");
-    const [dateIsScheduled, setDateIsScheduled] = useState(false);
+    const [dateIsScheduled, setDateIsScheduled] = useState(props.scheduled);
     const [updateDate, setUpdateDate] = useState(false);
     const [datePickerValue, setDatePickerValue] = useState(new Date());
     const [dish, setDish] = useState("");
 
+    console.log("calendar flag value");
+    console.log(dateIsScheduled);
+
     const [updateDish] = useMutation(UPDATE_DISH);
-    useQuery(GET_DISH, {
+
+    const { loading, data } = useQuery(GET_DISH, {
         variables: {
             id: dishId
-        },
-        onCompleted({ dish }) {
-            setDish(dish);
         }
     });
+
+    useEffect(
+        () => {
+            if (!loading) {
+                setDish(data.dish);
+                console.log(data.dish);
+
+                if (props.scheduled) setNewScheduleDate(data.dish.history[0]);
+            }
+        },
+        [loading]
+    );
 
     Moment.locale("en");
     momentLocalizer();
@@ -42,13 +55,14 @@ const Calendar = props => {
 
     /* This function will handle adding the history state object to the database*/
     const addDateToDatabase = async () => {
-        // If the state update field is true, then we need to make a put request instead of a post request
-        console.log("Add to database");
-
         // User has selected the default date (today)
         if (!newScheduleDate) {
             dateChanged(new Date());
         }
+
+        setDateIsScheduled(true);
+
+        props.scheduleDish();
 
         updateDish({
             variables: {
@@ -58,7 +72,6 @@ const Calendar = props => {
                 lastMade: history[0]
             }
         });
-        setDateIsScheduled(true);
     };
 
     /* Add the date to the history array in state */
@@ -66,7 +79,6 @@ const Calendar = props => {
         setDatePickerValue(newDate);
 
         newDate = newDate.toLocaleDateString("en-US", dateOptions);
-        console.log("New Date: " + newDate);
         // If the user has not entered scheduled the dish, then just add the date to the end of the array
         let newHistory = history;
         if (updateDate) newHistory = removeDate(newHistory, 0);
@@ -87,60 +99,48 @@ const Calendar = props => {
         return array.filter((_, i) => i !== index);
     };
 
-    /* Render the components based on if the user has already sheduled the dish today*/
-    const RenderComponents = () => {
-        if (!dateIsScheduled)
-            return (
-                <div>
-                    {" "}
-                    <Row>
-                        <Col>
-                            <Button
-                                color="primary"
-                                size="md"
-                                onClick={addDateToDatabase}
-                            >
-                                Schedule Dish
-                            </Button>
-                        </Col>
-                        <Col>
-                            <PopOver history={history} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <DateTimePicker
-                                id="dateTimePicker"
-                                time={false}
-                                format="MMM DD YYYY"
-                                value={datePickerValue}
-                                defaultValue={new Date()}
-                                onChange={value => dateChanged(value)}
-                            />
-                        </Col>
-                    </Row>
-                </div>
-            );
-        else
-            return (
-                <div>
-                    <h3>Scheduled for {newScheduleDate}</h3>
-                    <Button
-                        color="primary"
-                        size="md"
-                        onClick={updateCurrentDate}
-                    >
-                        Reschedule Dish
-                    </Button>
-                </div>
-            );
-    };
-
-    return (
-        <div id="calendarComponent">
-            <RenderComponents />
-        </div>
-    );
+    /* Render the components based on if the user has already scheduled the dish today*/
+    if (!dateIsScheduled)
+        return (
+            <div>
+                {" "}
+                <Row>
+                    <Col>
+                        <Button
+                            color="primary"
+                            size="md"
+                            onClick={addDateToDatabase}
+                        >
+                            Schedule Dish
+                        </Button>
+                    </Col>
+                    <Col>
+                        <PopOver history={history} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <DateTimePicker
+                            id="dateTimePicker"
+                            time={false}
+                            format="MMM DD YYYY"
+                            value={datePickerValue}
+                            defaultValue={new Date()}
+                            onChange={value => dateChanged(value)}
+                        />
+                    </Col>
+                </Row>
+            </div>
+        );
+    else
+        return (
+            <div>
+                <h3>Scheduled for {newScheduleDate}</h3>
+                <Button color="primary" size="md" onClick={updateCurrentDate}>
+                    Reschedule Dish
+                </Button>
+            </div>
+        );
 };
 
 export default Calendar;

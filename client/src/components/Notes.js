@@ -17,6 +17,7 @@ const Notes = props => {
         type: "text",
         initialValue: props.notes
     });
+
     useQuery(GET_DISH, {
         variables: {
             id: dishId
