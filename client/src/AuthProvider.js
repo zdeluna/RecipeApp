@@ -57,7 +57,10 @@ export const AuthProvider = ({ children }) => {
                 login: async (username, password) => {
                     client.resetStore();
                     await signInUser({
-                        variables: { username: username, password: password }
+                        variables: {
+                            username: username,
+                            password: password
+                        }
                     });
                 },
                 signUp: async (username, password) => {

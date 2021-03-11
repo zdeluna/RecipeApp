@@ -25,6 +25,7 @@ const SignUp = props => {
 
             props.history.push("/users/category");
         } catch (error) {
+            //console.log(error);
             switch (error.message) {
                 case "GraphQL error: Password is not valid.":
                     alert("Password is not valid.");
