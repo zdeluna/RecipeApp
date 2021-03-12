@@ -6,12 +6,15 @@ import "./NewDishForm.css";
 import { UPDATE_DISH } from "../api/mutations/dish/updateDish";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { GET_DISH } from "../api/queries/dish/getDish";
+import { useApolloClient } from "@apollo/react-hooks";
 
 const NewDishForm = props => {
     const [userId] = useState(props.userId);
     const [dishId] = useState(props.dishId);
     const [progressNumber, setProgressNumber] = useState(0);
     const [dish, setDish] = useState(props.dish);
+    const client = useApolloClient();
+
     /*  Progress Number
         1: User wants to get steps/ingredients from url
         2: User is setting steps
@@ -34,20 +37,41 @@ const NewDishForm = props => {
     });
 
     const addSteps = steps => {
-        setDish({ ...dish, steps: steps });
-        setProgressNumber(3);
-    };
+        let filteredSteps = steps.map(step => step.value);
+        let filteredIngredients = dish.ingredients.map(
+            ingredient => ingredient.value
+        );
 
-    const addIngredients = ingredients => {
+        setDish({ ...dish, steps: filteredSteps });
         updateDish({
             variables: {
                 id: dish.id,
-                ingredients: ingredients,
-                steps: dish.steps,
+                ingredients: filteredIngredients,
+                steps: filteredSteps,
                 name: dish.name,
                 category: dish.category
             }
         });
+
+        let data = client.readQuery({
+            query: GET_DISH,
+            variables: { id: dish.id }
+        });
+
+        data.dish.steps = filteredSteps;
+        data.dish.ingredients = filteredIngredients;
+
+        client.writeQuery({
+            query: GET_DISH,
+            variables: { id: dish.id },
+            data: { dish: data.dish }
+        });
+    };
+
+    const addIngredients = ingredients => {
+        setDish({ ...dish, ingredients: ingredients });
+
+        setProgressNumber(3);
     };
 
     const handleClick = (event, progressNumber) => {
@@ -60,7 +84,6 @@ const NewDishForm = props => {
             return (
                 <AddUrlForm
                     dishId={dishId}
-                    userId={userId}
                     category={props.category}
                     onClick={props.onClick}
                 />
@@ -68,21 +91,19 @@ const NewDishForm = props => {
         } else if (progressNumber === 2) {
             return (
                 <ItemForm
-                    key={dishId + "steps"}
-                    userId={userId}
+                    key={dishId + "ingredients"}
                     dishId={dishId}
-                    onClick={addSteps}
-                    type={"steps"}
+                    onClick={addIngredients}
+                    type={"ingredients"}
                 />
             );
         } else if (progressNumber === 3) {
             return (
                 <ItemForm
-                    key={dishId + "ingredients"}
-                    userId={userId}
+                    key={dishId + "steps"}
                     dishId={dishId}
-                    onClick={addIngredients}
-                    type={"ingredients"}
+                    onClick={addSteps}
+                    type={"steps"}
                 />
             );
         }
@@ -116,7 +137,7 @@ const NewDishForm = props => {
                             value="1"
                             onClick={e => handleClick(e, 2)}
                         >
-                            Add Steps Manually
+                            Add Recipe Manually
                         </Button>
                     </Col>
                 </Row>

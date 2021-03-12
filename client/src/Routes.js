@@ -29,6 +29,13 @@ const Routes = props => {
                     )} />
                     <Route
                         exact
+                        path="/users/category/:category/dish/:dishId/steps"
+                        render={props => (
+                            <ItemForm {...props} update={true} type={"steps"} />
+                        )}
+                    />
+                    <Route
+                        exact
                         path="/users/category/:category/dish/:dishId/ingredients"
                         render={props => (
                             <ItemForm
@@ -36,13 +43,6 @@ const Routes = props => {
                                 update={true}
                                 type={"ingredients"}
                             />
-                        )}
-                    />
-                    <Route
-                        exact
-                        path="/users/category/:category/dish/:dishId/steps"
-                        render={props => (
-                            <ItemForm {...props} update={true} type={"steps"} />
                         )}
                     />
                     )} />

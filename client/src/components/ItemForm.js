@@ -6,7 +6,7 @@ import { Form, Button, FormGroup, Container, Col, Row } from "reactstrap";
 import "./ItemForm.css";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { UPDATE_DISH } from "../api/mutations/dish/updateDish";
+import { UPDATE_PARTIAL_DISH } from "../api/mutations/dish/updateDish";
 import { useApolloClient } from "@apollo/react-hooks";
 import { GET_DISH } from "../api/queries/dish/getDish";
 
@@ -25,21 +25,31 @@ const ItemForm = props => {
     const [itemsArray, setItemsArray] = useState([
         { value: "", visible: false }
     ]);
-
     useQuery(GET_DISH, {
         variables: {
             id: dishId
         },
         onCompleted({ dish }) {
             if (update) {
-                if (type === "steps" && dish.steps && dish.steps.length)
-                    setItemsArray(dish.steps);
+                if (type === "steps" && dish.steps && dish.steps.length) {
+                    var stepsArray = dish.steps.map(step => ({
+                        value: step,
+                        visible: "true"
+                    }));
+                    setItemsArray(stepsArray);
+                }
                 if (
                     type === "ingredients" &&
                     dish.ingredients &&
                     dish.ingredients.length
-                )
-                    setItemsArray(dish.ingredients);
+                ) {
+                    var ingredientsArray = dish.ingredients.map(ingredient => ({
+                        value: ingredient,
+                        visible: "true"
+                    }));
+
+                    setItemsArray(ingredientsArray);
+                }
             }
         }
     });
@@ -52,7 +62,7 @@ const ItemForm = props => {
         };
     }, []);
 
-    const [updateDish] = useMutation(UPDATE_DISH, {
+    const [updatePartialDish] = useMutation(UPDATE_PARTIAL_DISH, {
         onCompleted(updateDishResponse) {
             props.history.push(`/users/category/${category}/dish/${dishId}`);
         }
@@ -60,12 +70,26 @@ const ItemForm = props => {
 
     const addItemsToDatabase = () => {
         if (update) {
-            console.log("update steps and ingredients");
-            updateDish({
+            // Filter the array to only have the value property
+            let filteredArray = itemsArray.map(item => item.value);
+            updatePartialDish({
                 variables: {
                     id: dishId,
-                    [type]: itemsArray
+                    [type]: filteredArray
                 }
+            });
+
+            let data = client.readQuery({
+                query: GET_DISH,
+                variables: { id: dishId }
+            });
+
+            data.dish[type] = filteredArray;
+
+            client.writeQuery({
+                query: GET_DISH,
+                variables: { id: dishId },
+                data: { dish: data.dish }
             });
         } else props.onClick(itemsArray);
     };
@@ -81,7 +105,7 @@ const ItemForm = props => {
 
     const handleChange = (index, value) => {
         let newItemsArray = itemsArray;
-        newItemsArray[index] = value;
+        newItemsArray[index].value = value;
         setItemsArray(newItemsArray);
     };
 
@@ -111,7 +135,7 @@ const ItemForm = props => {
                                 <Item
                                     key={new Date().getTime() + index}
                                     id={index}
-                                    value={item}
+                                    value={item.value}
                                     onChange={handleChange}
                                     onClick={index => handleDeleteItem(index)}
                                     onBlur={handleChange}
