@@ -25,6 +25,9 @@ const ItemForm = props => {
     const [itemsArray, setItemsArray] = useState([
         { value: "", visible: false }
     ]);
+
+    const buttonText = type.substring(0, type.length - 1);
+
     useQuery(GET_DISH, {
         variables: {
             id: dishId
@@ -150,9 +153,9 @@ const ItemForm = props => {
                                 color="primary"
                                 onClick={addItem}
                             >
-                                Add
+                                Add {buttonText}
                             </Button>
-                            <Button color="primary">Save</Button>
+                            <Button color="primary">Done</Button>
                         </FormGroup>
                     </Form>
                 </Col>
