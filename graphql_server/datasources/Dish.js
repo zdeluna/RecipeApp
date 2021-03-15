@@ -94,8 +94,6 @@ class DishAPI extends RESTDataSource {
                 value: dishFields[prop]
             });
         }
-        console.log("in partial dish function");
-        console.log(patchArray);
 
         return await this.patch(`/${id}`, patchArray, {
             headers: { Authorization: this.context.token }
@@ -117,8 +115,6 @@ class DishAPI extends RESTDataSource {
         let steps = [];
         let ingredients = [];
         let patchArray = [];
-        console.log("url");
-        console.log(url);
         const requestOptions = {
             uri: url,
             encoding: "utf8"
@@ -131,9 +127,6 @@ class DishAPI extends RESTDataSource {
                 let $ = cheerio.load(data);
                 steps = await getStepsFromWebPage($);
                 ingredients = await getIngredientsFromWebPage($);
-                console.log("FROM URL: ");
-                console.log(steps);
-                console.log(ingredients);
 
                 if (steps.length) {
                     patchArray.push({

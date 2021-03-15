@@ -82,7 +82,8 @@ namespace RecipeAPI.Services
         }
 
         public async Task<Dish> UpdateEntireDish(long dishId, UpdateDishRequest updatedDishRequest) {
-           
+
+            Console.WriteLine("Update entire dish");
             // If the user is updating ingredients
             if (updatedDishRequest.Ingredients != null)
             {
@@ -107,7 +108,6 @@ namespace RecipeAPI.Services
 
         public async Task<Dish> UpdatePartOfDish(long dishId, JsonPatchDocument<UpdateDishRequest> patchDish, ModelStateDictionary ModelState)
         {
-
             return await _dishRepo.UpdatePartOfDish(patchDish, dishId, ModelState);
         }
 

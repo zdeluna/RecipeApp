@@ -50,10 +50,16 @@ namespace RecipeAPI.Services
 
         public async Task<Dish> GetDishById(long id)
         {
-            return await GetAll().Include(s => s.History)
+            var dish = await GetAll().Include(s => s.History)
                 .Include(s => s.Ingredients)
                 .Include(s => s.Steps)
                 .FirstOrDefaultAsync(m => m.ID == id);
+
+            dish.Ingredients = dish.Ingredients.OrderBy(x => x.ID).ToList();
+            dish.Steps = dish.Steps.OrderBy(x => x.ID).ToList();
+            dish.History = dish.History.OrderBy(x => x.ID).ToList();
+
+            return dish;
         }
 
         public async Task<Dish> AddDish(Dish dish)
@@ -81,6 +87,10 @@ namespace RecipeAPI.Services
             var dish = await GetDishById(id);
             var updateDishRequest = _mapper.Map<UpdateDishRequest>(dish);
             Console.WriteLine(dish);
+
+
+
+
             patchDish.ApplyTo(updateDishRequest, ModelState);
 
             if (!ModelState.IsValid)

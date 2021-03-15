@@ -75,6 +75,8 @@ const ItemForm = props => {
         if (update) {
             // Filter the array to only have the value property
             let filteredArray = itemsArray.map(item => item.value);
+            console.log("filtered Array");
+            console.log(filteredArray);
             updatePartialDish({
                 variables: {
                     id: dishId,
@@ -119,6 +121,7 @@ const ItemForm = props => {
 
     const handleDeleteItem = index => {
         let newItemsArray = removeItem(index);
+        console.log("After deletion");
         console.log(newItemsArray);
 
         setItemsArray(newItemsArray);

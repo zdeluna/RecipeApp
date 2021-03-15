@@ -34,8 +34,6 @@ const DishEntry = props => {
     const [steps2, setSteps2] = useState([]);
     const [scheduled, setScheduled] = useState(false);
 
-    console.log("render dish entry");
-
     const [deleteDish] = useMutation(DELETE_DISH, {
         onCompleted(updateDishResponse) {
             /*

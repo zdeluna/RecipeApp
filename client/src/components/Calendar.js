@@ -20,9 +20,6 @@ const Calendar = props => {
     const [datePickerValue, setDatePickerValue] = useState(new Date());
     const [dish, setDish] = useState("");
 
-    console.log("calendar flag value");
-    console.log(dateIsScheduled);
-
     const [updateDish] = useMutation(UPDATE_DISH);
 
     const { loading, data } = useQuery(GET_DISH, {
@@ -35,7 +32,6 @@ const Calendar = props => {
         () => {
             if (!loading) {
                 setDish(data.dish);
-                console.log(data.dish);
 
                 if (props.scheduled) setNewScheduleDate(data.dish.history[0]);
             }
