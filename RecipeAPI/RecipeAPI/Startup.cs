@@ -37,9 +37,9 @@ namespace RecipeAPI
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddDbContext<DatabaseContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
-            //services.AddDbContext<DatabaseContext>(options =>
-              //  options.UseSqlServer(Configuration.GetConnectionString("Azure")));
+            //services.AddDbContext<DatabaseContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
+            services.AddDbContext<DatabaseContext>(options =>
+              options.UseSqlServer(Configuration.GetConnectionString("Azure")));
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
