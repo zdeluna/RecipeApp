@@ -74,6 +74,9 @@ export const AuthProvider = ({ children }) => {
                 },
                 update: async updatedProperties => {
                     await updateUser(updatedProperties);
+                },
+                logout: async => {
+                    console.log("logout");
                 }
             }}
         >
