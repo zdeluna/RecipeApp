@@ -16,7 +16,7 @@ namespace RecipeAPI.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Category = table.Column<long>(type: "bigint", nullable: false),
                     CookingTime = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    LastMade = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    LastMade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserID = table.Column<long>(type: "bigint", nullable: false)

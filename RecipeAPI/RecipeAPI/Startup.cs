@@ -25,10 +25,12 @@ namespace RecipeAPI
 {
     public class Startup
     {
+        private readonly IHostEnvironment _currentEnvironment;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostEnvironment env)
         {
             Configuration = configuration;
+            _currentEnvironment = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -37,9 +39,16 @@ namespace RecipeAPI
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //services.AddDbContext<DatabaseContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
-            services.AddDbContext<DatabaseContext>(options =>
-              options.UseSqlServer(Configuration.GetConnectionString("Azure")));
+            if (_currentEnvironment.IsProduction())
+            {
+
+                services.AddDbContext<DatabaseContext>(options =>
+                  options.UseSqlServer(Configuration.GetConnectionString("Azure")));
+            }
+
+            else {
+                services.AddDbContext<DatabaseContext>(opt => opt.UseInMemoryDatabase("RecipeAPI"));
+            }
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

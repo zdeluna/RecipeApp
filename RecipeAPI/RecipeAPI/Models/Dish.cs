@@ -18,7 +18,7 @@ namespace RecipeAPI.Models
         [StringLength(100)]
         public string CookingTime { get; set; }
 
-        [StringLength(40)]
+        [StringLength(100)]
         public string LastMade { get; set; }
 
         [StringLength(1000)]

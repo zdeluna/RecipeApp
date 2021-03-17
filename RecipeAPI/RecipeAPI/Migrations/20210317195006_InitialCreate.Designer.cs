@@ -10,7 +10,7 @@ using RecipeAPI.Models;
 namespace RecipeAPI.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210301235714_InitialCreate")]
+    [Migration("20210317195006_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,8 +59,8 @@ namespace RecipeAPI.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LastMade")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100)
