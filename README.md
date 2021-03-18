@@ -2,7 +2,7 @@
 
 This project allows users to save food recipes to a database. Users can store the dates of when they made the recipes and create notes.
 
-![Screenshot 2](/docs/images/walkthrough.gif "Screenshot 1")
+![Screenshot 1](/docs/images/Walkthrough.gif "Screenshot 1")
 
 ## Getting Started
 
