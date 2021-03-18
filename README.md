@@ -8,11 +8,6 @@ This project allows users to save food recipes to a database. Users can store th
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Prerequisites
-
-You will need to create a Firebase Application at https://firebase.google.com/
-Copy the firebase credientials stored as a json into the repository
-
 ### Installing
 
 Install the dependencies of the backend server where the API calls are made.
@@ -53,14 +48,15 @@ npm run dev
 
 ## Architecture
 
-This application uses React as the front-end client and uses the Apollo library to communicate with the GRAPHQL server. The GraphQL server makes API requests to the RESTFUL server. The RESTFUL server process those requests using data stored in Google's SQL Cloud and Firebase Authentication databases.
+This application uses React as the front-end client and uses the Apollo library to communicate with the GRAPHQL server. The GraphQL server makes API requests to the RESTFUL server. The RESTFUL server process those requests using data stored in Azure's SQL DB.
 
 ![Screenshot 3](/client/src/static/images/Architecture.png?raw=true "Screenshot 3")
 
 ## Built With
 
 -   [React](https://reactjs.org/)
--   [Google Cloud SQL](https://cloud.google.com/sql)
+-   [.NET](https://dotnet.microsoft.com/)
+-   [Azure](https://azure.microsoft.com/en-us/)
 -   [GraphQL](https://graphql.org/)
 -   [Apollo](https://www.apollographql.com/)
 -   [Reactstrap](https://reactstrap.github.io/)
