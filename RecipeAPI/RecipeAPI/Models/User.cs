@@ -15,6 +15,10 @@ namespace RecipeAPI.Models
         public DateTime LastLoggedIn { get; set; }
 
         public List<Category> Categories { get; set; }
+
+        public string RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
+
     }
 
 }

@@ -1,25 +1,25 @@
 ﻿<Properties StartupConfiguration="{4FCE5C01-396D-458A-9E2E-E25B9B8625CF}|Default">
   <MonoDevelop.Ide.ItemProperties.RecipeAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Models/DishResponse.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RecipeAPI/Models/UpdateDishRequest.cs">
     <Files>
       <File FileName="RecipeAPI/Services/DishRepository.cs" Line="53" Column="26" />
       <File FileName="RecipeAPI/Services/Repository.cs" />
       <File FileName="RecipeAPI/Models/UpdateUserRequest.cs" Line="1" Column="1" />
       <File FileName="RecipeAPI/Models/Category.cs" />
       <File FileName="RecipeAPI/Models/UpdateCategoryRequest.cs" />
-      <File FileName="RecipeAPI/Services/UserService.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Services/UserService.cs" Line="163" Column="10" />
       <File FileName="RecipeAPI/MappingProfile/AutoMapperProfile.cs" Line="1" Column="1" />
       <File FileName="RecipeAPI/Models/UpdateDishRequest.cs" Line="1" Column="1" />
-      <File FileName="RecipeAPI/Controllers/UserController.cs" />
+      <File FileName="RecipeAPI/Controllers/UserController.cs" Line="1" Column="1" />
       <File FileName="RecipeAPI/Middleware/ErrorHandlingMiddleware.cs" Line="1" Column="1" />
       <File FileName="RecipeAPI/Services/CategoryRepository.cs" />
-      <File FileName="RecipeAPI/Models/User.cs" />
+      <File FileName="RecipeAPI/Models/User.cs" Line="18" Column="1" />
       <File FileName="RecipeAPI/Services/DishService.cs" Line="69" Column="1" />
-      <File FileName="RecipeAPI/Controllers/LoginController.cs" />
-      <File FileName="RecipeAPI/Controllers/DishController.cs" />
-      <File FileName="RecipeAPI/Startup.cs" Line="42" Column="26" />
+      <File FileName="RecipeAPI/Controllers/LoginController.cs" Line="41" Column="9" />
+      <File FileName="RecipeAPI/Controllers/DishController.cs" Line="77" Column="27" />
+      <File FileName="RecipeAPI/Startup.cs" Line="50" Column="10" />
       <File FileName="RecipeAPI/Controllers/BaseController.cs" />
-      <File FileName="RecipeAPI/Models/Dish.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Models/Dish.cs" Line="19" Column="9" />
       <File FileName="RecipeAPI/Models/Step.cs" />
       <File FileName="RecipeAPI/Models/Ingredient.cs" />
       <File FileName="RecipeAPI/Services/IngredientRepository.cs" />
@@ -32,6 +32,7 @@
       <File FileName="RecipeAPI/Services/UserRepository.cs" />
       <File FileName="RecipeAPI/Exceptions/BadRequestException.cs" Line="1" Column="1" />
       <File FileName="RecipeAPI/Models/DishResponse.cs" Line="1" Column="1" />
+      <File FileName="RecipeAPI/Models/RefreshTokenRequest.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -43,7 +44,7 @@
               <Node name="MappingProfile" expanded="True" />
               <Node name="Middleware" expanded="True" />
               <Node name="Models" expanded="True">
-                <Node name="Dish.cs" selected="True" />
+                <Node name="UpdateDishRequest.cs" selected="True" />
               </Node>
               <Node name="Properties" expanded="True" />
               <Node name="Services" expanded="True" />

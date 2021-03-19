@@ -71,7 +71,7 @@ namespace RecipeAPI.Services
 
         public async Task<User> GetByUsername(string userName)
         {
-            return await GetAll().SingleOrDefaultAsync(x => x.UserName == userName);
+            return await GetAll().Include(s => s.Categories).SingleOrDefaultAsync(x => x.UserName == userName);
         }
     }
 }

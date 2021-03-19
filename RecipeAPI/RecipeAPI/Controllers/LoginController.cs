@@ -32,6 +32,26 @@ namespace RecipeAPI.Controllers
             _userService = userService;
         }
 
+        
+        [HttpPost]
+        [Route("refresh")]
+        public IActionResult Refresh([FromBody] RefreshTokenRequest refreshTokenRequest)
+        { 
+            if (refreshTokenRequest is null)
+            {
+                return BadRequest("Invalid request: Must provide access and refresh tokens");
+            }
+
+            string accessToken = refreshTokenRequest.AccessToken;
+            string refreshToken = refreshTokenRequest.RefreshToken;
+
+            var principal = _userService.GetPrincipalFromExpiredToken(accessToken);
+            var userName = principal.Identity.Name;
+
+            //var user = _userService.
+
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody]User login)
@@ -42,12 +62,18 @@ namespace RecipeAPI.Controllers
             {
 
                 user.LastLoggedIn = DateTime.Now;
+                var refreshToken = _userService.GenerateRefreshToken();
+
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+
                 await _context.SaveChangesAsync();
 
                 var tokenString = _userService.GenerateJWTToken(user);
                 response = Ok(new
                 {
                     token = tokenString,
+                    refreshToken = refreshToken,
                     id = user.ID
                 }); 
             }

@@ -15,6 +15,7 @@ using RecipeAPI.Exceptions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
+using System.Security.Cryptography;
 
 
 namespace RecipeAPI.Services
@@ -24,6 +25,8 @@ namespace RecipeAPI.Services
         bool UserExistsWithUserName(string userName);
         bool UserExistsWithID(long id);
         string GenerateJWTToken(User user);
+        string GenerateRefreshToken();
+        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
         string HashPassword(string password);
         Task<User> AuthenticateUser(User loginCredentials);
         Task<IEnumerable<User>> GetAll();
@@ -72,8 +75,9 @@ namespace RecipeAPI.Services
             {
                 new Category{UserID=newUser.ID, Name="Dinner", Order=0},
                 new Category{UserID=newUser.ID, Name="Lunch", Order=1},
-                new Category{UserID=newUser.ID, Name="Fast Meals", Order=2},
-                new Category{UserID=newUser.ID, Name="Salads", Order=3},
+                new Category{UserID=newUser.ID, Name="Breakfast", Order=2},
+                new Category{UserID=newUser.ID, Name="Fast Meals", Order=3},
+                new Category{UserID=newUser.ID, Name="Salads", Order=4},
             };
 
             await _categoryRepo.AddCategories(categories);
@@ -142,6 +146,42 @@ namespace RecipeAPI.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        
+        }
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"])),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
+        }
+
 
         public string HashPassword(string password) {
             return BCrypt.Net.BCrypt.HashPassword(password);
