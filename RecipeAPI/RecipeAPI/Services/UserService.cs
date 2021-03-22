@@ -31,6 +31,7 @@ namespace RecipeAPI.Services
         Task<User> AuthenticateUser(User loginCredentials);
         Task<IEnumerable<User>> GetAll();
         Task<User> GetById(long id);
+        Task<User> GetByUsername(string username);
         Task<User> Add(User user);
         Task<User> Remove(long id);
         Task<User> Update(JsonPatchDocument<UpdateUserRequest> patchUser, long id, ModelStateDictionary ModelState);
@@ -64,6 +65,16 @@ namespace RecipeAPI.Services
             
             return user;
             
+        }
+
+        public async Task<User> GetByUsername(string username)
+        {
+            User user = await _userRepo.GetByUsername(username);
+            if (user == null)
+                throw new NotFoundException($"User with Username {username} not found");
+
+            return user;
+
         }
 
         public async Task<User> Add(User user) {
@@ -131,7 +142,8 @@ namespace RecipeAPI.Services
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim("role", user.UserRole),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("UserID", user.ID.ToString())
+                new Claim("UserID", user.ID.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
 
@@ -139,7 +151,7 @@ namespace RecipeAPI.Services
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
+                expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: credentials
             );
 

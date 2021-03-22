@@ -63,12 +63,12 @@ namespace RecipeAPI.Controllers
 
             await _userService.Add(user);
 
-            var tokenString = _userService.GenerateJWTToken(user);
+            var accessToken = _userService.GenerateJWTToken(user);
 
             var response = _mapper.Map<UserResponse>(user);
-            response.Token = tokenString;
+            response.AccessToken = accessToken;
 
-            return CreatedAtAction("GetUser", new { id = user.ID, token = tokenString }, response);
+            return CreatedAtAction("GetUser", new { id = user.ID, accessToken = accessToken }, response);
         }
 
         // PATCH: api/User/5
