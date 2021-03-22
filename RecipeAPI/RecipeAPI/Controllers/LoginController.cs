@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using RecipeAPI.Models;
 using RecipeAPI.Services;
 using BCrypt;
+using Microsoft.AspNetCore.Http;
 
 
 namespace RecipeAPI.Controllers
@@ -98,11 +99,12 @@ namespace RecipeAPI.Controllers
                 DateTime expiryTimeJWT = DateTime.Now.AddMinutes(15);
 
                 var accessToken = _userService.GenerateJWTToken(user);
+                HttpContext.Response.Cookies.Append("refresh_token", refreshToken, new CookieOptions() { HttpOnly = true });
+
                 response = Ok(new
                 {
                     jwt_token = accessToken,
                     jwt_token_expiry = expiryTimeJWT,
-                    refresh_token = refreshToken,
                     id = user.ID
                 }); 
             }
