@@ -17,6 +17,7 @@ const dataSources = () => ({
 const context = async ({ req }) => {
     const auth = (req.headers && req.headers.authorization) || "";
     //if (!auth) throw new AuthenticationError("you must be logged in");
+    console.log("in context: " + auth);
     return { token: auth };
 };
 

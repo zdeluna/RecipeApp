@@ -33,7 +33,8 @@ const typeDefs = gql`
     }
 
     type LoginUserResponse {
-        token: String!
+        jwt_token: String!
+        jwt_token_expiry: String!
         id: ID!
     }
 
@@ -95,10 +96,6 @@ const typeDefs = gql`
         userID: ID
         name: String
         order: Int
-    }
-
-    type Token {
-        token: String!
     }
 
     type Query {

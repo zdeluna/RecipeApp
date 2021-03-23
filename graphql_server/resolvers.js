@@ -96,7 +96,8 @@ module.exports = {
             });
             return {
                 success: true,
-                token: response.token,
+                jwt_token: response.jwt_token,
+                jwt_token_expiry: response.jwt_token_expiry,
                 id: response.id
             };
         }

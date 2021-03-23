@@ -12,6 +12,22 @@ class UserAPI extends RESTDataSource {
             this.baseURL = "https://recipescheduler.azurewebsites.net/api/";
         }
     }
+
+    async didReceiveResponse(response, _request) {
+        let cookies = response.headers.get("set-cookie");
+
+        const defaultReturnValue = await super.didReceiveResponse(
+            response,
+            _request
+        );
+        if (cookies) {
+            return {
+                ...defaultReturnValue,
+                headers: response.headers
+            };
+        }
+    }
+
     async getUserById({ id }) {
         const res = await this.get(`/User/${id}`, undefined, {
             headers: { Authorization: this.context.token }

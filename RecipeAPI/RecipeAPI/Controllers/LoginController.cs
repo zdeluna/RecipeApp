@@ -100,7 +100,7 @@ namespace RecipeAPI.Controllers
 
                 var accessToken = _userService.GenerateJWTToken(user);
                 HttpContext.Response.Cookies.Append("refresh_token", refreshToken, new CookieOptions() { HttpOnly = true });
-
+                Console.WriteLine(refreshToken);
                 response = Ok(new
                 {
                     jwt_token = accessToken,

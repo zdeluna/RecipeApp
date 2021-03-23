@@ -34,14 +34,14 @@ export const AuthProvider = ({ children }) => {
         errorPolicy: "all",
         async onCompleted({ signInUser }) {
             localStorage.setItem("userId", signInUser.id);
-            localStorage.setItem("token", signInUser.token);
+            localStorage.setItem("token", signInUser.jwt_token);
             getUser({ variables: { id: signInUser.id } });
         }
     });
 
     const [addUser] = useMutation(ADD_USER, {
         async onCompleted({ addUser }) {
-            localStorage.setItem("token", addUser.token);
+            localStorage.setItem("jwt_token", addUser.jwt_token);
             localStorage.setItem("userId", addUser.id);
 
             getUser({
