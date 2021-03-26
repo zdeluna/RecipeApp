@@ -18,7 +18,7 @@ const LogIn = props => {
     const handleLogIn = async event => {
         try {
             const response = await login(email, password);
-            props.history.push("/users/category");
+            //props.history.push("/users/category");
         } catch (error) {
             switch (error.message) {
                 case "GraphQL error: Password is not valid.":

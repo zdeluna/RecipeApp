@@ -17,7 +17,9 @@ export const AuthProvider = ({ children }) => {
         useQuery(GET_USER, {
             variables: { id: localStorage.getItem("userId") },
             async onCompleted({ user }) {
-                setUserData(user);
+                console.log("user data");
+                console.log(user);
+                if (user) setUserData(user);
             }
         });
     } catch (error) {
@@ -26,6 +28,8 @@ export const AuthProvider = ({ children }) => {
 
     const [getUser] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
+            console.log("get user data");
+            console.log(user);
             setUserData(user);
         }
     });
@@ -34,7 +38,7 @@ export const AuthProvider = ({ children }) => {
         errorPolicy: "all",
         async onCompleted({ signInUser }) {
             localStorage.setItem("userId", signInUser.id);
-            localStorage.setItem("token", signInUser.jwt_token);
+            localStorage.setItem("jwt_token", signInUser.jwt_token);
             getUser({ variables: { id: signInUser.id } });
         }
     });

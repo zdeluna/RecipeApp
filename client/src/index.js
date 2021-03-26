@@ -14,6 +14,7 @@ import { setContext } from "apollo-link-context";
 import { onError } from "apollo-link-error";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { from } from "apollo-boost";
+import { ApolloLink } from "apollo-link";
 
 const init = async () => {
     let GRAPHQL_URI =
@@ -24,10 +25,7 @@ const init = async () => {
 
     const httpLink = createHttpLink({
         uri: GRAPHQL_URI,
-        headers: {
-            //"client-name": "Recipe Scheduler [web]",
-            //"client-version": "1.0.0"
-        }
+        credentials: "include"
     });
 
     const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -47,9 +45,21 @@ const init = async () => {
         if (networkError) console.log(`[Network error]: ${networkError}`);
     });
 
+    const afterwareLink = new ApolloLink((operation, forward) => {
+        return forward(operation).map(response => {
+            const context = operation.getContext();
+            console.log("Response");
+            console.log(context);
+            const cookie = context.response.headers.get("set-cookie");
+            return response;
+        });
+    });
+
     const authLink = setContext((_, { headers }) => {
+        console.log("in auth link");
+        console.log(headers);
         // get the authentication token from local storage if it exists
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("jwt_token");
         return {
             headers: {
                 ...headers,
@@ -68,7 +78,7 @@ const init = async () => {
 
     const client = new ApolloClient({
         cache,
-        link: from([authLink, errorLink, httpLink])
+        link: from([authLink, errorLink, afterwareLink, httpLink])
     });
 
     ReactDOM.render(

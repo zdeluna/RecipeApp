@@ -15,7 +15,8 @@ class UserAPI extends RESTDataSource {
 
     async didReceiveResponse(response, _request) {
         let cookies = response.headers.get("set-cookie");
-
+        console.log("in graphql server: ");
+        console.log(cookies);
         const defaultReturnValue = await super.didReceiveResponse(
             response,
             _request
@@ -26,6 +27,8 @@ class UserAPI extends RESTDataSource {
                 headers: response.headers
             };
         }
+
+        return defaultReturnValue;
     }
 
     async getUserById({ id }) {
@@ -65,6 +68,26 @@ class UserAPI extends RESTDataSource {
             UserName: username,
             Password: password
         });
+        console.log("in sign in user data source");
+        console.log(res);
+        this.context.setHeaders.push({
+            key: "headername",
+            value: "headercontent"
+        });
+        this.context.setCookies.push({
+            name: "testCookie",
+            value: "cookieValue",
+            options: {
+                domain: "http://localhost:3000",
+                expires: new Date("2021-01-01T00:00:00"),
+                httpOnly: true,
+                maxAge: 3600,
+                path: "/",
+                sameSite: true,
+                secure: true
+            }
+        });
+
         return res;
     }
 }

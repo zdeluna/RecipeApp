@@ -5,8 +5,9 @@ module.exports = {
         dishes: (_, undefined, { dataSources }) => {
             return dataSources.dishAPI.getAllDishes();
         },
-        user: (_, { id }, { dataSources }) =>
-            dataSources.userAPI.getUserById({ id }),
+        user: (_, { id }, { dataSources }) => {
+            return dataSources.userAPI.getUserById({ id });
+        },
         ingredientsInSteps: (_, { steps, ingredients }, { dataSources }) => {
             return dataSources.dishAPI.getIngredientsWithSteps({
                 steps,

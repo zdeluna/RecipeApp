@@ -23,6 +23,8 @@ const Category = props => {
     useEffect(
         () => {
             if (user && user.categories) {
+                console.log("user");
+                console.log(user);
                 setCategoryButtons(user.categories);
             }
         },
