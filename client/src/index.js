@@ -56,8 +56,6 @@ const init = async () => {
     });
 
     const authLink = setContext((_, { headers }) => {
-        console.log("in auth link");
-        console.log(headers);
         // get the authentication token from local storage if it exists
         const token = localStorage.getItem("jwt_token");
         return {

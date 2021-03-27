@@ -1,6 +1,7 @@
 "use strict";
 const { RESTDataSource } = require("apollo-datasource-rest");
 //const {RESTDataSource} = require('apollo-server-cloud-functions');
+var cookie = require("cookie");
 
 class UserAPI extends RESTDataSource {
     constructor() {
@@ -13,10 +14,10 @@ class UserAPI extends RESTDataSource {
         }
     }
 
+    /* This method will allow us to return the headers in the login user request so
+     * that we can pass along the cookie to our GraphQL client*/
     async didReceiveResponse(response, _request) {
         let cookies = response.headers.get("set-cookie");
-        console.log("in graphql server: ");
-        console.log(cookies);
         const defaultReturnValue = await super.didReceiveResponse(
             response,
             _request
@@ -68,23 +69,24 @@ class UserAPI extends RESTDataSource {
             UserName: username,
             Password: password
         });
-        console.log("in sign in user data source");
-        console.log(res);
+
+        const cookies = res.headers.get("set-cookie");
+        const parsedCookie = cookie.parse(cookies);
+
         this.context.setHeaders.push({
             key: "headername",
             value: "headercontent"
         });
         this.context.setCookies.push({
-            name: "testCookie",
-            value: "cookieValue",
+            name: "refresh_token",
+            value: parsedCookie.refresh_token,
             options: {
-                domain: "http://localhost:3000",
-                expires: new Date("2021-01-01T00:00:00"),
+                expires: new Date("2021-08-01T00:00:00"),
                 httpOnly: true,
                 maxAge: 3600,
                 path: "/",
-                sameSite: true,
-                secure: true
+                sameSite: false,
+                secure: false
             }
         });
 
