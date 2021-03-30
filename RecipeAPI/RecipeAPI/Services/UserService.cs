@@ -24,7 +24,7 @@ namespace RecipeAPI.Services
     {
         bool UserExistsWithUserName(string userName);
         bool UserExistsWithID(long id);
-        string GenerateJWTToken(User user);
+        string GenerateJWTToken(User user, int expiryMinutes);
         string GenerateRefreshToken();
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
         string HashPassword(string password);
@@ -132,7 +132,7 @@ namespace RecipeAPI.Services
             return null;
         }
 
-        public string GenerateJWTToken(User user)
+        public string GenerateJWTToken(User user, int expiryMinutes)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -151,7 +151,7 @@ namespace RecipeAPI.Services
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(15),
+                expires: DateTime.Now.AddMinutes(expiryMinutes),
                 signingCredentials: credentials
             );
 

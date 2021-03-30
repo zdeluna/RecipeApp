@@ -20,7 +20,7 @@ namespace RecipeAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LoginController : ControllerBase
+    public class LoginController : BaseController
     {
         private readonly IConfiguration _config;
         private readonly DatabaseContext _context;
@@ -38,16 +38,14 @@ namespace RecipeAPI.Controllers
         [Route("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
-            Console.WriteLine("Refresh");
             if (refreshTokenRequest is null)
             {
-                return BadRequest("Invalid request: Must provide access and refresh tokens");
+                return BadRequest("Invalid request: Must provide access token");
             }
 
             string accessToken = refreshTokenRequest.AccessToken;
-            string refreshToken = refreshTokenRequest.RefreshToken;
-            Console.Write("access token: " + accessToken);
-            Console.Write("refresh token: " + refreshToken);
+
+            string refreshToken = Request.Cookies["refresh_token"].ToString();
 
             var principal = _userService.GetPrincipalFromExpiredToken(accessToken);
             var userName = principal.Identity.Name;
@@ -64,16 +62,28 @@ namespace RecipeAPI.Controllers
                 return BadRequest("Invalid request: User does not exist");
             }
 
-            var newAccessToken = _userService.GenerateJWTToken(user);
+            
             var newRefreshToken = _userService.GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;
+
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+
             await _context.SaveChangesAsync();
+
+            var newAccessToken = _userService.GenerateJWTToken(user, 1);
+            DateTime expiryTimeJWT = DateTime.Now.AddMinutes(1);
+
+            CookieOptions cookieOptions = new CookieOptions();
+            cookieOptions.Expires = user.RefreshTokenExpiryTime;
+            cookieOptions.HttpOnly = true;
+
+            HttpContext.Response.Cookies.Append("refresh_token", newRefreshToken, cookieOptions);
 
             return new ObjectResult(new
             {
-                accessToken = newAccessToken,
-                refreshToken = newRefreshToken
+                jwt_token = newAccessToken,
+                jwt_token_expiry = expiryTimeJWT,
             });
         }
 
@@ -90,17 +100,22 @@ namespace RecipeAPI.Controllers
                 var refreshToken = _userService.GenerateRefreshToken();
 
                 user.RefreshToken = refreshToken;
-
+                Console.WriteLine("Assign refresh token: " + refreshToken);
                 user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
 
                 await _context.SaveChangesAsync();
 
 
-                DateTime expiryTimeJWT = DateTime.Now.AddMinutes(15);
+                DateTime expiryTimeJWT = DateTime.Now.AddMinutes(1);
 
-                var accessToken = _userService.GenerateJWTToken(user);
-                HttpContext.Response.Cookies.Append("refresh_token", refreshToken, new CookieOptions() { HttpOnly = true });
-                Console.WriteLine(refreshToken);
+                var accessToken = _userService.GenerateJWTToken(user, 1);
+
+                CookieOptions cookieOptions = new CookieOptions();
+                cookieOptions.Expires = user.RefreshTokenExpiryTime; 
+                cookieOptions.HttpOnly = true;
+
+
+                HttpContext.Response.Cookies.Append("refresh_token", refreshToken, cookieOptions);
                 response = Ok(new
                 {
                     jwt_token = accessToken,

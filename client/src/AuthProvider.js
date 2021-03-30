@@ -39,6 +39,11 @@ export const AuthProvider = ({ children }) => {
         async onCompleted({ signInUser }) {
             localStorage.setItem("userId", signInUser.id);
             localStorage.setItem("jwt_token", signInUser.jwt_token);
+            localStorage.setItem(
+                "jwt_token_expiry",
+                signInUser.jwt_token_expiry
+            );
+
             getUser({ variables: { id: signInUser.id } });
         }
     });

@@ -73,17 +73,16 @@ class UserAPI extends RESTDataSource {
         const cookies = res.headers.get("set-cookie");
         const parsedCookie = cookie.parse(cookies);
 
-        this.context.setHeaders.push({
-            key: "headername",
-            value: "headercontent"
-        });
+        // Format C# DateTime to JavaScript date
+        ///https://stackoverflow.com/questions/61984132/how-do-i-get-cookie-from-apollo-graphql-resolver
+        const expirationDate = new Date(Date.parse(parsedCookie.expires));
+
         this.context.setCookies.push({
             name: "refresh_token",
             value: parsedCookie.refresh_token,
             options: {
-                expires: new Date("2021-08-01T00:00:00"),
+                expires: expirationDate,
                 httpOnly: true,
-                maxAge: 3600,
                 path: "/",
                 sameSite: false,
                 secure: false

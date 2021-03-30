@@ -55,8 +55,18 @@ const init = async () => {
         });
     });
 
-    const authLink = setContext((_, { headers }) => {
-        // get the authentication token from local storage if it exists
+    const refreshJWT = async () => {};
+
+    const authLink = setContext(async (_, { headers }) => {
+        // Check to make sure the jwt isn't expired
+        const expirationDate = localStorage.getItem("jwt_token_expiry");
+
+        // If the jwt is expired, fetch a new token
+        if (new Date() - new Date(expirationDate)) {
+            //await refreshJWT();
+            console.log("Refresh Token");
+        }
+
         const token = localStorage.getItem("jwt_token");
         return {
             headers: {
