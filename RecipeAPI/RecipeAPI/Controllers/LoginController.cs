@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Web;
 using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ using RecipeAPI.Models;
 using RecipeAPI.Services;
 using BCrypt;
 using Microsoft.AspNetCore.Http;
+using RecipeAPI.Exceptions;
 
 
 namespace RecipeAPI.Controllers
@@ -44,7 +46,12 @@ namespace RecipeAPI.Controllers
             }
 
             string accessToken = refreshTokenRequest.AccessToken;
-            Console.WriteLine(Request.Cookies);
+
+            if (Request.Cookies["refresh_token"] == null)
+            {
+                throw new UnauthorizedException("Not Authorized to Refresh Token");
+            }
+            
             string refreshToken = Request.Cookies["refresh_token"].ToString();
 
             var principal = _userService.GetPrincipalFromExpiredToken(accessToken);
@@ -59,10 +66,9 @@ namespace RecipeAPI.Controllers
 
             if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             { 
-                return BadRequest("Invalid request: User does not exist");
+                throw new UnauthorizedException("Not Authorized to Refresh Token");
             }
 
-            
             var newRefreshToken = _userService.GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;
@@ -95,13 +101,11 @@ namespace RecipeAPI.Controllers
             User user = await _userService.AuthenticateUser(login);
             if (user != null)
             {
-
                 user.LastLoggedIn = DateTime.Now;
                 var refreshToken = _userService.GenerateRefreshToken();
 
                 user.RefreshToken = refreshToken;
-                Console.WriteLine("Assign refresh token: " + refreshToken);
-                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+                user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(2);
 
                 await _context.SaveChangesAsync();
 

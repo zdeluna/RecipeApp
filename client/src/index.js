@@ -59,14 +59,12 @@ const init = async () => {
     const refreshJWT = async () => {
         REFRESH_JWT = true;
 
-        console.log("jwt token");
-        console.log(localStorage.getItem("jwt_token"));
         const result = await client.mutate({
             variables: { accessToken: localStorage.getItem("jwt_token") },
             mutation: REFRESH_TOKEN
         });
-        console.log("IN REFRESH: ");
-        console.log(result);
+
+        // Store the new token and token expiration date
         if (result.data.refreshToken) {
             localStorage.setItem(
                 "jwt_token",
