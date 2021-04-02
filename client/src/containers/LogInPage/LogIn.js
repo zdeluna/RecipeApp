@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Container, Form, Button, Input, FormGroup, Label } from "reactstrap";
 import { useApolloClient } from "@apollo/react-hooks";
@@ -15,8 +15,14 @@ const LogIn = props => {
     const [showAlert, setShowAlert] = useState("");
     const { login } = useContext(AuthContext);
 
+    useEffect(() => {});
+
     const handleLogIn = async event => {
         try {
+            localStorage.removeItem("userId");
+            localStorage.removeItem("jwt_token");
+            localStorage.removeItem("jwt_token_expiry");
+
             const response = await login(email, password);
             props.history.push("/users/category");
         } catch (error) {

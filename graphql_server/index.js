@@ -19,7 +19,19 @@ const context = async ({ req, res }) => {
     const auth = (req.headers && req.headers.authorization) || "";
     //if (!auth) throw new AuthenticationError("you must be logged in");
     //
-    return { setCookies: new Array(), setHeaders: new Array(), token: auth };
+    console.log("in context");
+    console.log("req");
+    console.log(req);
+    console.log("res");
+    console.log(res);
+    const cookie = req.headers.cookie || "";
+
+    return {
+        setCookies: new Array(),
+        setHeaders: new Array(),
+        token: auth,
+        cookie: cookie
+    };
 };
 
 if (process.env.GRAPH_ENV == "test") {

@@ -14,10 +14,39 @@ class UserAPI extends RESTDataSource {
         }
     }
 
+    setCookieHeader(headers) {
+        const cookies = headers.get("set-cookie");
+        const parsedCookie = cookie.parse(cookies);
+
+        // Format C# DateTime to JavaScript date
+        ///https://stackoverflow.com/questions/61984132/how-do-i-get-cookie-from-apollo-graphql-resolver
+        const expirationDate = new Date(Date.parse(parsedCookie.expires));
+
+        this.context.setCookies.push({
+            name: "refresh_token",
+            value: parsedCookie.refresh_token,
+            options: {
+                expires: expirationDate,
+                httpOnly: true,
+                path: "/",
+                sameSite: false,
+                secure: false
+            }
+        });
+    }
+
     /* This method will allow us to return the headers in the login user request so
      * that we can pass along the cookie to our GraphQL client*/
     async didReceiveResponse(response, _request) {
-        let cookies = response.headers.get("set-cookie");
+        console.log("Request");
+        console.log(_request.headers.get("set-cookie"));
+        console.log("Response");
+        console.log(response.headers.get("set-cookie"));
+
+        console.log(_request.headers);
+        let cookies =
+            response.headers.get("set-cookie") ||
+            _request.headers.get("set-cookie");
         const defaultReturnValue = await super.didReceiveResponse(
             response,
             _request
@@ -25,7 +54,7 @@ class UserAPI extends RESTDataSource {
         if (cookies) {
             return {
                 ...defaultReturnValue,
-                headers: response.headers
+                headers: response.headers || _request.headers
             };
         }
 
@@ -70,24 +99,20 @@ class UserAPI extends RESTDataSource {
             Password: password
         });
 
-        const cookies = res.headers.get("set-cookie");
-        const parsedCookie = cookie.parse(cookies);
+        this.setCookieHeader(res.headers);
 
-        // Format C# DateTime to JavaScript date
-        ///https://stackoverflow.com/questions/61984132/how-do-i-get-cookie-from-apollo-graphql-resolver
-        const expirationDate = new Date(Date.parse(parsedCookie.expires));
+        return res;
+    }
 
-        this.context.setCookies.push({
-            name: "refresh_token",
-            value: parsedCookie.refresh_token,
-            options: {
-                expires: expirationDate,
-                httpOnly: true,
-                path: "/",
-                sameSite: false,
-                secure: false
-            }
-        });
+    async refreshToken({ accessToken }) {
+        const res = await this.post(
+            "/Login/refresh",
+            {
+                AccessToken: accessToken
+            },
+            { headers: { cookie: this.context.cookie } }
+        );
+        this.setCookieHeader(res.headers);
 
         return res;
     }

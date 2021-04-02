@@ -101,6 +101,17 @@ module.exports = {
                 jwt_token_expiry: response.jwt_token_expiry,
                 id: response.id
             };
+        },
+        refreshToken: async (_, { accessToken }, { dataSources }) => {
+            console.log("Access token: " + accessToken);
+            let response = await dataSources.userAPI.refreshToken({
+                accessToken
+            });
+
+            return {
+                jwt_token: response.jwt_token,
+                jwt_token_expiry: response.jwt_token_expiry
+            };
         }
     }
 };

@@ -38,6 +38,11 @@ const typeDefs = gql`
         id: ID!
     }
 
+    type RefreshTokenResponse {
+        jwt_token: String!
+        jwt_token_expiry: String!
+    }
+
     type Step {
         id: Int
         value: String
@@ -142,6 +147,7 @@ const typeDefs = gql`
         addUser(username: String!, password: String!): CreateUserResponse
         updateUser(id: ID!, categories: [CategoryInput]): UpdateUserResponse
         signInUser(username: String!, password: String!): LoginUserResponse
+        refreshToken(accessToken: String!): RefreshTokenResponse
     }
 `;
 

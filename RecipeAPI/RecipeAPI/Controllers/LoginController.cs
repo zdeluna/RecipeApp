@@ -44,7 +44,7 @@ namespace RecipeAPI.Controllers
             }
 
             string accessToken = refreshTokenRequest.AccessToken;
-
+            Console.WriteLine(Request.Cookies);
             string refreshToken = Request.Cookies["refresh_token"].ToString();
 
             var principal = _userService.GetPrincipalFromExpiredToken(accessToken);
