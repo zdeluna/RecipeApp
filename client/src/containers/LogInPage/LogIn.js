@@ -19,12 +19,10 @@ const LogIn = props => {
 
     const handleLogIn = async event => {
         try {
-            localStorage.removeItem("userId");
-            localStorage.removeItem("jwt_token");
-            localStorage.removeItem("jwt_token_expiry");
-
             const response = await login(email, password);
-            props.history.push("/users/category");
+            console.log("Go to category page");
+
+            //props.history.push("/users/category");
         } catch (error) {
             switch (error.message) {
                 case "GraphQL error: Password is not valid.":

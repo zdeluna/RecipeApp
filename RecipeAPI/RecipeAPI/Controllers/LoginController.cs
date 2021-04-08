@@ -105,12 +105,12 @@ namespace RecipeAPI.Controllers
                 var refreshToken = _userService.GenerateRefreshToken();
 
                 user.RefreshToken = refreshToken;
-                user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(2);
+                user.RefreshTokenExpiryTime = DateTime.Now.AddSeconds(10);
 
                 await _context.SaveChangesAsync();
 
 
-                DateTime expiryTimeJWT = DateTime.Now.AddMinutes(1);
+                DateTime expiryTimeJWT = DateTime.Now.AddSeconds(1);
 
                 var accessToken = _userService.GenerateJWTToken(user, 1);
 

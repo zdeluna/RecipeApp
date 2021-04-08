@@ -19,11 +19,6 @@ const context = async ({ req, res }) => {
     const auth = (req.headers && req.headers.authorization) || "";
     //if (!auth) throw new AuthenticationError("you must be logged in");
     //
-    console.log("in context");
-    console.log("req");
-    console.log(req);
-    console.log("res");
-    console.log(res);
     const cookie = req.headers.cookie || "";
 
     return {

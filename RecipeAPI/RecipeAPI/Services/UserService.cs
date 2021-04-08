@@ -151,7 +151,7 @@ namespace RecipeAPI.Services
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(expiryMinutes),
+                expires: DateTime.Now.AddSeconds(expiryMinutes),
                 signingCredentials: credentials
             );
 

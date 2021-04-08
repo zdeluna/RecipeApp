@@ -8,29 +8,18 @@ import { useApolloClient } from "@apollo/react-hooks";
 
 export const AuthContext = React.createContext({});
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children, history }) => {
     const client = useApolloClient();
     const [userData, setUserData] = useState("");
 
     const [updateUser] = useMutation(UPDATE_USER);
-    try {
-        useQuery(GET_USER, {
-            variables: { id: localStorage.getItem("userId") },
-            async onCompleted({ user }) {
-                console.log("user data");
-                console.log(user);
-                if (user) setUserData(user);
-            }
-        });
-    } catch (error) {
-        console.log(error);
-    }
 
     const [getUser] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
             console.log("get user data");
             console.log(user);
             setUserData(user);
+            history.replace("/users/category");
         }
     });
 
@@ -43,8 +32,6 @@ export const AuthProvider = ({ children }) => {
                 "jwt_token_expiry",
                 signInUser.jwt_token_expiry
             );
-
-            getUser({ variables: { id: signInUser.id } });
         }
     });
 
@@ -64,16 +51,17 @@ export const AuthProvider = ({ children }) => {
             value={{
                 user: userData,
                 login: async (username, password) => {
-                    client.resetStore();
+                    client.cache.reset();
+
                     await signInUser({
                         variables: {
                             username: username,
                             password: password
                         }
                     });
+                    await getUser({ variables: { id: "1" } });
                 },
                 signUp: async (username, password) => {
-                    client.resetStore();
                     await addUser({
                         variables: {
                             username: username,
@@ -85,7 +73,7 @@ export const AuthProvider = ({ children }) => {
                     await updateUser(updatedProperties);
                 },
                 logout: async => {
-                    console.log("logout");
+                    console.log("LOGOUT");
                 }
             }}
         >

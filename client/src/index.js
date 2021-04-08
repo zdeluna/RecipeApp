@@ -16,8 +16,11 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { from } from "apollo-boost";
 import { ApolloLink } from "apollo-link";
 import { REFRESH_TOKEN } from "./api/mutations/user/refreshToken";
+import { createBrowserHistory } from "history";
 
 const init = async () => {
+    const history = createBrowserHistory();
+
     let GRAPHQL_URI =
         "https://us-central1-recipescheduler-227221.cloudfunctions.net/handler";
     if (process.env.NODE_ENV === "development") {
@@ -36,8 +39,11 @@ const init = async () => {
             graphQLErrors.map(({ message, locations, path }) => {
                 // If the user is not authenticated, remove the token in local storage which will proceed the user to the login screen
                 if (message === "401: Unauthorized") {
-                    //localStorage.setItem("token", null);
-                    //client.cache.reset();
+                    localStorage.removeItem("jwt_token");
+                    localStorage.removeItem("jwt_token_expiry");
+                    localStorage.removeItem("userId");
+                    //history.replace("/login");
+                    client.cache.reset();
                     //app.auth().signOut();
                 }
                 console.log(
@@ -46,14 +52,6 @@ const init = async () => {
             });
 
         if (networkError) console.log(`[Network error]: ${networkError}`);
-    });
-
-    const afterwareLink = new ApolloLink((operation, forward) => {
-        return forward(operation).map(response => {
-            const context = operation.getContext();
-            const cookie = context.response.headers.get("set-cookie");
-            return response;
-        });
     });
 
     const refreshJWT = async () => {
@@ -80,9 +78,15 @@ const init = async () => {
     const authLink = setContext(async (_, { headers }) => {
         // Check to make sure the jwt isn't expired
         const expirationDate = localStorage.getItem("jwt_token_expiry");
-
+        console.log("auth link");
+        console.log(_.operationName);
         // If the jwt is expired, fetch a new token
-        if (expirationDate && !REFRESH_JWT) {
+        if (
+            expirationDate &&
+            !REFRESH_JWT &&
+            _.operationName != "refreshToken" &&
+            _.operationName != "signInUser"
+        ) {
             // If the jwt token is expired
             if (new Date() > new Date(expirationDate)) {
                 REFRESH_JWT = false;
@@ -90,8 +94,6 @@ const init = async () => {
 
                 await refreshJWT();
             }
-
-            console.log("get jwt token");
         }
         const token = localStorage.getItem("jwt_token");
 
@@ -116,13 +118,13 @@ const init = async () => {
         fetchOptions: {
             credentials: "include"
         },
-        link: from([authLink, errorLink, afterwareLink, httpLink])
+        link: from([authLink, errorLink, httpLink])
     });
 
     ReactDOM.render(
         <ApolloProvider client={client}>
-            <AuthProvider>
-                <App />
+            <AuthProvider history={history}>
+                <App history={history} />
             </AuthProvider>
         </ApolloProvider>,
         document.getElementById("root")
