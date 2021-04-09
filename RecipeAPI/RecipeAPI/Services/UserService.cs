@@ -1,10 +1,6 @@
 ﻿using System;
 using RecipeAPI.Models;
 using System.Linq;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +20,6 @@ namespace RecipeAPI.Services
     {
         bool UserExistsWithUserName(string userName);
         bool UserExistsWithID(long id);
-        string GenerateJWTToken(User user, int expiryMinutes);
-        string GenerateRefreshToken();
-        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
         string HashPassword(string password);
         Task<User> AuthenticateUser(User loginCredentials);
         Task<IEnumerable<User>> GetAll();
@@ -132,67 +125,7 @@ namespace RecipeAPI.Services
             return null;
         }
 
-        public string GenerateJWTToken(User user, int expiryMinutes)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim("role", user.UserRole),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("UserID", user.ID.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
-            };
-
-
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddSeconds(expiryMinutes),
-                signingCredentials: credentials
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-
-        }
-
-        public string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[32];
-
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
         
-        }
-
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"])),
-                ValidateLifetime = false
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken securityToken;
-
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid token");
-
-            return principal;
-        }
 
 
         public string HashPassword(string password) {

@@ -26,12 +26,14 @@ namespace RecipeAPI.Controllers
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
         private readonly IUserService _userService;
+        private readonly IAuthService _authService;
 
-        public UserController(IConfiguration config, IMapper mapper, IUserService userService)
+        public UserController(IConfiguration config, IMapper mapper, IUserService userService, IAuthService authService)
         {
             _mapper = mapper;
             _config = config;
             _userService = userService;
+            _authService = authService;
         }
 
         // GET: api/User
@@ -63,7 +65,7 @@ namespace RecipeAPI.Controllers
 
             await _userService.Add(user);
 
-            var accessToken = _userService.GenerateJWTToken(user, 15);
+            var accessToken = _authService.GenerateJWTToken(user, 15);
 
             var response = _mapper.Map<UserResponse>(user);
             response.AccessToken = accessToken;

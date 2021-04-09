@@ -27,12 +27,14 @@ namespace RecipeAPI.Controllers
         private readonly IConfiguration _config;
         private readonly DatabaseContext _context;
         private readonly IUserService _userService;
+        private readonly IAuthService _authService;
 
-        public LoginController(IConfiguration config, DatabaseContext context, IUserService userService)
+        public LoginController(IConfiguration config, DatabaseContext context, IUserService userService, IAuthService authService)
         {
             _config = config;
             _context = context;
             _userService = userService;
+            _authService = authService;
         }
 
         
@@ -54,9 +56,8 @@ namespace RecipeAPI.Controllers
             
             string refreshToken = Request.Cookies["refresh_token"].ToString();
 
-            var principal = _userService.GetPrincipalFromExpiredToken(accessToken);
+            var principal = _authService.GetPrincipalFromExpiredToken(accessToken);
             var userName = principal.Identity.Name;
-            Console.WriteLine("username: " + userName);
 
             User user = await _userService.GetByUsername(userName);
 
@@ -69,7 +70,7 @@ namespace RecipeAPI.Controllers
                 throw new UnauthorizedException("Not Authorized to Refresh Token");
             }
 
-            var newRefreshToken = _userService.GenerateRefreshToken();
+            var newRefreshToken = _authService.GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;
 
@@ -77,7 +78,7 @@ namespace RecipeAPI.Controllers
 
             await _context.SaveChangesAsync();
 
-            var newAccessToken = _userService.GenerateJWTToken(user, 1);
+            var newAccessToken = _authService.GenerateJWTToken(user, 1);
             DateTime expiryTimeJWT = DateTime.Now.AddMinutes(1);
 
             CookieOptions cookieOptions = new CookieOptions();
@@ -102,7 +103,7 @@ namespace RecipeAPI.Controllers
             if (user != null)
             {
                 user.LastLoggedIn = DateTime.Now;
-                var refreshToken = _userService.GenerateRefreshToken();
+                var refreshToken = _authService.GenerateRefreshToken();
 
                 user.RefreshToken = refreshToken;
                 user.RefreshTokenExpiryTime = DateTime.Now.AddSeconds(10);
@@ -112,7 +113,7 @@ namespace RecipeAPI.Controllers
 
                 DateTime expiryTimeJWT = DateTime.Now.AddSeconds(1);
 
-                var accessToken = _userService.GenerateJWTToken(user, 1);
+                var accessToken = _authService.GenerateJWTToken(user, 1);
 
                 CookieOptions cookieOptions = new CookieOptions();
                 cookieOptions.Expires = user.RefreshTokenExpiryTime; 
