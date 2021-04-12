@@ -11,6 +11,7 @@ import DishListTable from "./containers/DishListPage/DishListTable";
 import DishEntry from "./containers/DishEntryPage/DishEntry";
 import RecipeGuide from "./containers/DishEntryPage/RecipeGuide";
 import ItemForm from "./components/ItemForm";
+import LogoutButton from "./components/LogoutButton";
 import { GET_USER } from "./api/queries/user/getUser";
 import { useApolloClient } from "@apollo/react-hooks";
 import { AuthContext } from "./AuthProvider";
@@ -36,9 +37,16 @@ const Routes = props => {
         });
     }
 
+    const RenderLogoutButton = () => {
+        if (!user) return null;
+
+        return <LogoutButton />;
+    };
+
     return (
         <Router history={props.history}>
             <div>
+                <RenderLogoutButton />
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <PrivateRoute
