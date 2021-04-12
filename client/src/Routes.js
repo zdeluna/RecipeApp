@@ -18,48 +18,23 @@ import { AuthContext } from "./AuthProvider";
 const Routes = props => {
     const [authenticated, setAuthenticated] = useState(true);
     const client = useApolloClient();
-    /*
-    try {
-        const data = client.readQuery({
+
+    const { user } = useContext(AuthContext);
+
+    if (user) {
+        let watcher = client.cache.watch({
             query: GET_USER,
-            variables: { id: "1" }
+            variables: { id: user.id },
+
+            callback: data => {
+                if (data.result.user == null) {
+                    setAuthenticated(false);
+                } else {
+                    setAuthenticated(true);
+                }
+            }
         });
-
-        console.log("Read cache");
-        console.log(data);
-    } catch (error) {}*/
-    console.log("routes authenticated value: " + authenticated);
-
-    let watcher = client.cache.watch({
-        query: GET_USER,
-        variables: { id: "1" },
-
-        callback: data => {
-            console.log("get user query has changed");
-            console.log(data);
-            if (data.result.user == null) {
-                setAuthenticated(false);
-                console.log("set auth to false");
-            } else {
-                console.log("set auth to true");
-                setAuthenticated(true);
-            }
-        }
-    });
-    /*
-    client
-        .watchQuery({
-            query: GET_USER,
-            variables: { id: "1" },
-            fetchPolicy: "cache-only"
-        })
-        .subscribe({
-            next: ({ data }) => {
-                console.log("in watch query function");
-                console.log(data);
-                if (data.user == null) setAuthenticated(false);
-            }
-        });*/
+    }
 
     return (
         <Router history={props.history}>

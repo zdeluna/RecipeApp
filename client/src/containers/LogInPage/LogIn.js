@@ -15,14 +15,10 @@ const LogIn = props => {
     const [showAlert, setShowAlert] = useState("");
     const { login } = useContext(AuthContext);
 
-    useEffect(() => {});
-
     const handleLogIn = async event => {
         try {
+            event.preventDefault();
             const response = await login(email, password);
-            console.log("Go to category page");
-
-            //props.history.push("/users/category");
         } catch (error) {
             switch (error.message) {
                 case "GraphQL error: Password is not valid.":
@@ -36,8 +32,6 @@ const LogIn = props => {
                     break;
             }
         }
-
-        event.preventDefault();
     };
 
     const handleEmailChange = event => {
@@ -80,7 +74,7 @@ const LogIn = props => {
                             onChange={handlePasswordChange}
                         />
                     </FormGroup>
-                    <Button color="primary" onClick={handleLogIn}>
+                    <Button color="primary" type="submit" onClick={handleLogIn}>
                         Log in
                     </Button>
                     <p>

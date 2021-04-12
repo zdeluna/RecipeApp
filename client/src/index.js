@@ -78,8 +78,6 @@ const init = async () => {
     const authLink = setContext(async (_, { headers }) => {
         // Check to make sure the jwt isn't expired
         const expirationDate = localStorage.getItem("jwt_token_expiry");
-        console.log("auth link");
-        console.log(_.operationName);
         // If the jwt is expired, fetch a new token
         if (
             expirationDate &&
@@ -90,7 +88,6 @@ const init = async () => {
             // If the jwt token is expired
             if (new Date() > new Date(expirationDate)) {
                 REFRESH_JWT = false;
-                console.log("Refresh Token");
 
                 await refreshJWT();
             }

@@ -6,7 +6,6 @@ export default function PrivateRoute({
     authenticated,
     ...rest
 }) {
-    console.log("IN PROTECTED ROUTE: " + authenticated);
     return (
         <Route
             {...rest}

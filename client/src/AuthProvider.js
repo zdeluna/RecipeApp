@@ -16,12 +16,14 @@ export const AuthProvider = ({ children, history }) => {
 
     const [getUser] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
-            console.log("get user data");
-            console.log(user);
             setUserData(user);
             history.replace("/users/category");
+            console.log("get user ");
         }
     });
+
+    const [username, setUserName] = useState("");
+    const [password, setPassword] = useState("");
 
     const [signInUser] = useMutation(LOG_IN_USER, {
         errorPolicy: "all",
@@ -32,16 +34,20 @@ export const AuthProvider = ({ children, history }) => {
                 "jwt_token_expiry",
                 signInUser.jwt_token_expiry
             );
+
+            await getUser({ variables: { id: signInUser.id } });
         }
     });
 
     const [addUser] = useMutation(ADD_USER, {
         async onCompleted({ addUser }) {
-            localStorage.setItem("jwt_token", addUser.jwt_token);
-            localStorage.setItem("userId", addUser.id);
-
-            getUser({
-                variables: { id: localStorage.getItem("userId") }
+            console.log(username);
+            console.log(password);
+            await signInUser({
+                variables: {
+                    username: username,
+                    password: password
+                }
             });
         }
     });
@@ -59,9 +65,11 @@ export const AuthProvider = ({ children, history }) => {
                             password: password
                         }
                     });
-                    await getUser({ variables: { id: "1" } });
                 },
                 signUp: async (username, password) => {
+                    setUserName(username);
+                    setPassword(password);
+                    client.cache.reset();
                     await addUser({
                         variables: {
                             username: username,

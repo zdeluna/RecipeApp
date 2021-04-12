@@ -17,7 +17,6 @@ using BCrypt;
 using Microsoft.AspNetCore.Http;
 using RecipeAPI.Exceptions;
 
-
 namespace RecipeAPI.Controllers
 {
     [ApiController]
@@ -74,12 +73,12 @@ namespace RecipeAPI.Controllers
 
             user.RefreshToken = newRefreshToken;
 
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(AuthConstants.REFRESH_EXPIRY_DAYS);
 
             await _context.SaveChangesAsync();
 
-            var newAccessToken = _authService.GenerateJWTToken(user, 1);
-            DateTime expiryTimeJWT = DateTime.Now.AddMinutes(1);
+            DateTime expiryTimeJWT = DateTime.Now.AddMinutes(AuthConstants.JWT_EXPIRY_MINUTES);
+            var newAccessToken = _authService.GenerateJWTToken(user, expiryTimeJWT);
 
             CookieOptions cookieOptions = new CookieOptions();
             cookieOptions.Expires = user.RefreshTokenExpiryTime;
@@ -106,14 +105,13 @@ namespace RecipeAPI.Controllers
                 var refreshToken = _authService.GenerateRefreshToken();
 
                 user.RefreshToken = refreshToken;
-                user.RefreshTokenExpiryTime = DateTime.Now.AddSeconds(10);
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(AuthConstants.REFRESH_EXPIRY_DAYS);
 
                 await _context.SaveChangesAsync();
 
+                DateTime expiryTimeJWT = DateTime.Now.AddMinutes(AuthConstants.JWT_EXPIRY_MINUTES);
 
-                DateTime expiryTimeJWT = DateTime.Now.AddSeconds(1);
-
-                var accessToken = _authService.GenerateJWTToken(user, 1);
+                var accessToken = _authService.GenerateJWTToken(user, expiryTimeJWT);
 
                 CookieOptions cookieOptions = new CookieOptions();
                 cookieOptions.Expires = user.RefreshTokenExpiryTime; 

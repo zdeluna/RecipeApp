@@ -20,10 +20,7 @@ const SignUp = props => {
     const handleSignUp = async event => {
         try {
             event.preventDefault();
-            client.resetStore();
             const response = await signUp(email, password);
-
-            props.history.push("/users/category");
         } catch (error) {
             //console.log(error);
             switch (error.message) {
@@ -60,7 +57,7 @@ const SignUp = props => {
         <div>
             <Container>
                 <h1>Sign up</h1>
-                <Form onSubmit={handleSignUp}>
+                <Form>
                     <FormGroup>
                         <Label for="userEmail">Email</Label>
                         <Input
@@ -81,7 +78,11 @@ const SignUp = props => {
                             onChange={handlePasswordChange}
                         />
                     </FormGroup>
-                    <Button color="primary" type="submit">
+                    <Button
+                        color="primary"
+                        type="submit"
+                        onClick={handleSignUp}
+                    >
                         Sign Up
                     </Button>
                     <p>

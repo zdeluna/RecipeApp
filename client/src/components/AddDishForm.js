@@ -3,11 +3,30 @@ import { Form, Button, FormGroup, Label, Input, Container } from "reactstrap";
 import "./AddDishForm.css";
 import { useMutation } from "@apollo/react-hooks";
 import { ADD_DISH } from "../api/mutations/dish/createDish";
+import { GET_DISHES } from "../api/queries/dish/getAllDishes";
+import { useApolloClient } from "@apollo/react-hooks";
 
 const AddDishForm = props => {
     let input = { value: "" };
+    const client = useApolloClient();
+
     const [addDish] = useMutation(ADD_DISH, {
         onCompleted({ addDish }) {
+            let data = client.readQuery({
+                query: GET_DISHES
+            });
+
+            data.dishes.push({
+                id: addDish.id,
+                category: props.category,
+                name: input.value
+            });
+
+            client.writeQuery({
+                query: GET_DISHES,
+                data: { dishes: data.dishes }
+            });
+
             props.onClick(addDish.id);
         }
     });

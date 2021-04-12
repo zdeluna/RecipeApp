@@ -21,7 +21,7 @@ namespace RecipeAPI.Services
     public interface IAuthService
     {
 
-        public string GenerateJWTToken(User user, int expiryMinutes);
+        public string GenerateJWTToken(User user, DateTime expiryDate);
         public string GenerateRefreshToken();
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
@@ -35,7 +35,7 @@ namespace RecipeAPI.Services
         {
             _config = config;
         }
-        public string GenerateJWTToken(User user, int expiryMinutes)
+        public string GenerateJWTToken(User user, DateTime expiryDate)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -54,7 +54,7 @@ namespace RecipeAPI.Services
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(expiryMinutes),
+                expires: expiryDate,
                 signingCredentials: credentials
             );
 
