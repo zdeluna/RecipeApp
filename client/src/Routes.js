@@ -1,4 +1,4 @@
-import React, { useState, useContext, Component } from "react";
+import React, { useState, useContext, useEffect, Component } from "react";
 import { Route, Switch } from "react-router";
 import { Router } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -22,20 +22,26 @@ const Routes = props => {
 
     const { user } = useContext(AuthContext);
 
-    if (user) {
-        let watcher = client.cache.watch({
-            query: GET_USER,
-            variables: { id: user.id },
+    useEffect(() => {
+        if (user) {
+            let watcher = client.cache.watch({
+                query: GET_USER,
+                variables: { id: user.id },
 
-            callback: data => {
-                if (data.result.user == null) {
-                    setAuthenticated(false);
-                } else {
-                    setAuthenticated(true);
+                callback: data => {
+                    if (data.result.user == null) {
+                        setAuthenticated(false);
+                    } else {
+                        setAuthenticated(true);
+                    }
                 }
-            }
-        });
-    }
+            });
+            // Cancel watcher subscription in clean up
+            return () => {
+                return watcher();
+            };
+        }
+    });
 
     const RenderLogoutButton = () => {
         if (!user) return null;
