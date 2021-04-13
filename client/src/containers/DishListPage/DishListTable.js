@@ -25,7 +25,7 @@ const DishListTable = props => {
     };
 
     const ShowTableRows = () => {
-        return dishes.map(dish => (
+        return dishes.filter(dish => dish.category == category).map(dish => (
             <tr className="dishRow" key={dish.id + "r"}>
                 <td key={dish.id + "name"}>
                     <Link
