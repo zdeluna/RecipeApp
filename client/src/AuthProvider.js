@@ -81,6 +81,7 @@ export const AuthProvider = ({ children, history }) => {
                     await updateUser(updatedProperties);
                 },
                 logout: async => {
+                    console.log("logout");
                     localStorage.removeItem("userId");
                     localStorage.removeItem("jwt_token");
                     localStorage.removeItem("jwt_token_expiry");

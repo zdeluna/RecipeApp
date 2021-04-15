@@ -11,7 +11,6 @@ import DishListTable from "./containers/DishListPage/DishListTable";
 import DishEntry from "./containers/DishEntryPage/DishEntry";
 import RecipeGuide from "./containers/DishEntryPage/RecipeGuide";
 import ItemForm from "./components/ItemForm";
-import LogoutButton from "./components/LogoutButton";
 import { GET_USER } from "./api/queries/user/getUser";
 import { useApolloClient } from "@apollo/react-hooks";
 import { AuthContext } from "./AuthProvider";
@@ -21,38 +20,26 @@ const Routes = props => {
     const client = useApolloClient();
 
     const { user } = useContext(AuthContext);
+    if (user) {
+        let watcher = client.cache.watch({
+            query: GET_USER,
+            variables: { id: user.id },
 
-    useEffect(() => {
-        if (user) {
-            let watcher = client.cache.watch({
-                query: GET_USER,
-                variables: { id: user.id },
-
-                callback: data => {
-                    if (data.result.user == null) {
-                        setAuthenticated(false);
-                    } else {
-                        setAuthenticated(true);
-                    }
+            callback: data => {
+                if (data.result.user == null) {
+                    console.log("Set auth to false");
+                    setAuthenticated(false);
+                } else {
+                    console.log("Set auth to true");
+                    setAuthenticated(true);
                 }
-            });
-            // Cancel watcher subscription in clean up
-            return () => {
-                return watcher();
-            };
-        }
-    });
-
-    const RenderLogoutButton = () => {
-        if (!user) return null;
-
-        return <LogoutButton />;
-    };
+            }
+        });
+    }
 
     return (
         <Router history={props.history}>
             <div>
-                <RenderLogoutButton />
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <PrivateRoute
@@ -95,6 +82,7 @@ const Routes = props => {
                         path="/users/category/:category/dish/:dishId"
                         component={DishEntry}
                         authenticated={authenticated}
+                        showMakeDishButton={true}
                     />
                     )} />
                     <PrivateRoute

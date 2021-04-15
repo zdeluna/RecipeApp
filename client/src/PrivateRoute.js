@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
+import NavigationBar from "./components/NavigationBar";
 
 export default function PrivateRoute({
     component: Component,
@@ -11,7 +12,10 @@ export default function PrivateRoute({
             {...rest}
             render={props =>
                 authenticated === true ? (
-                    <Component {...props} {...rest} />
+                    <div>
+                        <NavigationBar {...props} />
+                        <Component {...props} {...rest} />
+                    </div>
                 ) : (
                     <Redirect to="/login" />
                 )

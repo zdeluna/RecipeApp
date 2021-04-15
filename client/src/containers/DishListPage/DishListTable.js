@@ -64,12 +64,6 @@ const DishListTable = props => {
     return (
         <Container>
             <Row>
-                {" "}
-                <Link to={`/users/category`} id="goBackLink">
-                    Go Back To Categories
-                </Link>
-            </Row>
-            <Row>
                 <AddDishForm
                     category={category}
                     onClick={id => handleClick(id)}

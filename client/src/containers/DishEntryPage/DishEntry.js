@@ -174,15 +174,7 @@ const DishEntry = props => {
         return (
             <div>
                 <Row>
-                    <Col>
-                        {" "}
-                        <Link
-                            to={`/users/category/${category}`}
-                            id="goBackLink"
-                        >
-                            Go Back
-                        </Link>
-                    </Col>
+                    <Col> </Col>
                     <Col sm="2" md={{ size: 2, offset: 3 }}>
                         <Button
                             id="makeDishModeButton"

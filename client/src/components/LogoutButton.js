@@ -13,9 +13,10 @@ const LogoutButton = props => {
 
     return (
         <Button
-            id="logoutButton"
+            id={"logoutButton"}
+            style={{ color: "#007BFF", fontSize: 20 }}
+            color="none"
             size="sm"
-            color="primary"
             onClick={handleLogOut}
         >
             Logout
