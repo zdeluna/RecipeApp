@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { LOG_IN_USER } from "./api/mutations/user/signInUser";
 import { ADD_USER } from "./api/mutations/user/createUser";
@@ -9,6 +9,7 @@ import { useApolloClient } from "@apollo/react-hooks";
 export const AuthContext = React.createContext({});
 
 export const AuthProvider = ({ children, history }) => {
+    console.log("load auth provider");
     const client = useApolloClient();
     const [userData, setUserData] = useState("");
 
@@ -20,6 +21,16 @@ export const AuthProvider = ({ children, history }) => {
             history.replace("/users/category");
             console.log("get user ");
         }
+    });
+    useEffect(() => {
+        try {
+            const { user } = client.readQuery({
+                query: GET_USER,
+                variables: { id: localStorage.getItem("userId") }
+            });
+            console.log(user);
+            setUserData(user);
+        } catch (error) {}
     });
 
     const [username, setUserName] = useState("");

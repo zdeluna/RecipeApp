@@ -19,7 +19,8 @@ const Category = props => {
     const [editMode, setEditMode] = useState(false);
     const { user, update } = useContext(AuthContext);
     const client = useApolloClient();
-
+    console.log("in category");
+    console.log(user);
     useEffect(
         () => {
             if (user && user.categories) {
