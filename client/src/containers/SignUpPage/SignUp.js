@@ -20,6 +20,7 @@ const SignUp = props => {
     const handleSignUp = async event => {
         try {
             event.preventDefault();
+            client.cache.reset();
             const response = await signUp(email, password);
         } catch (error) {
             //console.log(error);

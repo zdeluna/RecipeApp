@@ -12,14 +12,14 @@ export const AuthProvider = ({ children, history }) => {
     console.log("load auth provider");
     const client = useApolloClient();
     const [userData, setUserData] = useState("");
-
+    console.log("set User data");
+    console.log(userData);
     const [updateUser] = useMutation(UPDATE_USER);
 
     const [getUser] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
             setUserData(user);
             history.replace("/users/category");
-            console.log("get user ");
         }
     });
     useEffect(() => {
@@ -28,7 +28,6 @@ export const AuthProvider = ({ children, history }) => {
                 query: GET_USER,
                 variables: { id: localStorage.getItem("userId") }
             });
-            console.log(user);
             setUserData(user);
         } catch (error) {}
     });
@@ -45,15 +44,12 @@ export const AuthProvider = ({ children, history }) => {
                 "jwt_token_expiry",
                 signInUser.jwt_token_expiry
             );
-
             await getUser({ variables: { id: signInUser.id } });
         }
     });
 
     const [addUser] = useMutation(ADD_USER, {
         async onCompleted({ addUser }) {
-            console.log(username);
-            console.log(password);
             await signInUser({
                 variables: {
                     username: username,
@@ -78,9 +74,9 @@ export const AuthProvider = ({ children, history }) => {
                     });
                 },
                 signUp: async (username, password) => {
+                    client.cache.reset();
                     setUserName(username);
                     setPassword(password);
-                    client.cache.reset();
                     await addUser({
                         variables: {
                             username: username,

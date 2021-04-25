@@ -21,11 +21,15 @@ const Routes = props => {
 
     const { user } = useContext(AuthContext);
     if (user) {
+        console.log("get user id");
+        console.log(user.id);
         let watcher = client.cache.watch({
             query: GET_USER,
             variables: { id: user.id },
 
             callback: data => {
+                console.log("DATA");
+                console.log(data);
                 if (data.result.user == null) {
                     console.log("Set auth to false");
                     setAuthenticated(false);
