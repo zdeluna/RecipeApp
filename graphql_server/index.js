@@ -63,7 +63,7 @@ if (process.env.GRAPH_ENV == "test") {
 
     exports.handler = server.createHandler({
         cors: {
-            origin: "*",
+            origin: "https://recipescheduler-227221.appspot.com",
             credentials: true,
             allowedHeaders:
                 "Origin, X-Requested-With, Content-Type, Accept, Authorization"

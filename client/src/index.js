@@ -113,6 +113,7 @@ const init = async () => {
     const client = new ApolloClient({
         cache,
         fetchOptions: {
+            origin: "https://recipescheduler-227221.appspot.com",
             credentials: "include"
         },
         link: from([authLink, errorLink, httpLink])

@@ -9,17 +9,29 @@ import { useApolloClient } from "@apollo/react-hooks";
 export const AuthContext = React.createContext({});
 
 export const AuthProvider = ({ children, history }) => {
-    console.log("load auth provider");
     const client = useApolloClient();
     const [userData, setUserData] = useState("");
-    console.log("set User data");
-    console.log(userData);
     const [updateUser] = useMutation(UPDATE_USER);
 
     const [getUser] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
+            user.isAuthenticated = true;
             setUserData(user);
             history.replace("/users/category");
+            let watcher = client.cache.watch({
+                query: GET_USER,
+                variables: { id: user.id },
+
+                callback: data => {
+                    console.log("DATA");
+                    console.log(data);
+                    if (data.result.user == null) {
+                        setUserData({ ...userData, isAuthenticated: false });
+                    } else {
+                        setUserData({ ...userData, isAuthenticated: true });
+                    }
+                }
+            });
         }
     });
     useEffect(() => {
@@ -28,6 +40,7 @@ export const AuthProvider = ({ children, history }) => {
                 query: GET_USER,
                 variables: { id: localStorage.getItem("userId") }
             });
+            user.isAuthenticated = true;
             setUserData(user);
         } catch (error) {}
     });
@@ -45,6 +58,21 @@ export const AuthProvider = ({ children, history }) => {
                 signInUser.jwt_token_expiry
             );
             await getUser({ variables: { id: signInUser.id } });
+            /*
+            let watcher = client.cache.watch({
+                query: GET_USER,
+                variables: { id: signInUser.id },
+
+                callback: data => {
+                    console.log("DATA");
+                    console.log(data);
+                    if (data.result.user == null) {
+                        setUserData({ ...userData, isAuthenticated: false });
+                    } else {
+                        setUserData({ ...userData, isAuthenticated: true });
+                    }
+                }
+            });*/
         }
     });
 
@@ -74,6 +102,7 @@ export const AuthProvider = ({ children, history }) => {
                     });
                 },
                 signUp: async (username, password) => {
+                    console.log("Sign up");
                     client.cache.reset();
                     setUserName(username);
                     setPassword(password);

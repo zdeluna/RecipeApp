@@ -20,6 +20,7 @@ const Routes = props => {
     const client = useApolloClient();
 
     const { user } = useContext(AuthContext);
+    /*
     if (user) {
         console.log("get user id");
         console.log(user.id);
@@ -39,7 +40,9 @@ const Routes = props => {
                 }
             }
         });
-    }
+    }*/
+    console.log("Routes");
+    console.log(user);
 
     return (
         <Router history={props.history}>
@@ -50,7 +53,7 @@ const Routes = props => {
                         exact
                         path="/users/category"
                         component={Category}
-                        authenticated={authenticated}
+                        authenticated={user.isAuthenticated}
                     />
                     <Route exact path="/login" component={LogIn} />
                     <Route exact path="/signup" component={SignUp} />
@@ -58,7 +61,7 @@ const Routes = props => {
                         expact
                         path="/users/category/:category/dish/:dishId/makeMode"
                         component={RecipeGuide}
-                        authenticated={authenticated}
+                        authenticated={user.isAuthenticated}
                     />
                     )} />
                     <Route
@@ -67,7 +70,7 @@ const Routes = props => {
                         render={props => (
                             <ItemForm {...props} update={true} type={"steps"} />
                         )}
-                        authenticated={authenticated}
+                        authenticated={user.isAuthenticated}
                     />
                     <Route
                         exact
@@ -85,7 +88,7 @@ const Routes = props => {
                         exact
                         path="/users/category/:category/dish/:dishId"
                         component={DishEntry}
-                        authenticated={authenticated}
+                        authenticated={user.isAuthenticated}
                         showMakeDishButton={true}
                     />
                     )} />
@@ -94,7 +97,7 @@ const Routes = props => {
                         path="/users/category/:category"
                         component={DishListTable}
                         loading={true}
-                        authenticated={authenticated}
+                        authenticated={user.isAuthenticated}
                     />
                     )} />
                 </Switch>

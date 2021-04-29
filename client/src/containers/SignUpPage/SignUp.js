@@ -16,7 +16,6 @@ const SignUp = props => {
 
     const [showAlert, setShowAlert] = useState("");
     const { signUp } = useContext(AuthContext);
-
     const handleSignUp = async event => {
         try {
             event.preventDefault();
