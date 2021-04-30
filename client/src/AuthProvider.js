@@ -15,7 +15,6 @@ export const AuthProvider = ({ children, history }) => {
 
     const [getUser] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
-            user.isAuthenticated = true;
             setUserData(user);
             history.replace("/users/category");
             let watcher = client.cache.watch({
@@ -26,9 +25,10 @@ export const AuthProvider = ({ children, history }) => {
                     console.log("DATA");
                     console.log(data);
                     if (data.result.user == null) {
-                        setUserData({ ...userData, isAuthenticated: false });
+                        setUserData(null);
+                        history.replace("/login");
                     } else {
-                        setUserData({ ...userData, isAuthenticated: true });
+                        setUserData({ ...userData });
                     }
                 }
             });
@@ -40,7 +40,6 @@ export const AuthProvider = ({ children, history }) => {
                 query: GET_USER,
                 variables: { id: localStorage.getItem("userId") }
             });
-            user.isAuthenticated = true;
             setUserData(user);
         } catch (error) {}
     });

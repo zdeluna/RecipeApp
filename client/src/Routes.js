@@ -18,31 +18,11 @@ import { AuthContext } from "./AuthProvider";
 const Routes = props => {
     const [authenticated, setAuthenticated] = useState(true);
     const client = useApolloClient();
-
     const { user } = useContext(AuthContext);
-    /*
-    if (user) {
-        console.log("get user id");
-        console.log(user.id);
-        let watcher = client.cache.watch({
-            query: GET_USER,
-            variables: { id: user.id },
 
-            callback: data => {
-                console.log("DATA");
-                console.log(data);
-                if (data.result.user == null) {
-                    console.log("Set auth to false");
-                    setAuthenticated(false);
-                } else {
-                    console.log("Set auth to true");
-                    setAuthenticated(true);
-                }
-            }
-        });
-    }*/
-    console.log("Routes");
-    console.log(user);
+    useEffect(() => {
+        if (user) setAuthenticated(true);
+    });
 
     return (
         <Router history={props.history}>
@@ -53,7 +33,7 @@ const Routes = props => {
                         exact
                         path="/users/category"
                         component={Category}
-                        authenticated={user.isAuthenticated}
+                        authenticated={authenticated}
                     />
                     <Route exact path="/login" component={LogIn} />
                     <Route exact path="/signup" component={SignUp} />
@@ -61,7 +41,7 @@ const Routes = props => {
                         expact
                         path="/users/category/:category/dish/:dishId/makeMode"
                         component={RecipeGuide}
-                        authenticated={user.isAuthenticated}
+                        authenticated={authenticated}
                     />
                     )} />
                     <Route
@@ -70,7 +50,7 @@ const Routes = props => {
                         render={props => (
                             <ItemForm {...props} update={true} type={"steps"} />
                         )}
-                        authenticated={user.isAuthenticated}
+                        authenticated={authenticated}
                     />
                     <Route
                         exact
@@ -88,7 +68,7 @@ const Routes = props => {
                         exact
                         path="/users/category/:category/dish/:dishId"
                         component={DishEntry}
-                        authenticated={user.isAuthenticated}
+                        authenticated={authenticated}
                         showMakeDishButton={true}
                     />
                     )} />
@@ -97,7 +77,7 @@ const Routes = props => {
                         path="/users/category/:category"
                         component={DishListTable}
                         loading={true}
-                        authenticated={user.isAuthenticated}
+                        authenticated={authenticated}
                     />
                     )} />
                 </Switch>
