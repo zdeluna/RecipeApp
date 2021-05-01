@@ -42,9 +42,7 @@ const init = async () => {
                     localStorage.removeItem("jwt_token");
                     localStorage.removeItem("jwt_token_expiry");
                     localStorage.removeItem("userId");
-                    //history.replace("/login");
                     client.cache.reset();
-                    //app.auth().signOut();
                 }
                 console.log(
                     `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`

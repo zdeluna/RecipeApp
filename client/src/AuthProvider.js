@@ -10,13 +10,12 @@ export const AuthContext = React.createContext({});
 
 export const AuthProvider = ({ children, history }) => {
     const client = useApolloClient();
-    const [userData, setUserData] = useState("");
+    const [userData, setUserData] = useState({});
     const [updateUser] = useMutation(UPDATE_USER);
 
     const [getUser] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
-            setUserData(user);
-            history.replace("/users/category");
+            setUserData({ ...user, isAuthenticated: true });
             let watcher = client.cache.watch({
                 query: GET_USER,
                 variables: { id: user.id },
@@ -25,13 +24,14 @@ export const AuthProvider = ({ children, history }) => {
                     console.log("DATA");
                     console.log(data);
                     if (data.result.user == null) {
-                        setUserData(null);
-                        history.replace("/login");
+                        setUserData({ isAuthenticated: false });
+                        //history.replace("/login");
                     } else {
-                        setUserData({ ...userData });
+                        setUserData({ ...userData, isAuthenticated: true });
                     }
                 }
             });
+            history.replace("/users/category");
         }
     });
     useEffect(() => {
@@ -40,9 +40,9 @@ export const AuthProvider = ({ children, history }) => {
                 query: GET_USER,
                 variables: { id: localStorage.getItem("userId") }
             });
-            setUserData(user);
+            setUserData({ ...user, isAuthenticated: true });
         } catch (error) {}
-    });
+    }, []);
 
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
@@ -57,21 +57,6 @@ export const AuthProvider = ({ children, history }) => {
                 signInUser.jwt_token_expiry
             );
             await getUser({ variables: { id: signInUser.id } });
-            /*
-            let watcher = client.cache.watch({
-                query: GET_USER,
-                variables: { id: signInUser.id },
-
-                callback: data => {
-                    console.log("DATA");
-                    console.log(data);
-                    if (data.result.user == null) {
-                        setUserData({ ...userData, isAuthenticated: false });
-                    } else {
-                        setUserData({ ...userData, isAuthenticated: true });
-                    }
-                }
-            });*/
         }
     });
 
@@ -115,13 +100,16 @@ export const AuthProvider = ({ children, history }) => {
                 update: async updatedProperties => {
                     await updateUser(updatedProperties);
                 },
+                updateUser: async updatedUser => {
+                    setUserData(updatedUser);
+                },
                 logout: async => {
                     console.log("logout");
                     localStorage.removeItem("userId");
                     localStorage.removeItem("jwt_token");
                     localStorage.removeItem("jwt_token_expiry");
                     client.cache.reset();
-                    setUserData(null);
+                    setUserData({ isAuthenticated: false });
                 }
             }}
         >
