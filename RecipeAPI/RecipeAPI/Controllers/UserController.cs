@@ -65,7 +65,7 @@ namespace RecipeAPI.Controllers
 
             await _userService.Add(user);
 
-            DateTime expiryTimeJWT = DateTime.Now.AddSeconds(AuthConstants.JWT_EXPIRY_MINUTES);
+            DateTime expiryTimeJWT = DateTime.Now.AddMinutes(AuthConstants.JWT_EXPIRY_MINUTES);
 
             var accessToken = _authService.GenerateJWTToken(user, expiryTimeJWT);
 

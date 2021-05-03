@@ -32,8 +32,6 @@ const init = async () => {
         credentials: "include"
     });
 
-    let REFRESH_JWT = false;
-
     const errorLink = onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors)
             graphQLErrors.map(({ message, locations, path }) => {
@@ -53,8 +51,6 @@ const init = async () => {
     });
 
     const refreshJWT = async () => {
-        REFRESH_JWT = true;
-
         const result = await client.mutate({
             variables: { accessToken: localStorage.getItem("jwt_token") },
             mutation: REFRESH_TOKEN
@@ -76,17 +72,20 @@ const init = async () => {
     const authLink = setContext(async (_, { headers }) => {
         // Check to make sure the jwt isn't expired
         const expirationDate = localStorage.getItem("jwt_token_expiry");
+        console.log("operation name");
+        console.log(_.operationName);
         // If the jwt is expired, fetch a new token
         if (
             expirationDate &&
-            !REFRESH_JWT &&
             _.operationName != "refreshToken" &&
-            _.operationName != "signInUser"
+            _.operationName != "signInUser" &&
+            _.operationName != "addUser"
         ) {
             // If the jwt token is expired
+            console.log(expirationDate);
+            console.log(new Date());
             if (new Date() > new Date(expirationDate)) {
-                REFRESH_JWT = false;
-
+                console.log("REFRESH JWT");
                 await refreshJWT();
             }
         }

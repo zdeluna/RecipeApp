@@ -25,7 +25,6 @@ export const AuthProvider = ({ children, history }) => {
                     console.log(data);
                     if (data.result.user == null) {
                         setUserData({ isAuthenticated: false });
-                        //history.replace("/login");
                     } else {
                         setUserData({ ...userData, isAuthenticated: true });
                     }

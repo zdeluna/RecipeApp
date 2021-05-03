@@ -103,7 +103,6 @@ module.exports = {
             };
         },
         refreshToken: async (_, { accessToken }, { dataSources }) => {
-            console.log("Access token: " + accessToken);
             let response = await dataSources.userAPI.refreshToken({
                 accessToken
             });

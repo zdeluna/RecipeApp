@@ -38,12 +38,6 @@ class UserAPI extends RESTDataSource {
     /* This method will allow us to return the headers in the login user request so
      * that we can pass along the cookie to our GraphQL client*/
     async didReceiveResponse(response, _request) {
-        console.log("Request");
-        console.log(_request.headers.get("set-cookie"));
-        console.log("Response");
-        console.log(response.headers.get("set-cookie"));
-
-        console.log(_request.headers);
         let cookies =
             response.headers.get("set-cookie") ||
             _request.headers.get("set-cookie");

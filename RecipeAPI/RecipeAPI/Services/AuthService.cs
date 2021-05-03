@@ -26,7 +26,6 @@ namespace RecipeAPI.Services
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
 
-
     public class AuthService : IAuthService
     {
         private readonly IConfiguration _config;
