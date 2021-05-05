@@ -20,9 +20,6 @@ const Routes = props => {
     const { user } = useContext(AuthContext);
     const { updateUser } = useContext(AuthContext);
 
-    console.log("user in routes component");
-    console.log(user);
-
     if (localStorage.getItem("userId")) user.isAuthenticated = true;
 
     return (

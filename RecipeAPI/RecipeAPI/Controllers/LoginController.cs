@@ -106,7 +106,6 @@ namespace RecipeAPI.Controllers
 
                 user.RefreshToken = refreshToken;
                 user.RefreshTokenExpiryTime = DateTime.Now.AddDays(AuthConstants.REFRESH_EXPIRY_DAYS);
-
                 await _context.SaveChangesAsync();
 
                 DateTime expiryTimeJWT = DateTime.Now.AddMinutes(AuthConstants.JWT_EXPIRY_MINUTES);
@@ -116,6 +115,7 @@ namespace RecipeAPI.Controllers
                 CookieOptions cookieOptions = new CookieOptions();
                 cookieOptions.Expires = user.RefreshTokenExpiryTime; 
                 cookieOptions.HttpOnly = true;
+                cookieOptions.Domain = "us-central1-recipescheduler-227221";
 
 
                 HttpContext.Response.Cookies.Append("refresh_token", refreshToken, cookieOptions);

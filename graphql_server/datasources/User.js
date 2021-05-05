@@ -1,6 +1,5 @@
 "use strict";
 const { RESTDataSource } = require("apollo-datasource-rest");
-//const {RESTDataSource} = require('apollo-server-cloud-functions');
 var cookie = require("cookie");
 
 class UserAPI extends RESTDataSource {
@@ -22,6 +21,9 @@ class UserAPI extends RESTDataSource {
         ///https://stackoverflow.com/questions/61984132/how-do-i-get-cookie-from-apollo-graphql-resolver
         const expirationDate = new Date(Date.parse(parsedCookie.expires));
 
+        console.log("Cookie");
+        console.log(parsedCookie);
+
         this.context.setCookies.push({
             name: "refresh_token",
             value: parsedCookie.refresh_token,
@@ -29,6 +31,7 @@ class UserAPI extends RESTDataSource {
                 expires: expirationDate,
                 httpOnly: true,
                 path: "/",
+                domain: "recipescheduler-227221.appspot.com",
                 sameSite: false,
                 secure: false
             }
