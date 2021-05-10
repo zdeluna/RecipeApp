@@ -31,7 +31,7 @@ class UserAPI extends RESTDataSource {
                 expires: expirationDate,
                 httpOnly: true,
                 path: "/",
-                domain: "recipescheduler-227221.appspot.com",
+                domain: "recipescheduler.net",
                 sameSite: false,
                 secure: false
             }
