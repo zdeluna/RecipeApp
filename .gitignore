@@ -33,4 +33,5 @@ RecipeAPI/RecipeAPI/obj
 client/src/static/images/Architecture.afdesign
 cloud_sql_proxy
 .gcloudignore
+*.firebaserc
 
