@@ -17,12 +17,13 @@ import { from } from "apollo-boost";
 import { ApolloLink } from "apollo-link";
 import { REFRESH_TOKEN } from "./api/mutations/user/refreshToken";
 import { createBrowserHistory } from "history";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const init = async () => {
     const history = createBrowserHistory();
 
-    let GRAPHQL_URI =
-        "https://us-central1-recipescheduler-227221.cloudfunctions.net/handler";
+    let GRAPHQL_URI = "https://graphql.recipescheduler.net/graphql";
     if (process.env.NODE_ENV === "development") {
         GRAPHQL_URI = "http://localhost:4000";
     }
@@ -110,7 +111,7 @@ const init = async () => {
     const client = new ApolloClient({
         cache,
         fetchOptions: {
-            origin: "https://recipescheduler-227221.appspot.com",
+            origin: "https://www.recipescheduler.net",
             credentials: "include"
         },
         link: from([authLink, errorLink, httpLink])
@@ -118,9 +119,11 @@ const init = async () => {
 
     ReactDOM.render(
         <ApolloProvider client={client}>
-            <AuthProvider history={history}>
-                <App history={history} />
-            </AuthProvider>
+            <Provider store={store}>
+                <AuthProvider history={history}>
+                    <App history={history} />
+                </AuthProvider>
+            </Provider>
         </ApolloProvider>,
         document.getElementById("root")
     );
