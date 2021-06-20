@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { GET_DISHES } from "../../api/queries/dish/getAllDishes";
+import { ADD_DISH } from "../../api/mutations/dish/createDish";
+
 import { useDispatch } from "react-redux";
 import { useQuery } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 
 export const fetchDishes = createAsyncThunk(
     "dishes/fetchDishes",
@@ -30,14 +33,16 @@ const dishesSlice = createSlice({
     name: "dishes",
     initialState,
     reducers: {
-        dishesLoading(state, action) {
-            state.status = "loading";
-        },
         dishesLoaded(state, action) {
             state.status = "loaded";
             console.log("loading dishes");
             console.log(action.payload);
             state.entities = action.payload;
+        },
+        dishAdded(state, action) {
+            console.log("dish added");
+            console.log(action);
+            state.entities.push(action.payload);
         }
     }
     /* extraReducers: builder => {

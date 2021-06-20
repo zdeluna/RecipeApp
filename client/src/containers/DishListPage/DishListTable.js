@@ -12,29 +12,15 @@ import { fetchDishes } from "../../features/dishes/dishesSlice.js";
 const DishListTable = props => {
     const [userId] = useState(props.userId);
     const [category] = useState(props.match.params.category);
-    //const [dishes, setDishes] = useState([]);
-    /*
-    const { loading, error } = useQuery(GET_DISHES, {
-        onCompleted({ dishes }) {
-            if (dishes) setDishes(dishes);
-        }
-    });
 
-    if (loading) return <Loading />;
-    if (error) return <p>Error :(</p>;
-    */
-    const dispatch = useDispatch();
+    const data = useSelector(state => state.dishes);
     const { entities } = useSelector(state => state.dishes);
     const dishes = entities;
-
-    dispatch(fetchDishes());
 
     const handleClick = dishId => {
         props.history.push(`/users/category/${category}/dish/${dishId}`);
     };
 
-    console.log("load dish list table");
-    console.log(dishes);
     const ShowTableRows = () => {
         return dishes.filter(dish => dish.category == category).map(dish => (
             <tr className="dishRow" key={dish.id + "r"}>

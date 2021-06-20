@@ -19,9 +19,12 @@ import { REFRESH_TOKEN } from "./api/mutations/user/refreshToken";
 import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
 import store from "./store";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
 
 const init = async () => {
     const history = createBrowserHistory();
+    let persistor = persistStore(store);
 
     let GRAPHQL_URI = "https://graphql.recipescheduler.net/graphql";
     if (process.env.NODE_ENV === "development") {
@@ -120,9 +123,11 @@ const init = async () => {
     ReactDOM.render(
         <ApolloProvider client={client}>
             <Provider store={store}>
-                <AuthProvider history={history}>
-                    <App history={history} />
-                </AuthProvider>
+                <PersistGate loading={null} persistor={persistor}>
+                    <AuthProvider history={history}>
+                        <App history={history} />
+                    </AuthProvider>
+                </PersistGate>
             </Provider>
         </ApolloProvider>,
         document.getElementById("root")

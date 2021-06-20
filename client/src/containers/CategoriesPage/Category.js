@@ -10,6 +10,8 @@ import { UPDATE_USER } from "../../api/mutations/user/updateUser";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { useApolloClient } from "@apollo/react-hooks";
 import { GET_USER } from "../../api/queries/user/getUser";
+import { useDispatch } from "react-redux";
+import { fetchDishes } from "../../features/dishes/dishesSlice.js";
 
 const Category = props => {
     const [updateUser] = useMutation(UPDATE_USER);
@@ -19,6 +21,10 @@ const Category = props => {
     const [editMode, setEditMode] = useState(false);
     const { user, update } = useContext(AuthContext);
     const client = useApolloClient();
+
+    const dispatch = useDispatch();
+    dispatch(fetchDishes());
+
     useEffect(
         () => {
             if (user && user.categories) {

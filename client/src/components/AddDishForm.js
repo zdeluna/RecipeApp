@@ -5,13 +5,30 @@ import { useMutation } from "@apollo/react-hooks";
 import { ADD_DISH } from "../api/mutations/dish/createDish";
 import { GET_DISHES } from "../api/queries/dish/getAllDishes";
 import { useApolloClient } from "@apollo/react-hooks";
+import { useSelector, useDispatch } from "react-redux";
+import { addNewDish2 } from "../features/dishes/dishesSlice.js";
 
 const AddDishForm = props => {
-    let input = { value: "" };
+    const [input, setInputValue] = useState("");
     const client = useApolloClient();
+
+    const dispatch = useDispatch();
+    const { entities } = useSelector(state => state.dishes);
+    const dishes = entities;
 
     const [addDish] = useMutation(ADD_DISH, {
         onCompleted({ addDish }) {
+            console.log("add dish mutation");
+            console.log(input);
+            dispatch({
+                type: "dishes/dishAdded",
+                payload: {
+                    id: addDish.id,
+                    category: props.category,
+                    name: input
+                }
+            });
+            /*
             let data = client.readQuery({
                 query: GET_DISHES
             });
@@ -25,7 +42,7 @@ const AddDishForm = props => {
             client.writeQuery({
                 query: GET_DISHES,
                 data: { dishes: data.dishes }
-            });
+            });*/
 
             props.onClick(addDish.id);
         }
@@ -39,12 +56,10 @@ const AddDishForm = props => {
                     e.preventDefault();
                     addDish({
                         variables: {
-                            name: input.value,
+                            name: input,
                             category: props.category
                         }
                     });
-
-                    input.value = "";
                 }}
             >
                 <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
@@ -53,7 +68,7 @@ const AddDishForm = props => {
                         type="text"
                         id="newDishInput"
                         onChange={e => {
-                            input.value = e.target.value;
+                            setInputValue(e.target.value);
                         }}
                     />
                 </FormGroup>
