@@ -7,16 +7,16 @@ import Loading from "../../components/Loading";
 import { useQuery } from "@apollo/react-hooks";
 import { GET_DISHES } from "../../api/queries/dish/getAllDishes";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchDishes } from "../../features/dishes/dishesSlice.js";
+import {
+    fetchDishes,
+    selectDishes
+} from "../../features/dishes/dishesSlice.js";
 
 const DishListTable = props => {
     const [userId] = useState(props.userId);
     const [category] = useState(props.match.params.category);
 
-    const data = useSelector(state => state.dishes);
-    const { entities } = useSelector(state => state.dishes);
-    const dishes = entities;
-
+    const dishes = useSelector(selectDishes);
     const handleClick = dishId => {
         props.history.push(`/users/category/${category}/dish/${dishId}`);
     };

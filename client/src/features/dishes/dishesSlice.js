@@ -1,10 +1,16 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+    createSlice,
+    createAsyncThunk,
+    createEntityAdapter
+} from "@reduxjs/toolkit";
 import { GET_DISHES } from "../../api/queries/dish/getAllDishes";
 import { ADD_DISH } from "../../api/mutations/dish/createDish";
 
 import { useDispatch } from "react-redux";
 import { useQuery } from "@apollo/react-hooks";
 import { useMutation } from "@apollo/react-hooks";
+
+const dishesAdapter = createEntityAdapter();
 
 export const fetchDishes = createAsyncThunk(
     "dishes/fetchDishes",
@@ -35,9 +41,14 @@ const dishesSlice = createSlice({
     reducers: {
         dishesLoaded(state, action) {
             state.status = "loaded";
-            console.log("loading dishes");
-            console.log(action.payload);
-            state.entities = action.payload;
+
+            /* Convert array of dishes to object*/
+            let entities = {};
+            for (let i = 0; i < action.payload.length; i++) {
+                entities[action.payload[i].id] = action.payload[i];
+            }
+
+            dishesAdapter.setAll(state, entities);
         },
         dishAdded(state, action) {
             console.log("dish added");
@@ -58,6 +69,10 @@ const dishesSlice = createSlice({
             });
     }*/
 });
+
+export const { selectAll: selectDishes } = dishesAdapter.getSelectors(
+    state => state.dishes
+);
 
 export const { dishesLoading } = dishesSlice.actions;
 
