@@ -6,7 +6,7 @@ import { ADD_DISH } from "../api/mutations/dish/createDish";
 import { GET_DISHES } from "../api/queries/dish/getAllDishes";
 import { useApolloClient } from "@apollo/react-hooks";
 import { useSelector, useDispatch } from "react-redux";
-import { addNewDish2 } from "../features/dishes/dishesSlice.js";
+import { addOneDish } from "../features/dishes/dishesSlice.js";
 
 const AddDishForm = props => {
     const [input, setInputValue] = useState("");
@@ -16,18 +16,17 @@ const AddDishForm = props => {
     const { entities } = useSelector(state => state.dishes);
     const dishes = entities;
 
-    const [addDish] = useMutation(ADD_DISH, {
+    const [addNewDish] = useMutation(ADD_DISH, {
         onCompleted({ addDish }) {
             console.log("add dish mutation");
             console.log(input);
-            dispatch({
-                type: "dishes/dishAdded",
-                payload: {
+            dispatch(
+                addOneDish({
                     id: addDish.id,
                     category: props.category,
                     name: input
-                }
-            });
+                })
+            );
             /*
             let data = client.readQuery({
                 query: GET_DISHES
@@ -54,7 +53,7 @@ const AddDishForm = props => {
                 inline
                 onSubmit={e => {
                     e.preventDefault();
-                    addDish({
+                    addNewDish({
                         variables: {
                             name: input,
                             category: props.category

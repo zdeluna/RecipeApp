@@ -54,7 +54,9 @@ const dishesSlice = createSlice({
             console.log("dish added");
             console.log(action);
             state.entities.push(action.payload);
-        }
+        },
+        addOneDish: dishesAdapter.addOne,
+        dishDeleted: dishesAdapter.removeOne
     }
     /* extraReducers: builder => {
         builder
@@ -74,6 +76,6 @@ export const { selectAll: selectDishes } = dishesAdapter.getSelectors(
     state => state.dishes
 );
 
-export const { dishesLoading } = dishesSlice.actions;
+export const { addOneDish, dishDeleted } = dishesSlice.actions;
 
 export default dishesSlice.reducer;
