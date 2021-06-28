@@ -9,12 +9,21 @@ const reducers = combineReducers({
     dishes: dishesReducer
 });
 
+const rootReducer = (state, action) => {
+    if (action.type === "LOGOUT") {
+        storage.removeItem("persist:root");
+        return reducers(undefined, action);
+    }
+
+    return reducers(state, action);
+};
+
 const persistConfig = {
     key: "root",
     storage
 };
 
-const persistedReducer = persistReducer(persistConfig, reducers);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
     reducer: persistedReducer

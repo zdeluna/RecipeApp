@@ -5,6 +5,7 @@ import { ADD_USER } from "./api/mutations/user/createUser";
 import { GET_USER } from "./api/queries/user/getUser";
 import { UPDATE_USER } from "./api/mutations/user/updateUser";
 import { useApolloClient } from "@apollo/react-hooks";
+import { useDispatch } from "react-redux";
 
 export const AuthContext = React.createContext({});
 
@@ -12,6 +13,7 @@ export const AuthProvider = ({ children, history }) => {
     const client = useApolloClient();
     const [userData, setUserData] = useState({});
     const [updateUser] = useMutation(UPDATE_USER);
+    const dispatch = useDispatch();
 
     const [getUser] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
@@ -102,13 +104,14 @@ export const AuthProvider = ({ children, history }) => {
                 updateUser: async updatedUser => {
                     setUserData(updatedUser);
                 },
-                logout: async => {
+                logout: () => {
                     console.log("logout");
                     localStorage.removeItem("userId");
                     localStorage.removeItem("jwt_token");
                     localStorage.removeItem("jwt_token_expiry");
                     client.cache.reset();
                     setUserData({ isAuthenticated: false });
+                    dispatch({ type: "LOGOUT" });
                 }
             }}
         >
