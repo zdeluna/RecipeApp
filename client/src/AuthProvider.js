@@ -17,6 +17,8 @@ export const AuthProvider = ({ children, history }) => {
 
     const [getUser] = useLazyQuery(GET_USER, {
         async onCompleted({ user }) {
+            console.log("call dispatch");
+            dispatch({ type: "users/userLoaded", payload: user });
             setUserData({ ...user, isAuthenticated: true });
             let watcher = client.cache.watch({
                 query: GET_USER,

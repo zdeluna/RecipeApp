@@ -4,9 +4,11 @@ import { persistReducer } from "redux-persist";
 import { combineReducers } from "redux";
 
 import dishesReducer from "./features/dishes/dishesSlice";
+import usersReducer from "./features/users/usersSlice";
 
 const reducers = combineReducers({
-    dishes: dishesReducer
+    dishes: dishesReducer,
+    users: usersReducer
 });
 
 const rootReducer = (state, action) => {
