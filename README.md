@@ -52,6 +52,16 @@ This application uses React as the front-end client and uses the Apollo library 
 
 ![Screenshot 3](/client/src/static/images/Architecture.png?raw=true "Screenshot 3")
 
+## Backend
+
+The backend RESTFUL API server was developed using ASP.NET Core 3.0 with
+
+-   [Entity Framework as ORM](https://docs.microsoft.com/en-us/ef/)
+-   [Map DTO->Objects using AutoMapper](http://automapper.org/)
+-   [ASP.NET Core JWT Bearer Authentication](https://github.com/aspnet/Security/tree/master/src/Microsoft.AspNetCore.Authentication.JwtBearer)
+-   [Data Hashing using BCrypt](https://github.com/BcryptNet/bcrypt.net)
+-   [Encrypt cloud app service secrets using Azure's Key Vault](https://azure.microsoft.com/en-us/services/key-vault/)
+
 ## Built With
 
 -   [React](https://reactjs.org/)
