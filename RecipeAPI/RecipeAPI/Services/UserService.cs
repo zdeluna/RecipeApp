@@ -2,7 +2,6 @@
 using RecipeAPI.Models;
 using System.Linq;
 using System.Text;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,8 +17,8 @@ namespace RecipeAPI.Services
 {
     public interface IUserService
     {
-        bool UserExistsWithUserName(string userName);
-        bool UserExistsWithID(long id);
+        Task<bool> UserExistsWithUserName(string userName);
+        Task<bool> UserExistsWithID(long id);
         string HashPassword(string password);
         Task<User> AuthenticateUser(User loginCredentials);
         Task<IEnumerable<User>> GetAll();
@@ -28,23 +27,17 @@ namespace RecipeAPI.Services
         Task<User> Add(User user);
         Task<User> Remove(long id);
         Task<User> Update(JsonPatchDocument<UpdateUserRequest> patchUser, long id, ModelStateDictionary ModelState);
-
     }
 
     public class UserService : IUserService
     {
-        private readonly DatabaseContext _context;
-        private readonly IConfiguration _config;
         private readonly IUserRepository _userRepo;
         private readonly ICategoryRepository _categoryRepo;
 
-        public UserService(DatabaseContext context, IConfiguration config, IUserRepository userRepo, ICategoryRepository categoryRepo)
+        public UserService(IUserRepository userRepo, ICategoryRepository categoryRepo)
         {
-            _context = context;
-            _config = config;
             _userRepo = userRepo;
             _categoryRepo = categoryRepo;
-              
         }
 
         public async Task<IEnumerable<User>> GetAll() {
@@ -102,14 +95,20 @@ namespace RecipeAPI.Services
             return await _userRepo.RemoveUser(id);
         }
 
-        public bool UserExistsWithUserName(string username)
+        public async Task<bool> UserExistsWithUserName(string username)
         {
-            return _context.Users.Any(e => e.UserName == username);
+            var user = await _userRepo.GetByUsername(username);
+            if (user != null) return true;
+            
+            return false;
         }
 
-        public bool UserExistsWithID(long id)
+        public async Task<bool> UserExistsWithID(long id)
         {
-            return _context.Users.Any(e => e.ID == id);
+            var user = await _userRepo.GetUserById(id);
+            if (user != null) return true;
+
+            return false;
         }
 
         public async Task<User> AuthenticateUser(User loginCredentials)
@@ -124,9 +123,6 @@ namespace RecipeAPI.Services
 
             return null;
         }
-
-        
-
 
         public string HashPassword(string password) {
             return BCrypt.Net.BCrypt.HashPassword(password);

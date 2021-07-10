@@ -24,14 +24,12 @@ namespace RecipeAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IConfiguration _config;
         private readonly IUserService _userService;
         private readonly IAuthService _authService;
 
-        public UserController(IConfiguration config, IMapper mapper, IUserService userService, IAuthService authService)
+        public UserController(IMapper mapper, IUserService userService, IAuthService authService)
         {
             _mapper = mapper;
-            _config = config;
             _userService = userService;
             _authService = authService;
         }
@@ -58,7 +56,7 @@ namespace RecipeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            if (_userService.UserExistsWithUserName(user.UserName) == true)
+            if (await _userService.UserExistsWithUserName(user.UserName) == true)
             {
                 return BadRequest("User already exists.");
             }

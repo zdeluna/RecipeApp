@@ -1,0 +1,23 @@
+﻿<Properties StartupConfiguration="{AB4D97B1-6E85-40AF-BA49-DAC192BAA3E7}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UserControllerTest.cs">
+    <Files>
+      <File FileName="UserControllerTest.cs" Line="4" Column="17" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="UnitTests" expanded="True">
+            <Node name="UnitTests" expanded="True" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.UnitTests PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
