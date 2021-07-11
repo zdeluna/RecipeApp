@@ -67,6 +67,7 @@ namespace RecipeAPI.Services
 
         public async Task<Dish> Add(Dish dish)
         {
+            Console.Write(dish);
             return await _dishRepo.AddDish(dish);
         }
 

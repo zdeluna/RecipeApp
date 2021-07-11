@@ -61,7 +61,27 @@ namespace UnitTests
             result.Should().BeEquivalentTo(expectedDishes, options => options.ComparingByMembers<Dish>());
 
         }
+        
+        [Fact]
+        public async Task AddDish_WithDishToCreate_ReturnsCreatedDish()
+        {
+            var dishToCreate = new Dish()
+            {
+                ID = 1,
+                Name = "Pizza",
+                Category = 1
+            };
 
+            dishRepoStub.Setup(repo => repo.AddDish(dishToCreate)).ReturnsAsync(dishToCreate);
+
+            var service = new DishService(dishRepoStub.Object, ingredientRepoStub.Object, stepRepoStub.Object, historyRepoStub.Object);
+
+            var result = await service.Add(dishToCreate);
+
+            result.Should().BeEquivalentTo(dishToCreate, options => options.ComparingByMembers<Dish>());
+        }
+        
+        
         private Dish CreateRandomDish()
         {
             return new Dish()
