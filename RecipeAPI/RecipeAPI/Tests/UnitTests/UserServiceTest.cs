@@ -16,7 +16,7 @@ namespace UnitTests
         private readonly Mock<ICategoryRepository> categoryRepoStub = new Mock<ICategoryRepository>();
 
         [Fact]
-        public async Task GetUser_WithUnexistingId_ReturnsNotFound()
+        public async Task GetUserById_WithUnexistingId_ReturnsNotFound()
         {
             userRepoStub.Setup(repo => repo.GetUserById(It.IsAny<long>())).ReturnsAsync((User)null);
 
@@ -28,7 +28,7 @@ namespace UnitTests
 
         }
         [Fact]
-        public async Task GetUser_WithExistingId_ReturnsExpectedUser()
+        public async Task GetUserById_WithExistingId_ReturnsExpectedUser()
         {
             var expectedUser = CreateRandomUser();
             userRepoStub.Setup(repo => repo.GetUserById(It.IsAny<long>())).ReturnsAsync(expectedUser);

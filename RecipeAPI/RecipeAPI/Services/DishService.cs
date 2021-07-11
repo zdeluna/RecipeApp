@@ -44,10 +44,8 @@ namespace RecipeAPI.Services
        
 
 
-        public DishService(DatabaseContext context, IConfiguration config, IDishRepository dishRepo, IIngredientRepository ingredientRepo, IStepRepository stepRepo, IHistoryRepository historyRepo) 
+        public DishService(IDishRepository dishRepo, IIngredientRepository ingredientRepo, IStepRepository stepRepo, IHistoryRepository historyRepo) 
         {
-            _context = context;
-            _config = config;
             _dishRepo = dishRepo;
             _ingredientRepo = ingredientRepo;
             _stepRepo = stepRepo;

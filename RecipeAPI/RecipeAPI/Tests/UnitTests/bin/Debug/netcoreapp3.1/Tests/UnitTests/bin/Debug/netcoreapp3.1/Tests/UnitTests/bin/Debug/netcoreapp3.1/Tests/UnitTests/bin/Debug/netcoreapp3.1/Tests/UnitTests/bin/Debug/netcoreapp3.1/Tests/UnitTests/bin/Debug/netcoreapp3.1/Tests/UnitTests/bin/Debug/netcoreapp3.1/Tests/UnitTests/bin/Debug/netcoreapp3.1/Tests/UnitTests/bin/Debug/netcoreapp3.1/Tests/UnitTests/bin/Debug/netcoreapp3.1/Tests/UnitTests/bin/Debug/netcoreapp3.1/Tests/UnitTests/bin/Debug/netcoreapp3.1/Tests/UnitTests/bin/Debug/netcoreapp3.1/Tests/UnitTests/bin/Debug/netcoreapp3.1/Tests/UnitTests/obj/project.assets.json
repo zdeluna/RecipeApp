@@ -10276,7 +10276,7 @@
       "outputPath": "/Users/zacharydeluna/Documents/RecipeApp/RecipeAPI/RecipeAPI/Tests/UnitTests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/zacharydeluna/.config/NuGet/NuGet.Config"
+        "/Users/zacharydeluna/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
