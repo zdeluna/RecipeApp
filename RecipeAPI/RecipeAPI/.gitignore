@@ -33,5 +33,5 @@ cloud_sql_proxy
 .gcloudignore
 bin/debug
 RecipeAPI/.vs/RecipeAPI/xs/UserPrefs.xml
-RecipeAPI/RecipeAPI/Tests/UnitTests/bin
-RecipeAPI/RecipeAPI/Tests/UnitTests/obj
+Tests/UnitTests/bin
+Tests/UnitTests/obj
