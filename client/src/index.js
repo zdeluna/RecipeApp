@@ -84,10 +84,7 @@ const init = async () => {
             _.operationName != "addUser"
         ) {
             // If the jwt token is expired
-            console.log(expirationDate);
-            console.log(new Date());
             if (new Date() > new Date(expirationDate)) {
-                console.log("REFRESH JWT");
                 await refreshJWT();
             }
         }

@@ -8,8 +8,10 @@ class UserAPI extends RESTDataSource {
 
         if (process.env.GRAPH_ENV == "test") {
             this.baseURL = "https://localhost:5001/api/";
+            this.domain = "localhost";
         } else {
             this.baseURL = "https://recipescheduler.azurewebsites.net/api/";
+            this.domain = ".recipescheduler.net";
         }
     }
 
@@ -31,7 +33,7 @@ class UserAPI extends RESTDataSource {
                 expires: expirationDate,
                 httpOnly: true,
                 path: "/",
-                domain: ".recipescheduler.net",
+                domain: this.domain,
                 sameSite: false,
                 secure: true
             }
@@ -49,6 +51,8 @@ class UserAPI extends RESTDataSource {
             _request
         );
         if (cookies) {
+            console.log("GRAPHQL DID RECEIVE");
+            console.log(cookies);
             return {
                 ...defaultReturnValue,
                 headers: response.headers || _request.headers

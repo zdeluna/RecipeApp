@@ -38,8 +38,8 @@ namespace UnitTests
             var result = await service.GetById(1);
 
             result.Should().BeEquivalentTo(expectedUser, options => options.ComparingByMembers<User>());
-        }   
-        
+        }
+
         private User CreateRandomUser()
         {
             return new User()

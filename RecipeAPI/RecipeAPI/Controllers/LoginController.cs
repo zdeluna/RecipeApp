@@ -15,6 +15,7 @@ using RecipeAPI.Models;
 using RecipeAPI.Services;
 using BCrypt;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using RecipeAPI.Exceptions;
 
 namespace RecipeAPI.Controllers
@@ -27,13 +28,25 @@ namespace RecipeAPI.Controllers
         private readonly DatabaseContext _context;
         private readonly IUserService _userService;
         private readonly IAuthService _authService;
-
-        public LoginController(IConfiguration config, DatabaseContext context, IUserService userService, IAuthService authService)
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly string DOMAIN_NAME;
+       
+        public LoginController(IConfiguration config, IWebHostEnvironment hostingEnvironment, DatabaseContext context, IUserService userService, IAuthService authService)
         {
             _config = config;
+            _hostingEnvironment = hostingEnvironment;
             _context = context;
             _userService = userService;
             _authService = authService;
+
+            if (hostingEnvironment.EnvironmentName == "Development") {
+                DOMAIN_NAME = AuthConstants.DEV_DOMAIN;
+            }
+
+            else {
+                DOMAIN_NAME = AuthConstants.PROD_DOMAIN;
+            }
+
         }
 
         
@@ -64,27 +77,17 @@ namespace RecipeAPI.Controllers
             /* If there is no user with the username obtained from the access token or the refresh tokens don't match or 
             there is still time left before the refresh token expires then throw an error */
 
-            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime >= DateTime.Now)
             { 
                 throw new UnauthorizedException("Not Authorized to Refresh Token");
             }
 
-            var newRefreshToken = _authService.GenerateRefreshToken();
-
-            user.RefreshToken = newRefreshToken;
-
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(AuthConstants.REFRESH_EXPIRY_DAYS);
-
-            await _context.SaveChangesAsync();
+            var newRefreshToken = await CreateUserRefreshToken(user);
 
             DateTime expiryTimeJWT = DateTime.Now.AddMinutes(AuthConstants.JWT_EXPIRY_MINUTES);
             var newAccessToken = _authService.GenerateJWTToken(user, expiryTimeJWT);
 
-            CookieOptions cookieOptions = new CookieOptions();
-            cookieOptions.Expires = user.RefreshTokenExpiryTime;
-            cookieOptions.HttpOnly = true;
-
-            HttpContext.Response.Cookies.Append("refresh_token", newRefreshToken, cookieOptions);
+            CreateRefreshTokenCookie(user, refreshToken);
 
             return new ObjectResult(new
             {
@@ -102,23 +105,15 @@ namespace RecipeAPI.Controllers
             if (user != null)
             {
                 user.LastLoggedIn = DateTime.Now;
-                var refreshToken = _authService.GenerateRefreshToken();
 
-                user.RefreshToken = refreshToken;
-                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(AuthConstants.REFRESH_EXPIRY_DAYS);
-                await _context.SaveChangesAsync();
+                var refreshToken = await CreateUserRefreshToken(user);
 
                 DateTime expiryTimeJWT = DateTime.Now.AddMinutes(AuthConstants.JWT_EXPIRY_MINUTES);
 
                 var accessToken = _authService.GenerateJWTToken(user, expiryTimeJWT);
 
-                CookieOptions cookieOptions = new CookieOptions();
-                cookieOptions.Expires = user.RefreshTokenExpiryTime; 
-                cookieOptions.HttpOnly = true;
-                cookieOptions.Domain = "us-central1-recipescheduler-227221";
+                CreateRefreshTokenCookie(user, refreshToken);
 
-
-                HttpContext.Response.Cookies.Append("refresh_token", refreshToken, cookieOptions);
                 response = Ok(new
                 {
                     jwt_token = accessToken,
@@ -127,6 +122,27 @@ namespace RecipeAPI.Controllers
                 }); 
             }
             return response;
+        }
+
+        private async Task<string> CreateUserRefreshToken(User user) {
+            var refreshToken = _authService.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(AuthConstants.REFRESH_EXPIRY_DAYS);
+            await _context.SaveChangesAsync();
+
+            return refreshToken;
+
+        }
+
+        private void CreateRefreshTokenCookie(User user, string refreshToken) { 
+        
+                CookieOptions cookieOptions = new CookieOptions();
+                cookieOptions.Expires = user.RefreshTokenExpiryTime; 
+                cookieOptions.HttpOnly = true;
+                cookieOptions.Domain = DOMAIN_NAME;
+        
+                HttpContext.Response.Cookies.Append("refresh_token", refreshToken, cookieOptions);
         }
     }
 }
